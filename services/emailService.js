@@ -1,405 +1,500 @@
-const nodemailer = require("nodemailer");
+// ============================================================
+// EMAIL SERVICE - RESEND HTTPS API
+// ============================================================
 
-// =====================================================
-// SMTP CONFIGURATION
-// =====================================================
+const { Resend } = require("resend");
 
-const smtpUser = process.env.SMTP_USER;
-const smtpPass = process.env.SMTP_PASS;
 
-if (!smtpUser) {
-    console.warn("⚠️ SMTP_USER is missing in .env");
-}
+// ============================================================
+// RESEND CONFIG
+// ============================================================
 
-if (!smtpPass) {
-    console.warn("⚠️ SMTP_PASS is missing in .env");
-}
+const resendApiKey =
+    process.env.RESEND_API_KEY;
 
-// =====================================================
-// NODEMAILER TRANSPORTER
-// Gmail SMTP: Port 587 + STARTTLS
-// =====================================================
-const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST || "smtp.gmail.com",
-    port: 465,
-    secure: true,
-    family: 4,
+const resendFrom =
+    process.env.RESEND_FROM_EMAIL ||
+    "CampusNexus <onboarding@resend.dev>";
 
-    auth: {
-        user: smtpUser,
-        pass: smtpPass
-    },
 
-    connectionTimeout: 30000,
-    greetingTimeout: 30000,
-    socketTimeout: 60000
-});
-// =====================================================
-// VERIFY SMTP CONNECTION
-// =====================================================
+if (!resendApiKey) {
 
-const verifyEmailTransport = async () => {
-    if (!smtpUser) {
-        throw new Error("SMTP_USER is missing in .env");
-    }
-
-    if (!smtpPass) {
-        throw new Error("SMTP_PASS is missing in .env");
-    }
-
-    console.log("==========================================");
-    console.log("📧 Testing Gmail SMTP");
-    console.log("==========================================");
-    console.log("SMTP Host:", process.env.SMTP_HOST || "smtp.gmail.com");
-    console.log("SMTP Port:", process.env.SMTP_PORT || 587);
-    console.log("SMTP User:", smtpUser);
-    console.log("SMTP Password: LOADED");
-
-    try {
-        await transporter.verify();
-
-        console.log("✅ Gmail SMTP connection successful.");
-        console.log("==========================================");
-
-        return true;
-    } catch (error) {
-        console.error("❌ Gmail SMTP connection failed.");
-        console.error("Code:", error.code);
-        console.error("Command:", error.command);
-        console.error("Response Code:", error.responseCode);
-        console.error("Response:", error.response);
-        console.error("Message:", error.message);
-        console.error("==========================================");
-
-        throw error;
-    }
-};
-
-// =====================================================
-// ROLE NAME
-// =====================================================
-
-const getRoleName = (role) => {
-    const roles = {
-        student: "Student",
-        faculty: "Faculty",
-        admin: "Administrator"
-    };
-
-    return roles[role] || "User";
-};
-
-// =====================================================
-// SEND LOGIN OTP
-// =====================================================
-
-const sendLoginOTP = async ({ to, name, role, otp }) => {
-    if (!to) {
-        throw new Error("Recipient email is required.");
-    }
-
-    if (!otp) {
-        throw new Error("OTP is required.");
-    }
-
-    const appName = process.env.APP_NAME || "CampusNexus AI";
-
-    const roleName = getRoleName(role);
-
-    const expiryMinutes = Number(
-        process.env.LOGIN_OTP_EXPIRES_MINUTES || 5
+    console.warn(
+        "⚠️ RESEND_API_KEY is missing."
     );
 
-    const from =
-        process.env.SMTP_FROM ||
-        `"${appName}" <${smtpUser}>`;
+}
 
-    const mailOptions = {
-        from,
-        to,
 
-        subject: `${appName} - Login Verification OTP`,
+const resend =
+    new Resend(resendApiKey);
 
-        text: `
-Hello ${name || "User"},
 
-Your ${roleName} login verification OTP is:
+// ============================================================
+// VALIDATE EMAIL CONFIG
+// ============================================================
+
+const verifyEmailTransport = async () => {
+
+    if (!resendApiKey) {
+
+        throw new Error(
+            "RESEND_API_KEY is not configured."
+        );
+
+    }
+
+    console.log(
+        "✅ Resend email API configured."
+    );
+
+    return true;
+};
+
+
+// ============================================================
+// COMMON SEND FUNCTION
+// ============================================================
+
+const sendEmail = async ({
+    to,
+    subject,
+    html,
+    text
+}) => {
+
+    if (!resendApiKey) {
+
+        throw new Error(
+            "RESEND_API_KEY is not configured."
+        );
+
+    }
+
+
+    if (!to) {
+
+        throw new Error(
+            "Recipient email address is required."
+        );
+
+    }
+
+
+    try {
+
+        const { data, error } =
+            await resend.emails.send({
+
+                from: resendFrom,
+
+                to: [to],
+
+                subject,
+
+                html,
+
+                text
+
+            });
+
+
+        if (error) {
+
+            console.error(
+                "❌ Resend email API error:",
+                error
+            );
+
+            throw new Error(
+                error.message ||
+                "Failed to send email."
+            );
+
+        }
+
+
+        console.log(
+            "✅ Email sent successfully:",
+            {
+                to,
+                id: data?.id
+            }
+        );
+
+
+        return data;
+
+    } catch (error) {
+
+        console.error(
+            "❌ Failed to send email:",
+            {
+                code: error?.code,
+                message: error?.message
+            }
+        );
+
+        throw error;
+
+    }
+
+};
+
+
+// ============================================================
+// LOGIN OTP
+// ============================================================
+
+const sendLoginOTP = async ({
+    to,
+    name,
+    role,
+    otp
+}) => {
+
+    const safeName =
+        name || "User";
+
+    const safeRole =
+        role || "user";
+
+
+    const subject =
+        "CampusNexus Login OTP";
+
+
+    const text = `
+Hello ${safeName},
+
+Your CampusNexus login OTP is:
 
 ${otp}
 
-This OTP will expire in ${expiryMinutes} minutes.
+This OTP is valid for 5 minutes.
+
+Role: ${safeRole}
 
 If you did not attempt to login, please ignore this email.
 
 Regards,
-${appName}
-        `.trim(),
+CampusNexus Team
+`.trim();
 
-        html: `
+
+    const html = `
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Verification OTP</title>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>CampusNexus Login OTP</title>
+
 </head>
 
 <body style="
     margin:0;
     padding:0;
-    background:#f5f7fb;
+    background:#f4f6f8;
     font-family:Arial,Helvetica,sans-serif;
 ">
 
 <div style="
     max-width:600px;
     margin:40px auto;
-    padding:35px;
-    background:#ffffff;
-    border-radius:12px;
-    box-shadow:0 4px 20px rgba(0,0,0,0.08);
+    padding:20px;
 ">
 
-    <h2 style="
-        margin-top:0;
-        color:#212529;
-    ">
-        ${appName}
-    </h2>
-
-    <p>
-        Hello <strong>${name || "User"}</strong>,
-    </p>
-
-    <p>
-        Your ${roleName} login verification OTP is:
-    </p>
-
     <div style="
-        margin:30px 0;
+        background:#ffffff;
+        border-radius:16px;
+        padding:35px;
         text-align:center;
+        box-shadow:0 8px 30px rgba(0,0,0,0.08);
     ">
 
-        <span style="
+        <h1 style="
+            margin:0 0 10px;
+            color:#2563eb;
+            font-size:28px;
+        ">
+            CampusNexus
+        </h1>
+
+        <p style="
+            color:#555;
+            font-size:15px;
+            margin-bottom:25px;
+        ">
+            Login verification
+        </p>
+
+        <p style="
+            color:#333;
+            font-size:16px;
+        ">
+            Hello <strong>${safeName}</strong>,
+        </p>
+
+        <p style="
+            color:#555;
+            font-size:15px;
+        ">
+            Use the following OTP to complete your login:
+        </p>
+
+        <div style="
             display:inline-block;
-            padding:15px 30px;
-            background:#f1f3f5;
-            border-radius:10px;
+            margin:20px 0;
+            padding:18px 35px;
+            background:#eff6ff;
+            border-radius:12px;
+            color:#2563eb;
             font-size:32px;
             font-weight:bold;
             letter-spacing:8px;
-            color:#212529;
         ">
             ${otp}
-        </span>
+        </div>
+
+        <p style="
+            color:#777;
+            font-size:14px;
+        ">
+            This OTP is valid for <strong>5 minutes</strong>.
+        </p>
+
+        <p style="
+            color:#777;
+            font-size:13px;
+            margin-top:25px;
+        ">
+            Account role: ${safeRole}
+        </p>
+
+        <hr style="
+            border:none;
+            border-top:1px solid #eee;
+            margin:30px 0;
+        ">
+
+        <p style="
+            color:#999;
+            font-size:12px;
+        ">
+            If you did not attempt to login to CampusNexus,
+            you can safely ignore this email.
+        </p>
+
+        <p style="
+            color:#999;
+            font-size:12px;
+        ">
+            CampusNexus Team
+        </p>
 
     </div>
-
-    <p>
-        This OTP will expire in
-        <strong>${expiryMinutes} minutes</strong>.
-    </p>
-
-    <p style="color:#6c757d;">
-        If you did not attempt to login,
-        please ignore this email.
-    </p>
-
-    <hr>
-
-    <p style="
-        font-size:13px;
-        color:#6c757d;
-    ">
-        Regards,<br>
-        <strong>${appName}</strong>
-    </p>
 
 </div>
 
 </body>
 </html>
-        `
-    };
+`;
 
-    try {
-        const info = await transporter.sendMail(mailOptions);
 
-        console.log("✅ Login OTP email sent successfully.");
-        console.log("📧 To:", to);
-        console.log("📨 Message ID:", info.messageId);
+    return sendEmail({
 
-        return info;
-    } catch (error) {
-        console.error("❌ Failed to send login OTP email.");
-        console.error("Code:", error.code);
-        console.error("Command:", error.command);
-        console.error("Response Code:", error.responseCode);
-        console.error("Response:", error.response);
-        console.error("Message:", error.message);
-
-        throw error;
-    }
-};
-
-// =====================================================
-// SEND PASSWORD RESET OTP
-// =====================================================
-
-const sendPasswordResetOTP = async ({ to, name, otp }) => {
-    if (!to) {
-        throw new Error("Recipient email is required.");
-    }
-
-    if (!otp) {
-        throw new Error("OTP is required.");
-    }
-
-    const appName = process.env.APP_NAME || "CampusNexus AI";
-
-    const expiryMinutes = Number(
-        process.env.PASSWORD_RESET_OTP_EXPIRES_MINUTES || 5
-    );
-
-    const from =
-        process.env.SMTP_FROM ||
-        `"${appName}" <${smtpUser}>`;
-
-    const mailOptions = {
-        from,
         to,
 
-        subject: `${appName} - Password Reset OTP`,
+        subject,
 
-        text: `
-Hello ${name || "User"},
+        html,
 
-Your password reset OTP is:
+        text
+
+    });
+
+};
+
+
+// ============================================================
+// PASSWORD RESET OTP
+// ============================================================
+
+const sendPasswordResetOTP = async ({
+    to,
+    name,
+    otp
+}) => {
+
+    const safeName =
+        name || "User";
+
+
+    const subject =
+        "CampusNexus Password Reset OTP";
+
+
+    const text = `
+Hello ${safeName},
+
+Your CampusNexus password reset OTP is:
 
 ${otp}
 
-This OTP will expire in ${expiryMinutes} minutes.
+This OTP is valid for 5 minutes.
 
 If you did not request a password reset, please ignore this email.
 
 Regards,
-${appName}
-        `.trim(),
+CampusNexus Team
+`.trim();
 
-        html: `
+
+    const html = `
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Password Reset OTP</title>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>CampusNexus Password Reset</title>
+
 </head>
 
 <body style="
     margin:0;
     padding:0;
-    background:#f5f7fb;
+    background:#f4f6f8;
     font-family:Arial,Helvetica,sans-serif;
 ">
 
 <div style="
     max-width:600px;
     margin:40px auto;
-    padding:35px;
-    background:#ffffff;
-    border-radius:12px;
-    box-shadow:0 4px 20px rgba(0,0,0,0.08);
+    padding:20px;
 ">
 
-    <h2 style="
-        margin-top:0;
-        color:#212529;
-    ">
-        ${appName}
-    </h2>
-
-    <p>
-        Hello <strong>${name || "User"}</strong>,
-    </p>
-
-    <p>
-        Your password reset OTP is:
-    </p>
-
     <div style="
-        margin:30px 0;
+        background:#ffffff;
+        border-radius:16px;
+        padding:35px;
         text-align:center;
+        box-shadow:0 8px 30px rgba(0,0,0,0.08);
     ">
 
-        <span style="
+        <h1 style="
+            margin:0 0 10px;
+            color:#2563eb;
+            font-size:28px;
+        ">
+            CampusNexus
+        </h1>
+
+        <p style="
+            color:#555;
+            font-size:15px;
+        ">
+            Password reset verification
+        </p>
+
+        <p style="
+            color:#333;
+            font-size:16px;
+        ">
+            Hello <strong>${safeName}</strong>,
+        </p>
+
+        <p style="
+            color:#555;
+            font-size:15px;
+        ">
+            Use this OTP to reset your password:
+        </p>
+
+        <div style="
             display:inline-block;
-            padding:15px 30px;
-            background:#f1f3f5;
-            border-radius:10px;
+            margin:20px 0;
+            padding:18px 35px;
+            background:#eff6ff;
+            border-radius:12px;
+            color:#2563eb;
             font-size:32px;
             font-weight:bold;
             letter-spacing:8px;
-            color:#212529;
         ">
             ${otp}
-        </span>
+        </div>
+
+        <p style="
+            color:#777;
+            font-size:14px;
+        ">
+            This OTP is valid for <strong>5 minutes</strong>.
+        </p>
+
+        <hr style="
+            border:none;
+            border-top:1px solid #eee;
+            margin:30px 0;
+        ">
+
+        <p style="
+            color:#999;
+            font-size:12px;
+        ">
+            If you did not request a password reset,
+            please ignore this email.
+        </p>
+
+        <p style="
+            color:#999;
+            font-size:12px;
+        ">
+            CampusNexus Team
+        </p>
 
     </div>
-
-    <p>
-        This OTP will expire in
-        <strong>${expiryMinutes} minutes</strong>.
-    </p>
-
-    <p style="color:#6c757d;">
-        If you did not request a password reset,
-        please ignore this email.
-    </p>
-
-    <hr>
-
-    <p style="
-        font-size:13px;
-        color:#6c757d;
-    ">
-        Regards,<br>
-        <strong>${appName}</strong>
-    </p>
 
 </div>
 
 </body>
 </html>
-        `
-    };
+`;
 
-    try {
-        const info = await transporter.sendMail(mailOptions);
 
-        console.log("✅ Password reset OTP email sent successfully.");
-        console.log("📧 To:", to);
-        console.log("📨 Message ID:", info.messageId);
+    return sendEmail({
 
-        return info;
-    } catch (error) {
-        console.error("❌ Failed to send password reset OTP email.");
-        console.error("Code:", error.code);
-        console.error("Command:", error.command);
-        console.error("Response Code:", error.responseCode);
-        console.error("Response:", error.response);
-        console.error("Message:", error.message);
+        to,
 
-        throw error;
-    }
+        subject,
+
+        html,
+
+        text
+
+    });
+
 };
 
-// =====================================================
+
+// ============================================================
 // EXPORTS
-// =====================================================
+// ============================================================
 
 module.exports = {
-    transporter,
+
+    verifyEmailTransport,
+
     sendLoginOTP,
-    sendPasswordResetOTP,
-    verifyEmailTransport
+
+    sendPasswordResetOTP
+
 };
