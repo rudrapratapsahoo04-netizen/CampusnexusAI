@@ -10,7 +10,6 @@ const Program = require("../models/Program");
 
 
 const {
-    sendLoginOTP,
     sendPasswordResetOTP
 } = require("../services/emailService");
 console.log(
@@ -2450,80 +2449,93 @@ const login = async (
         // GENERATE LOGIN OTP
         // ====================================================
 
-        const otp =
-            generateOTP();
+       // ====================================================
+// DIRECT LOGIN
+// STUDENT / FACULTY / WORKER - NO LOGIN OTP
+// ====================================================
 
-        user.loginOTP =
-            hashOTP(otp);
+delete req.session.pendingLogin;
 
-        user.loginOTPExpires =
-            getLoginOTPExpiry();
+const userSession = {
+    _id: user._id.toString(),
+    id: user._id.toString(),
+    name: user.name,
+    email: user.email,
+    role: user.role
+};
 
-        user.loginOTPAttempts = 0;
+// Update last login
+user.lastLogin = new Date();
 
-        user.loginOTPLastSentAt =
-            new Date();
+await user.save({
+    validateBeforeSave: false
+});
 
-        await user.save({
-            validateBeforeSave: false
-        });
+// Preserve requested protected route
+const returnTo =
+    req.session.returnTo;
 
-        // ====================================================
-        // SEND LOGIN OTP
-        // ====================================================
+// ====================================================
+// SESSION REGENERATION
+// ====================================================
 
-        try {
+return req.session.regenerate(
+    (error) => {
 
-            await sendLoginOTP({
-                to: user.email,
-                name: user.name,
-                role: user.role,
-                otp
-            });
+        if (error) {
+            console.error(
+                "Session regenerate error:",
+                error
+            );
 
-        } catch (emailError) {
-
-            clearLoginOTP(user);
-
-            await user.save({
-                validateBeforeSave: false
-            });
-
-            throw emailError;
+            return next(error);
         }
 
-        // ====================================================
-        // PENDING LOGIN SESSION
-        // ====================================================
+        req.session.user =
+            userSession;
 
-        req.session.pendingLogin = {
-            userId:
-                user._id.toString(),
+        delete req.session.pendingLogin;
+        delete req.session.returnTo;
 
-            role:
+        const dashboard =
+            getDashboardByRole(
                 user.role,
-
-            email:
-                user.email
-        };
-
-        req.flash(
-            "success",
-            `OTP sent to ${maskEmail(user.email)}.`
-        );
+                returnTo
+            );
 
         return req.session.save(
-            (err) => {
+            (saveError) => {
 
-                if (err) {
-                    return next(err);
+                if (saveError) {
+                    console.error(
+                        "Authenticated session save error:",
+                        saveError
+                    );
+
+                    return next(saveError);
                 }
 
+                console.log(
+                    "LOGIN SUCCESS"
+                );
+
+                console.log(
+                    "USER:",
+                    req.session.user
+                );
+
+                console.log(
+                    "REDIRECT:",
+                    dashboard
+                );
+
                 return res.redirect(
-                    "/auth/verify-login-otp"
+                    dashboard
                 );
             }
         );
+    }
+);
 
     } catch (error) {
 
