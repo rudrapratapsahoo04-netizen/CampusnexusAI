@@ -1,0 +1,1760 @@
+<% layout("layouts/boilerplate") -%>
+
+<div class="container-fluid py-4">
+
+    <!-- ========================================== -->
+    <!-- PAGE HEADER -->
+    <!-- ========================================== -->
+
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+
+        <div>
+            <h2 class="fw-bold mb-1">
+                <i class="bi bi-calendar-check me-2"></i>
+                Attendance Management
+            </h2>
+
+            <p class="text-muted mb-0">
+                Manage monthly student and faculty attendance.
+            </p>
+        </div>
+
+        <div class="d-flex gap-2 flex-wrap">
+
+            <a
+                href="/admin/attendance?type=student&month=<%= month %>&year=<%= year %>"
+                class="btn <%= type === 'student' ? 'btn-primary' : 'btn-outline-primary' %>"
+            >
+                <i class="bi bi-mortarboard me-1"></i>
+                Student Attendance
+            </a>
+
+            <a
+                href="/admin/attendance?type=faculty&month=<%= month %>&year=<%= year %>"
+                class="btn <%= type === 'faculty' ? 'btn-primary' : 'btn-outline-primary' %>"
+            >
+                <i class="bi bi-person-workspace me-1"></i>
+                Faculty Attendance
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- MONTH / YEAR -->
+    <!-- ========================================== -->
+
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-body">
+
+            <form
+                method="GET"
+                action="/admin/attendance"
+                class="row g-3 align-items-end"
+            >
+
+                <input
+                    type="hidden"
+                    name="type"
+                    value="<%= type %>"
+                >
+
+                <div class="col-md-4">
+
+                    <label class="form-label fw-semibold">
+                        Month
+                    </label>
+
+                    <select
+                        name="month"
+                        class="form-select"
+                    >
+
+                        <% const monthNames = [
+                            "January",
+                            "February",
+                            "March",
+                            "April",
+                            "May",
+                            "June",
+                            "July",
+                            "August",
+                            "September",
+                            "October",
+                            "November",
+                            "December"
+                        ]; %>
+
+                        <% monthNames.forEach((monthName, index) => { %>
+
+                            <option
+                                value="<%= index + 1 %>"
+                                <%= Number(month) === index + 1 ? "selected" : "" %>
+                            >
+                                <%= monthName %>
+                            </option>
+
+                        <% }); %>
+
+                    </select>
+
+                </div>
+
+
+                <div class="col-md-4">
+
+                    <label class="form-label fw-semibold">
+                        Year
+                    </label>
+
+                    <input
+                        type="number"
+                        name="year"
+                        class="form-control"
+                        value="<%= year %>"
+                        min="2000"
+                        max="2100"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="col-md-4">
+
+                    <button
+                        type="submit"
+                        class="btn btn-dark w-100"
+                    >
+                        <i class="bi bi-funnel me-1"></i>
+                        Apply Period
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- ====================================================== -->
+    <!-- STUDENT ATTENDANCE -->
+    <!-- ====================================================== -->
+
+    <% if (type === "student") { %>
+
+        <!-- ========================================== -->
+        <!-- STUDENT FILTERS -->
+        <!-- ========================================== -->
+
+        <div class="card border-0 shadow-sm mb-4">
+
+            <div class="card-header bg-white py-3">
+
+                <div class="d-flex align-items-center">
+
+                    <i class="bi bi-funnel-fill text-primary me-2"></i>
+
+                    <h5 class="mb-0 fw-bold">
+                        Student Attendance Filters
+                    </h5>
+
+                </div>
+
+            </div>
+
+
+            <div class="card-body">
+
+                <form
+                    method="GET"
+                    action="/admin/attendance"
+                    class="row g-3"
+                >
+
+                    <input
+                        type="hidden"
+                        name="type"
+                        value="student"
+                    >
+
+                    <input
+                        type="hidden"
+                        name="month"
+                        value="<%= month %>"
+                    >
+
+                    <input
+                        type="hidden"
+                        name="year"
+                        value="<%= year %>"
+                    >
+
+
+                    <!-- Department -->
+
+                    <div class="col-md-4">
+
+                        <label class="form-label fw-semibold">
+                            Department
+                        </label>
+
+                        <select
+                            name="department"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                All Departments
+                            </option>
+
+                            <% departments.forEach(departmentName => { %>
+
+                                <option
+                                    value="<%= departmentName %>"
+                                    <%= String(filters.department || "").toLowerCase() === String(departmentName || "").toLowerCase() ? "selected" : "" %>
+                                >
+                                    <%= departmentName %>
+                                </option>
+
+                            <% }); %>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Program -->
+
+                    <div class="col-md-4">
+
+                        <label class="form-label fw-semibold">
+                            Program
+                        </label>
+
+                        <select
+                            name="program"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                All Programs
+                            </option>
+
+                            <% programs.forEach(programName => { %>
+
+                                <option
+                                    value="<%= programName %>"
+                                    <%= String(filters.program || "").toLowerCase() === String(programName || "").toLowerCase() ? "selected" : "" %>
+                                >
+                                    <%= programName %>
+                                </option>
+
+                            <% }); %>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Semester -->
+
+                    <div class="col-md-4">
+
+                        <label class="form-label fw-semibold">
+                            Semester
+                        </label>
+
+                        <select
+                            name="semester"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                All Semesters
+                            </option>
+
+                            <% for (let semesterNumber = 1; semesterNumber <= 12; semesterNumber++) { %>
+
+                                <option
+                                    value="<%= semesterNumber %>"
+                                    <%= String(filters.semester || "") === String(semesterNumber) ? "selected" : "" %>
+                                >
+                                    Semester <%= semesterNumber %>
+                                </option>
+
+                            <% } %>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Section -->
+
+                    <div class="col-md-4">
+
+                        <label class="form-label fw-semibold">
+                            Section
+                        </label>
+
+                        <input
+                            type="text"
+                            name="section"
+                            class="form-control"
+                            placeholder="e.g. A"
+                            value="<%= filters.section || "" %>"
+                        >
+
+                    </div>
+
+
+                    <!-- Course -->
+
+                    <div class="col-md-4">
+
+                        <label class="form-label fw-semibold">
+                            Course
+                        </label>
+
+                        <select
+                            name="courseCode"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                All Courses
+                            </option>
+
+                            <% courses.forEach(course => { %>
+
+                                <option
+                                    value="<%= course.courseCode %>"
+                                    <%= String(filters.courseCode || "").toUpperCase() === String(course.courseCode || "").toUpperCase() ? "selected" : "" %>
+                                >
+                                    <%= course.courseCode %> -
+                                    <%= course.courseName %>
+                                </option>
+
+                            <% }); %>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Updated By Faculty -->
+
+                    <div class="col-md-4">
+
+                        <label class="form-label fw-semibold">
+                            Updated By Faculty
+                        </label>
+
+                        <select
+                            name="faculty"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                All Faculty
+                            </option>
+
+                            <% facultyProfiles.forEach(profile => { %>
+
+                                <% if (profile.user) { %>
+
+                                    <option
+                                        value="<%= profile.user._id %>"
+                                        <%= String(filters.faculty || "") === String(profile.user._id) ? "selected" : "" %>
+                                    >
+                                        <%= profile.user.name %>
+                                        -
+                                        <%= profile.employeeId %>
+                                    </option>
+
+                                <% } %>
+
+                            <% }); %>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Buttons -->
+
+                    <div class="col-12 d-flex gap-2">
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                        >
+                            <i class="bi bi-search me-1"></i>
+                            Apply Filters
+                        </button>
+
+                        <a
+                            href="/admin/attendance?type=student&month=<%= month %>&year=<%= year %>"
+                            class="btn btn-outline-secondary"
+                        >
+                            <i class="bi bi-x-circle me-1"></i>
+                            Clear Filters
+                        </a>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+
+        <!-- ========================================== -->
+        <!-- STUDENT ATTENDANCE TABLE -->
+        <!-- ========================================== -->
+
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-header bg-white py-3">
+
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+
+                    <div>
+
+                        <h5 class="mb-1 fw-bold">
+                            <i class="bi bi-mortarboard me-2"></i>
+                            Student Attendance
+                        </h5>
+
+                        <small class="text-muted">
+                            Manage monthly subject-wise student attendance.
+                        </small>
+
+                    </div>
+
+
+                    <div class="d-flex align-items-center gap-2">
+
+                        <span class="badge bg-primary">
+                            <%= studentAttendance.length %>
+                            Records
+                        </span>
+
+                        <button
+                            type="button"
+                            class="btn btn-primary"
+                            data-bs-toggle="modal"
+                            data-bs-target="#addStudentAttendanceModal"
+                        >
+                            <i class="bi bi-plus-circle me-1"></i>
+                            Add Attendance
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="card-body p-0">
+
+                <% if (studentAttendance.length === 0) { %>
+
+                    <div class="text-center py-5 px-3">
+
+                        <i class="bi bi-calendar-x fs-1 text-muted"></i>
+
+                        <h5 class="mt-3">
+                            No student attendance records found
+                        </h5>
+
+                        <p class="text-muted mb-0">
+                            Try changing the month or filters,
+                            or add a new attendance record.
+                        </p>
+
+                    </div>
+
+                <% } else { %>
+
+                    <div class="table-responsive">
+
+                        <table class="table table-hover align-middle mb-0">
+
+                            <thead class="table-light">
+
+                                <tr>
+
+                                    <th>
+                                        Student
+                                    </th>
+
+                                    <th>
+                                        Student ID
+                                    </th>
+
+                                    <th>
+                                        Academic
+                                    </th>
+
+                                    <th>
+                                        Course
+                                    </th>
+
+                                    <th class="text-center">
+                                        Total
+                                    </th>
+
+                                    <th class="text-center">
+                                        Present
+                                    </th>
+
+                                    <th class="text-center">
+                                        Absent
+                                    </th>
+
+                                    <th class="text-center">
+                                        Percentage
+                                    </th>
+
+                                    <th class="text-end">
+                                        Action
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody>
+
+                                <% studentAttendance.forEach(record => { %>
+
+                                    <tr>
+
+                                        <!-- Student -->
+
+                                        <td>
+
+                                            <div class="fw-semibold">
+                                                <%= record.student?.name || "Unknown Student" %>
+                                            </div>
+
+                                            <small class="text-muted">
+                                                <%= record.student?.email || "-" %>
+                                            </small>
+
+                                        </td>
+
+
+                                        <!-- Student ID -->
+
+                                        <td>
+
+                                            <span class="badge bg-light text-dark border">
+                                                <%= record.studentProfile?.studentId || record.studentId || "-" %>
+                                            </span>
+
+                                        </td>
+
+
+                                        <!-- Academic -->
+
+                                        <td>
+
+                                            <div class="small">
+
+                                                <strong>
+                                                    <%= record.department || record.studentProfile?.department || "-" %>
+                                                </strong>
+
+                                            </div>
+
+                                            <div class="small text-muted">
+
+                                                <%= record.program || record.studentProfile?.program || "-" %>
+
+                                                · Sem
+
+                                                <%= record.semester || record.studentProfile?.semester || "-" %>
+
+                                                <% if (record.section || record.studentProfile?.section) { %>
+
+                                                    · Sec
+
+                                                    <%= record.section || record.studentProfile.section %>
+
+                                                <% } %>
+
+                                            </div>
+
+                                        </td>
+
+
+                                        <!-- Course -->
+
+                                        <td>
+
+                                            <div class="fw-semibold">
+                                                <%= record.courseCode || "-" %>
+                                            </div>
+
+                                            <small class="text-muted">
+                                                <%= record.courseName || "-" %>
+                                            </small>
+
+                                        </td>
+
+
+                                        <!-- Total -->
+
+                                        <td class="text-center">
+                                            <%= record.totalClasses || 0 %>
+                                        </td>
+
+
+                                        <!-- Present -->
+
+                                        <td class="text-center">
+
+                                            <span class="badge bg-success">
+                                                <%= record.presentClasses || 0 %>
+                                            </span>
+
+                                        </td>
+
+
+                                        <!-- Absent -->
+
+                                        <td class="text-center">
+
+                                            <span class="badge bg-danger">
+                                                <%= record.absentClasses || 0 %>
+                                            </span>
+
+                                        </td>
+
+
+                                        <!-- Percentage -->
+
+                                        <td class="text-center">
+
+                                            <% const percentage = Number(record.percentage || 0); %>
+
+                                            <% if (percentage >= 75) { %>
+
+                                                <span class="badge bg-success">
+                                                    <%= percentage.toFixed(2) %>%
+                                                </span>
+
+                                            <% } else if (percentage >= 60) { %>
+
+                                                <span class="badge bg-warning text-dark">
+                                                    <%= percentage.toFixed(2) %>%
+                                                </span>
+
+                                            <% } else { %>
+
+                                                <span class="badge bg-danger">
+                                                    <%= percentage.toFixed(2) %>%
+                                                </span>
+
+                                            <% } %>
+
+                                        </td>
+
+
+                                        <!-- Action -->
+
+                                        <td class="text-end">
+
+                                            <button
+                                                type="button"
+                                                class="btn btn-sm btn-outline-primary"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#studentAttendanceModal<%= record._id %>"
+                                            >
+                                                <i class="bi bi-pencil-square me-1"></i>
+                                                Update
+                                            </button>
+
+                                        </td>
+
+                                    </tr>
+
+                                <% }); %>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                <% } %>
+
+            </div>
+
+        </div>
+
+
+        <!-- ========================================== -->
+        <!-- ADD STUDENT ATTENDANCE MODAL -->
+        <!-- ========================================== -->
+
+        <div
+            class="modal fade"
+            id="addStudentAttendanceModal"
+            tabindex="-1"
+            aria-labelledby="addStudentAttendanceModalLabel"
+            aria-hidden="true"
+        >
+
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+
+                <div class="modal-content">
+
+                    <div class="modal-header">
+
+                        <div>
+
+                            <h5
+                                class="modal-title fw-bold"
+                                id="addStudentAttendanceModalLabel"
+                            >
+                                <i class="bi bi-plus-circle me-2"></i>
+                                Add Student Attendance
+                            </h5>
+
+                            <small class="text-muted">
+                                <%= monthNames[Number(month) - 1] %>
+                                <%= year %>
+                            </small>
+
+                        </div>
+
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"
+                        ></button>
+
+                    </div>
+
+
+                    <form
+                        method="POST"
+                        action="/admin/attendance/student/create"
+                    >
+
+                        <div class="modal-body">
+
+                            <div class="alert alert-info">
+
+                                <i class="bi bi-info-circle me-2"></i>
+
+                                Select the student and course.
+                                Absent classes will be calculated automatically.
+
+                            </div>
+
+
+                            <div class="row g-3">
+
+
+                                <!-- Student -->
+
+                                <div class="col-md-6">
+
+                                    <label class="form-label fw-semibold">
+                                        Student
+                                    </label>
+
+                                    <select
+                                        name="student"
+                                        class="form-select"
+                                        required
+                                    >
+
+                                        <option value="">
+                                            Select Student
+                                        </option>
+
+                                        <% if (typeof students !== "undefined" && students.length > 0) { %>
+
+                                            <% students.forEach(student => { %>
+
+                                                <% if (student.user) { %>
+
+                                                    <option
+                                                        value="<%= student.user._id %>"
+                                                    >
+                                                        <%= student.studentId %>
+                                                        -
+                                                        <%= student.user.name %>
+                                                        -
+                                                        <%= student.program %>
+                                                        -
+                                                        Sem <%= student.semester %>
+                                                        <% if (student.section) { %>
+                                                            -
+                                                            Sec <%= student.section %>
+                                                        <% } %>
+                                                    </option>
+
+                                                <% } %>
+
+                                            <% }); %>
+
+                                        <% } %>
+
+                                    </select>
+
+                                    <% if (typeof students === "undefined" || students.length === 0) { %>
+
+                                        <small class="text-danger">
+                                            No students available.
+                                        </small>
+
+                                    <% } %>
+
+                                </div>
+
+
+                                <!-- Course -->
+
+                                <div class="col-md-6">
+
+                                    <label class="form-label fw-semibold">
+                                        Course
+                                    </label>
+
+                                    <select
+                                        name="courseCode"
+                                        class="form-select"
+                                        required
+                                    >
+
+                                        <option value="">
+                                            Select Course
+                                        </option>
+
+                                        <% courses.forEach(course => { %>
+
+                                            <option
+                                                value="<%= course.courseCode %>"
+                                            >
+                                                <%= course.courseCode %>
+                                                -
+                                                <%= course.courseName %>
+                                            </option>
+
+                                        <% }); %>
+
+                                    </select>
+
+                                </div>
+
+
+                                <!-- Month -->
+
+                                <div class="col-md-6">
+
+                                    <label class="form-label fw-semibold">
+                                        Month
+                                    </label>
+
+                                    <select
+                                        name="month"
+                                        class="form-select"
+                                        required
+                                    >
+
+                                        <% monthNames.forEach((monthName, index) => { %>
+
+                                            <option
+                                                value="<%= index + 1 %>"
+                                                <%= Number(month) === index + 1 ? "selected" : "" %>
+                                            >
+                                                <%= monthName %>
+                                            </option>
+
+                                        <% }); %>
+
+                                    </select>
+
+                                </div>
+
+
+                                <!-- Year -->
+
+                                <div class="col-md-6">
+
+                                    <label class="form-label fw-semibold">
+                                        Year
+                                    </label>
+
+                                    <input
+                                        type="number"
+                                        name="year"
+                                        class="form-control"
+                                        value="<%= year %>"
+                                        min="2000"
+                                        max="2100"
+                                        required
+                                    >
+
+                                </div>
+
+
+                                <!-- Total Classes -->
+
+                                <div class="col-md-6">
+
+                                    <label class="form-label fw-semibold">
+                                        Total Classes
+                                    </label>
+
+                                    <input
+                                        type="number"
+                                        name="totalClasses"
+                                        class="form-control"
+                                        min="0"
+                                        value="0"
+                                        required
+                                    >
+
+                                </div>
+
+
+                                <!-- Present Classes -->
+
+                                <div class="col-md-6">
+
+                                    <label class="form-label fw-semibold">
+                                        Present Classes
+                                    </label>
+
+                                    <input
+                                        type="number"
+                                        name="presentClasses"
+                                        class="form-control"
+                                        min="0"
+                                        value="0"
+                                        required
+                                    >
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="modal-footer">
+
+                            <button
+                                type="button"
+                                class="btn btn-secondary"
+                                data-bs-dismiss="modal"
+                            >
+                                Cancel
+                            </button>
+
+                            <button
+                                type="submit"
+                                class="btn btn-primary"
+                            >
+                                <i class="bi bi-check-lg me-1"></i>
+                                Add Attendance
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ========================================== -->
+        <!-- STUDENT UPDATE MODALS -->
+        <!-- ========================================== -->
+
+        <% studentAttendance.forEach(record => { %>
+
+            <div
+                class="modal fade"
+                id="studentAttendanceModal<%= record._id %>"
+                tabindex="-1"
+                aria-hidden="true"
+            >
+
+                <div class="modal-dialog modal-dialog-centered">
+
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+
+                            <h5 class="modal-title fw-bold">
+                                <i class="bi bi-pencil-square me-2"></i>
+                                Update Student Attendance
+                            </h5>
+
+                            <button
+                                type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"
+                            ></button>
+
+                        </div>
+
+
+                        <form
+                            method="POST"
+                            action="/admin/attendance/student/<%= record._id %>"
+                        >
+
+                            <div class="modal-body">
+
+
+                                <!-- Student -->
+
+                                <div class="mb-3">
+
+                                    <label class="form-label fw-semibold">
+                                        Student
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        value="<%= record.student?.name || 'Unknown Student' %>"
+                                        disabled
+                                    >
+
+                                </div>
+
+
+                                <!-- Student ID -->
+
+                                <div class="mb-3">
+
+                                    <label class="form-label fw-semibold">
+                                        Student ID
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        value="<%= record.studentProfile?.studentId || record.studentId || '-' %>"
+                                        disabled
+                                    >
+
+                                </div>
+
+
+                                <!-- Course -->
+
+                                <div class="mb-3">
+
+                                    <label class="form-label fw-semibold">
+                                        Course
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        value="<%= record.courseCode || '-' %> - <%= record.courseName || '-' %>"
+                                        disabled
+                                    >
+
+                                </div>
+
+
+                                <!-- Total / Present -->
+
+                                <div class="row g-3">
+
+                                    <div class="col-md-6">
+
+                                        <label class="form-label fw-semibold">
+                                            Total Classes
+                                        </label>
+
+                                        <input
+                                            type="number"
+                                            name="totalClasses"
+                                            class="form-control"
+                                            min="0"
+                                            value="<%= record.totalClasses || 0 %>"
+                                            required
+                                        >
+
+                                    </div>
+
+
+                                    <div class="col-md-6">
+
+                                        <label class="form-label fw-semibold">
+                                            Present Classes
+                                        </label>
+
+                                        <input
+                                            type="number"
+                                            name="presentClasses"
+                                            class="form-control"
+                                            min="0"
+                                            value="<%= record.presentClasses || 0 %>"
+                                            required
+                                        >
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="alert alert-info mt-3 mb-0">
+
+                                    <i class="bi bi-info-circle me-1"></i>
+
+                                    Absent classes will be calculated automatically.
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="modal-footer">
+
+                                <button
+                                    type="button"
+                                    class="btn btn-secondary"
+                                    data-bs-dismiss="modal"
+                                >
+                                    Cancel
+                                </button>
+
+                                <button
+                                    type="submit"
+                                    class="btn btn-primary"
+                                >
+                                    <i class="bi bi-check-lg me-1"></i>
+                                    Save Attendance
+                                </button>
+
+                            </div>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        <% }); %>
+
+
+    <% } %>
+
+
+    <!-- ====================================================== -->
+    <!-- FACULTY ATTENDANCE -->
+    <!-- ====================================================== -->
+
+    <% if (type === "faculty") { %>
+
+        <!-- ========================================== -->
+        <!-- FACULTY FILTERS -->
+        <!-- ========================================== -->
+
+        <div class="card border-0 shadow-sm mb-4">
+
+            <div class="card-header bg-white py-3">
+
+                <div class="d-flex align-items-center">
+
+                    <i class="bi bi-funnel-fill text-primary me-2"></i>
+
+                    <h5 class="mb-0 fw-bold">
+                        Faculty Attendance Filters
+                    </h5>
+
+                </div>
+
+            </div>
+
+
+            <div class="card-body">
+
+                <form
+                    method="GET"
+                    action="/admin/attendance"
+                    class="row g-3"
+                >
+
+                    <input
+                        type="hidden"
+                        name="type"
+                        value="faculty"
+                    >
+
+                    <input
+                        type="hidden"
+                        name="month"
+                        value="<%= month %>"
+                    >
+
+                    <input
+                        type="hidden"
+                        name="year"
+                        value="<%= year %>"
+                    >
+
+
+                    <!-- Department -->
+
+                    <div class="col-md-6">
+
+                        <label class="form-label fw-semibold">
+                            Department
+                        </label>
+
+                        <select
+                            name="department"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                All Departments
+                            </option>
+
+                            <% departments.forEach(departmentName => { %>
+
+                                <option
+                                    value="<%= departmentName %>"
+                                    <%= String(filters.department || "").toLowerCase() === String(departmentName || "").toLowerCase() ? "selected" : "" %>
+                                >
+                                    <%= departmentName %>
+                                </option>
+
+                            <% }); %>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Faculty -->
+
+                    <div class="col-md-6">
+
+                        <label class="form-label fw-semibold">
+                            Faculty
+                        </label>
+
+                        <select
+                            name="faculty"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                All Faculty
+                            </option>
+
+                            <% facultyProfiles.forEach(profile => { %>
+
+                                <% if (profile.user) { %>
+
+                                    <option
+                                        value="<%= profile.user._id %>"
+                                        <%= String(filters.faculty || "") === String(profile.user._id) ? "selected" : "" %>
+                                    >
+                                        <%= profile.user.name %>
+                                        -
+                                        <%= profile.employeeId %>
+                                    </option>
+
+                                <% } %>
+
+                            <% }); %>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Buttons -->
+
+                    <div class="col-12 d-flex gap-2">
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                        >
+                            <i class="bi bi-search me-1"></i>
+                            Apply Filters
+                        </button>
+
+                        <a
+                            href="/admin/attendance?type=faculty&month=<%= month %>&year=<%= year %>"
+                            class="btn btn-outline-secondary"
+                        >
+                            <i class="bi bi-x-circle me-1"></i>
+                            Clear Filters
+                        </a>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+
+        <!-- ========================================== -->
+        <!-- FACULTY ATTENDANCE TABLE -->
+        <!-- ========================================== -->
+
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-header bg-white py-3">
+
+                <div class="d-flex justify-content-between align-items-center">
+
+                    <div>
+
+                        <h5 class="mb-1 fw-bold">
+                            <i class="bi bi-person-workspace me-2"></i>
+                            Faculty Attendance
+                        </h5>
+
+                        <small class="text-muted">
+                            <%= monthNames[Number(month) - 1] %>
+                            <%= year %>
+                        </small>
+
+                    </div>
+
+                    <span class="badge bg-primary">
+                        <%= facultyAttendance.length %>
+                        Records
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="card-body p-0">
+
+                <% if (facultyAttendance.length === 0) { %>
+
+                    <div class="text-center py-5">
+
+                        <i class="bi bi-calendar-x fs-1 text-muted"></i>
+
+                        <h5 class="mt-3">
+                            No faculty attendance records found
+                        </h5>
+
+                        <p class="text-muted mb-0">
+                            Try changing the month or filters.
+                        </p>
+
+                    </div>
+
+                <% } else { %>
+
+                    <div class="table-responsive">
+
+                        <table class="table table-hover align-middle mb-0">
+
+                            <thead class="table-light">
+
+                                <tr>
+
+                                    <th>
+                                        Faculty
+                                    </th>
+
+                                    <th>
+                                        Department
+                                    </th>
+
+                                    <th class="text-center">
+                                        Working Days
+                                    </th>
+
+                                    <th class="text-center">
+                                        Present
+                                    </th>
+
+                                    <th class="text-center">
+                                        Leave
+                                    </th>
+
+                                    <th class="text-center">
+                                        Absent
+                                    </th>
+
+                                    <th class="text-center">
+                                        Percentage
+                                    </th>
+
+                                    <th class="text-end">
+                                        Action
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody>
+
+                                <% facultyAttendance.forEach(record => { %>
+
+                                    <%
+                                        const facultyProfile =
+                                            facultyProfiles.find(
+                                                profile =>
+                                                    profile.user &&
+                                                    String(profile.user._id) ===
+                                                    String(record.faculty?._id || record.faculty)
+                                            );
+                                    %>
+
+
+                                    <tr>
+
+                                        <!-- Faculty -->
+
+                                        <td>
+
+                                            <div class="fw-semibold">
+                                                <%= record.faculty?.name || "Unknown Faculty" %>
+                                            </div>
+
+                                            <small class="text-muted">
+                                                <%= record.faculty?.email || "-" %>
+                                            </small>
+
+                                        </td>
+
+
+                                        <!-- Department -->
+
+                                        <td>
+
+                                            <%= facultyProfile?.department || "-" %>
+
+                                            <% if (facultyProfile?.designation) { %>
+
+                                                <div class="small text-muted">
+                                                    <%= facultyProfile.designation %>
+                                                </div>
+
+                                            <% } %>
+
+                                        </td>
+
+
+                                        <!-- Working Days -->
+
+                                        <td class="text-center">
+                                            <%= record.workingDays || 0 %>
+                                        </td>
+
+
+                                        <!-- Present -->
+
+                                        <td class="text-center">
+
+                                            <span class="badge bg-success">
+                                                <%= record.presentDays || 0 %>
+                                            </span>
+
+                                        </td>
+
+
+                                        <!-- Leave -->
+
+                                        <td class="text-center">
+
+                                            <span class="badge bg-warning text-dark">
+                                                <%= record.leaveDays || 0 %>
+                                            </span>
+
+                                        </td>
+
+
+                                        <!-- Absent -->
+
+                                        <td class="text-center">
+
+                                            <span class="badge bg-danger">
+                                                <%= record.absentDays || 0 %>
+                                            </span>
+
+                                        </td>
+
+
+                                        <!-- Percentage -->
+
+                                        <td class="text-center">
+
+                                            <% const facultyPercentage = Number(record.percentage || 0); %>
+
+                                            <% if (facultyPercentage >= 75) { %>
+
+                                                <span class="badge bg-success">
+                                                    <%= facultyPercentage.toFixed(2) %>%
+                                                </span>
+
+                                            <% } else if (facultyPercentage >= 60) { %>
+
+                                                <span class="badge bg-warning text-dark">
+                                                    <%= facultyPercentage.toFixed(2) %>%
+                                                </span>
+
+                                            <% } else { %>
+
+                                                <span class="badge bg-danger">
+                                                    <%= facultyPercentage.toFixed(2) %>%
+                                                </span>
+
+                                            <% } %>
+
+                                        </td>
+
+
+                                        <!-- Action -->
+
+                                        <td class="text-end">
+
+                                            <button
+                                                type="button"
+                                                class="btn btn-sm btn-outline-primary"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#facultyAttendanceModal<%= record._id %>"
+                                            >
+                                                <i class="bi bi-pencil-square me-1"></i>
+                                                Update
+                                            </button>
+
+                                        </td>
+
+                                    </tr>
+
+                                <% }); %>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                <% } %>
+
+            </div>
+
+        </div>
+
+
+        <!-- ========================================== -->
+        <!-- FACULTY UPDATE MODALS -->
+        <!-- ========================================== -->
+
+        <% facultyAttendance.forEach(record => { %>
+
+            <div
+                class="modal fade"
+                id="facultyAttendanceModal<%= record._id %>"
+                tabindex="-1"
+                aria-hidden="true"
+            >
+
+                <div class="modal-dialog modal-dialog-centered">
+
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+
+                            <h5 class="modal-title fw-bold">
+                                <i class="bi bi-pencil-square me-2"></i>
+                                Update Faculty Attendance
+                            </h5>
+
+                            <button
+                                type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"
+                            ></button>
+
+                        </div>
+
+
+                        <form
+                            method="POST"
+                            action="/admin/attendance/faculty/<%= record._id %>"
+                        >
+
+                            <div class="modal-body">
+
+
+                                <!-- Faculty -->
+
+                                <div class="mb-3">
+
+                                    <label class="form-label fw-semibold">
+                                        Faculty
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        value="<%= record.faculty?.name || 'Unknown Faculty' %>"
+                                        disabled
+                                    >
+
+                                </div>
+
+
+                                <!-- Attendance -->
+
+                                <div class="row g-3">
+
+
+                                    <div class="col-md-6">
+
+                                        <label class="form-label fw-semibold">
+                                            Working Days
+                                        </label>
+
+                                        <input
+                                            type="number"
+                                            name="workingDays"
+                                            class="form-control"
+                                            min="0"
+                                            value="<%= record.workingDays || 0 %>"
+                                            required
+                                        >
+
+                                    </div>
+
+
+                                    <div class="col-md-6">
+
+                                        <label class="form-label fw-semibold">
+                                            Present Days
+                                        </label>
+
+                                        <input
+                                            type="number"
+                                            name="presentDays"
+                                            class="form-control"
+                                            min="0"
+                                            value="<%= record.presentDays || 0 %>"
+                                            required
+                                        >
+
+                                    </div>
+
+
+                                    <div class="col-md-6">
+
+                                        <label class="form-label fw-semibold">
+                                            Leave Days
+                                        </label>
+
+                                        <input
+                                            type="number"
+                                            name="leaveDays"
+                                            class="form-control"
+                                            min="0"
+                                            value="<%= record.leaveDays || 0 %>"
+                                            required
+                                        >
+
+                                    </div>
+
+
+                                    <div class="col-md-6">
+
+                                        <label class="form-label fw-semibold">
+                                            Absent Days
+                                        </label>
+
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            value="<%= record.absentDays || 0 %>"
+                                            disabled
+                                        >
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="alert alert-info mt-3 mb-0">
+
+                                    <i class="bi bi-info-circle me-1"></i>
+
+                                    Absent days will be calculated automatically.
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="modal-footer">
+
+                                <button
+                                    type="button"
+                                    class="btn btn-secondary"
+                                    data-bs-dismiss="modal"
+                                >
+                                    Cancel
+                                </button>
+
+                                <button
+                                    type="submit"
+                                    class="btn btn-primary"
+                                >
+                                    <i class="bi bi-check-lg me-1"></i>
+                                    Save Attendance
+                                </button>
+
+                            </div>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        <% }); %>
+
+
+    <% } %>
+
+</div>

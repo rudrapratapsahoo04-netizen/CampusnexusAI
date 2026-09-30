@@ -1,0 +1,892 @@
+<% layout("layouts/boilerplate") -%>
+
+<div class="container-fluid py-4">
+
+    <!-- ========================================== -->
+    <!-- PAGE HEADER -->
+    <!-- ========================================== -->
+
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+
+        <div>
+            <div class="d-flex align-items-center gap-2 mb-1">
+                <span class="badge bg-primary-subtle text-primary">
+                    <i class="bi bi-book-half me-1"></i>
+                    Academic Management
+                </span>
+            </div>
+
+            <h2 class="fw-bold mb-1">
+                Course Management
+            </h2>
+
+            <p class="text-muted mb-0">
+                Manage university courses, academic mappings and course status.
+            </p>
+        </div>
+
+        <div>
+            <a
+                href="/admin/courses/new"
+                class="btn btn-primary"
+            >
+                <i class="bi bi-plus-lg me-1"></i>
+                Add Course
+            </a>
+        </div>
+
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- FILTER CARD -->
+    <!-- ========================================== -->
+
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-header bg-white border-bottom py-3">
+
+            <div class="d-flex align-items-center">
+
+                <div
+                    class="rounded-3 bg-primary-subtle text-primary d-flex align-items-center justify-content-center me-3"
+                    style="width: 42px; height: 42px;"
+                >
+                    <i class="bi bi-funnel fs-5"></i>
+                </div>
+
+                <div>
+                    <h5 class="mb-0 fw-semibold">
+                        Search & Filter
+                    </h5>
+
+                    <small class="text-muted">
+                        Find courses by academic details.
+                    </small>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="card-body">
+
+            <form
+                method="GET"
+                action="/admin/courses"
+            >
+
+                <div class="row g-3">
+
+                    <!-- SEARCH -->
+
+                    <div class="col-12 col-lg-4">
+
+                        <label
+                            for="search"
+                            class="form-label fw-semibold"
+                        >
+                            Search Course
+                        </label>
+
+                        <div class="input-group">
+
+                            <span class="input-group-text bg-white">
+                                <i class="bi bi-search text-muted"></i>
+                            </span>
+
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="search"
+                                name="search"
+                                value="<%= filters?.search || '' %>"
+                                placeholder="Course code or course name"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- DEPARTMENT -->
+
+                    <div class="col-12 col-md-6 col-lg-2">
+
+                        <label
+                            for="department"
+                            class="form-label fw-semibold"
+                        >
+                            Department
+                        </label>
+
+                        <select
+                            class="form-select"
+                            id="department"
+                            name="department"
+                        >
+
+                            <option value="">
+                                All Departments
+                            </option>
+
+                            <% departments.forEach(department => { %>
+
+                                <option
+                                    value="<%= department._id %>"
+                                    <%= String(filters?.department || '') === String(department._id) ? 'selected' : '' %>
+                                >
+                                    <%= department.name %>
+                                    (<%= department.code %>)
+                                </option>
+
+                            <% }) %>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- PROGRAM -->
+
+                    <div class="col-12 col-md-6 col-lg-2">
+
+                        <label
+                            for="program"
+                            class="form-label fw-semibold"
+                        >
+                            Program
+                        </label>
+
+                        <select
+                            class="form-select"
+                            id="program"
+                            name="program"
+                        >
+
+                            <option value="">
+                                All Programs
+                            </option>
+
+                            <% programs.forEach(program => { %>
+
+                                <option
+                                    value="<%= program._id %>"
+                                    data-department="<%= program.department %>"
+                                    <%= String(filters?.program || '') === String(program._id) ? 'selected' : '' %>
+                                >
+                                    <%= program.name %>
+                                    (<%= program.code %>)
+                                </option>
+
+                            <% }) %>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- SEMESTER -->
+
+                    <div class="col-12 col-md-4 col-lg-1">
+
+                        <label
+                            for="semester"
+                            class="form-label fw-semibold"
+                        >
+                            Semester
+                        </label>
+
+                        <select
+                            class="form-select"
+                            id="semester"
+                            name="semester"
+                        >
+
+                            <option value="">
+                                All
+                            </option>
+
+                            <% for (let i = 1; i <= 12; i++) { %>
+
+                                <option
+                                    value="<%= i %>"
+                                    <%= String(filters?.semester || '') === String(i) ? 'selected' : '' %>
+                                >
+                                    <%= i %>
+                                </option>
+
+                            <% } %>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- COURSE TYPE -->
+
+                    <div class="col-12 col-md-4 col-lg-1">
+
+                        <label
+                            for="courseType"
+                            class="form-label fw-semibold"
+                        >
+                            Type
+                        </label>
+
+                        <select
+                            class="form-select"
+                            id="courseType"
+                            name="courseType"
+                        >
+
+                            <option value="">
+                                All
+                            </option>
+
+                            <option
+                                value="core"
+                                <%= filters?.courseType === 'core' ? 'selected' : '' %>
+                            >
+                                Core
+                            </option>
+
+                            <option
+                                value="elective"
+                                <%= filters?.courseType === 'elective' ? 'selected' : '' %>
+                            >
+                                Elective
+                            </option>
+
+                            <option
+                                value="practical"
+                                <%= filters?.courseType === 'practical' ? 'selected' : '' %>
+                            >
+                                Practical
+                            </option>
+
+                            <option
+                                value="tutorial"
+                                <%= filters?.courseType === 'tutorial' ? 'selected' : '' %>
+                            >
+                                Tutorial
+                            </option>
+
+                            <option
+                                value="project"
+                                <%= filters?.courseType === 'project' ? 'selected' : '' %>
+                            >
+                                Project
+                            </option>
+
+                            <option
+                                value="internship"
+                                <%= filters?.courseType === 'internship' ? 'selected' : '' %>
+                            >
+                                Internship
+                            </option>
+
+                            <option
+                                value="seminar"
+                                <%= filters?.courseType === 'seminar' ? 'selected' : '' %>
+                            >
+                                Seminar
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- STATUS -->
+
+                    <div class="col-12 col-md-4 col-lg-1">
+
+                        <label
+                            for="status"
+                            class="form-label fw-semibold"
+                        >
+                            Status
+                        </label>
+
+                        <select
+                            class="form-select"
+                            id="status"
+                            name="status"
+                        >
+
+                            <option value="">
+                                All
+                            </option>
+
+                            <option
+                                value="active"
+                                <%= filters?.status === 'active' ? 'selected' : '' %>
+                            >
+                                Active
+                            </option>
+
+                            <option
+                                value="inactive"
+                                <%= filters?.status === 'inactive' ? 'selected' : '' %>
+                            >
+                                Inactive
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- BUTTONS -->
+
+                    <div class="col-12 col-lg-12">
+
+                        <div class="d-flex flex-wrap gap-2 pt-1">
+
+                            <button
+                                type="submit"
+                                class="btn btn-primary"
+                            >
+                                <i class="bi bi-search me-1"></i>
+                                Search
+                            </button>
+
+                            <a
+                                href="/admin/courses"
+                                class="btn btn-outline-secondary"
+                            >
+                                <i class="bi bi-arrow-counterclockwise me-1"></i>
+                                Reset
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- COURSE LIST -->
+    <!-- ========================================== -->
+
+    <div class="card border-0 shadow-sm">
+
+        <div class="card-header bg-white border-bottom py-3">
+
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2">
+
+                <div>
+                    <h5 class="mb-0 fw-semibold">
+                        Courses
+                    </h5>
+
+                    <small class="text-muted">
+                        <%= courses.length %>
+                        course<%= courses.length === 1 ? '' : 's' %>
+                        found
+                    </small>
+                </div>
+
+                <span class="badge bg-light text-dark border">
+                    <i class="bi bi-collection me-1"></i>
+                    Course Master
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <% if (!courses || courses.length === 0) { %>
+
+            <!-- EMPTY STATE -->
+
+            <div class="card-body py-5">
+
+                <div class="text-center py-5">
+
+                    <div
+                        class="rounded-circle bg-primary-subtle text-primary d-inline-flex align-items-center justify-content-center mb-3"
+                        style="width: 72px; height: 72px;"
+                    >
+                        <i class="bi bi-book fs-2"></i>
+                    </div>
+
+                    <h5 class="fw-semibold">
+                        No courses found
+                    </h5>
+
+                    <p class="text-muted mb-4">
+                        No courses match the selected filters.
+                    </p>
+
+                    <a
+                        href="/admin/courses/new"
+                        class="btn btn-primary"
+                    >
+                        <i class="bi bi-plus-lg me-1"></i>
+                        Add First Course
+                    </a>
+
+                </div>
+
+            </div>
+
+        <% } else { %>
+
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle mb-0">
+
+                    <thead class="table-light">
+
+                        <tr>
+
+                            <th class="px-4">
+                                Course
+                            </th>
+
+                            <th>
+                                Academic Structure
+                            </th>
+
+                            <th>
+                                Semester
+                            </th>
+
+                            <th>
+                                Credits
+                            </th>
+
+                            <th>
+                                Type
+                            </th>
+
+                            <th>
+                                Hours
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th class="text-end px-4">
+                                Actions
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        <% courses.forEach(course => { %>
+
+                            <tr>
+
+                                <!-- COURSE -->
+
+                                <td class="px-4">
+
+                                    <div class="fw-semibold">
+                                        <%= course.courseName %>
+                                    </div>
+
+                                    <div class="small text-muted">
+
+                                        <span class="badge bg-light text-dark border">
+                                            <%= course.courseCode %>
+                                        </span>
+
+                                        <% if (course.shortName) { %>
+
+                                            <span class="ms-1">
+                                                <%= course.shortName %>
+                                            </span>
+
+                                        <% } %>
+
+                                    </div>
+
+                                </td>
+
+
+                                <!-- ACADEMIC STRUCTURE -->
+
+                                <td>
+
+                                    <div class="fw-medium">
+                                        <%= course.program?.name || '—' %>
+                                    </div>
+
+                                    <div class="small text-muted">
+
+                                        <%= course.department?.name || '—' %>
+
+                                        <% if (course.department?.code) { %>
+
+                                            <span class="ms-1">
+                                                (<%= course.department.code %>)
+                                            </span>
+
+                                        <% } %>
+
+                                    </div>
+
+                                </td>
+
+
+                                <!-- SEMESTER -->
+
+                                <td>
+
+                                    <span class="badge bg-info-subtle text-info-emphasis">
+
+                                        Semester
+                                        <%= course.semester %>
+
+                                    </span>
+
+                                </td>
+
+
+                                <!-- CREDITS -->
+
+                                <td>
+
+                                    <span class="fw-semibold">
+                                        <%= course.credits %>
+                                    </span>
+
+                                </td>
+
+
+                                <!-- TYPE -->
+
+                                <td>
+
+                                    <%
+                                        const typeLabels = {
+                                            core: "Core",
+                                            elective: "Elective",
+                                            practical: "Practical",
+                                            tutorial: "Tutorial",
+                                            project: "Project",
+                                            internship: "Internship",
+                                            seminar: "Seminar"
+                                        };
+
+                                        const typeIcons = {
+                                            core: "bi-book",
+                                            elective: "bi-list-stars",
+                                            practical: "bi-pc-display",
+                                            tutorial: "bi-person-video3",
+                                            project: "bi-kanban",
+                                            internship: "bi-briefcase",
+                                            seminar: "bi-mic"
+                                        };
+                                    %>
+
+                                    <span class="badge bg-secondary-subtle text-secondary-emphasis">
+
+                                        <i
+                                            class="bi <%= typeIcons[course.courseType] || 'bi-book' %> me-1"
+                                        ></i>
+
+                                        <%= typeLabels[course.courseType] || course.courseType %>
+
+                                    </span>
+
+                                </td>
+
+
+                                <!-- HOURS -->
+
+                                <td>
+
+                                    <div class="small">
+
+                                        <span
+                                            class="text-muted"
+                                            title="Theory hours"
+                                        >
+                                            <i class="bi bi-journal-text me-1"></i>
+                                            <%= course.theoryHours || 0 %>
+                                        </span>
+
+                                        <span class="mx-1 text-muted">
+                                            /
+                                        </span>
+
+                                        <span
+                                            class="text-muted"
+                                            title="Practical hours"
+                                        >
+                                            <i class="bi bi-tools me-1"></i>
+                                            <%= course.practicalHours || 0 %>
+                                        </span>
+
+                                    </div>
+
+                                </td>
+
+
+                                <!-- STATUS -->
+
+                                <td>
+
+                                    <% if (course.status === "active") { %>
+
+                                        <span class="badge bg-success-subtle text-success">
+                                            <i class="bi bi-check-circle me-1"></i>
+                                            Active
+                                        </span>
+
+                                    <% } else { %>
+
+                                        <span class="badge bg-danger-subtle text-danger">
+                                            <i class="bi bi-pause-circle me-1"></i>
+                                            Inactive
+                                        </span>
+
+                                    <% } %>
+
+                                </td>
+
+
+                                <!-- ACTIONS -->
+
+                                <td class="text-end px-4">
+
+                                    <div class="dropdown">
+
+                                        <button
+                                            class="btn btn-sm btn-outline-secondary dropdown-toggle"
+                                            type="button"
+                                            data-bs-toggle="dropdown"
+                                            aria-expanded="false"
+                                        >
+                                            Actions
+                                        </button>
+
+                                        <ul class="dropdown-menu dropdown-menu-end">
+
+                                            <li>
+
+                                                <a
+                                                    class="dropdown-item"
+                                                    href="/admin/courses/<%= course._id %>"
+                                                >
+                                                    <i class="bi bi-eye me-2"></i>
+                                                    View Course
+                                                </a>
+
+                                            </li>
+
+                                            <li>
+
+                                                <a
+                                                    class="dropdown-item"
+                                                    href="/admin/courses/<%= course._id %>/edit"
+                                                >
+                                                    <i class="bi bi-pencil-square me-2"></i>
+                                                    Edit Course
+                                                </a>
+
+                                            </li>
+
+                                            <li>
+                                                <hr class="dropdown-divider">
+                                            </li>
+
+                                            <li>
+
+                                                <form
+                                                    method="POST"
+                                                    action="/admin/courses/<%= course._id %>/toggle-status"
+                                                    onsubmit="return confirm('Are you sure you want to change this course status?');"
+                                                >
+
+                                                    <button
+                                                        type="submit"
+                                                        class="dropdown-item <%= course.status === 'active' ? 'text-danger' : 'text-success' %>"
+                                                    >
+
+                                                        <% if (course.status === "active") { %>
+
+                                                            <i class="bi bi-pause-circle me-2"></i>
+                                                            Deactivate
+
+                                                        <% } else { %>
+
+                                                            <i class="bi bi-check-circle me-2"></i>
+                                                            Activate
+
+                                                        <% } %>
+
+                                                    </button>
+
+                                                </form>
+
+                                            </li>
+
+                                        </ul>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                        <% }) %>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        <% } %>
+
+    </div>
+
+</div>
+
+
+<!-- ========================================== -->
+<!-- FILTER SCRIPT -->
+<!-- ========================================== -->
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const departmentSelect =
+            document.getElementById(
+                "department"
+            );
+
+        const programSelect =
+            document.getElementById(
+                "program"
+            );
+
+        if (
+            !departmentSelect ||
+            !programSelect
+        ) {
+            return;
+        }
+
+
+        const programOptions =
+            Array.from(
+                programSelect.options
+            );
+
+
+        function filterPrograms() {
+
+            const selectedDepartment =
+                departmentSelect.value;
+
+            const selectedProgram =
+                programSelect.value;
+
+            programSelect.innerHTML = "";
+
+            const allOption =
+                document.createElement(
+                    "option"
+                );
+
+            allOption.value = "";
+            allOption.textContent =
+                "All Programs";
+
+            programSelect.appendChild(
+                allOption
+            );
+
+
+            programOptions
+                .filter(
+                    option =>
+                        option.value === "" ||
+                        !selectedDepartment ||
+                        option.dataset.department ===
+                            selectedDepartment
+                )
+                .forEach(
+                    option => {
+
+                        if (
+                            option.value === ""
+                        ) {
+                            return;
+                        }
+
+                        const newOption =
+                            option.cloneNode(
+                                true
+                            );
+
+                        programSelect.appendChild(
+                            newOption
+                        );
+                    }
+                );
+
+
+            if (
+                selectedProgram &&
+                Array.from(
+                    programSelect.options
+                ).some(
+                    option =>
+                        option.value ===
+                        selectedProgram
+                )
+            ) {
+
+                programSelect.value =
+                    selectedProgram;
+
+            } else {
+
+                programSelect.value =
+                    "";
+
+            }
+
+        }
+
+
+        departmentSelect.addEventListener(
+            "change",
+            function () {
+
+                filterPrograms();
+
+            }
+        );
+
+
+        filterPrograms();
+
+    }
+);
+
+</script>

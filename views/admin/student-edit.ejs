@@ -1,0 +1,932 @@
+<% layout("layouts/boilerplate") -%>
+<div class="student-edit-page">
+
+    <div class="page-header">
+        <div>
+            <a
+                href="/admin/students/<%= student._id %>"
+                class="back-link"
+            >
+                <i class="bi bi-arrow-left"></i>
+                Back to Student Profile
+            </a>
+
+            <h1 class="page-title">Edit Student</h1>
+
+            <p class="page-subtitle">
+                Update student information and academic status
+            </p>
+        </div>
+    </div>
+
+
+    <form
+        method="POST"
+        action="/admin/students/<%= student._id %>/edit"
+    >
+
+        <!-- PERSONAL INFORMATION -->
+
+        <div class="section-card">
+
+            <div class="section-title">
+                <div class="section-icon">
+                    <i class="bi bi-person"></i>
+                </div>
+
+                <div>
+                    <h3>Personal Information</h3>
+                    <p>Basic student information</p>
+                </div>
+            </div>
+
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label>
+                        Full Name <span>*</span>
+                    </label>
+
+                    <input
+                        type="text"
+                        name="name"
+                        class="form-control"
+                        value="<%= student.user.name || '' %>"
+                        required
+                    >
+                </div>
+
+
+                <div class="form-group">
+                    <label>Email</label>
+
+                    <input
+                        type="email"
+                        class="form-control"
+                        value="<%= student.user.email || '' %>"
+                        disabled
+                    >
+
+                    <small>
+                        Student email cannot be changed here.
+                    </small>
+                </div>
+
+
+                <div class="form-group">
+                    <label>
+                        Date of Birth <span>*</span>
+                    </label>
+
+                    <input
+                        type="date"
+                        name="dob"
+                        class="form-control"
+                        value="<%= student.dob ? new Date(student.dob).toISOString().slice(0, 10) : '' %>"
+                        required
+                    >
+                </div>
+
+
+                <div class="form-group">
+                    <label>
+                        Gender <span>*</span>
+                    </label>
+
+                    <select
+                        name="gender"
+                        class="form-select"
+                        required
+                    >
+                        <option
+                            value="male"
+                            <%= student.gender === "male" ? "selected" : "" %>
+                        >
+                            Male
+                        </option>
+
+                        <option
+                            value="female"
+                            <%= student.gender === "female" ? "selected" : "" %>
+                        >
+                            Female
+                        </option>
+
+                        <option
+                            value="other"
+                            <%= student.gender === "other" ? "selected" : "" %>
+                        >
+                            Other
+                        </option>
+                    </select>
+                </div>
+
+
+                <div class="form-group">
+                    <label>
+                        Mobile <span>*</span>
+                    </label>
+
+                    <input
+                        type="tel"
+                        name="mobile"
+                        class="form-control"
+                        value="<%= student.mobile || '' %>"
+                        maxlength="10"
+                        pattern="[0-9]{10}"
+                        required
+                    >
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ACADEMIC INFORMATION -->
+
+        <div class="section-card">
+
+            <div class="section-title">
+                <div class="section-icon academic">
+                    <i class="bi bi-mortarboard"></i>
+                </div>
+
+                <div>
+                    <h3>Academic Information</h3>
+                    <p>
+                        Department, program and academic placement
+                    </p>
+                </div>
+            </div>
+
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label>
+                        Student ID <span>*</span>
+                    </label>
+
+                    <input
+                        type="text"
+                        name="studentId"
+                        class="form-control"
+                        value="<%= student.studentId || '' %>"
+                        required
+                    >
+                </div>
+
+
+                <div class="form-group">
+                    <label>
+                        Department <span>*</span>
+                    </label>
+
+                    <input
+                        type="text"
+                        name="department"
+                        class="form-control"
+                        value="<%= student.department || '' %>"
+                        required
+                    >
+                </div>
+
+
+                <div class="form-group">
+                    <label>
+                        Program <span>*</span>
+                    </label>
+
+                    <input
+                        type="text"
+                        name="program"
+                        class="form-control"
+                        value="<%= student.program || '' %>"
+                        required
+                    >
+                </div>
+
+
+                <div class="form-group">
+                    <label>
+                        Semester <span>*</span>
+                    </label>
+
+                    <select
+                        name="semester"
+                        class="form-select"
+                        required
+                    >
+
+                        <% for (let i = 1; i <= 8; i++) { %>
+
+                            <option
+                                value="<%= i %>"
+                                <%= Number(student.semester) === i ? "selected" : "" %>
+                            >
+                                Semester <%= i %>
+                            </option>
+
+                        <% } %>
+
+                    </select>
+                </div>
+
+
+                <div class="form-group">
+                    <label>Section</label>
+
+                    <input
+                        type="text"
+                        name="section"
+                        class="form-control"
+                        value="<%= student.section || '' %>"
+                    >
+                </div>
+
+
+                <div class="form-group">
+                    <label>
+                        Batch / Admission Year <span>*</span>
+                    </label>
+
+                    <input
+                        type="number"
+                        name="batch"
+                        class="form-control"
+                        value="<%= student.batch || '' %>"
+                        min="2000"
+                        required
+                    >
+                </div>
+
+
+                <div class="form-group">
+                    <label>
+                        Academic Approval
+                    </label>
+
+                    <select
+                        name="academicApprovalStatus"
+                        class="form-select"
+                    >
+
+                        <option
+                            value="pending"
+                            <%= student.academicApprovalStatus === "pending" ? "selected" : "" %>
+                        >
+                            Pending
+                        </option>
+
+                        <option
+                            value="approved"
+                            <%= student.academicApprovalStatus === "approved" ? "selected" : "" %>
+                        >
+                            Approved
+                        </option>
+
+                        <option
+                            value="rejected"
+                            <%= student.academicApprovalStatus === "rejected" ? "selected" : "" %>
+                        >
+                            Rejected
+                        </option>
+
+                    </select>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ADDRESS -->
+
+        <div class="section-card">
+
+            <div class="section-title">
+                <div class="section-icon address">
+                    <i class="bi bi-geo-alt"></i>
+                </div>
+
+                <div>
+                    <h3>Address Information</h3>
+                    <p>Permanent and current address</p>
+                </div>
+            </div>
+
+
+            <div class="form-grid">
+
+                <div class="form-group full">
+                    <label>
+                        Permanent Address <span>*</span>
+                    </label>
+
+                    <textarea
+                        name="permanentAddress"
+                        class="form-control"
+                        rows="3"
+                        required
+                    ><%= student.permanentAddress || '' %></textarea>
+                </div>
+
+
+                <div class="form-group full">
+                    <label>Current Address</label>
+
+                    <textarea
+                        name="currentAddress"
+                        class="form-control"
+                        rows="3"
+                    ><%= student.currentAddress || '' %></textarea>
+                </div>
+
+
+                <div class="form-group">
+                    <label>
+                        City <span>*</span>
+                    </label>
+
+                    <input
+                        type="text"
+                        name="city"
+                        class="form-control"
+                        value="<%= student.city || '' %>"
+                        required
+                    >
+                </div>
+
+
+                <div class="form-group">
+                    <label>
+                        State <span>*</span>
+                    </label>
+
+                    <input
+                        type="text"
+                        name="state"
+                        class="form-control"
+                        value="<%= student.state || '' %>"
+                        required
+                    >
+                </div>
+
+
+                <div class="form-group">
+                    <label>
+                        PIN Code <span>*</span>
+                    </label>
+
+                    <input
+                        type="text"
+                        name="pin"
+                        class="form-control"
+                        value="<%= student.pin || '' %>"
+                        maxlength="6"
+                        pattern="[0-9]{6}"
+                        required
+                    >
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- GUARDIAN -->
+
+        <div class="section-card">
+
+            <div class="section-title">
+                <div class="section-icon guardian">
+                    <i class="bi bi-people"></i>
+                </div>
+
+                <div>
+                    <h3>Guardian & Emergency Contact</h3>
+                    <p>Parent and emergency contact details</p>
+                </div>
+            </div>
+
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label>
+                        Guardian Name <span>*</span>
+                    </label>
+
+                    <input
+                        type="text"
+                        name="guardianName"
+                        class="form-control"
+                        value="<%= student.guardianName || '' %>"
+                        required
+                    >
+                </div>
+
+
+                <div class="form-group">
+                    <label>
+                        Guardian Mobile <span>*</span>
+                    </label>
+
+                    <input
+                        type="tel"
+                        name="guardianMobile"
+                        class="form-control"
+                        value="<%= student.guardianMobile || '' %>"
+                        maxlength="10"
+                        pattern="[0-9]{10}"
+                        required
+                    >
+                </div>
+
+
+                <div class="form-group">
+                    <label>
+                        Emergency Contact <span>*</span>
+                    </label>
+
+                    <input
+                        type="tel"
+                        name="emergencyContact"
+                        class="form-control"
+                        value="<%= student.emergencyContact || '' %>"
+                        maxlength="10"
+                        pattern="[0-9]{10}"
+                        required
+                    >
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- HOSTEL -->
+
+        <div class="section-card">
+
+            <div class="section-title">
+                <div class="section-icon hostel">
+                    <i class="bi bi-house-door"></i>
+                </div>
+
+                <div>
+                    <h3>Hostel Information</h3>
+                    <p>Campus accommodation details</p>
+                </div>
+            </div>
+
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label>Hostel Required</label>
+
+                    <select
+                        name="hostelRequired"
+                        id="hostelRequired"
+                        class="form-select"
+                    >
+
+                        <option
+                            value="no"
+                            <%= !student.hostelRequired ? "selected" : "" %>
+                        >
+                            No
+                        </option>
+
+                        <option
+                            value="yes"
+                            <%= student.hostelRequired ? "selected" : "" %>
+                        >
+                            Yes
+                        </option>
+
+                    </select>
+                </div>
+
+
+                <div
+                    class="form-group hostel-field"
+                    id="hostelNameField"
+                >
+                    <label>Hostel Name</label>
+
+                    <input
+                        type="text"
+                        name="hostelName"
+                        class="form-control"
+                        value="<%= student.hostelName || '' %>"
+                    >
+                </div>
+
+
+                <div
+                    class="form-group hostel-field"
+                    id="roomNumberField"
+                >
+                    <label>Room Number</label>
+
+                    <input
+                        type="text"
+                        name="roomNumber"
+                        class="form-control"
+                        value="<%= student.roomNumber || '' %>"
+                    >
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ACCOUNT -->
+
+        <div class="section-card">
+
+            <div class="section-title">
+                <div class="section-icon account">
+                    <i class="bi bi-shield-lock"></i>
+                </div>
+
+                <div>
+                    <h3>Account Status</h3>
+                    <p>Control student login access</p>
+                </div>
+            </div>
+
+
+            <div class="account-control">
+
+                <div>
+                    <strong>Student Account</strong>
+
+                    <p>
+                        Inactive accounts cannot log in.
+                    </p>
+                </div>
+
+
+                <select
+                    name="isActive"
+                    class="form-select account-select"
+                >
+
+                    <option
+                        value="active"
+                        <%= student.user.isActive ? "selected" : "" %>
+                    >
+                        Active
+                    </option>
+
+                    <option
+                        value="inactive"
+                        <%= !student.user.isActive ? "selected" : "" %>
+                    >
+                        Inactive
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+
+        <!-- ACTIONS -->
+
+        <div class="form-actions">
+
+            <a
+                href="/admin/students/<%= student._id %>"
+                class="btn btn-outline-secondary"
+            >
+                Cancel
+            </a>
+
+            <button
+                type="submit"
+                class="btn btn-primary save-btn"
+            >
+                <i class="bi bi-check2-circle me-1"></i>
+                Save Changes
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+<script>
+
+    const hostelRequired =
+        document.getElementById("hostelRequired");
+
+    const hostelNameField =
+        document.getElementById("hostelNameField");
+
+    const roomNumberField =
+        document.getElementById("roomNumberField");
+
+
+    function updateHostelFields() {
+
+        const show =
+            hostelRequired.value === "yes";
+
+        hostelNameField.style.display =
+            show ? "block" : "none";
+
+        roomNumberField.style.display =
+            show ? "block" : "none";
+    }
+
+
+    hostelRequired.addEventListener(
+        "change",
+        updateHostelFields
+    );
+
+    updateHostelFields();
+
+</script>
+
+
+<style>
+
+    .student-edit-page {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 30px 20px 60px;
+    }
+
+
+    .page-header {
+        margin-bottom: 25px;
+    }
+
+
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        text-decoration: none;
+        color: #64748b;
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+
+
+    .back-link:hover {
+        color: #2563eb;
+    }
+
+
+    .page-title {
+        margin: 0;
+        font-size: 32px;
+        font-weight: 800;
+        color: #0f172a;
+    }
+
+
+    .page-subtitle {
+        margin: 6px 0 0;
+        color: #64748b;
+    }
+
+
+    .section-card {
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 20px;
+        padding: 25px;
+        margin-bottom: 20px;
+        box-shadow: 0 8px 30px rgba(15, 23, 42, 0.05);
+    }
+
+
+    .section-title {
+        display: flex;
+        align-items: center;
+        gap: 13px;
+        margin-bottom: 25px;
+    }
+
+
+    .section-title h3 {
+        margin: 0;
+        font-size: 19px;
+        font-weight: 800;
+        color: #111827;
+    }
+
+
+    .section-title p {
+        margin: 3px 0 0;
+        color: #64748b;
+        font-size: 13px;
+    }
+
+
+    .section-icon {
+        width: 45px;
+        height: 45px;
+        border-radius: 13px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #eff6ff;
+        color: #2563eb;
+        font-size: 20px;
+    }
+
+
+    .section-icon.academic {
+        background: #f5f3ff;
+        color: #7c3aed;
+    }
+
+
+    .section-icon.address {
+        background: #ecfdf5;
+        color: #059669;
+    }
+
+
+    .section-icon.guardian {
+        background: #fff7ed;
+        color: #ea580c;
+    }
+
+
+    .section-icon.hostel {
+        background: #fefce8;
+        color: #ca8a04;
+    }
+
+
+    .section-icon.account {
+        background: #fdf2f8;
+        color: #db2777;
+    }
+
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 20px;
+    }
+
+
+    .form-group {
+        min-width: 0;
+    }
+
+
+    .form-group.full {
+        grid-column: 1 / -1;
+    }
+
+
+    .form-group label {
+        display: block;
+        margin-bottom: 7px;
+        color: #334155;
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+
+    .form-group label span {
+        color: #dc2626;
+    }
+
+
+    .form-control,
+    .form-select {
+        min-height: 46px;
+        border-radius: 11px;
+        border: 1px solid #dbe1e8;
+    }
+
+
+    .form-control:focus,
+    .form-select:focus {
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+
+    textarea.form-control {
+        min-height: auto;
+    }
+
+
+    .form-group small {
+        display: block;
+        margin-top: 5px;
+        color: #94a3b8;
+        font-size: 12px;
+    }
+
+
+    .account-control {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        padding: 18px;
+        border-radius: 15px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+    }
+
+
+    .account-control strong {
+        display: block;
+        color: #111827;
+        margin-bottom: 4px;
+    }
+
+
+    .account-control p {
+        margin: 0;
+        color: #64748b;
+        font-size: 13px;
+    }
+
+
+    .account-select {
+        max-width: 180px;
+    }
+
+
+    .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+        padding-top: 5px;
+    }
+
+
+    .save-btn {
+        min-width: 145px;
+    }
+
+
+    @media (max-width: 700px) {
+
+        .student-edit-page {
+            padding: 20px 12px 40px;
+        }
+
+
+        .form-grid {
+            grid-template-columns: 1fr;
+        }
+
+
+        .form-group.full {
+            grid-column: auto;
+        }
+
+
+        .section-card {
+            padding: 18px;
+            border-radius: 16px;
+        }
+
+
+        .account-control {
+            align-items: stretch;
+            flex-direction: column;
+        }
+
+
+        .account-select {
+            max-width: none;
+        }
+
+
+        .form-actions {
+            flex-direction: column-reverse;
+        }
+
+
+        .form-actions .btn {
+            width: 100%;
+        }
+
+    }
+
+</style>

@@ -1,0 +1,328 @@
+<% layout("layouts/boilerplate") -%>
+
+<div class="container-fluid py-4">
+
+    <!-- Header -->
+
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+
+        <div>
+
+            <div class="d-flex align-items-center gap-3">
+
+                <div
+                    class="bg-primary bg-opacity-10 text-primary rounded-3 d-flex align-items-center justify-content-center"
+                    style="width: 48px; height: 48px;"
+                >
+                    <i class="bi bi-megaphone fs-4"></i>
+                </div>
+
+                <div>
+
+                    <h1 class="h3 fw-bold mb-1">
+                        Notices
+                    </h1>
+
+                    <p class="text-muted mb-0">
+                        Important announcements and updates
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <a
+            href="/student/dashboard"
+            class="btn btn-outline-secondary"
+        >
+            <i class="bi bi-arrow-left me-1"></i>
+            Dashboard
+        </a>
+
+    </div>
+
+
+    <% if (studentProfile) { %>
+
+        <!-- Academic Context -->
+
+        <div class="card border-0 shadow-sm mb-4">
+
+            <div class="card-body">
+
+                <div class="row g-3">
+
+                    <div class="col-md-3">
+
+                        <div class="text-muted small">
+                            Department
+                        </div>
+
+                        <div class="fw-semibold text-capitalize">
+
+                            <%= String(
+                                studentProfile.department || "N/A"
+                            )
+                                .replace(/-/g, " ") %>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-3">
+
+                        <div class="text-muted small">
+                            Program
+                        </div>
+
+                        <div class="fw-semibold text-uppercase">
+
+                            <%= studentProfile.program || "N/A" %>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-3">
+
+                        <div class="text-muted small">
+                            Semester
+                        </div>
+
+                        <div class="fw-semibold">
+
+                            Semester
+                            <%= studentProfile.semester || "N/A" %>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-3">
+
+                        <div class="text-muted small">
+                            Section
+                        </div>
+
+                        <div class="fw-semibold">
+
+                            Section
+                            <%= studentProfile.section || "N/A" %>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    <% } %>
+
+
+    <% if (!notices || notices.length === 0) { %>
+
+        <!-- Empty State -->
+
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-body text-center py-5">
+
+                <div
+                    class="bg-light rounded-circle mx-auto d-flex align-items-center justify-content-center mb-3"
+                    style="width: 80px; height: 80px;"
+                >
+                    <i class="bi bi-bell-slash fs-1 text-muted"></i>
+                </div>
+
+                <h4 class="fw-bold">
+                    No Notices
+                </h4>
+
+                <p class="text-muted mb-0">
+                    There are no notices available for you at the moment.
+                </p>
+
+            </div>
+
+        </div>
+
+    <% } else { %>
+
+
+        <!-- Notice List -->
+
+        <div class="row g-4">
+
+            <% notices.forEach((notice) => { %>
+
+                <div class="col-12">
+
+                    <div class="card border-0 shadow-sm">
+
+                        <div class="card-body p-4">
+
+                            <div class="d-flex gap-3">
+
+                                <!-- Icon -->
+
+                                <div
+                                    class="bg-primary bg-opacity-10 text-primary rounded-3 d-flex align-items-center justify-content-center flex-shrink-0"
+                                    style="width: 48px; height: 48px;"
+                                >
+                                    <i class="bi bi-megaphone fs-5"></i>
+                                </div>
+
+
+                                <!-- Content -->
+
+                                <div class="flex-grow-1">
+
+                                    <div
+                                        class="d-flex flex-column flex-md-row justify-content-between gap-2"
+                                    >
+
+                                        <div>
+
+                                            <h5 class="fw-bold mb-2">
+                                                <%= notice.title %>
+                                            </h5>
+
+
+                                            <div class="mb-2">
+
+                                                <% if (notice.scope === "university") { %>
+
+                                                    <span class="badge bg-primary-subtle text-primary">
+                                                        University
+                                                    </span>
+
+                                                <% } else if (notice.scope === "department") { %>
+
+                                                    <span class="badge bg-success-subtle text-success">
+                                                        Department
+                                                    </span>
+
+                                                <% } else if (notice.scope === "program") { %>
+
+                                                    <span class="badge bg-warning-subtle text-warning">
+                                                        Program
+                                                    </span>
+
+                                                <% } else if (notice.scope === "semester") { %>
+
+                                                    <span class="badge bg-info-subtle text-info">
+                                                        Semester
+                                                    </span>
+
+                                                <% } else if (notice.scope === "section") { %>
+
+                                                    <span class="badge bg-secondary-subtle text-secondary">
+                                                        Section
+                                                    </span>
+
+                                                <% } %>
+
+                                            </div>
+
+                                        </div>
+
+
+                                        <div class="text-muted small text-md-end">
+
+                                            <i class="bi bi-calendar3 me-1"></i>
+
+                                            <%= notice.publishedAt
+                                                ? new Date(
+                                                    notice.publishedAt
+                                                ).toLocaleDateString(
+                                                    "en-IN",
+                                                    {
+                                                        day: "2-digit",
+                                                        month: "short",
+                                                        year: "numeric"
+                                                    }
+                                                )
+                                                : "Date not available"
+                                            %>
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <!-- Description -->
+
+                                    <p class="text-muted mb-3">
+
+                                        <%= notice.description || "" %>
+
+                                    </p>
+
+
+                                    <!-- Footer -->
+
+                                    <div
+                                        class="d-flex flex-wrap align-items-center gap-3"
+                                    >
+
+                                        <% if (notice.publishedBy) { %>
+
+                                            <small class="text-muted">
+
+                                                <i class="bi bi-person me-1"></i>
+
+                                                Published by
+
+                                                <strong>
+                                                    <%= notice.publishedBy.name || "Unknown" %>
+                                                </strong>
+
+                                            </small>
+
+                                        <% } %>
+
+
+                                        <% if (notice.attachment) { %>
+
+                                            <a
+                                                href="<%= notice.attachment %>"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                class="btn btn-sm btn-outline-primary"
+                                            >
+
+                                                <i class="bi bi-paperclip me-1"></i>
+
+                                                View Attachment
+
+                                            </a>
+
+                                        <% } %>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            <% }) %>
+
+        </div>
+
+    <% } %>
+
+</div>

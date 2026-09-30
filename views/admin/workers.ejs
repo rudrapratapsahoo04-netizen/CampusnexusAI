@@ -1,0 +1,1193 @@
+<% layout("layouts/boilerplate") -%>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --bg: #f4f7fb;
+            --card: #ffffff;
+            --text: #172033;
+            --muted: #6b7280;
+            --border: #e5e7eb;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background:
+                radial-gradient(
+                    circle at top left,
+                    rgba(37, 99, 235, 0.08),
+                    transparent 30%
+                ),
+                var(--bg);
+            color: var(--text);
+            font-family:
+                Inter,
+                system-ui,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                sans-serif;
+        }
+
+        .page-wrapper {
+            min-height: 100vh;
+        }
+
+        .top-navbar {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(229, 231, 235, 0.8);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .brand {
+            font-weight: 800;
+            color: var(--text);
+            text-decoration: none;
+            letter-spacing: -0.4px;
+        }
+
+        .brand i {
+            color: var(--primary);
+        }
+
+        .admin-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 12px;
+            border-radius: 999px;
+            background: #eff6ff;
+            color: #1d4ed8;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .admin-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(
+                135deg,
+                #2563eb,
+                #7c3aed
+            );
+            color: #fff;
+            font-weight: 800;
+        }
+
+        .main-container {
+            max-width: 1450px;
+            margin: 0 auto;
+            padding: 34px 20px 60px;
+        }
+
+        .page-header {
+            margin-bottom: 26px;
+        }
+
+        .page-title {
+            font-size: clamp(28px, 4vw, 38px);
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 7px;
+        }
+
+        .page-subtitle {
+            color: var(--muted);
+            margin: 0;
+            font-size: 15px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary-custom {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #fff;
+            font-weight: 700;
+            border-radius: 11px;
+            padding: 10px 16px;
+        }
+
+        .btn-primary-custom:hover {
+            background: var(--primary-dark);
+            border-color: var(--primary-dark);
+            color: #fff;
+        }
+
+        .stat-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 20px;
+            height: 100%;
+            box-shadow:
+                0 10px 30px rgba(15, 23, 42, 0.04);
+        }
+
+        .stat-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-bottom: 14px;
+        }
+
+        .stat-number {
+            font-size: 27px;
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 6px;
+        }
+
+        .stat-label {
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .icon-blue {
+            background: #eff6ff;
+            color: #2563eb;
+        }
+
+        .icon-green {
+            background: #ecfdf5;
+            color: #059669;
+        }
+
+        .icon-red {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+
+        .icon-purple {
+            background: #f5f3ff;
+            color: #7c3aed;
+        }
+
+        .filter-card {
+            background: rgba(255, 255, 255, 0.92);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 20px;
+            margin-top: 26px;
+            box-shadow:
+                0 10px 30px rgba(15, 23, 42, 0.04);
+        }
+
+        .form-label {
+            font-size: 12px;
+            font-weight: 800;
+            color: #374151;
+            margin-bottom: 7px;
+        }
+
+        .form-control,
+        .form-select {
+            min-height: 44px;
+            border-radius: 10px;
+            border-color: #dbe1ea;
+            font-size: 14px;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: #93c5fd;
+            box-shadow:
+                0 0 0 4px rgba(37, 99, 235, 0.08);
+        }
+
+        .worker-table-card {
+            margin-top: 22px;
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow:
+                0 10px 30px rgba(15, 23, 42, 0.04);
+        }
+
+        .table-header {
+            padding: 20px 22px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .table-title {
+            margin: 0;
+            font-size: 17px;
+            font-weight: 800;
+        }
+
+        .worker-table {
+            margin: 0;
+            min-width: 1050px;
+        }
+
+        .worker-table thead th {
+            background: #f8fafc;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+        }
+
+        .worker-table tbody td {
+            padding: 16px;
+            vertical-align: middle;
+            border-bottom: 1px solid #f0f2f5;
+            font-size: 14px;
+        }
+
+        .worker-table tbody tr:last-child td {
+            border-bottom: 0;
+        }
+
+        .worker-table tbody tr:hover {
+            background: #fafcff;
+        }
+
+        .worker-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 220px;
+        }
+
+        .worker-avatar {
+            width: 44px;
+            height: 44px;
+            min-width: 44px;
+            border-radius: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(
+                135deg,
+                #2563eb,
+                #7c3aed
+            );
+            color: #fff;
+            font-weight: 800;
+            font-size: 15px;
+        }
+
+        .worker-name {
+            font-weight: 800;
+            color: #111827;
+            margin-bottom: 3px;
+        }
+
+        .worker-email {
+            color: #6b7280;
+            font-size: 12px;
+        }
+
+        .worker-id {
+            font-family: monospace;
+            font-weight: 800;
+            color: #374151;
+        }
+
+        .type-badge,
+        .employment-badge,
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 9px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .type-badge {
+            background: #f5f3ff;
+            color: #6d28d9;
+        }
+
+        .employment-badge {
+            background: #f0fdf4;
+            color: #15803d;
+        }
+
+        .status-active {
+            background: #ecfdf5;
+            color: #047857;
+        }
+
+        .status-inactive {
+            background: #fef2f2;
+            color: #b91c1c;
+        }
+
+        .salary {
+            font-weight: 800;
+            color: #111827;
+            white-space: nowrap;
+        }
+
+        .action-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            border: 1px solid #dbe1ea;
+            background: #fff;
+            color: #374151;
+            transition: 0.2s ease;
+        }
+
+        .action-btn:hover {
+            background: #eff6ff;
+            border-color: #bfdbfe;
+            color: #2563eb;
+        }
+
+        .empty-state {
+            padding: 65px 20px;
+            text-align: center;
+        }
+
+        .empty-icon {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 18px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #eff6ff;
+            color: #2563eb;
+            font-size: 28px;
+        }
+
+        .empty-title {
+            font-size: 18px;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+
+        .empty-text {
+            color: var(--muted);
+            font-size: 14px;
+            margin: 0;
+        }
+
+        .mobile-scroll {
+            overflow-x: auto;
+        }
+
+        @media (max-width: 767.98px) {
+            .main-container {
+                padding: 24px 14px 45px;
+            }
+
+            .page-header {
+                margin-bottom: 20px;
+            }
+
+            .header-actions {
+                margin-top: 16px;
+            }
+
+            .header-actions .btn {
+                width: 100%;
+            }
+
+            .stat-card {
+                padding: 17px;
+            }
+
+            .filter-card {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="page-wrapper">
+
+    <!-- ===================================================== -->
+    <!-- NAVBAR -->
+    <!-- ===================================================== -->
+
+    <nav class="top-navbar">
+        <div class="container-fluid px-3 px-md-4 py-2">
+
+            <div class="d-flex align-items-center justify-content-between gap-3">
+
+                <a
+                    href="/admin/dashboard"
+                    class="brand"
+                >
+                    <i class="bi bi-mortarboard-fill me-2"></i>
+                    CampusNexus
+                </a>
+
+                <div class="d-flex align-items-center gap-3">
+
+                    <span class="admin-pill d-none d-sm-inline-flex">
+                        <i class="bi bi-shield-check"></i>
+                        Administrator
+                    </span>
+
+                    <div class="admin-avatar">
+                        <%= (
+                            currentUser?.name ||
+                            "A"
+                        ).charAt(0).toUpperCase() %>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </nav>
+
+
+    <!-- ===================================================== -->
+    <!-- MAIN -->
+    <!-- ===================================================== -->
+
+    <main class="main-container">
+
+        <!-- PAGE HEADER -->
+
+        <div class="page-header">
+
+            <div class="row align-items-center">
+
+                <div class="col-lg-8">
+
+                    <h1 class="page-title">
+                        Worker Management
+                    </h1>
+
+                    <p class="page-subtitle">
+                        Manage university workers, view their profiles,
+                        employment details and work information.
+                    </p>
+
+                </div>
+
+                <div class="col-lg-4">
+
+                    <div class="header-actions justify-content-lg-end">
+
+                        <a
+                            href="/admin/dashboard"
+                            class="btn btn-light border px-3 py-2 rounded-3 fw-semibold"
+                        >
+                            <i class="bi bi-arrow-left me-2"></i>
+                            Dashboard
+                        </a>
+
+                        <a
+                            href="/admin/worker-tasks"
+                            class="btn btn-primary-custom"
+                        >
+                            <i class="bi bi-list-task me-2"></i>
+                            Manage Tasks
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- SUMMARY CARDS -->
+        <!-- ================================================= -->
+
+        <div class="row g-3">
+
+            <div class="col-6 col-xl-3">
+
+                <div class="stat-card">
+
+                    <div class="stat-icon icon-blue">
+                        <i class="bi bi-people-fill"></i>
+                    </div>
+
+                    <div class="stat-number">
+                        <%= summary?.total || 0 %>
+                    </div>
+
+                    <div class="stat-label">
+                        Total Workers
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-6 col-xl-3">
+
+                <div class="stat-card">
+
+                    <div class="stat-icon icon-green">
+                        <i class="bi bi-person-check-fill"></i>
+                    </div>
+
+                    <div class="stat-number">
+                        <%= summary?.active || 0 %>
+                    </div>
+
+                    <div class="stat-label">
+                        Active Workers
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-6 col-xl-3">
+
+                <div class="stat-card">
+
+                    <div class="stat-icon icon-red">
+                        <i class="bi bi-person-x-fill"></i>
+                    </div>
+
+                    <div class="stat-number">
+                        <%= summary?.inactive || 0 %>
+                    </div>
+
+                    <div class="stat-label">
+                        Inactive Workers
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-6 col-xl-3">
+
+                <div class="stat-card">
+
+                    <div class="stat-icon icon-purple">
+                        <i class="bi bi-person-vcard-fill"></i>
+                    </div>
+
+                    <div class="stat-number">
+                        <%= summary?.withProfile || 0 %>
+                    </div>
+
+                    <div class="stat-label">
+                        Complete Profiles
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- FILTERS -->
+        <!-- ================================================= -->
+
+        <div class="filter-card">
+
+            <form
+                action="/admin/workers"
+                method="GET"
+            >
+
+                <div class="row g-3 align-items-end">
+
+                    <div class="col-lg-4">
+
+                        <label class="form-label">
+                            Search Worker
+                        </label>
+
+                        <div class="input-group">
+
+                            <span class="input-group-text bg-white">
+                                <i class="bi bi-search text-muted"></i>
+                            </span>
+
+                            <input
+                                type="text"
+                                name="search"
+                                class="form-control"
+                                placeholder="Name, email, ID or mobile..."
+                                value="<%= filters?.search || '' %>"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-4 col-lg-2">
+
+                        <label class="form-label">
+                            Worker Type
+                        </label>
+
+                        <select
+                            name="workerType"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                All Types
+                            </option>
+
+                            <option
+                                value="plumber"
+                                <%= filters?.workerType === "plumber" ? "selected" : "" %>
+                            >
+                                Plumber
+                            </option>
+
+                            <option
+                                value="electrician"
+                                <%= filters?.workerType === "electrician" ? "selected" : "" %>
+                            >
+                                Electrician
+                            </option>
+
+                            <option
+                                value="carpenter"
+                                <%= filters?.workerType === "carpenter" ? "selected" : "" %>
+                            >
+                                Carpenter
+                            </option>
+
+                            <option
+                                value="cleaner"
+                                <%= filters?.workerType === "cleaner" ? "selected" : "" %>
+                            >
+                                Cleaner
+                            </option>
+
+                            <option
+                                value="gardener"
+                                <%= filters?.workerType === "gardener" ? "selected" : "" %>
+                            >
+                                Gardener
+                            </option>
+
+                            <option
+                                value="security"
+                                <%= filters?.workerType === "security" ? "selected" : "" %>
+                            >
+                                Security
+                            </option>
+
+                            <option
+                                value="technician"
+                                <%= filters?.workerType === "technician" ? "selected" : "" %>
+                            >
+                                Technician
+                            </option>
+
+                            <option
+                                value="other"
+                                <%= filters?.workerType === "other" ? "selected" : "" %>
+                            >
+                                Other
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="col-md-4 col-lg-2">
+
+                        <label class="form-label">
+                            Employment
+                        </label>
+
+                        <select
+                            name="employmentType"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                All
+                            </option>
+
+                            <option
+                                value="full-time"
+                                <%= filters?.employmentType === "full-time" ? "selected" : "" %>
+                            >
+                                Full-time
+                            </option>
+
+                            <option
+                                value="part-time"
+                                <%= filters?.employmentType === "part-time" ? "selected" : "" %>
+                            >
+                                Part-time
+                            </option>
+
+                            <option
+                                value="contract"
+                                <%= filters?.employmentType === "contract" ? "selected" : "" %>
+                            >
+                                Contract
+                            </option>
+
+                            <option
+                                value="temporary"
+                                <%= filters?.employmentType === "temporary" ? "selected" : "" %>
+                            >
+                                Temporary
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="col-md-4 col-lg-2">
+
+                        <label class="form-label">
+                            Status
+                        </label>
+
+                        <select
+                            name="status"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                All
+                            </option>
+
+                            <option
+                                value="active"
+                                <%= filters?.status === "active" ? "selected" : "" %>
+                            >
+                                Active
+                            </option>
+
+                            <option
+                                value="inactive"
+                                <%= filters?.status === "inactive" ? "selected" : "" %>
+                            >
+                                Inactive
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="col-md-12 col-lg-2">
+
+                        <div class="d-flex gap-2">
+
+                            <button
+                                type="submit"
+                                class="btn btn-primary-custom flex-grow-1"
+                            >
+                                <i class="bi bi-funnel me-1"></i>
+                                Filter
+                            </button>
+
+                            <a
+                                href="/admin/workers"
+                                class="btn btn-light border rounded-3"
+                                title="Clear Filters"
+                            >
+                                <i class="bi bi-arrow-counterclockwise"></i>
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- WORKER TABLE -->
+        <!-- ================================================= -->
+
+        <div class="worker-table-card">
+
+            <div class="table-header">
+
+                <div class="d-flex align-items-center justify-content-between gap-3">
+
+                    <div>
+
+                        <h2 class="table-title">
+                            All Workers
+                        </h2>
+
+                        <small class="text-muted">
+                            <%= workers?.length || 0 %> worker(s) found
+                        </small>
+
+                    </div>
+
+                    <a
+                        href="/admin/worker-tasks"
+                        class="btn btn-sm btn-outline-primary rounded-3 fw-semibold"
+                    >
+                        <i class="bi bi-clipboard-check me-1"></i>
+                        Worker Tasks
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <% if (workers && workers.length > 0) { %>
+
+                <div class="mobile-scroll">
+
+                    <table class="table worker-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Worker
+                                </th>
+
+                                <th>
+                                    Worker ID
+                                </th>
+
+                                <th>
+                                    Worker Type
+                                </th>
+
+                                <th>
+                                    Employment
+                                </th>
+
+                                <th>
+                                    Joining Date
+                                </th>
+
+                                <th>
+                                    Salary
+                                </th>
+
+                                <th>
+                                    Status
+                                </th>
+
+                                <th class="text-end">
+                                    Action
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            <% workers.forEach(worker => { %>
+
+                                <%
+                                    const workerName =
+                                        worker.user?.name || "Unknown Worker";
+
+                                    const workerInitial =
+                                        workerName
+                                            .charAt(0)
+                                            .toUpperCase();
+
+                                    const workerType =
+                                        worker.workerType
+                                            ? worker.workerType
+                                                .charAt(0)
+                                                .toUpperCase() +
+                                              worker.workerType.slice(1)
+                                            : "Not Set";
+
+                                    const employmentType =
+                                        worker.employmentType
+                                            ? worker.employmentType
+                                                .replace("-", " ")
+                                                .replace(/\b\w/g, c => c.toUpperCase())
+                                            : "Not Set";
+                                %>
+
+
+                                <tr>
+
+                                    <!-- WORKER -->
+
+                                    <td>
+
+                                        <div class="worker-info">
+
+                                            <div class="worker-avatar">
+                                                <%= workerInitial %>
+                                            </div>
+
+                                            <div>
+
+                                                <div class="worker-name">
+                                                    <%= workerName %>
+                                                </div>
+
+                                                <div class="worker-email">
+                                                    <%= worker.user?.email || "No email" %>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    </td>
+
+
+                                    <!-- WORKER ID -->
+
+                                    <td>
+
+                                        <% if (worker.workerId) { %>
+
+                                            <span class="worker-id">
+                                                <%= worker.workerId %>
+                                            </span>
+
+                                        <% } else { %>
+
+                                            <span class="text-muted">
+                                                —
+                                            </span>
+
+                                        <% } %>
+
+                                    </td>
+
+
+                                    <!-- WORKER TYPE -->
+
+                                    <td>
+
+                                        <span class="type-badge">
+
+                                            <i class="bi bi-tools"></i>
+
+                                            <%= workerType %>
+
+                                        </span>
+
+                                    </td>
+
+
+                                    <!-- EMPLOYMENT -->
+
+                                    <td>
+
+                                        <span class="employment-badge">
+
+                                            <i class="bi bi-briefcase"></i>
+
+                                            <%= employmentType %>
+
+                                        </span>
+
+                                    </td>
+
+
+                                    <!-- JOINING DATE -->
+
+                                    <td>
+
+                                        <% if (worker.joiningDate) { %>
+
+                                            <span>
+                                                <%= new Date(
+                                                    worker.joiningDate
+                                                ).toLocaleDateString(
+                                                    "en-IN",
+                                                    {
+                                                        day: "2-digit",
+                                                        month: "short",
+                                                        year: "numeric"
+                                                    }
+                                                ) %>
+                                            </span>
+
+                                        <% } else { %>
+
+                                            <span class="text-muted">
+                                                —
+                                            </span>
+
+                                        <% } %>
+
+                                    </td>
+
+
+                                    <!-- SALARY -->
+
+                                    <td>
+
+                                        <% if (
+                                            worker.salary !== null &&
+                                            worker.salary !== undefined
+                                        ) { %>
+
+                                            <span class="salary">
+                                                ₹<%= Number(
+                                                    worker.salary
+                                                ).toLocaleString("en-IN") %>
+                                            </span>
+
+                                        <% } else { %>
+
+                                            <span class="text-muted">
+                                                —
+                                            </span>
+
+                                        <% } %>
+
+                                    </td>
+
+
+                                    <!-- STATUS -->
+
+                                    <td>
+
+                                        <% if (
+                                            worker.user?.isActive
+                                        ) { %>
+
+                                            <span class="status-badge status-active">
+
+                                                <i class="bi bi-check-circle-fill"></i>
+
+                                                Active
+
+                                            </span>
+
+                                        <% } else { %>
+
+                                            <span class="status-badge status-inactive">
+
+                                                <i class="bi bi-x-circle-fill"></i>
+
+                                                Inactive
+
+                                            </span>
+
+                                        <% } %>
+
+                                    </td>
+
+
+                                    <!-- ACTION -->
+
+                                    <td class="text-end">
+
+                                        <% if (worker._id) { %>
+
+                                            <a
+                                                href="/admin/workers/<%= worker._id %>"
+                                                class="action-btn"
+                                                title="View Worker"
+                                            >
+                                                <i class="bi bi-eye-fill"></i>
+                                            </a>
+
+                                        <% } else { %>
+
+                                            <span
+                                                class="text-muted"
+                                                title="Worker profile unavailable"
+                                            >
+                                                —
+                                            </span>
+
+                                        <% } %>
+
+                                    </td>
+
+                                </tr>
+
+                            <% }); %>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            <% } else { %>
+
+                <div class="empty-state">
+
+                    <div class="empty-icon">
+                        <i class="bi bi-people"></i>
+                    </div>
+
+                    <div class="empty-title">
+                        No Workers Found
+                    </div>
+
+                    <p class="empty-text">
+                        No workers match the current search or filter criteria.
+                    </p>
+
+                </div>
+
+            <% } %>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+</body>

@@ -1,0 +1,780 @@
+<% layout("layouts/boilerplate") -%>
+<style>
+
+    .presence-hero {
+        border-radius: 24px;
+        padding: 32px;
+        color: #fff;
+        background: linear-gradient(
+            135deg,
+            #0f766e,
+            #0891b2
+        );
+        box-shadow: 0 20px 45px rgba(8,145,178,.18);
+    }
+
+    .presence-icon {
+        width: 58px;
+        height: 58px;
+        border-radius: 18px;
+        background: rgba(255,255,255,.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+    }
+
+    .presence-card {
+        border: 0;
+        border-radius: 20px;
+        box-shadow: 0 8px 28px rgba(15,23,42,.06);
+    }
+
+    .summary-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+    }
+
+    .student-avatar {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #ecfeff;
+        color: #0e7490;
+        font-weight: 700;
+    }
+
+    .presence-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 7px 11px;
+        border-radius: 999px;
+        font-size: .78rem;
+        font-weight: 600;
+    }
+
+    .status-on-campus {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .status-hostel {
+        background: #dbeafe;
+        color: #1d4ed8;
+    }
+
+    .status-outside {
+        background: #fef3c7;
+        color: #92400e;
+    }
+
+    .status-leave {
+        background: #fee2e2;
+        color: #b91c1c;
+    }
+
+    .status-unknown {
+        background: #f1f5f9;
+        color: #475569;
+    }
+
+</style>
+
+
+<div class="container-fluid pb-5">
+
+    <!-- HERO -->
+
+    <div class="presence-hero mb-4">
+
+        <div class="d-flex align-items-start gap-3">
+
+            <div class="presence-icon">
+                <i class="bi bi-geo-alt"></i>
+            </div>
+
+            <div>
+
+                <div class="small text-uppercase fw-semibold opacity-75">
+                    Faculty Workspace
+                </div>
+
+                <h1 class="fw-bold mb-2">
+                    Student Campus Presence
+                </h1>
+
+                <p class="mb-0 opacity-75">
+                    View the current campus presence information
+                    of students assigned to your academic area.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- SUMMARY -->
+
+    <div class="row g-3 mb-4">
+
+        <div class="col-xl-2 col-md-4 col-6">
+
+            <div class="card presence-card h-100">
+
+                <div class="card-body">
+
+                    <small class="text-muted">
+                        Total Students
+                    </small>
+
+                    <h3 class="fw-bold mb-0 mt-1">
+                        <%= summary.total %>
+                    </h3>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-xl-2 col-md-4 col-6">
+
+            <div class="card presence-card h-100">
+
+                <div class="card-body">
+
+                    <small class="text-muted">
+                        On Campus
+                    </small>
+
+                    <h3 class="fw-bold text-success mb-0 mt-1">
+                        <%= summary.onCampus %>
+                    </h3>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-xl-2 col-md-4 col-6">
+
+            <div class="card presence-card h-100">
+
+                <div class="card-body">
+
+                    <small class="text-muted">
+                        Hostel
+                    </small>
+
+                    <h3 class="fw-bold text-primary mb-0 mt-1">
+                        <%= summary.hostel %>
+                    </h3>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-xl-2 col-md-4 col-6">
+
+            <div class="card presence-card h-100">
+
+                <div class="card-body">
+
+                    <small class="text-muted">
+                        Outside
+                    </small>
+
+                    <h3 class="fw-bold text-warning mb-0 mt-1">
+                        <%= summary.outsideCampus %>
+                    </h3>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-xl-2 col-md-4 col-6">
+
+            <div class="card presence-card h-100">
+
+                <div class="card-body">
+
+                    <small class="text-muted">
+                        On Leave
+                    </small>
+
+                    <h3 class="fw-bold text-danger mb-0 mt-1">
+                        <%= summary.onLeave %>
+                    </h3>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-xl-2 col-md-4 col-6">
+
+            <div class="card presence-card h-100">
+
+                <div class="card-body">
+
+                    <small class="text-muted">
+                        Unknown
+                    </small>
+
+                    <h3 class="fw-bold text-secondary mb-0 mt-1">
+                        <%= summary.unknown %>
+                    </h3>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- FILTER -->
+
+    <div class="card presence-card mb-4">
+
+        <div class="card-body p-4">
+
+            <h5 class="fw-bold mb-3">
+                <i class="bi bi-funnel me-2"></i>
+                Filter Students
+            </h5>
+
+            <form
+                method="GET"
+                action="/faculty/campus-presence"
+            >
+
+                <div class="row g-3">
+
+                    <div class="col-lg-3 col-md-6">
+
+                        <label class="form-label fw-semibold">
+                            Department
+                        </label>
+
+                        <select
+                            name="department"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                All Departments
+                            </option>
+
+                            <% academicAreas
+                                .filter((area, index, arr) =>
+                                    arr.findIndex(
+                                        x =>
+                                            x.department ===
+                                            area.department
+                                    ) === index
+                                )
+                                .forEach(area => { %>
+
+                                <option
+                                    value="<%= area.department %>"
+                                    <%= filters.department === area.department ? "selected" : "" %>
+                                >
+                                    <%= area.department %>
+                                </option>
+
+                            <% }) %>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="col-lg-2 col-md-6">
+
+                        <label class="form-label fw-semibold">
+                            Semester
+                        </label>
+
+                        <select
+                            name="semester"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                All
+                            </option>
+
+                            <% [1,2,3,4,5,6,7,8].forEach(
+                                sem => { %>
+
+                                <option
+                                    value="<%= sem %>"
+                                    <%= Number(filters.semester) === sem ? "selected" : "" %>
+                                >
+                                    Semester <%= sem %>
+                                </option>
+
+                            <% }) %>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="col-lg-2 col-md-6">
+
+                        <label class="form-label fw-semibold">
+                            Section
+                        </label>
+
+                        <input
+                            type="text"
+                            name="section"
+                            class="form-control"
+                            placeholder="A"
+                            value="<%= filters.section %>"
+                        >
+
+                    </div>
+
+
+                    <div class="col-lg-2 col-md-6">
+
+                        <label class="form-label fw-semibold">
+                            Status
+                        </label>
+
+                        <select
+                            name="status"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                All Status
+                            </option>
+
+                            <option
+                                value="on_campus"
+                                <%= filters.status === "on_campus" ? "selected" : "" %>
+                            >
+                                On Campus
+                            </option>
+
+                            <option
+                                value="hostel"
+                                <%= filters.status === "hostel" ? "selected" : "" %>
+                            >
+                                Hostel
+                            </option>
+
+                            <option
+                                value="outside_campus"
+                                <%= filters.status === "outside_campus" ? "selected" : "" %>
+                            >
+                                Outside Campus
+                            </option>
+
+                            <option
+                                value="on_leave"
+                                <%= filters.status === "on_leave" ? "selected" : "" %>
+                            >
+                                On Leave
+                            </option>
+
+                            <option
+                                value="unknown"
+                                <%= filters.status === "unknown" ? "selected" : "" %>
+                            >
+                                Unknown
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="col-lg-3 col-md-6">
+
+                        <label class="form-label fw-semibold">
+                            Search Student
+                        </label>
+
+                        <input
+                            type="text"
+                            name="search"
+                            class="form-control"
+                            placeholder="Name / Student ID / Email"
+                            value="<%= filters.search %>"
+                        >
+
+                    </div>
+
+
+                    <div class="col-12">
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                        >
+                            <i class="bi bi-search me-1"></i>
+                            Search
+                        </button>
+
+                        <a
+                            href="/faculty/campus-presence"
+                            class="btn btn-outline-secondary"
+                        >
+                            Reset
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- STUDENT TABLE -->
+
+    <div class="card presence-card">
+
+        <div class="card-body p-0">
+
+            <% if (students.length > 0) { %>
+
+                <div class="p-4 border-bottom">
+
+                    <h5 class="fw-bold mb-1">
+                        Student Presence
+                    </h5>
+
+                    <small class="text-muted">
+                        Read-only campus presence information.
+                    </small>
+
+                </div>
+
+
+                <div class="table-responsive">
+
+                    <table class="table align-middle mb-0">
+
+                        <thead class="table-light">
+
+                            <tr>
+
+                                <th class="ps-4">
+                                    Student
+                                </th>
+
+                                <th>
+                                    Student ID
+                                </th>
+
+                                <th>
+                                    Academic
+                                </th>
+
+                                <th>
+                                    Presence
+                                </th>
+
+                                <th>
+                                    Location
+                                </th>
+
+                                <th>
+                                    Last Verified
+                                </th>
+
+                                <th>
+                                    Source
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            <% students.forEach(item => { %>
+
+                                <%
+                                    const student =
+                                        item.student;
+
+                                    const presence =
+                                        item.presence;
+
+                                    let statusClass =
+                                        "status-unknown";
+
+                                    let statusText =
+                                        "Unknown";
+
+                                    let statusIcon =
+                                        "bi-question-circle";
+
+                                    if (
+                                        presence.status ===
+                                        "on_campus"
+                                    ) {
+                                        statusClass =
+                                            "status-on-campus";
+
+                                        statusText =
+                                            "On Campus";
+
+                                        statusIcon =
+                                            "bi-building-check";
+                                    }
+
+                                    if (
+                                        presence.status ===
+                                        "hostel"
+                                    ) {
+                                        statusClass =
+                                            "status-hostel";
+
+                                        statusText =
+                                            "Hostel";
+
+                                        statusIcon =
+                                            "bi-house-check";
+                                    }
+
+                                    if (
+                                        presence.status ===
+                                        "outside_campus"
+                                    ) {
+                                        statusClass =
+                                            "status-outside";
+
+                                        statusText =
+                                            "Outside Campus";
+
+                                        statusIcon =
+                                            "bi-box-arrow-right";
+                                    }
+
+                                    if (
+                                        presence.status ===
+                                        "on_leave"
+                                    ) {
+                                        statusClass =
+                                            "status-leave";
+
+                                        statusText =
+                                            "On Leave";
+
+                                        statusIcon =
+                                            "bi-calendar-x";
+                                    }
+                                %>
+
+
+                                <tr>
+
+                                    <td class="ps-4">
+
+                                        <div class="d-flex align-items-center">
+
+                                            <div class="student-avatar me-3">
+
+                                                <%= student.user?.name
+                                                    ? student.user.name
+                                                        .charAt(0)
+                                                        .toUpperCase()
+                                                    : "S" %>
+
+                                            </div>
+
+                                            <div>
+
+                                                <div class="fw-semibold">
+                                                    <%= student.user?.name || "Student" %>
+                                                </div>
+
+                                                <small class="text-muted">
+                                                    <%= student.user?.email || "" %>
+                                                </small>
+
+                                            </div>
+
+                                        </div>
+
+                                    </td>
+
+
+                                    <td>
+
+                                        <span class="fw-semibold">
+                                            <%= student.studentId %>
+                                        </span>
+
+                                    </td>
+
+
+                                    <td>
+
+                                        <div class="small fw-semibold">
+                                            <%= student.program %>
+                                        </div>
+
+                                        <div class="small text-muted">
+
+                                            Sem <%= student.semester %>
+                                            · Section <%= student.section %>
+
+                                        </div>
+
+                                    </td>
+
+
+                                    <td>
+
+                                        <span
+                                            class="presence-status <%= statusClass %>"
+                                        >
+
+                                            <i class="bi <%= statusIcon %>"></i>
+
+                                            <%= statusText %>
+
+                                        </span>
+
+                                    </td>
+
+
+                                    <td>
+
+                                        <%= presence.location || "—" %>
+
+                                    </td>
+
+
+                                    <td>
+
+                                        <% if (
+                                            presence.lastVerifiedAt
+                                        ) { %>
+
+                                            <%= new Date(
+                                                presence.lastVerifiedAt
+                                            ).toLocaleString(
+                                                "en-IN"
+                                            ) %>
+
+                                        <% } else { %>
+
+                                            <span class="text-muted">
+                                                Not available
+                                            </span>
+
+                                        <% } %>
+
+                                    </td>
+
+
+                                    <td>
+
+                                        <span class="badge text-bg-light">
+                                            <%= presence.source %>
+                                        </span>
+
+                                    </td>
+
+                                </tr>
+
+                            <% }) %>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            <% } else { %>
+
+                <div class="text-center py-5 px-3">
+
+                    <div
+                        class="mx-auto mb-3"
+                        style="
+                            width:76px;
+                            height:76px;
+                            border-radius:22px;
+                            background:#f1f5f9;
+                            display:flex;
+                            align-items:center;
+                            justify-content:center;
+                            font-size:2rem;
+                            color:#64748b;
+                        "
+                    >
+                        <i class="bi bi-geo-alt"></i>
+                    </div>
+
+                    <h5 class="fw-bold">
+                        No Student Presence Found
+                    </h5>
+
+                    <p class="text-muted mb-0">
+                        No students or presence records match
+                        the selected filters.
+                    </p>
+
+                </div>
+
+            <% } %>
+
+        </div>
+
+    </div>
+
+
+    <!-- INFO -->
+
+    <div class="alert alert-info mt-4">
+
+        <i class="bi bi-info-circle me-2"></i>
+
+        <strong>Read-only view:</strong>
+
+        Faculty can view student campus presence information.
+        Presence data is maintained by authorized campus systems
+        such as Admin, Gate Pass/QR verification, Hostel,
+        or other approved sources.
+
+    </div>
+
+</div>

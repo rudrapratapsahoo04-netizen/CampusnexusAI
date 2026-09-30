@@ -1,0 +1,2914 @@
+<% layout("layouts/boilerplate") %>
+
+<style>
+
+/* =========================================================
+   CAMPUSNEXUS HOME PAGE
+   LOCAL PREDEFINED CHATBOT
+========================================================= */
+
+:root {
+    --cn-blue: #2563eb;
+    --cn-indigo: #4f46e5;
+    --cn-purple: #7c3aed;
+    --cn-pink: #ec4899;
+    --cn-cyan: #06b6d4;
+    --cn-green: #10b981;
+
+    --cn-dark: #07152f;
+    --cn-dark-2: #0b1f42;
+    --cn-text: #0f172a;
+    --cn-muted: #64748b;
+    --cn-white: #ffffff;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    overflow-x: hidden;
+}
+
+.cn-section {
+    position: relative;
+    overflow: hidden;
+}
+
+/* =========================================================
+   ANIMATIONS
+========================================================= */
+
+@keyframes cnFadeLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-60px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes cnFadeRight {
+    from {
+        opacity: 0;
+        transform: translateX(60px) scale(.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+}
+
+@keyframes cnFloat {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-15px);
+    }
+}
+
+@keyframes cnFloatSlow {
+    0%,
+    100% {
+        transform: translate(0, 0);
+    }
+
+    50% {
+        transform: translate(15px, -20px);
+    }
+}
+
+@keyframes cnPulse {
+    0% {
+        transform: scale(1);
+        opacity: .7;
+    }
+
+    50% {
+        transform: scale(1.08);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: .7;
+    }
+}
+
+@keyframes cnShine {
+    from {
+        transform: translateX(-120%);
+    }
+
+    to {
+        transform: translateX(120%);
+    }
+}
+
+@keyframes cnChatOpen {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.cn-hero {
+    min-height: 88vh;
+    position: relative;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+
+    background:
+        radial-gradient(
+            circle at 10% 20%,
+            rgba(37, 99, 235, .15),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 85% 20%,
+            rgba(124, 58, 237, .16),
+            transparent 30%
+        ),
+        linear-gradient(
+            135deg,
+            #f8fbff 0%,
+            #eef4ff 50%,
+            #f8f5ff 100%
+        );
+}
+
+.cn-hero::before {
+    content: "";
+
+    position: absolute;
+
+    width: 450px;
+    height: 450px;
+
+    border-radius: 50%;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(37, 99, 235, .08),
+            rgba(236, 72, 153, .08)
+        );
+
+    top: -220px;
+    left: -180px;
+
+    animation:
+        cnFloatSlow
+        8s
+        ease-in-out
+        infinite;
+}
+
+.cn-hero::after {
+    content: "";
+
+    position: absolute;
+
+    width: 320px;
+    height: 320px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(6, 182, 212, .08);
+
+    right: -120px;
+    bottom: -120px;
+
+    animation:
+        cnFloatSlow
+        10s
+        ease-in-out
+        infinite reverse;
+}
+
+.cn-hero-content {
+    position: relative;
+    z-index: 5;
+
+    animation:
+        cnFadeLeft
+        .9s
+        ease
+        both;
+}
+
+.cn-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+
+    padding: 9px 15px;
+
+    border-radius: 50px;
+
+    color: #1d4ed8;
+
+    background:
+        rgba(255, 255, 255, .85);
+
+    border:
+        1px solid
+        rgba(37, 99, 235, .15);
+
+    box-shadow:
+        0 8px 25px
+        rgba(37, 99, 235, .08);
+
+    font-weight: 600;
+}
+
+.cn-hero-title {
+    font-size: clamp(
+        2.7rem,
+        5vw,
+        4.7rem
+    );
+
+    line-height: 1.04;
+
+    letter-spacing: -2px;
+
+    color: var(--cn-text);
+
+    font-weight: 800;
+}
+
+.cn-gradient-text {
+    background:
+        linear-gradient(
+            90deg,
+            #2563eb,
+            #4f46e5,
+            #7c3aed,
+            #ec4899
+        );
+
+    -webkit-background-clip: text;
+    background-clip: text;
+
+    color: transparent;
+}
+
+.cn-hero-description {
+    max-width: 650px;
+
+    color: #475569;
+
+    font-size: 1.08rem;
+
+    line-height: 1.8;
+}
+
+.cn-primary-btn {
+    position: relative;
+    overflow: hidden;
+
+    border: none;
+
+    color: white;
+
+    padding: 13px 23px;
+
+    border-radius: 13px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #4f46e5,
+            #7c3aed
+        );
+
+    box-shadow:
+        0 12px 30px
+        rgba(79, 70, 229, .28);
+
+    transition:
+        transform .3s ease,
+        box-shadow .3s ease;
+}
+
+.cn-primary-btn:hover {
+    color: white;
+
+    transform: translateY(-4px);
+
+    box-shadow:
+        0 18px 40px
+        rgba(79, 70, 229, .38);
+}
+
+.cn-primary-btn::after {
+    content: "";
+
+    position: absolute;
+
+    width: 70px;
+    height: 100%;
+
+    top: 0;
+    left: -100px;
+
+    background:
+        rgba(255, 255, 255, .25);
+
+    transform:
+        skewX(-20deg);
+
+    animation:
+        cnShine
+        4s
+        infinite;
+}
+
+/* =========================================================
+   HERO IMAGE
+========================================================= */
+
+.cn-hero-visual {
+    position: relative;
+    z-index: 4;
+
+    animation:
+        cnFadeRight
+        1s
+        .2s
+        ease
+        both;
+}
+
+.cn-campus-image {
+    width: 100%;
+    max-width: 650px;
+
+    display: block;
+
+    border-radius: 30px;
+
+    object-fit: cover;
+
+    box-shadow:
+        0 35px 80px
+        rgba(15, 23, 42, .18);
+
+    border:
+        8px solid
+        rgba(255, 255, 255, .72);
+
+    animation:
+        cnFloat
+        6s
+        ease-in-out
+        infinite;
+}
+
+.cn-floating-card {
+    position: absolute;
+    z-index: 5;
+
+    padding: 14px 17px;
+
+    border-radius: 17px;
+
+    background:
+        rgba(255, 255, 255, .94);
+
+    backdrop-filter:
+        blur(12px);
+
+    box-shadow:
+        0 15px 40px
+        rgba(15, 23, 42, .13);
+
+    border:
+        1px solid
+        rgba(255, 255, 255, .8);
+}
+
+.cn-ai-card {
+    top: 4%;
+    right: -4%;
+
+    animation:
+        cnFloat
+        4s
+        ease-in-out
+        infinite;
+}
+
+.cn-campus-card {
+    bottom: 4%;
+    left: -5%;
+
+    animation:
+        cnFloat
+        5s
+        ease-in-out
+        infinite
+        reverse;
+}
+
+.cn-floating-icon {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 13px;
+
+    color: white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #7c3aed
+        );
+}
+
+/* =========================================================
+   TRUST
+========================================================= */
+
+.cn-trust {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    margin-top: 28px;
+
+    color: #64748b;
+
+    font-size: .9rem;
+}
+
+.cn-avatar-stack {
+    display: flex;
+}
+
+.cn-avatar-stack span {
+    width: 34px;
+    height: 34px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    margin-left: -8px;
+
+    border-radius: 50%;
+
+    color: white;
+
+    font-size: .75rem;
+
+    font-weight: 700;
+
+    border: 3px solid white;
+}
+
+.cn-avatar-stack span:first-child {
+    margin-left: 0;
+    background: #2563eb;
+}
+
+.cn-avatar-stack span:nth-child(2) {
+    background: #7c3aed;
+}
+
+.cn-avatar-stack span:nth-child(3) {
+    background: #ec4899;
+}
+
+.cn-avatar-stack span:nth-child(4) {
+    background: #10b981;
+}
+
+/* =========================================================
+   FEATURES
+========================================================= */
+
+.cn-features {
+    position: relative;
+
+    padding: 105px 0;
+
+    color: white;
+
+    overflow: hidden;
+
+    background:
+        radial-gradient(
+            circle at 5% 10%,
+            rgba(37, 99, 235, .28),
+            transparent 25%
+        ),
+        radial-gradient(
+            circle at 90% 15%,
+            rgba(124, 58, 237, .28),
+            transparent 25%
+        ),
+        radial-gradient(
+            circle at 80% 90%,
+            rgba(6, 182, 212, .18),
+            transparent 25%
+        ),
+        linear-gradient(
+            135deg,
+            #06132d,
+            #0b1f42,
+            #10164a
+        );
+}
+
+.cn-features::before {
+    content: "";
+
+    position: absolute;
+
+    width: 300px;
+    height: 300px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(79, 70, 229, .16);
+
+    left: -150px;
+    bottom: -100px;
+
+    filter: blur(30px);
+
+    animation:
+        cnPulse
+        7s
+        infinite;
+}
+
+.cn-features::after {
+    content: "";
+
+    position: absolute;
+
+    width: 250px;
+    height: 250px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(236, 72, 153, .12);
+
+    right: -100px;
+    top: 35%;
+
+    filter: blur(35px);
+
+    animation:
+        cnPulse
+        8s
+        infinite
+        reverse;
+}
+
+.cn-section-heading {
+    position: relative;
+    z-index: 2;
+
+    text-align: center;
+}
+
+.cn-section-label {
+    display: inline-block;
+
+    padding: 7px 14px;
+
+    border-radius: 50px;
+
+    font-size: .75rem;
+
+    letter-spacing: 2px;
+
+    color: #93c5fd;
+
+    background:
+        rgba(37, 99, 235, .14);
+
+    border:
+        1px solid
+        rgba(96, 165, 250, .28);
+}
+
+.cn-feature-title {
+    font-size:
+        clamp(2rem, 4vw, 3.2rem);
+
+    font-weight: 800;
+
+    margin-top: 15px;
+}
+
+.cn-feature-title span {
+    background:
+        linear-gradient(
+            90deg,
+            #60a5fa,
+            #a78bfa,
+            #f0abfc
+        );
+
+    -webkit-background-clip: text;
+    background-clip: text;
+
+    color: transparent;
+}
+
+.cn-feature-card {
+    position: relative;
+
+    z-index: 2;
+
+    height: 100%;
+
+    padding: 28px;
+
+    border-radius: 22px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255, 255, 255, .09),
+            rgba(255, 255, 255, .035)
+        );
+
+    border:
+        1px solid
+        rgba(148, 163, 184, .22);
+
+    backdrop-filter:
+        blur(14px);
+
+    box-shadow:
+        0 15px 45px
+        rgba(0, 0, 0, .18);
+
+    transition:
+        transform .35s ease,
+        border-color .35s ease,
+        box-shadow .35s ease;
+}
+
+.cn-feature-card:hover {
+    transform:
+        translateY(-10px);
+
+    border-color:
+        rgba(96, 165, 250, .6);
+
+    box-shadow:
+        0 25px 55px
+        rgba(0, 0, 0, .28);
+}
+
+.cn-feature-icon {
+    width: 58px;
+    height: 58px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 17px;
+
+    color: white;
+
+    font-size: 25px;
+
+    margin-bottom: 22px;
+
+    box-shadow:
+        0 12px 25px
+        rgba(0, 0, 0, .20);
+}
+
+.cn-feature-card:nth-child(1) .cn-feature-icon {
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #6366f1
+        );
+}
+
+.cn-feature-card:nth-child(2) .cn-feature-icon {
+    background:
+        linear-gradient(
+            135deg,
+            #ec4899,
+            #f43f5e
+        );
+}
+
+.cn-feature-card:nth-child(3) .cn-feature-icon {
+    background:
+        linear-gradient(
+            135deg,
+            #10b981,
+            #06b6d4
+        );
+}
+
+.cn-feature-card:nth-child(4) .cn-feature-icon {
+    background:
+        linear-gradient(
+            135deg,
+            #f59e0b,
+            #f97316
+        );
+}
+
+.cn-feature-card:nth-child(5) .cn-feature-icon {
+    background:
+        linear-gradient(
+            135deg,
+            #06b6d4,
+            #2563eb
+        );
+}
+
+.cn-feature-card:nth-child(6) .cn-feature-icon {
+    background:
+        linear-gradient(
+            135deg,
+            #7c3aed,
+            #ec4899
+        );
+}
+
+.cn-feature-card h5 {
+    color: white;
+    font-weight: 700;
+}
+
+.cn-feature-card p {
+    color: #b8c5dc;
+    line-height: 1.7;
+}
+
+.cn-feature-arrow {
+    position: absolute;
+
+    right: 22px;
+    bottom: 22px;
+
+    width: 36px;
+    height: 36px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    color: white;
+
+    background:
+        rgba(99, 102, 241, .35);
+
+    transition:
+        transform .3s ease,
+        background .3s ease;
+}
+
+.cn-feature-card:hover .cn-feature-arrow {
+    transform:
+        translateX(5px);
+
+    background:
+        rgba(99, 102, 241, .7);
+}
+
+/* =========================================================
+   ABOUT
+========================================================= */
+
+.cn-about {
+    padding: 100px 0;
+
+    position: relative;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f8fbff,
+            #ffffff
+        );
+}
+
+.cn-about-title {
+    font-size:
+        clamp(2rem, 4vw, 3.2rem);
+
+    font-weight: 800;
+
+    color: #0f172a;
+}
+
+.cn-about-title span {
+    background:
+        linear-gradient(
+            90deg,
+            #2563eb,
+            #7c3aed
+        );
+
+    -webkit-background-clip: text;
+    background-clip: text;
+
+    color: transparent;
+}
+
+.cn-about-text {
+    color: #64748b;
+    line-height: 1.8;
+}
+
+.cn-hierarchy {
+    padding: 28px;
+
+    border-radius: 28px;
+
+    background:
+        rgba(255, 255, 255, .9);
+
+    border:
+        1px solid
+        #e2e8f0;
+
+    box-shadow:
+        0 25px 60px
+        rgba(15, 23, 42, .08);
+}
+
+.cn-hierarchy-item {
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+
+    padding: 14px 16px;
+
+    border-radius: 16px;
+
+    background: white;
+
+    border:
+        1px solid
+        #e5e7eb;
+
+    transition:
+        transform .3s ease,
+        box-shadow .3s ease;
+}
+
+.cn-hierarchy-item:hover {
+    transform:
+        translateX(7px);
+
+    box-shadow:
+        0 10px 25px
+        rgba(15, 23, 42, .08);
+}
+
+.cn-hierarchy-icon {
+    width: 43px;
+    height: 43px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    color: white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #7c3aed
+        );
+}
+
+.cn-hierarchy-line {
+    height: 22px;
+
+    width: 2px;
+
+    margin-left: 36px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #2563eb,
+            #7c3aed
+        );
+
+    opacity: .35;
+}
+
+/* =========================================================
+   LOCAL CHATBOT
+========================================================= */
+
+.cn-chat-button {
+    position: fixed;
+
+    right: 25px;
+    bottom: 25px;
+
+    width: 64px;
+    height: 64px;
+
+    border: none;
+
+    border-radius: 50%;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    color: white;
+
+    font-size: 25px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #7c3aed
+        );
+
+    box-shadow:
+        0 15px 35px
+        rgba(37, 99, 235, .35);
+
+    cursor: pointer;
+
+    z-index: 9999;
+
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease;
+}
+
+.cn-chat-button:hover {
+    transform:
+        translateY(-4px)
+        scale(1.05);
+
+    box-shadow:
+        0 20px 45px
+        rgba(37, 99, 235, .45);
+}
+
+.cn-chat-button .cn-online-dot {
+    position: absolute;
+
+    right: 2px;
+    top: 2px;
+
+    width: 13px;
+    height: 13px;
+
+    border-radius: 50%;
+
+    background: #10b981;
+
+    border: 2px solid white;
+}
+
+.cn-chat-box {
+    position: fixed;
+
+    right: 25px;
+    bottom: 100px;
+
+    width: 370px;
+    max-width: calc(100vw - 30px);
+
+    height: 520px;
+
+    background: white;
+
+    border-radius: 22px;
+
+    box-shadow:
+        0 25px 70px
+        rgba(15, 23, 42, .25);
+
+    border:
+        1px solid
+        #e2e8f0;
+
+    overflow: hidden;
+
+    display: none;
+
+    flex-direction: column;
+
+    z-index: 9998;
+}
+
+.cn-chat-box.cn-chat-open {
+    display: flex;
+
+    animation:
+        cnChatOpen
+        .25s
+        ease
+        both;
+}
+
+.cn-chat-header {
+    padding: 17px 18px;
+
+    color: white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #4f46e5,
+            #7c3aed
+        );
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+}
+
+.cn-chat-title {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+}
+
+.cn-chat-avatar {
+    width: 42px;
+    height: 42px;
+
+    border-radius: 13px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    background:
+        rgba(255,255,255,.18);
+
+    font-size: 20px;
+}
+
+.cn-chat-header small {
+    opacity: .8;
+}
+
+.cn-chat-close {
+    border: none;
+
+    background: transparent;
+
+    color: white;
+
+    font-size: 20px;
+
+    cursor: pointer;
+}
+
+.cn-chat-messages {
+    flex: 1;
+
+    overflow-y: auto;
+
+    padding: 18px;
+
+    background:
+        #f8fafc;
+}
+
+.cn-chat-message {
+    display: flex;
+
+    margin-bottom: 12px;
+}
+
+.cn-chat-message.bot {
+    justify-content: flex-start;
+}
+
+.cn-chat-message.user {
+    justify-content: flex-end;
+}
+
+.cn-chat-bubble {
+    max-width: 82%;
+
+    padding: 11px 14px;
+
+    border-radius: 16px;
+
+    font-size: .92rem;
+
+    line-height: 1.55;
+}
+
+.cn-chat-message.bot .cn-chat-bubble {
+    color: #334155;
+
+    background: white;
+
+    border:
+        1px solid
+        #e2e8f0;
+
+    border-top-left-radius: 5px;
+}
+
+.cn-chat-message.user .cn-chat-bubble {
+    color: white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #4f46e5
+        );
+
+    border-top-right-radius: 5px;
+}
+
+.cn-chat-suggestions {
+    padding: 10px 14px;
+
+    display: flex;
+
+    gap: 7px;
+
+    overflow-x: auto;
+
+    background: white;
+
+    border-top:
+        1px solid
+        #e2e8f0;
+}
+
+.cn-chat-suggestion {
+    flex-shrink: 0;
+
+    border:
+        1px solid
+        #cbd5e1;
+
+    background: white;
+
+    color: #475569;
+
+    border-radius: 50px;
+
+    padding: 6px 11px;
+
+    font-size: .75rem;
+
+    cursor: pointer;
+
+    transition:
+        background .2s ease,
+        color .2s ease;
+}
+
+.cn-chat-suggestion:hover {
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+.logoai{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.cn-chat-input-area {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    padding: 12px;
+
+    background: white;
+
+    border-top:
+        1px solid
+        #e2e8f0;
+}
+
+.mainailogo{
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+}
+
+.cn-chat-input {
+    flex: 1;
+
+    border:
+        1px solid
+        #cbd5e1;
+
+    outline: none;
+
+    border-radius: 13px;
+
+    padding: 10px 13px;
+
+    font-size: .9rem;
+}
+
+.cn-chat-input:focus {
+    border-color: #2563eb;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(37, 99, 235, .08);
+}
+
+.cn-chat-send {
+    width: 42px;
+    height: 42px;
+
+    border: none;
+
+    border-radius: 12px;
+
+    color: white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #7c3aed
+        );
+
+    cursor: pointer;
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 991px) {
+
+    .cn-hero {
+        padding: 80px 0;
+    }
+
+    .cn-hero-visual {
+        margin-top: 55px;
+    }
+
+    .cn-floating-card {
+        display: none;
+    }
+}
+
+@media (max-width: 575px) {
+
+    .cn-hero {
+        padding: 60px 0;
+    }
+
+    .cn-hero-title {
+        font-size: 2.35rem;
+        letter-spacing: -1px;
+    }
+
+    .cn-hero-description {
+        font-size: 1rem;
+    }
+
+    .cn-features {
+        padding: 75px 0;
+    }
+
+    .cn-about {
+        padding: 70px 0;
+    }
+
+    .cn-campus-image {
+        border-radius: 20px;
+        border-width: 5px;
+    }
+
+    .cn-chat-button {
+        right: 18px;
+        bottom: 18px;
+    }
+
+    .cn-chat-box {
+        right: 15px;
+        bottom: 90px;
+
+        width: calc(100vw - 30px);
+
+        height: 500px;
+    }
+}
+
+</style>
+
+
+<!-- =========================================================
+     HERO
+========================================================= -->
+
+<section class="cn-hero cn-section">
+
+    <div class="container">
+
+        <div class="row align-items-center g-5">
+
+            <div class="col-lg-6">
+
+                <div class="cn-hero-content">
+
+
+
+                    <h1 class="cn-hero-title mt-4">
+
+                        One Campus.
+
+                        <br>
+
+                        <span class="cn-gradient-text">
+                            One Intelligent Platform.
+                        </span>
+
+                    </h1>
+
+                    <p class="cn-hero-description mt-4">
+
+                        CampusNexus brings students, faculty and
+                        university administration together through
+                        one modern campus management platform.
+
+                    </p>
+
+                    <div class="d-flex flex-wrap gap-3 mt-4">
+
+                        <a
+                            href="#features"
+                            class="btn cn-primary-btn btn-lg"
+                        >
+                            Explore Platform
+                            <i class="bi bi-arrow-right ms-2"></i>
+                        </a>
+
+                        <a
+                            href="#about"
+                            class="btn btn-outline-dark btn-lg px-4"
+                        >
+                            Learn More
+                        </a>
+
+                    </div>
+
+                    <div class="cn-trust">
+
+                        <div class="cn-avatar-stack">
+
+                            <span>A</span>
+                            <span>S</span>
+                            <span>F</span>
+                            <span>C</span>
+
+                        </div>
+
+                        <span>
+                            Smart campus management for
+                            students & faculty
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-lg-6">
+
+                <div class="cn-hero-visual">
+
+                    <img
+                        src="/images/niba.webp"
+                        class="cn-campus-image"
+                        alt="CampusNexus University Platform"
+                    >
+
+                    <div class="cn-floating-card cn-ai-card">
+
+                        <div class="d-flex align-items-center gap-3">
+
+                            <div class="cn-floating-icon">
+                                <i class="bi bi-robot"></i>
+                            </div>
+
+                            <div>
+
+                                <small class="text-secondary">
+                                    Campus Assistant
+                                </small>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="cn-floating-card cn-campus-card">
+
+                        <div class="d-flex align-items-center gap-3">
+
+                            <div
+                                class="cn-floating-icon"
+                                style="
+                                    background:
+                                    linear-gradient(
+                                        135deg,
+                                        #10b981,
+                                        #06b6d4
+                                    );
+                                "
+                            >
+                                <i class="bi bi-building"></i>
+                            </div>
+
+                            <div>
+
+                                <small class="text-secondary">
+                                    Campus
+                                </small>
+
+                                <div class="fw-bold">
+                                    Connected University
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     FEATURES
+========================================================= -->
+
+<section
+    id="features"
+    class="cn-features cn-section"
+>
+
+    <div class="container">
+
+        <div class="cn-section-heading mb-5">
+
+            <span class="cn-section-label">
+                PLATFORM
+            </span>
+
+            <h2 class="cn-feature-title">
+
+                Everything in
+
+                <span>
+                    one place
+                </span>
+
+            </h2>
+
+            <p
+                class="text-white-50 mx-auto"
+                style="max-width: 650px;"
+            >
+
+                CampusNexus is designed for the complete university,
+                not a single department or program.
+
+            </p>
+
+        </div>
+
+
+        <div class="row g-4">
+
+
+            <div class="col-md-6 col-lg-4">
+
+                <div class="cn-feature-card">
+
+                    <div class="cn-feature-icon">
+                        <i class="bi bi-mortarboard"></i>
+                    </div>
+
+                    <h5>
+                        Student Management
+                    </h5>
+
+                    <p>
+                        Manage student profiles, academic details,
+                        departments, programs and campus information.
+                    </p>
+
+                    <div class="cn-feature-arrow">
+                        <i class="bi bi-arrow-right"></i>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-md-6 col-lg-4">
+
+                <div class="cn-feature-card">
+
+                    <div class="cn-feature-icon">
+                        <i class="bi bi-calendar-week"></i>
+                    </div>
+
+                    <h5>
+                        Smart Timetable
+                    </h5>
+
+                    <p>
+                        Department, program, semester and section-wise
+                        timetable management.
+                    </p>
+
+                    <div class="cn-feature-arrow">
+                        <i class="bi bi-arrow-right"></i>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-md-6 col-lg-4">
+
+                <div class="cn-feature-card">
+
+                    <div class="cn-feature-icon">
+                        <i class="bi bi-check2-square"></i>
+                    </div>
+
+                    <h5>
+                        Attendance
+                    </h5>
+
+                    <p>
+                        Faculty can manage attendance while students
+                        can monitor their academic attendance.
+                    </p>
+
+                    <div class="cn-feature-arrow">
+                        <i class="bi bi-arrow-right"></i>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-md-6 col-lg-4">
+
+                <div class="cn-feature-card">
+
+                    <div class="cn-feature-icon">
+                        <i class="bi bi-file-earmark-text"></i>
+                    </div>
+
+                    <h5>
+                        Digital Services
+                    </h5>
+
+                    <p>
+                        Leaves, gate passes, complaints,
+                        certificates and university notices.
+                    </p>
+
+                    <div class="cn-feature-arrow">
+                        <i class="bi bi-arrow-right"></i>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-md-6 col-lg-4">
+
+                <div class="cn-feature-card">
+
+                    <div class="cn-feature-icon">
+                        <i class="bi bi-building"></i>
+                    </div>
+
+                    <h5>
+                        Campus Services
+                    </h5>
+
+                    <p>
+                        Hostel, rooms, mess information and
+                        campus-related student services.
+                    </p>
+
+                    <div class="cn-feature-arrow">
+                        <i class="bi bi-arrow-right"></i>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-md-6 col-lg-4">
+
+                <div class="cn-feature-card">
+
+                    <div class="cn-feature-icon">
+                        <i class="bi bi-robot"></i>
+                    </div>
+
+                    <h5>
+                        Local Campus Assistant
+                    </h5>
+
+                    <p>
+                        Ask general questions about CampusNexus
+                        and get answers from the platform's
+                        predefined knowledge.
+                    </p>
+
+                    <div class="cn-feature-arrow">
+                        <i class="bi bi-arrow-right"></i>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     ABOUT
+========================================================= -->
+
+<section
+    id="about"
+    class="cn-about cn-section"
+>
+
+    <div class="container">
+
+        <div class="row align-items-center g-5">
+
+            <div class="col-lg-6">
+
+                <span class="cn-section-label">
+                    CAMPUSNEXUS
+                </span>
+
+                <h2 class="cn-about-title mt-3">
+
+                    Built for the whole
+
+                    <span>
+                        university
+                    </span>
+
+                </h2>
+
+                <p class="cn-about-text mt-4">
+
+                    CampusNexus follows a university-wide structure
+                    where departments, programs, semesters and
+                    sections are connected with students, courses
+                    and faculty.
+
+                </p>
+
+                <p class="cn-about-text">
+
+                    The platform brings commonly required university
+                    services into one organized digital environment.
+
+                </p>
+
+                <div class="d-flex flex-wrap gap-3 mt-4">
+
+                    <span class="badge bg-primary-subtle text-primary p-2">
+                        <i class="bi bi-shield-check me-1"></i>
+                        All-in-One
+                    </span>
+
+                    <span class="badge bg-info-subtle text-info p-2">
+                        <i class="bi bi-lightning-charge me-1"></i>
+                        Scalable
+                    </span>
+
+                    <span class="badge bg-danger-subtle text-danger p-2">
+                        <i class="bi bi-heart me-1"></i>
+                        Student Friendly
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-lg-6">
+
+                <div class="cn-hierarchy">
+
+                    <div class="cn-hierarchy-item">
+
+                        <div class="cn-hierarchy-icon">
+                            <i class="bi bi-bank"></i>
+                        </div>
+
+                        <span class="fw-bold">
+                            University
+                        </span>
+
+                    </div>
+
+
+                    <div class="cn-hierarchy-line"></div>
+
+
+                    <div class="cn-hierarchy-item">
+
+                        <div class="cn-hierarchy-icon">
+                            <i class="bi bi-building"></i>
+                        </div>
+
+                        <span class="fw-bold">
+                            Department
+                        </span>
+
+                    </div>
+
+
+                    <div class="cn-hierarchy-line"></div>
+
+
+                    <div class="cn-hierarchy-item">
+
+                        <div class="cn-hierarchy-icon">
+                            <i class="bi bi-book"></i>
+                        </div>
+
+                        <span class="fw-bold">
+                            Program
+                        </span>
+
+                    </div>
+
+
+                    <div class="cn-hierarchy-line"></div>
+
+
+                    <div class="cn-hierarchy-item">
+
+                        <div class="cn-hierarchy-icon">
+                            <i class="bi bi-layers"></i>
+                        </div>
+
+                        <span class="fw-bold">
+                            Semester / Section
+                        </span>
+
+                    </div>
+
+
+                    <div class="cn-hierarchy-line"></div>
+
+
+                    <div class="cn-hierarchy-item">
+
+                        <div
+                            class="cn-hierarchy-icon"
+                            style="
+                                background:
+                                linear-gradient(
+                                    135deg,
+                                    #ec4899,
+                                    #db2777
+                                );
+                            "
+                        >
+                            <i class="bi bi-person"></i>
+                        </div>
+
+                        <span class="fw-bold">
+                            Student
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     LOCAL CHATBOT
+========================================================= -->
+
+<button
+    type="button"
+    id="cnChatButton"
+    class="cn-chat-button"
+    aria-label="Open CampusNexus Assistant"
+    title="CampusNexus Assistant"
+>
+
+    <img src="images/logo3.png" alt="ai" class="mainailogo">
+
+    <span class="cn-online-dot"></span>
+
+</button>
+
+
+<div
+    id="cnChatBox"
+    class="cn-chat-box"
+    aria-hidden="true"
+>
+
+    <div class="cn-chat-header">
+
+        <div class="cn-chat-title">
+
+            <div class="cn-chat-avatar">
+                <img src="images/logo3.png" class="logoai" alt="logo">
+            </div>
+
+            <div>
+
+                <div class="fw-bold">
+                    CampusNexus Assistant
+                </div>
+
+            </div>
+
+        </div>
+
+        <button
+            type="button"
+            id="cnChatClose"
+            class="cn-chat-close"
+            aria-label="Close chatbot"
+        >
+            <i class="bi bi-x-lg"></i>
+        </button>
+
+    </div>
+
+
+    <div
+        id="cnChatMessages"
+        class="cn-chat-messages"
+    >
+
+        <div class="cn-chat-message bot">
+
+            <div class="cn-chat-bubble">
+
+                Hello! 👋
+
+                <br><br>
+
+                I am the CampusNexus Assistant.
+
+                <br><br>
+
+                I can answer general questions about
+                CampusNexus and its available platform features.
+
+                <br><br>
+
+                I do not access personal student or faculty data.
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="cn-chat-suggestions">
+
+        <button
+            type="button"
+            class="cn-chat-suggestion"
+            data-question="What is CampusNexus?"
+        >
+            What is CampusNexus?
+        </button>
+
+        <button
+            type="button"
+            class="cn-chat-suggestion"
+            data-question="What features are available?"
+        >
+            Features
+        </button>
+
+        <button
+            type="button"
+            class="cn-chat-suggestion"
+            data-question="Who can use CampusNexus?"
+        >
+            Who can use it?
+        </button>
+
+    </div>
+
+
+    <form
+        id="cnChatForm"
+        class="cn-chat-input-area"
+    >
+
+        <input
+            type="text"
+            id="cnChatInput"
+            class="cn-chat-input"
+            placeholder="Ask about CampusNexus..."
+            autocomplete="off"
+            maxlength="300"
+        >
+
+        <button
+            type="submit"
+            class="cn-chat-send"
+            aria-label="Send message"
+        >
+            <i class="bi bi-send-fill"></i>
+        </button>
+
+    </form>
+
+</div>
+
+
+<!-- =========================================================
+     LOCAL CHATBOT JAVASCRIPT
+========================================================= -->
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const chatButton =
+        document.getElementById("cnChatButton");
+
+    const chatBox =
+        document.getElementById("cnChatBox");
+
+    const chatClose =
+        document.getElementById("cnChatClose");
+
+    const chatForm =
+        document.getElementById("cnChatForm");
+
+    const chatInput =
+        document.getElementById("cnChatInput");
+
+    const chatMessages =
+        document.getElementById("cnChatMessages");
+
+    const suggestions =
+        document.querySelectorAll(
+            ".cn-chat-suggestion"
+        );
+
+
+    /* =====================================================
+       OPEN CHAT
+    ===================================================== */
+
+    function openChat() {
+
+        chatBox.classList.add("cn-chat-open");
+
+        chatBox.setAttribute(
+            "aria-hidden",
+            "false"
+        );
+
+        setTimeout(function () {
+
+            chatInput.focus();
+
+        }, 100);
+
+    }
+
+
+    /* =====================================================
+       CLOSE CHAT
+    ===================================================== */
+
+    function closeChat() {
+
+        chatBox.classList.remove(
+            "cn-chat-open"
+        );
+
+        chatBox.setAttribute(
+            "aria-hidden",
+            "true"
+        );
+
+    }
+
+
+    chatButton.addEventListener(
+        "click",
+        function () {
+
+            if (
+                chatBox.classList.contains(
+                    "cn-chat-open"
+                )
+            ) {
+
+                closeChat();
+
+            } else {
+
+                openChat();
+
+            }
+
+        }
+    );
+
+
+    chatClose.addEventListener(
+        "click",
+        closeChat
+    );
+
+
+    /* =====================================================
+       ADD MESSAGE
+    ===================================================== */
+
+    function addMessage(
+        message,
+        type
+    ) {
+
+        const wrapper =
+            document.createElement("div");
+
+        wrapper.className =
+            "cn-chat-message " + type;
+
+
+        const bubble =
+            document.createElement("div");
+
+        bubble.className =
+            "cn-chat-bubble";
+
+
+        /*
+         * textContent is intentionally used here.
+         * This prevents user input from being treated
+         * as HTML.
+         */
+
+        bubble.textContent =
+            message;
+
+
+        wrapper.appendChild(
+            bubble
+        );
+
+        chatMessages.appendChild(
+            wrapper
+        );
+
+
+        chatMessages.scrollTop =
+            chatMessages.scrollHeight;
+
+    }
+
+
+    /* =====================================================
+       NORMALIZE QUESTION
+    ===================================================== */
+
+    function normalizeQuestion(
+        question
+    ) {
+
+        return question
+            .toLowerCase()
+            .trim()
+            .replace(
+                /[?!.,]/g,
+                " "
+            )
+            .replace(
+                /\s+/g,
+                " "
+            );
+
+    }
+
+
+    /* =====================================================
+       LOCAL PREDEFINED KNOWLEDGE
+    ===================================================== */
+
+    function getLocalAnswer(
+        question
+    ) {
+
+        const q =
+            normalizeQuestion(
+                question
+            );
+
+
+        /* ---------------------------------------------
+           CAMPUSNEXUS
+        --------------------------------------------- */
+
+        if (
+            q.includes("what is campusnexus") ||
+            q.includes("what s campusnexus") ||
+            q.includes("campusnexus kya hai") ||
+            q.includes("campusnexus ke bare") ||
+            q.includes("campusnexus ke baare") ||
+            q.includes("campusnexus ke bare me") ||
+            q.includes("campusnexus ke baare mein") ||
+            q.includes("campusnexus ke bare mein")
+        ) {
+
+            return (
+                "CampusNexus is a university campus "
+                + "management platform that brings "
+                + "students, faculty and university "
+                + "services together in one place."
+            );
+
+        }
+
+
+        /* ---------------------------------------------
+           FEATURES
+        --------------------------------------------- */
+
+        if (
+            q.includes("features") ||
+            q.includes("feature") ||
+            q.includes("what can campusnexus do") ||
+            q.includes("campusnexus kya karta hai") ||
+            q.includes("campusnexus me kya hai") ||
+            q.includes("campusnexus mein kya hai")
+        ) {
+
+            return (
+                "CampusNexus provides features such as "
+                + "student management, timetable management, "
+                + "attendance, digital services, campus services "
+                + "and a local campus assistant."
+            );
+
+        }
+
+        /* ---------------------------------------------
+           STUDENTS
+        --------------------------------------------- */
+
+        if (
+            q.includes("student") &&
+            (
+                q.includes("use") ||
+                q.includes("management") ||
+                q.includes("service")
+            )
+        ) {
+
+            return (
+                "Students can use CampusNexus for available "
+                + "academic and campus services such as "
+                + "attendance, timetable information, "
+                + "digital services and other student-related "
+                + "features provided by the platform."
+            );
+
+        }
+
+
+        /* ---------------------------------------------
+           FACULTY
+        --------------------------------------------- */
+
+        if (
+            q.includes("faculty") ||
+            q.includes("teacher") ||
+            q.includes("professor")
+        ) {
+
+            return (
+                "Faculty members can use CampusNexus for "
+                + "available faculty features such as "
+                + "attendance management, timetable-related "
+                + "services and other faculty dashboard features."
+            );
+
+        }
+
+
+        /* ---------------------------------------------
+           TIMETABLE
+        --------------------------------------------- */
+
+        if (
+            q.includes("timetable") ||
+            q.includes("time table") ||
+            q.includes("schedule") ||
+            q.includes("class schedule")
+        ) {
+
+            return (
+                "CampusNexus supports timetable management "
+                + "based on university academic structures "
+                + "such as department, program, semester "
+                + "and section. show before register first then login "
+            );
+
+        }
+
+
+        /* ---------------------------------------------
+           ATTENDANCE
+        --------------------------------------------- */
+
+        if (
+            q.includes("attendance") ||
+            q.includes("present") ||
+            q.includes("absent")
+        ) {
+
+            return (
+                "CampusNexus includes attendance services. "
+                + "Faculty can manage attendance, while "
+                + "students can monitor their available "
+                + "attendance information from the platform."
+            );
+
+        }
+
+
+        /* ---------------------------------------------
+           DIGITAL SERVICES
+        --------------------------------------------- */
+
+        if (
+            q.includes("digital service") ||
+            q.includes("leave") ||
+            q.includes("gate pass") ||
+            q.includes("complaint") ||
+            q.includes("certificate") ||
+            q.includes("notice")
+        ) {
+
+            return (
+                "CampusNexus includes digital campus services "
+                + "such as leaves, gate passes, complaints, "
+                + "certificates,lost-found  and university notices."
+            );
+
+        }
+
+
+        /* ---------------------------------------------
+           CAMPUS SERVICES
+        --------------------------------------------- */
+
+        if (
+            q.includes("hostel") ||
+            q.includes("mess") ||
+            q.includes("room") ||
+            q.includes("campus service")
+        ) {
+
+            return (
+                "CampusNexus includes campus-related services "
+                + "such as hostel, room and mess information "
+                + "where those services are available."
+            );
+
+        }
+
+
+        /* ---------------------------------------------
+           DEPARTMENT / PROGRAM
+        --------------------------------------------- */
+
+        if (
+            q.includes("department") ||
+            q.includes("program") ||
+            q.includes("semester") ||
+            q.includes("section")
+        ) {
+
+            return (
+                "CampusNexus follows a university structure "
+                + "that connects university, departments, "
+                + "programs, semesters and sections with "
+                + "students and faculty."
+            );
+
+        }
+
+
+        /* ---------------------------------------------
+           WHO CAN USE
+        --------------------------------------------- */
+
+        if (
+            q.includes("who can use") ||
+            q.includes("who uses") ||
+            q.includes("kaun use") ||
+            q.includes("kon use") ||
+            q.includes("users")
+        ) {
+
+            return (
+                "CampusNexus is designed for students, "
+                + "faculty  workers and university administration."
+            );
+
+        }
+
+
+        /* ---------------------------------------------
+           AI / ASSISTANT
+        --------------------------------------------- */
+
+        if (
+            q.includes("ai") ||
+            q.includes("assistant") ||
+            q.includes("chatbot") ||
+            q.includes("bot")
+        ) {
+
+            return (
+                "CampusNexus uses a  predefined "
+                + "assistant on this page. It answers "
+                + "questions from its available CampusNexus "
+                + "knowledge and does not access personal "
+                + "student or faculty database information."
+            );
+
+        }
+
+
+        /* ---------------------------------------------
+           LOGIN
+        --------------------------------------------- */
+
+        if (
+            q.includes("login") ||
+            q.includes("log in") ||
+            q.includes("sign in")
+        ) {
+
+            return (
+                "Use the Login option on the CampusNexus "
+                + "website to access your authorized dashboard."
+            );
+
+        }
+
+
+        /* ---------------------------------------------
+           GREETING
+        --------------------------------------------- */
+
+        if (
+            q === "hi" ||
+            q === "hii" ||
+            q === "hello" ||
+            q === "hey" ||
+            q.includes("namaste") ||
+            q.includes("namaskar")
+        ) {
+
+            return (
+                "Hello! 👋 I can help you with general "
+                + "CampusNexus information and platform features."
+            );
+
+        }
+
+
+        /* ---------------------------------------------
+           THANK YOU
+        --------------------------------------------- */
+
+        if (
+    q === "thanks" ||
+    q === "thank you" ||
+    q === "thankyou" ||
+    q.includes("thank you very much") ||
+    q.includes("shukriya") ||
+    q.includes("dhanyavad")
+) {
+
+    return (
+        "You're welcome! 😊 I'm here to help you understand CampusNexus."
+    );
+
+}
+if (
+    q === "bye" ||
+    q === "goodbye" ||
+    q.includes("see you") ||
+    q.includes("phir milte hain")
+) {
+
+    return (
+        "Goodbye! 👋 Feel free to come back whenever you want to know "
+        + "more about CampusNexus."
+    );
+
+}
+
+if (
+    q.includes("campusnexus kis type ki university ke liye hai") ||
+    q.includes("kis university ke liye bana hai") ||
+    q.includes("kis type ke campus ke liye hai") ||
+    q.includes("ye system kis ke liye bana hai")
+) {
+    return (
+        "CampusNexus is designed as a university-focused campus "
+        + "management platform that can support different academic "
+        + "and administrative campus workflows."
+    );
+}
+
+if (
+    q.includes("campus ko centralized kaise karta hai") ||
+    q.includes("centralized campus management") ||
+    q.includes("sab kuch ek jagah kaise") ||
+    q.includes("university ka data ek jagah")
+) {
+    return (
+        "CampusNexus brings different university workflows together "
+        + "through connected modules for students, faculty, academics "
+        + "and campus administration."
+    );
+}
+
+if (
+    q.includes("student experience") ||
+    q.includes("students ko kya benefit") ||
+    q.includes("student ko kaise help karta hai") ||
+    q.includes("student ke liye useful kaise hai")
+) {
+    return (
+        "CampusNexus is designed to give students a more organized "
+        + "way to access their academic and campus-related information."
+    );
+}
+
+if (
+    q.includes("mera data safe hai") ||
+    q.includes("data safe hai") ||
+    q.includes("data secure hai") ||
+    q.includes("security kaise hai") ||
+    q.includes("privacy kaise hai") ||
+    q.includes("data privacy")
+) {
+    return (
+        "CampusNexus is designed with role-based access so users "
+        + "can access information according to their authorized role "
+        + "and permissions."
+    );
+}
+
+if (
+    q.includes("role based") ||
+    q.includes("role based access") ||
+    q.includes("different roles") ||
+    q.includes("roles kya hai") ||
+    q.includes("kis kis role ke liye")
+) {
+    return (
+        "CampusNexus can provide role-based experiences for different "
+        + "university users, such as students, faculty and administrators."
+    );
+}
+
+if (
+    q.includes("mobile me chalega") ||
+    q.includes("phone me chalega") ||
+    q.includes("mobile friendly") ||
+    q.includes("responsive hai") ||
+    q.includes("phone par use kar sakte hain")
+) {
+    return (
+        "CampusNexus can be designed as a responsive web platform so "
+        + "users can access the campus system from different screen sizes."
+    );
+}
+
+
+if (
+    q.includes("online campus") ||
+    q.includes("digital campus") ||
+    q.includes("digital university") ||
+    q.includes("university ko digital kaise")
+) {
+    return (
+        "CampusNexus provides a digital layer for university operations "
+        + "by bringing academic and campus workflows into one platform."
+    );
+}
+
+if (
+    q.includes("dashboard ka purpose") ||
+    q.includes("dashboard me kya hota hai") ||
+    q.includes("dashboard kya hai") ||
+    q.includes("campusnexus dashboard")
+) {
+    return (
+        "The CampusNexus dashboard is designed to give users a central "
+        + "place to access the information and features relevant to their role."
+    );
+}
+
+if (
+    q.includes("latest information") ||
+    q.includes("latest updates") ||
+    q.includes("recent updates") ||
+    q.includes("new updates") ||
+    q.includes("campus updates")
+) {
+    return (
+        "CampusNexus can provide current information through modules "
+        + "such as notices, announcements, schedules and other campus updates."
+    );
+}
+
+if (
+    q.includes("ai ko kyun add kiya") ||
+    q.includes("ai ka purpose kya hai") ||
+    q.includes("campusnexus me ai kyun") ||
+    q.includes("ai ki zarurat kya hai") ||
+    q.includes("why ai in campusnexus")
+) {
+    return (
+        "The CampusNexus AI Assistant is intended to make the platform "
+        + "easier to interact with by helping users find information "
+        + "and understand available features through natural questions."
+    );
+}
+
+if (
+    q.includes("ai kaise kaam karta hai") ||
+    q.includes("assistant kaise kaam karta hai") ||
+    q.includes("ye ai kaise work karta hai") ||
+    q.includes("how does the ai work")
+) {
+    return (
+        "The CampusNexus Assistant can interpret user questions and "
+        + "respond using predefined platform logic and, for authenticated "
+        + "features, relevant CampusNexus data."
+    );
+}
+
+if (
+    q.includes("openai use karta hai") ||
+    q.includes("gemini use karta hai") ||
+    q.includes("external ai use karta hai") ||
+    q.includes("api key chahiye") ||
+    q.includes("external ai api")
+) {
+    return (
+        "The CampusNexus local assistant can operate using application "
+        + "logic and local CampusNexus data without requiring an external "
+        + "AI service for its predefined responses."
+    );
+}
+
+if (
+    q.includes("campusnexus kisne banaya") ||
+    q.includes("who created campusnexus") ||
+    q.includes("who developed campusnexus")
+) {
+    return (
+        "CampusNexus is a university-focused campus management project. "
+        + "For specific developer or organization details, please refer "
+        + "to the official project information."
+    );
+}
+
+if (
+    q.includes("campusnexus ke modules") ||
+    q.includes("modules kya hai") ||
+    q.includes("system me kaun kaun se modules") ||
+    q.includes("major modules")
+) {
+    return (
+        "CampusNexus can organize university operations into modules such "
+        + "as student management, faculty management, courses, timetable, "
+        + "attendance, fees, notices and other campus services."
+    );
+}
+
+if (
+    q.includes("campusnexus naam kyun") ||
+    q.includes("campusnexus name meaning") ||
+    q.includes("campusnexus ka naam") ||
+    q.includes("why campusnexus")
+) {
+    return (
+        "The name CampusNexus represents a central connection point for "
+        + "different parts of a university campus and its users."
+    );
+}
+
+if (
+    q.includes("campusnexus in one line") ||
+    q.includes("campusnexus ek line me") ||
+    q.includes("one line about campusnexus") ||
+    q.includes("describe campusnexus")
+) {
+    return (
+        "CampusNexus is a centralized digital platform for managing "
+        + "and connecting university campus services."
+    );
+}
+
+if (
+    q.includes("bore ho raha") ||
+    q.includes("bored") ||
+    q.includes("kuch interesting batao")
+) {
+    return (
+        "Campus life ko interesting banane ke liye CampusNexus ka goal "
+        + "hai ki important university information ek organized place "
+        + "par easily accessible ho. 😄"
+    );
+}
+
+if (
+    q.includes("are you real") ||
+    q.includes("tum real ho") ||
+    q.includes("are you a robot") ||
+    q.includes("tum robot ho")
+) {
+    return (
+        "I'm the CampusNexus AI Assistant — a software-based assistant "
+        + "designed to help users interact with the CampusNexus platform. 🤖"
+    );
+}
+
+
+        /* ---------------------------------------------
+           FIXED FALLBACK
+        --------------------------------------------- */
+return (
+    "I'm the CampusNexus AI Assistant. 😊 "
+    + "I can help you with CampusNexus features, university services, "
+    + "students, faculty, courses, attendance, timetable, fees, notices "
+    + "and other platform-related questions."
+);
+
+    }
+
+
+    /* =====================================================
+       SEND QUESTION
+    ===================================================== */
+
+    function sendQuestion(
+        question
+    ) {
+
+        const cleanQuestion =
+            question.trim();
+
+
+        if (!cleanQuestion) {
+            return;
+        }
+
+
+        addMessage(
+            cleanQuestion,
+            "user"
+        );
+
+
+        const answer =
+            getLocalAnswer(
+                cleanQuestion
+            );
+
+
+        /*
+         * Small delay only for natural UI feeling.
+         * No API call is made.
+         */
+
+        setTimeout(
+            function () {
+
+                addMessage(
+                    answer,
+                    "bot"
+                );
+
+            },
+            250
+        );
+
+    }
+
+
+    /* =====================================================
+       FORM SUBMIT
+    ===================================================== */
+
+    chatForm.addEventListener(
+        "submit",
+        function (event) {
+
+            event.preventDefault();
+
+
+            const question =
+                chatInput.value.trim();
+
+
+            if (!question) {
+                return;
+            }
+
+
+            chatInput.value = "";
+
+
+            sendQuestion(
+                question
+            );
+
+        }
+    );
+
+
+    /* =====================================================
+       SUGGESTION BUTTONS
+    ===================================================== */
+
+    suggestions.forEach(
+        function (button) {
+
+            button.addEventListener(
+                "click",
+                function () {
+
+                    const question =
+                        button.dataset.question;
+
+
+                    if (!question) {
+                        return;
+                    }
+
+
+                    sendQuestion(
+                        question
+                    );
+
+                }
+            );
+
+        }
+    );
+
+
+    /* =====================================================
+       ENTER KEY
+    ===================================================== */
+
+    chatInput.addEventListener(
+        "keydown",
+        function (event) {
+
+            if (
+                event.key === "Enter"
+            ) {
+
+                event.preventDefault();
+
+                chatForm.dispatchEvent(
+                    new Event("submit")
+                );
+
+            }
+
+        }
+    );
+
+});
+
+</script>

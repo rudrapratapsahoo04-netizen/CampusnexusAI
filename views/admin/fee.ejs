@@ -1,0 +1,296 @@
+
+<% layout("layouts/boilerplate") -%>
+
+<div class="container-fluid py-4">
+
+    <!-- ==========================================
+         PAGE HEADER
+    =========================================== -->
+
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-1">
+                <i class="bi bi-cash-stack me-2"></i>
+                Fee Management
+            </h2>
+
+            <p class="text-muted mb-0">
+                Search a student and manage semester-wise fee details.
+            </p>
+        </div>
+
+        <div class="mt-3 mt-md-0">
+            <span class="badge bg-primary px-3 py-2">
+                Admin
+            </span>
+        </div>
+    </div>
+
+
+    <!-- ==========================================
+         SEARCH CARD
+    =========================================== -->
+
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-body p-4">
+
+            <h5 class="fw-semibold mb-3">
+                <i class="bi bi-search me-2"></i>
+                Find Student
+            </h5>
+
+            <form
+                action="/admin/fee"
+                method="GET"
+                class="row g-3"
+            >
+
+                <div class="col-md-9">
+                    <label
+                        for="search"
+                        class="form-label fw-semibold"
+                    >
+                        Student ID / Department / Program
+                    </label>
+
+                    <input
+                        type="text"
+                        id="search"
+                        name="search"
+                        class="form-control"
+                        value="<%= search || '' %>"
+                        placeholder="Enter Student ID, Department or Program"
+                        autocomplete="off"
+                    >
+                </div>
+
+                <div class="col-md-3 d-flex align-items-end">
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary w-100"
+                    >
+                        <i class="bi bi-search me-2"></i>
+                        Search Student
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         SEARCH RESULTS
+    =========================================== -->
+
+    <% if (search) { %>
+
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-header bg-white py-3">
+
+                <div class="d-flex justify-content-between align-items-center">
+
+                    <div>
+                        <h5 class="fw-semibold mb-1">
+                            Search Results
+                        </h5>
+
+                        <small class="text-muted">
+                            Results for:
+                            <strong>
+                                <%= search %>
+                            </strong>
+                        </small>
+                    </div>
+
+                    <span class="badge bg-secondary">
+                        <%= students.length %> Student<%= students.length === 1 ? "" : "s" %>
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="card-body p-0">
+
+                <% if (students.length === 0) { %>
+
+                    <div class="text-center py-5 px-3">
+
+                        <div class="mb-3">
+                            <i
+                                class="bi bi-person-x text-muted"
+                                style="font-size: 3rem;"
+                            ></i>
+                        </div>
+
+                        <h5 class="fw-semibold">
+                            No Student Found
+                        </h5>
+
+                        <p class="text-muted mb-0">
+                            Try searching with a valid Student ID,
+                            department or program.
+                        </p>
+
+                    </div>
+
+                <% } else { %>
+
+                    <div class="table-responsive">
+
+                        <table class="table table-hover align-middle mb-0">
+
+                            <thead class="table-light">
+
+                                <tr>
+                                    <th class="px-4">
+                                        Student ID
+                                    </th>
+
+                                    <th>
+                                        Student
+                                    </th>
+
+                                    <th>
+                                        Department
+                                    </th>
+
+                                    <th>
+                                        Program
+                                    </th>
+
+                                    <th>
+                                        Semester
+                                    </th>
+
+                                    <th>
+                                        Section
+                                    </th>
+
+                                    <th class="text-end px-4">
+                                        Action
+                                    </th>
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                                <% students.forEach(student => { %>
+
+                                    <tr>
+
+                                        <td class="px-4">
+                                            <span class="fw-semibold">
+                                                <%= student.studentId || "N/A" %>
+                                            </span>
+                                        </td>
+
+
+                                        <td>
+
+                                            <div class="fw-semibold">
+                                                <%= student.user?.name || "N/A" %>
+                                            </div>
+
+                                            <small class="text-muted">
+                                                <%= student.user?.email || "" %>
+                                            </small>
+
+                                        </td>
+
+
+                                        <td>
+                                            <%= student.department || "N/A" %>
+                                        </td>
+
+
+                                        <td>
+                                            <%= student.program || "N/A" %>
+                                        </td>
+
+
+                                        <td>
+                                            <span class="badge bg-info text-dark">
+                                                Semester
+                                                <%= student.semester || "N/A" %>
+                                            </span>
+                                        </td>
+
+
+                                        <td>
+                                            <%= student.section || "N/A" %>
+                                        </td>
+
+
+                                        <td class="text-end px-4">
+
+                                            <a
+                                                href="/admin/fee/student/<%= student._id %>"
+                                                class="btn btn-sm btn-primary"
+                                            >
+                                                <i class="bi bi-wallet2 me-1"></i>
+                                                Manage Fee
+                                            </a>
+
+                                        </td>
+
+                                    </tr>
+
+                                <% }) %>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                <% } %>
+
+            </div>
+
+        </div>
+
+    <% } else { %>
+
+        <!-- ==========================================
+             INITIAL STATE
+        =========================================== -->
+
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-body text-center py-5">
+
+                <div class="mb-3">
+
+                    <i
+                        class="bi bi-person-lines-fill text-primary"
+                        style="font-size: 3.5rem;"
+                    ></i>
+
+                </div>
+
+                <h5 class="fw-semibold">
+                    Search for a Student
+                </h5>
+
+                <p class="text-muted mb-0">
+                    Enter a Student ID, department or program
+                    above to manage the student's fees.
+                </p>
+
+            </div>
+
+        </div>
+
+    <% } %>
+
+</div>

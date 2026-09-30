@@ -1,0 +1,1794 @@
+<% layout("layouts/boilerplate") -%>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #3730a3;
+            --secondary: #7c3aed;
+            --cyan: #06b6d4;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+
+            --dark: #111827;
+            --dark-soft: #1f2937;
+
+            --text: #1e293b;
+            --muted: #64748b;
+
+            --bg: #f4f7fb;
+            --white: #ffffff;
+
+            --border: rgba(148, 163, 184, 0.18);
+
+            --shadow:
+                0 12px 35px rgba(15, 23, 42, 0.08);
+
+            --shadow-hover:
+                0 22px 50px rgba(79, 70, 229, 0.16);
+        }
+
+        body {
+            margin: 0;
+            background:
+                radial-gradient(
+                    circle at 5% 5%,
+                    rgba(79, 70, 229, 0.08),
+                    transparent 28%
+                ),
+                radial-gradient(
+                    circle at 95% 10%,
+                    rgba(6, 182, 212, 0.08),
+                    transparent 25%
+                ),
+                #f5f7fb;
+
+            color: var(--text);
+
+            font-family:
+                Inter,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                sans-serif;
+
+            overflow-x: hidden;
+        }
+
+        /* =========================
+           BACKGROUND LIGHTS
+        ========================== */
+
+        .ambient-light {
+            position: fixed;
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.18;
+            pointer-events: none;
+            z-index: -1;
+            animation: ambientFloat 9s ease-in-out infinite alternate;
+        }
+
+        .ambient-one {
+            background: #6366f1;
+            top: 8%;
+            left: -120px;
+        }
+
+        .ambient-two {
+            background: #06b6d4;
+            top: 50%;
+            right: -130px;
+            animation-delay: 2s;
+        }
+
+        .ambient-three {
+            background: #8b5cf6;
+            bottom: -150px;
+            left: 45%;
+            animation-delay: 4s;
+        }
+
+        @keyframes ambientFloat {
+            from {
+                transform: translateY(0) scale(1);
+            }
+
+            to {
+                transform: translateY(-35px) scale(1.08);
+            }
+        }
+
+        /* =========================
+           NAVBAR
+        ========================== */
+
+        .worker-navbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+
+            background:
+                rgba(255, 255, 255, 0.82);
+
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+
+            border-bottom:
+                1px solid rgba(148, 163, 184, 0.18);
+
+            box-shadow:
+                0 5px 25px rgba(15, 23, 42, 0.05);
+        }
+
+        .navbar-inner {
+            min-height: 76px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            color: var(--dark);
+            text-decoration: none;
+
+            transition: 0.3s ease;
+        }
+
+        .brand:hover {
+            transform: translateY(-1px);
+            color: var(--primary);
+        }
+
+        .brand-icon {
+            width: 46px;
+            height: 46px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 14px;
+
+            color: #ffffff;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--primary),
+                    var(--secondary)
+                );
+
+            box-shadow:
+                0 8px 20px rgba(79, 70, 229, 0.28);
+
+            font-size: 21px;
+
+            animation: brandPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes brandPulse {
+            0%,
+            100% {
+                box-shadow:
+                    0 8px 20px rgba(79, 70, 229, 0.25);
+            }
+
+            50% {
+                box-shadow:
+                    0 10px 30px rgba(79, 70, 229, 0.45);
+            }
+        }
+
+        .brand-title {
+            font-size: 19px;
+            font-weight: 800;
+            line-height: 1.1;
+        }
+
+        .brand-subtitle {
+            color: var(--muted);
+            font-size: 11px;
+            font-weight: 600;
+            margin-top: 3px;
+        }
+
+        .worker-mini-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .mini-avatar {
+            width: 39px;
+            height: 39px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+
+            color: #ffffff;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #4f46e5,
+                    #7c3aed
+                );
+
+            box-shadow:
+                0 6px 16px rgba(79, 70, 229, 0.25);
+        }
+
+        .mini-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .mini-role {
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        .logout-btn {
+            border: 0;
+            border-radius: 11px;
+
+            padding: 9px 14px;
+
+            color: #dc2626;
+            background: rgba(239, 68, 68, 0.08);
+
+            font-size: 13px;
+            font-weight: 700;
+
+            transition: all 0.25s ease;
+        }
+
+        .logout-btn:hover {
+            color: #ffffff;
+            background: #ef4444;
+
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 8px 20px rgba(239, 68, 68, 0.25);
+        }
+
+        /* =========================
+           MAIN
+        ========================== */
+
+        .dashboard-container {
+            padding-top: 34px;
+            padding-bottom: 60px;
+        }
+
+        /* =========================
+           HERO
+        ========================== */
+
+        .hero-card {
+            position: relative;
+            overflow: hidden;
+
+            border-radius: 28px;
+
+            color: #ffffff;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #3730a3 0%,
+                    #4f46e5 45%,
+                    #7c3aed 100%
+                );
+
+            box-shadow:
+                0 25px 55px rgba(79, 70, 229, 0.22);
+
+            animation: heroAppear 0.7s ease both;
+        }
+
+        @keyframes heroAppear {
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-card::before {
+            content: "";
+
+            position: absolute;
+
+            width: 300px;
+            height: 300px;
+
+            right: -90px;
+            top: -140px;
+
+            border-radius: 50%;
+
+            background:
+                rgba(255, 255, 255, 0.10);
+
+            box-shadow:
+                0 0 80px rgba(255, 255, 255, 0.08);
+        }
+
+        .hero-card::after {
+            content: "";
+
+            position: absolute;
+
+            width: 190px;
+            height: 190px;
+
+            right: 18%;
+            bottom: -130px;
+
+            border-radius: 50%;
+
+            background:
+                rgba(255, 255, 255, 0.08);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+
+            padding: 34px;
+        }
+
+        .hero-avatar {
+            width: 72px;
+            height: 72px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 21px;
+
+            background:
+                rgba(255, 255, 255, 0.16);
+
+            border:
+                1px solid rgba(255, 255, 255, 0.22);
+
+            box-shadow:
+                0 12px 30px rgba(0, 0, 0, 0.10);
+
+            font-size: 30px;
+        }
+
+        .hero-title {
+            font-size: 30px;
+            font-weight: 850;
+
+            margin: 0 0 6px;
+        }
+
+        .hero-text {
+            margin: 0;
+
+            color:
+                rgba(255, 255, 255, 0.78);
+
+            font-size: 14px;
+        }
+
+        .hero-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+
+            padding: 7px 12px;
+
+            margin-top: 14px;
+
+            border-radius: 30px;
+
+            color: #ffffff;
+
+            background:
+                rgba(255, 255, 255, 0.13);
+
+            border:
+                1px solid rgba(255, 255, 255, 0.18);
+
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .hero-actions {
+            position: relative;
+            z-index: 3;
+        }
+
+        .hero-profile-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+
+            border: 0;
+            border-radius: 13px;
+
+            padding: 12px 18px;
+
+            color: var(--primary);
+            background: #ffffff;
+
+            font-size: 13px;
+            font-weight: 800;
+
+            text-decoration: none;
+
+            transition: all 0.25s ease;
+
+            box-shadow:
+                0 10px 25px rgba(0, 0, 0, 0.10);
+        }
+
+        .hero-profile-btn:hover {
+            color: var(--primary-dark);
+
+            transform:
+                translateY(-3px)
+                scale(1.02);
+
+            box-shadow:
+                0 15px 30px rgba(0, 0, 0, 0.16);
+        }
+
+        /* =========================
+           SECTION
+        ========================== */
+
+        .section-heading {
+            margin-top: 34px;
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            margin: 0;
+
+            color: var(--dark);
+
+            font-size: 21px;
+            font-weight: 850;
+        }
+
+        .section-description {
+            margin-top: 4px;
+
+            color: var(--muted);
+
+            font-size: 13px;
+        }
+
+        /* =========================
+           STATS
+        ========================== */
+
+        .stat-card {
+            position: relative;
+            overflow: hidden;
+
+            height: 100%;
+
+            padding: 21px;
+
+            border-radius: 20px;
+
+            background:
+                rgba(255, 255, 255, 0.90);
+
+            border:
+                1px solid var(--border);
+
+            box-shadow: var(--shadow);
+
+            transition:
+                transform 0.3s ease,
+                box-shadow 0.3s ease,
+                border-color 0.3s ease;
+
+            animation: cardAppear 0.7s ease both;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-7px);
+
+            box-shadow: var(--shadow-hover);
+
+            border-color:
+                rgba(79, 70, 229, 0.18);
+        }
+
+        .stat-card::after {
+            content: "";
+
+            position: absolute;
+
+            width: 90px;
+            height: 90px;
+
+            border-radius: 50%;
+
+            right: -35px;
+            bottom: -40px;
+
+            background:
+                rgba(79, 70, 229, 0.045);
+        }
+
+        @keyframes cardAppear {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .stat-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .stat-icon {
+            width: 46px;
+            height: 46px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 14px;
+
+            font-size: 20px;
+        }
+
+        .stat-icon.blue {
+            color: #4f46e5;
+            background: rgba(79, 70, 229, 0.10);
+        }
+
+        .stat-icon.green {
+            color: #059669;
+            background: rgba(16, 185, 129, 0.10);
+        }
+
+        .stat-icon.orange {
+            color: #d97706;
+            background: rgba(245, 158, 11, 0.11);
+        }
+
+        .stat-icon.cyan {
+            color: #0891b2;
+            background: rgba(6, 182, 212, 0.10);
+        }
+
+        .stat-label {
+            color: var(--muted);
+
+            font-size: 12px;
+            font-weight: 700;
+
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .stat-value {
+            margin-top: 5px;
+
+            color: var(--dark);
+
+            font-size: 20px;
+            font-weight: 850;
+
+            word-break: break-word;
+        }
+
+        .stat-value.salary {
+            color: #059669;
+        }
+
+        /* =========================
+           MAIN ACTION CARDS
+        ========================== */
+
+        .action-card {
+            position: relative;
+            overflow: hidden;
+
+            display: block;
+
+            min-height: 225px;
+
+            padding: 25px;
+
+            border-radius: 23px;
+
+            color: var(--dark);
+            text-decoration: none;
+
+            background: #ffffff;
+
+            border:
+                1px solid var(--border);
+
+            box-shadow:
+                0 10px 32px rgba(15, 23, 42, 0.07);
+
+            transition:
+                transform 0.35s ease,
+                box-shadow 0.35s ease,
+                border-color 0.35s ease;
+        }
+
+        .action-card:hover {
+            color: var(--dark);
+
+            transform:
+                translateY(-9px);
+
+            box-shadow:
+                0 25px 55px rgba(15, 23, 42, 0.13);
+
+            border-color:
+                rgba(79, 70, 229, 0.20);
+        }
+
+        .action-card::before {
+            content: "";
+
+            position: absolute;
+
+            width: 130px;
+            height: 130px;
+
+            right: -45px;
+            top: -45px;
+
+            border-radius: 50%;
+
+            transition:
+                transform 0.5s ease;
+        }
+
+        .action-card:hover::before {
+            transform: scale(1.35);
+        }
+
+        .action-card.work::before {
+            background:
+                rgba(245, 158, 11, 0.10);
+        }
+
+        .action-card.leave::before {
+            background:
+                rgba(6, 182, 212, 0.10);
+        }
+
+        .action-card.profile::before {
+            background:
+                rgba(79, 70, 229, 0.10);
+        }
+
+        .action-icon {
+            position: relative;
+            z-index: 2;
+
+            width: 58px;
+            height: 58px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 17px;
+
+            margin-bottom: 22px;
+
+            font-size: 25px;
+
+            transition:
+                transform 0.3s ease;
+        }
+
+        .action-card:hover .action-icon {
+            transform:
+                rotate(-5deg)
+                scale(1.08);
+        }
+
+        .action-icon.work {
+            color: #d97706;
+            background: rgba(245, 158, 11, 0.12);
+        }
+
+        .action-icon.leave {
+            color: #0891b2;
+            background: rgba(6, 182, 212, 0.12);
+        }
+
+        .action-icon.profile {
+            color: #4f46e5;
+            background: rgba(79, 70, 229, 0.11);
+        }
+
+        .action-title {
+            position: relative;
+            z-index: 2;
+
+            font-size: 19px;
+            font-weight: 850;
+
+            margin-bottom: 7px;
+        }
+
+        .action-text {
+            position: relative;
+            z-index: 2;
+
+            color: var(--muted);
+
+            font-size: 13px;
+            line-height: 1.6;
+
+            margin-bottom: 20px;
+        }
+
+        .action-link {
+            position: relative;
+            z-index: 2;
+
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .action-card.work .action-link {
+            color: #d97706;
+        }
+
+        .action-card.leave .action-link {
+            color: #0891b2;
+        }
+
+        .action-card.profile .action-link {
+            color: #4f46e5;
+        }
+
+        .action-arrow {
+            transition:
+                transform 0.25s ease;
+        }
+
+        .action-card:hover .action-arrow {
+            transform:
+                translateX(5px);
+        }
+
+        /* =========================
+           PROFILE SUMMARY
+        ========================== */
+
+        .info-panel {
+            height: 100%;
+
+            border-radius: 22px;
+
+            background:
+                rgba(255, 255, 255, 0.94);
+
+            border:
+                1px solid var(--border);
+
+            box-shadow: var(--shadow);
+
+            overflow: hidden;
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+
+            padding: 20px 22px;
+
+            border-bottom:
+                1px solid rgba(148, 163, 184, 0.14);
+        }
+
+        .panel-header-icon {
+            width: 42px;
+            height: 42px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 12px;
+
+            color: var(--primary);
+
+            background:
+                rgba(79, 70, 229, 0.09);
+        }
+
+        .panel-title {
+            margin: 0;
+
+            font-size: 17px;
+            font-weight: 850;
+        }
+
+        .panel-subtitle {
+            margin-top: 2px;
+
+            color: var(--muted);
+
+            font-size: 11px;
+        }
+
+        .panel-body {
+            padding: 20px 22px;
+        }
+
+        .profile-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            gap: 20px;
+
+            padding: 13px 0;
+
+            border-bottom:
+                1px solid rgba(148, 163, 184, 0.13);
+        }
+
+        .profile-row:first-child {
+            padding-top: 0;
+        }
+
+        .profile-row:last-child {
+            border-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .profile-label {
+            color: var(--muted);
+
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .profile-value {
+            color: var(--dark);
+
+            font-size: 13px;
+            font-weight: 750;
+
+            text-align: right;
+        }
+
+        .badge-type {
+            display: inline-flex;
+            align-items: center;
+
+            padding: 5px 9px;
+
+            border-radius: 20px;
+
+            color: #4f46e5;
+            background: rgba(79, 70, 229, 0.09);
+
+            font-size: 11px;
+            font-weight: 800;
+
+            text-transform: capitalize;
+        }
+
+        .badge-employment {
+            display: inline-flex;
+            align-items: center;
+
+            padding: 5px 9px;
+
+            border-radius: 20px;
+
+            color: #059669;
+            background: rgba(16, 185, 129, 0.09);
+
+            font-size: 11px;
+            font-weight: 800;
+
+            text-transform: capitalize;
+        }
+
+        /* =========================
+           FOOTER
+        ========================== */
+
+        .dashboard-footer {
+            margin-top: 38px;
+
+            text-align: center;
+
+            color: #94a3b8;
+
+            font-size: 12px;
+        }
+
+        /* =========================
+           MOBILE
+        ========================== */
+
+        @media (max-width: 767.98px) {
+
+            .dashboard-container {
+                padding-top: 22px;
+            }
+
+            .hero-content {
+                padding: 25px;
+            }
+
+            .hero-title {
+                font-size: 24px;
+            }
+
+            .hero-avatar {
+                width: 60px;
+                height: 60px;
+                font-size: 25px;
+            }
+
+            .hero-actions {
+                margin-top: 5px;
+            }
+
+            .hero-profile-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .worker-mini-profile {
+                display: none;
+            }
+
+            .action-card {
+                min-height: 205px;
+            }
+
+            .profile-row {
+                align-items: flex-start;
+                flex-direction: column;
+
+                gap: 5px;
+            }
+
+            .profile-value {
+                text-align: left;
+            }
+
+            .brand-title {
+                font-size: 17px;
+            }
+        }
+
+        /* =========================
+           REDUCED MOTION
+        ========================== */
+
+        @media (prefers-reduced-motion: reduce) {
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Ambient Background -->
+    <div class="ambient-light ambient-one"></div>
+    <div class="ambient-light ambient-two"></div>
+    <div class="ambient-light ambient-three"></div>
+
+
+    <!-- =========================
+         NAVBAR
+    ========================== -->
+
+    <nav class="worker-navbar">
+
+        <div class="container">
+
+            <div
+                class="navbar-inner d-flex align-items-center justify-content-between"
+            >
+
+                <!-- Brand -->
+                <a
+                    href="/worker/dashboard"
+                    class="brand"
+                >
+
+                    <div class="brand-icon">
+                        <i class="bi bi-tools"></i>
+                    </div>
+
+                    <div>
+
+                        <div class="brand-title">
+                            CampusNexus
+                        </div>
+
+                        <div class="brand-subtitle">
+                            Worker Portal
+                        </div>
+
+                    </div>
+
+                </a>
+
+
+                <!-- Right -->
+                <div class="d-flex align-items-center gap-3">
+
+                    <div class="worker-mini-profile">
+
+                        <div class="mini-avatar">
+                            <i class="bi bi-person"></i>
+                        </div>
+
+                        <div>
+
+                            <div class="mini-name">
+                                <%= user?.name || "Worker" %>
+                            </div>
+
+                            <div class="mini-role">
+                                Worker Account
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </nav>
+
+
+    <!-- =========================
+         MAIN
+    ========================== -->
+
+    <main class="container dashboard-container">
+
+
+        <!-- =========================
+             HERO
+        ========================== -->
+
+        <section class="hero-card">
+
+            <div class="hero-content">
+
+                <div
+                    class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-4"
+                >
+
+                    <div class="d-flex align-items-center gap-3">
+
+                        <div class="hero-avatar">
+                            <i class="bi bi-person-workspace"></i>
+                        </div>
+
+                        <div>
+
+                            <h1 class="hero-title">
+                                Welcome,
+                                <%= user?.name || "Worker" %> 👋
+                            </h1>
+
+                            <p class="hero-text">
+                                Manage your work, leave and personal
+                                information from your worker portal.
+                            </p>
+
+                            <div class="hero-pill">
+
+                                <i class="bi bi-shield-check"></i>
+
+                                <span>
+                                    Worker ID:
+                                    <%= workerProfile?.workerId || "—" %>
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="hero-actions">
+
+                        <a
+                            href="/worker/profile"
+                            class="hero-profile-btn"
+                        >
+
+                            <i class="bi bi-person-vcard"></i>
+
+                            My Profile
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             OVERVIEW
+        ========================== -->
+
+        <div class="section-heading">
+
+            <h2 class="section-title">
+                Your Overview
+            </h2>
+
+            <div class="section-description">
+                Quick information about your worker account.
+            </div>
+
+        </div>
+
+
+        <div class="row g-3">
+
+            <!-- Worker ID -->
+            <div class="col-12 col-sm-6 col-xl-3">
+
+                <div class="stat-card">
+
+                    <div class="stat-top">
+
+                        <div>
+
+                            <div class="stat-label">
+                                Worker ID
+                            </div>
+
+                            <div class="stat-value">
+                                <%= workerProfile?.workerId || "—" %>
+                            </div>
+
+                        </div>
+
+                        <div class="stat-icon blue">
+                            <i class="bi bi-person-badge"></i>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Worker Type -->
+            <div class="col-12 col-sm-6 col-xl-3">
+
+                <div class="stat-card">
+
+                    <div class="stat-top">
+
+                        <div>
+
+                            <div class="stat-label">
+                                Worker Type
+                            </div>
+
+                            <div class="stat-value text-capitalize">
+                                <%= workerProfile?.workerType || "—" %>
+                            </div>
+
+                        </div>
+
+                        <div class="stat-icon orange">
+                            <i class="bi bi-wrench-adjustable"></i>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Employment -->
+            <div class="col-12 col-sm-6 col-xl-3">
+
+                <div class="stat-card">
+
+                    <div class="stat-top">
+
+                        <div>
+
+                            <div class="stat-label">
+                                Employment
+                            </div>
+
+                            <div class="stat-value text-capitalize">
+                                <%= workerProfile?.employmentType || "—" %>
+                            </div>
+
+                        </div>
+
+                        <div class="stat-icon green">
+                            <i class="bi bi-briefcase"></i>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Salary -->
+            <div class="col-12 col-sm-6 col-xl-3">
+
+                <div class="stat-card">
+
+                    <div class="stat-top">
+
+                        <div>
+
+                            <div class="stat-label">
+                                Monthly Salary
+                            </div>
+
+                            <div class="stat-value salary">
+                                ₹<%= Number(workerProfile?.salary || 0).toLocaleString("en-IN") %>
+                            </div>
+
+                        </div>
+
+                        <div class="stat-icon cyan">
+                            <i class="bi bi-cash-coin"></i>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+             MAIN ACTIONS
+        ========================== -->
+
+        <div class="section-heading">
+
+            <h2 class="section-title">
+                Worker Services
+            </h2>
+
+            <div class="section-description">
+                Access your work, leave and personal profile.
+            </div>
+
+        </div>
+
+
+        <div class="row g-4">
+
+
+            <!-- MY WORK -->
+
+            <div class="col-12 col-md-6 col-lg-4">
+
+                <a
+                    href="/worker/tasks"
+                    class="action-card work"
+                >
+
+                    <div class="action-icon work">
+                        <i class="bi bi-clipboard2-check"></i>
+                    </div>
+
+                    <div class="action-title">
+                        My Work
+                    </div>
+
+                    <div class="action-text">
+                        View the work and tasks assigned to you
+                        by the administrator. Track your assigned
+                        work from here.
+                    </div>
+
+                    <div class="action-link">
+
+                        View My Tasks
+
+                        <i
+                            class="bi bi-arrow-right action-arrow"
+                        ></i>
+
+                    </div>
+
+                </a>
+
+            </div>
+
+
+            <!-- MY LEAVE -->
+
+            <div class="col-12 col-md-6 col-lg-4">
+
+                <a
+                    href="/worker/leave"
+                    class="action-card leave"
+                >
+
+                    <div class="action-icon leave">
+                        <i class="bi bi-calendar2-plus"></i>
+                    </div>
+
+                    <div class="action-title">
+                        My Leave
+                    </div>
+
+                    <div class="action-text">
+                        Apply for leave, check your leave status
+                        and view your previous leave applications.
+                    </div>
+
+                    <div class="action-link">
+
+                        Apply / View Leave
+
+                        <i
+                            class="bi bi-arrow-right action-arrow"
+                        ></i>
+
+                    </div>
+
+                </a>
+
+            </div>
+
+
+            <!-- MY PROFILE -->
+
+            <div class="col-12 col-md-6 col-lg-4">
+
+                <a
+                    href="/worker/profile"
+                    class="action-card profile"
+                >
+
+                    <div class="action-icon profile">
+                        <i class="bi bi-person-vcard"></i>
+                    </div>
+
+                    <div class="action-title">
+                        My Profile
+                    </div>
+
+                    <div class="action-text">
+                        View your complete worker profile including
+                        contact, employment, address and emergency
+                        information.
+                    </div>
+
+                    <div class="action-link">
+
+                        View My Profile
+
+                        <i
+                            class="bi bi-arrow-right action-arrow"
+                        ></i>
+
+                    </div>
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+             PROFILE SUMMARY
+        ========================== -->
+
+        <div class="section-heading">
+
+            <h2 class="section-title">
+                Profile Summary
+            </h2>
+
+            <div class="section-description">
+                A quick look at your registered information.
+            </div>
+
+        </div>
+
+
+        <div class="row g-4">
+
+
+            <!-- Basic Details -->
+
+            <div class="col-12 col-lg-6">
+
+                <div class="info-panel">
+
+                    <div class="panel-header">
+
+                        <div class="panel-header-icon">
+                            <i class="bi bi-person"></i>
+                        </div>
+
+                        <div>
+
+                            <h3 class="panel-title">
+                                Basic Information
+                            </h3>
+
+                            <div class="panel-subtitle">
+                                Personal and employment details
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="panel-body">
+
+                        <div class="profile-row">
+
+                            <span class="profile-label">
+                                Full Name
+                            </span>
+
+                            <span class="profile-value">
+                                <%= user?.name || "—" %>
+                            </span>
+
+                        </div>
+
+
+                        <div class="profile-row">
+
+                            <span class="profile-label">
+                                Email
+                            </span>
+
+                            <span class="profile-value">
+                                <%= user?.email || "—" %>
+                            </span>
+
+                        </div>
+
+
+                        <div class="profile-row">
+
+                            <span class="profile-label">
+                                Mobile
+                            </span>
+
+                            <span class="profile-value">
+                                <%= workerProfile?.mobile || "—" %>
+                            </span>
+
+                        </div>
+
+
+                        <div class="profile-row">
+
+                            <span class="profile-label">
+                                Gender
+                            </span>
+
+                            <span class="profile-value text-capitalize">
+                                <%= workerProfile?.gender || "—" %>
+                            </span>
+
+                        </div>
+
+
+                        <div class="profile-row">
+
+                            <span class="profile-label">
+                                Worker Type
+                            </span>
+
+                            <span class="profile-value">
+
+                                <% if (workerProfile?.workerType) { %>
+
+                                    <span class="badge-type">
+                                        <%= workerProfile.workerType %>
+                                    </span>
+
+                                <% } else { %>
+
+                                    —
+
+                                <% } %>
+
+                            </span>
+
+                        </div>
+
+
+                        <div class="profile-row">
+
+                            <span class="profile-label">
+                                Employment Type
+                            </span>
+
+                            <span class="profile-value">
+
+                                <% if (workerProfile?.employmentType) { %>
+
+                                    <span class="badge-employment">
+                                        <%= workerProfile.employmentType %>
+                                    </span>
+
+                                <% } else { %>
+
+                                    —
+
+                                <% } %>
+
+                            </span>
+
+                        </div>
+
+
+                        <div class="profile-row">
+
+                            <span class="profile-label">
+                                Joining Date
+                            </span>
+
+                            <span class="profile-value">
+
+                                <%
+                                    const joiningDate =
+                                        workerProfile?.joiningDate
+                                            ? new Date(workerProfile.joiningDate)
+                                            : null;
+                                %>
+
+                                <%= joiningDate &&
+                                    !isNaN(joiningDate.getTime())
+                                    ? joiningDate.toLocaleDateString(
+                                        "en-IN",
+                                        {
+                                            day: "2-digit",
+                                            month: "short",
+                                            year: "numeric"
+                                        }
+                                    )
+                                    : "—"
+                                %>
+
+                            </span>
+
+                        </div>
+
+
+                        <div class="profile-row">
+
+                            <span class="profile-label">
+                                Salary
+                            </span>
+
+                            <span class="profile-value text-success">
+                                ₹<%= Number(workerProfile?.salary || 0).toLocaleString("en-IN") %>
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Address -->
+
+            <div class="col-12 col-lg-6">
+
+                <div class="info-panel">
+
+                    <div class="panel-header">
+
+                        <div class="panel-header-icon">
+                            <i class="bi bi-geo-alt"></i>
+                        </div>
+
+                        <div>
+
+                            <h3 class="panel-title">
+                                Contact & Address
+                            </h3>
+
+                            <div class="panel-subtitle">
+                                Address and emergency contact
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="panel-body">
+
+                        <div class="profile-row">
+
+                            <span class="profile-label">
+                                Address
+                            </span>
+
+                            <span class="profile-value">
+                                <%= workerProfile?.address || "—" %>
+                            </span>
+
+                        </div>
+
+
+                        <div class="profile-row">
+
+                            <span class="profile-label">
+                                City
+                            </span>
+
+                            <span class="profile-value">
+                                <%= workerProfile?.city || "—" %>
+                            </span>
+
+                        </div>
+
+
+                        <div class="profile-row">
+
+                            <span class="profile-label">
+                                State
+                            </span>
+
+                            <span class="profile-value">
+                                <%= workerProfile?.state || "—" %>
+                            </span>
+
+                        </div>
+
+
+                        <div class="profile-row">
+
+                            <span class="profile-label">
+                                PIN
+                            </span>
+
+                            <span class="profile-value">
+                                <%= workerProfile?.pin || "—" %>
+                            </span>
+
+                        </div>
+
+
+                        <div class="profile-row">
+
+                            <span class="profile-label">
+                                Emergency Contact
+                            </span>
+
+                            <span class="profile-value">
+                                <%= workerProfile?.emergencyContact || "—" %>
+                            </span>
+
+                        </div>
+
+
+                        <div class="profile-row">
+
+                            <span class="profile-label">
+                                Relation
+                            </span>
+
+                            <span class="profile-value">
+                                <%= workerProfile?.emergencyRelation || "—" %>
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+             FOOTER
+        ========================== -->
+
+        <div class="dashboard-footer">
+
+            <i class="bi bi-shield-check me-1"></i>
+
+            CampusNexus Worker Portal
+
+            <span class="mx-1">•</span>
+
+            Your account information is protected.
+
+        </div>
+
+    </main>
+
+
+   
+
+</body>

@@ -1,0 +1,964 @@
+
+<% layout("layouts/boilerplate") -%>
+<div class="student-view-page">
+
+    <!-- TOP BAR -->
+    <div class="page-header">
+        <div>
+            <a href="/admin/students" class="back-link">
+                <i class="bi bi-arrow-left"></i>
+                Back to Students
+            </a>
+
+            <h1 class="page-title">
+                Student Profile
+            </h1>
+
+            <p class="page-subtitle">
+                Complete student information and academic details
+            </p>
+        </div>
+
+        <div class="header-actions">
+            <a href="/admin/students" class="btn btn-light">
+                <i class="bi bi-people me-1"></i>
+                All Students
+            </a>
+        </div>
+    </div>
+
+
+    <!-- PROFILE HERO -->
+    <div class="profile-hero">
+
+        <div class="profile-left">
+
+            <div class="profile-photo">
+                <% if (student.photo) { %>
+
+                    <img
+                        src="<%= student.photo %>"
+                        alt="<%= student.user.name %>"
+                    >
+
+                <% } else { %>
+
+                    <div class="photo-placeholder">
+                        <i class="bi bi-person-fill"></i>
+                    </div>
+
+                <% } %>
+            </div>
+
+            <div class="profile-main">
+
+                <h2>
+                    <%= student.user.name %>
+                </h2>
+
+                <div class="student-id">
+                    <i class="bi bi-person-badge"></i>
+                    <%= student.studentId %>
+                </div>
+
+                <div class="profile-meta">
+
+                    <span>
+                        <i class="bi bi-building"></i>
+                        <%= student.department %>
+                    </span>
+
+                    <span>
+                        <i class="bi bi-mortarboard"></i>
+                        <%= student.program %>
+                    </span>
+
+                    <span>
+                        Semester <%= student.semester %>
+                    </span>
+
+                    <% if (student.section) { %>
+                        <span>
+                            Section <%= student.section %>
+                        </span>
+                    <% } %>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="status-area">
+
+            <% if (student.user.isActive) { %>
+
+                <span class="status-badge active">
+                    <span class="status-dot"></span>
+                    Active Account
+                </span>
+
+            <% } else { %>
+
+                <span class="status-badge inactive">
+                    <span class="status-dot"></span>
+                    Inactive Account
+                </span>
+
+            <% } %>
+
+
+            <% if (student.academicApprovalStatus === "approved") { %>
+
+                <span class="approval-badge approved">
+                    <i class="bi bi-check-circle-fill"></i>
+                    Academic Approved
+                </span>
+
+            <% } else if (student.academicApprovalStatus === "rejected") { %>
+
+                <span class="approval-badge rejected">
+                    <i class="bi bi-x-circle-fill"></i>
+                    Academic Rejected
+                </span>
+
+            <% } else { %>
+
+                <span class="approval-badge pending">
+                    <i class="bi bi-clock-fill"></i>
+                    Academic Pending
+                </span>
+
+            <% } %>
+
+        </div>
+
+    </div>
+
+
+    <!-- PERSONAL INFORMATION -->
+    <div class="section-card">
+
+        <div class="section-title">
+            <div class="section-icon">
+                <i class="bi bi-person"></i>
+            </div>
+
+            <div>
+                <h3>Personal Information</h3>
+                <p>Basic student information</p>
+            </div>
+        </div>
+
+        <div class="info-grid">
+
+            <div class="info-item">
+                <span class="label">Full Name</span>
+                <strong>
+                    <%= student.user.name %>
+                </strong>
+            </div>
+
+            <div class="info-item">
+                <span class="label">Email</span>
+                <strong>
+                    <%= student.user.email %>
+                </strong>
+            </div>
+
+            <div class="info-item">
+                <span class="label">Mobile</span>
+                <strong>
+                    <%= student.mobile || "Not provided" %>
+                </strong>
+            </div>
+
+            <div class="info-item">
+                <span class="label">Date of Birth</span>
+                <strong>
+                    <%= student.dob
+                        ? new Date(student.dob).toLocaleDateString("en-IN")
+                        : "Not provided"
+                    %>
+                </strong>
+            </div>
+
+            <div class="info-item">
+                <span class="label">Gender</span>
+                <strong class="text-capitalize">
+                    <%= student.gender || "Not provided" %>
+                </strong>
+            </div>
+
+            <div class="info-item">
+                <span class="label">Profile Status</span>
+
+                <% if (student.profileStatus === "complete") { %>
+
+                    <strong class="text-success">
+                        <i class="bi bi-check-circle-fill me-1"></i>
+                        Complete
+                    </strong>
+
+                <% } else { %>
+
+                    <strong class="text-warning">
+                        <i class="bi bi-exclamation-circle-fill me-1"></i>
+                        Incomplete
+                    </strong>
+
+                <% } %>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ACADEMIC INFORMATION -->
+    <div class="section-card">
+
+        <div class="section-title">
+            <div class="section-icon academic">
+                <i class="bi bi-mortarboard"></i>
+            </div>
+
+            <div>
+                <h3>Academic Information</h3>
+                <p>Department, program and current academic placement</p>
+            </div>
+        </div>
+
+        <div class="info-grid">
+
+            <div class="info-item highlight">
+                <span class="label">Student ID</span>
+                <strong>
+                    <%= student.studentId %>
+                </strong>
+            </div>
+
+            <div class="info-item">
+                <span class="label">Department</span>
+                <strong class="text-capitalize">
+                    <%= student.department %>
+                </strong>
+            </div>
+
+            <div class="info-item">
+                <span class="label">Program</span>
+                <strong>
+                    <%= student.program %>
+                </strong>
+            </div>
+
+            <div class="info-item">
+                <span class="label">Semester</span>
+                <strong>
+                    Semester <%= student.semester %>
+                </strong>
+            </div>
+
+            <div class="info-item">
+                <span class="label">Section</span>
+                <strong>
+                    <%= student.section || "Not assigned" %>
+                </strong>
+            </div>
+
+            <div class="info-item">
+                <span class="label">Batch / Admission Year</span>
+                <strong>
+                    <%= student.batch %>
+                </strong>
+            </div>
+
+            <div class="info-item">
+                <span class="label">Academic Approval</span>
+
+                <% if (student.academicApprovalStatus === "approved") { %>
+
+                    <strong class="text-success">
+                        <i class="bi bi-check-circle-fill me-1"></i>
+                        Approved
+                    </strong>
+
+                <% } else if (student.academicApprovalStatus === "rejected") { %>
+
+                    <strong class="text-danger">
+                        <i class="bi bi-x-circle-fill me-1"></i>
+                        Rejected
+                    </strong>
+
+                <% } else { %>
+
+                    <strong class="text-warning">
+                        <i class="bi bi-clock-fill me-1"></i>
+                        Pending
+                    </strong>
+
+                <% } %>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ADDRESS -->
+    <div class="section-card">
+
+        <div class="section-title">
+            <div class="section-icon address">
+                <i class="bi bi-geo-alt"></i>
+            </div>
+
+            <div>
+                <h3>Address Information</h3>
+                <p>Permanent and current address details</p>
+            </div>
+        </div>
+
+        <div class="address-grid">
+
+            <div class="address-box">
+
+                <span class="label">
+                    Permanent Address
+                </span>
+
+                <p>
+                    <%= student.permanentAddress || "Not provided" %>
+                </p>
+
+            </div>
+
+            <div class="address-box">
+
+                <span class="label">
+                    Current Address
+                </span>
+
+                <p>
+                    <%= student.currentAddress || "Same / Not provided" %>
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="info-grid address-meta">
+
+            <div class="info-item">
+                <span class="label">City</span>
+                <strong>
+                    <%= student.city || "Not provided" %>
+                </strong>
+            </div>
+
+            <div class="info-item">
+                <span class="label">State</span>
+                <strong>
+                    <%= student.state || "Not provided" %>
+                </strong>
+            </div>
+
+            <div class="info-item">
+                <span class="label">PIN Code</span>
+                <strong>
+                    <%= student.pin || "Not provided" %>
+                </strong>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- GUARDIAN -->
+    <div class="section-card">
+
+        <div class="section-title">
+            <div class="section-icon guardian">
+                <i class="bi bi-people"></i>
+            </div>
+
+            <div>
+                <h3>Guardian & Emergency Contact</h3>
+                <p>Parent, guardian and emergency information</p>
+            </div>
+        </div>
+
+        <div class="info-grid">
+
+            <div class="info-item">
+                <span class="label">Guardian Name</span>
+                <strong>
+                    <%= student.guardianName || "Not provided" %>
+                </strong>
+            </div>
+
+            <div class="info-item">
+                <span class="label">Guardian Mobile</span>
+                <strong>
+                    <%= student.guardianMobile || "Not provided" %>
+                </strong>
+            </div>
+
+            <div class="info-item">
+                <span class="label">Emergency Contact</span>
+                <strong>
+                    <%= student.emergencyContact || "Not provided" %>
+                </strong>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- HOSTEL -->
+    <div class="section-card">
+
+        <div class="section-title">
+            <div class="section-icon hostel">
+                <i class="bi bi-house-door"></i>
+            </div>
+
+            <div>
+                <h3>Hostel Information</h3>
+                <p>Campus accommodation details</p>
+            </div>
+        </div>
+
+        <% if (student.hostelRequired) { %>
+
+            <div class="hostel-required">
+                <div class="hostel-icon">
+                    <i class="bi bi-house-check-fill"></i>
+                </div>
+
+                <div>
+                    <strong>Hostel Required</strong>
+                    <p>
+                        This student has requested / requires hostel accommodation.
+                    </p>
+                </div>
+            </div>
+
+            <div class="info-grid mt-4">
+
+                <div class="info-item">
+                    <span class="label">Hostel Name</span>
+                    <strong>
+                        <%= student.hostelName || "Not assigned" %>
+                    </strong>
+                </div>
+
+                <div class="info-item">
+                    <span class="label">Room Number</span>
+                    <strong>
+                        <%= student.roomNumber || "Not assigned" %>
+                    </strong>
+                </div>
+
+            </div>
+
+        <% } else { %>
+
+            <div class="no-hostel">
+                <i class="bi bi-house-x"></i>
+
+                <div>
+                    <strong>Hostel Not Required</strong>
+                    <p>
+                        This student has not requested hostel accommodation.
+                    </p>
+                </div>
+            </div>
+
+        <% } %>
+
+    </div>
+
+
+    <!-- ACCOUNT INFORMATION -->
+    <div class="section-card">
+
+        <div class="section-title">
+            <div class="section-icon account">
+                <i class="bi bi-shield-lock"></i>
+            </div>
+
+            <div>
+                <h3>Account Information</h3>
+                <p>Student account and login information</p>
+            </div>
+        </div>
+
+        <div class="info-grid">
+
+            <div class="info-item">
+                <span class="label">Account Status</span>
+
+                <% if (student.user.isActive) { %>
+
+                    <strong class="text-success">
+                        <i class="bi bi-check-circle-fill me-1"></i>
+                        Active
+                    </strong>
+
+                <% } else { %>
+
+                    <strong class="text-danger">
+                        <i class="bi bi-x-circle-fill me-1"></i>
+                        Inactive
+                    </strong>
+
+                <% } %>
+
+            </div>
+
+            <div class="info-item">
+                <span class="label">Role</span>
+                <strong class="text-capitalize">
+                    <%= student.user.role %>
+                </strong>
+            </div>
+
+            <div class="info-item">
+                <span class="label">Last Login</span>
+                <strong>
+                    <%= student.user.lastLogin
+                        ? new Date(student.user.lastLogin).toLocaleString("en-IN")
+                        : "Never"
+                    %>
+                </strong>
+            </div>
+
+            <div class="info-item">
+                <span class="label">Account Created</span>
+                <strong>
+                    <%= student.user.createdAt
+                        ? new Date(student.user.createdAt).toLocaleString("en-IN")
+                        : "Unknown"
+                    %>
+                </strong>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- BOTTOM -->
+    <div class="bottom-actions">
+
+        <a href="/admin/students" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i>
+            Back to Students
+        </a>
+
+    </div>
+
+</div>
+
+
+<style>
+
+    .student-view-page {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 30px 20px 60px;
+    }
+
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 20px;
+        margin-bottom: 25px;
+    }
+
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 600;
+        color: #64748b;
+        margin-bottom: 10px;
+    }
+
+    .back-link:hover {
+        color: #2563eb;
+    }
+
+    .page-title {
+        margin: 0;
+        font-size: 32px;
+        font-weight: 800;
+        color: #0f172a;
+    }
+
+    .page-subtitle {
+        margin: 6px 0 0;
+        color: #64748b;
+    }
+
+    .profile-hero {
+        background: linear-gradient(135deg, #111827, #1e3a8a);
+        color: white;
+        border-radius: 24px;
+        padding: 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 25px;
+        margin-bottom: 25px;
+        box-shadow: 0 18px 45px rgba(15, 23, 42, .16);
+    }
+
+    .profile-left {
+        display: flex;
+        align-items: center;
+        gap: 22px;
+    }
+
+    .profile-photo {
+        width: 110px;
+        height: 110px;
+        flex: 0 0 110px;
+        border-radius: 24px;
+        overflow: hidden;
+        background: rgba(255,255,255,.12);
+        border: 2px solid rgba(255,255,255,.25);
+    }
+
+    .profile-photo img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .photo-placeholder {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 48px;
+        color: rgba(255,255,255,.8);
+    }
+
+    .profile-main h2 {
+        margin: 0 0 8px;
+        font-size: 30px;
+        font-weight: 800;
+    }
+
+    .student-id {
+        font-weight: 700;
+        opacity: .9;
+        margin-bottom: 15px;
+    }
+
+    .profile-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .profile-meta span {
+        background: rgba(255,255,255,.12);
+        border: 1px solid rgba(255,255,255,.12);
+        padding: 7px 11px;
+        border-radius: 999px;
+        font-size: 13px;
+    }
+
+    .status-area {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 10px;
+    }
+
+    .status-badge,
+    .approval-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 8px 13px;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+
+    .status-badge.active {
+        background: rgba(34,197,94,.15);
+        color: #bbf7d0;
+    }
+
+    .status-badge.inactive {
+        background: rgba(239,68,68,.15);
+        color: #fecaca;
+    }
+
+    .status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: currentColor;
+    }
+
+    .approval-badge.approved {
+        background: rgba(34,197,94,.15);
+        color: #bbf7d0;
+    }
+
+    .approval-badge.rejected {
+        background: rgba(239,68,68,.15);
+        color: #fecaca;
+    }
+
+    .approval-badge.pending {
+        background: rgba(245,158,11,.16);
+        color: #fde68a;
+    }
+
+    .section-card {
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 20px;
+        padding: 25px;
+        margin-bottom: 20px;
+        box-shadow: 0 8px 30px rgba(15,23,42,.05);
+    }
+
+    .section-title {
+        display: flex;
+        align-items: center;
+        gap: 13px;
+        margin-bottom: 25px;
+    }
+
+    .section-title h3 {
+        margin: 0;
+        font-size: 19px;
+        font-weight: 800;
+        color: #111827;
+    }
+
+    .section-title p {
+        margin: 3px 0 0;
+        color: #64748b;
+        font-size: 13px;
+    }
+
+    .section-icon {
+        width: 45px;
+        height: 45px;
+        border-radius: 13px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #eff6ff;
+        color: #2563eb;
+        font-size: 20px;
+    }
+
+    .section-icon.academic {
+        background: #f5f3ff;
+        color: #7c3aed;
+    }
+
+    .section-icon.address {
+        background: #ecfdf5;
+        color: #059669;
+    }
+
+    .section-icon.guardian {
+        background: #fff7ed;
+        color: #ea580c;
+    }
+
+    .section-icon.hostel {
+        background: #fefce8;
+        color: #ca8a04;
+    }
+
+    .section-icon.account {
+        background: #fdf2f8;
+        color: #db2777;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+    }
+
+    .info-item {
+        padding: 16px;
+        background: #f8fafc;
+        border-radius: 14px;
+        border: 1px solid #eef2f7;
+    }
+
+    .info-item.highlight {
+        background: #eff6ff;
+        border-color: #dbeafe;
+    }
+
+    .label {
+        display: block;
+        color: #64748b;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .05em;
+        margin-bottom: 7px;
+    }
+
+    .info-item strong {
+        color: #111827;
+        font-size: 15px;
+        word-break: break-word;
+    }
+
+    .address-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 18px;
+    }
+
+    .address-box {
+        padding: 18px;
+        border: 1px solid #e5e7eb;
+        border-radius: 14px;
+        background: #f8fafc;
+    }
+
+    .address-box p {
+        margin: 0;
+        color: #334155;
+        line-height: 1.7;
+    }
+
+    .address-meta {
+        margin-top: 18px;
+    }
+
+    .hostel-required,
+    .no-hostel {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 18px;
+        border-radius: 15px;
+        background: #fffbeb;
+        border: 1px solid #fde68a;
+    }
+
+    .hostel-required strong,
+    .no-hostel strong {
+        color: #92400e;
+    }
+
+    .hostel-required p,
+    .no-hostel p {
+        margin: 3px 0 0;
+        color: #78716c;
+        font-size: 14px;
+    }
+
+    .hostel-icon {
+        width: 45px;
+        height: 45px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #fef3c7;
+        color: #d97706;
+        font-size: 21px;
+    }
+
+    .no-hostel {
+        background: #f8fafc;
+        border-color: #e2e8f0;
+    }
+
+    .no-hostel strong {
+        color: #334155;
+    }
+
+    .bottom-actions {
+        display: flex;
+        justify-content: flex-end;
+        padding-top: 5px;
+    }
+
+    @media (max-width: 900px) {
+
+        .profile-hero {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .status-area {
+            align-items: flex-start;
+            flex-direction: row;
+            flex-wrap: wrap;
+        }
+
+        .info-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+    }
+
+    @media (max-width: 600px) {
+
+        .student-view-page {
+            padding: 20px 12px 40px;
+        }
+
+        .page-header {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .profile-hero {
+            padding: 22px;
+            border-radius: 18px;
+        }
+
+        .profile-left {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .profile-main h2 {
+            font-size: 24px;
+        }
+
+        .info-grid,
+        .address-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .section-card {
+            padding: 18px;
+            border-radius: 16px;
+        }
+
+    }
+
+</style>

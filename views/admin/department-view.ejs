@@ -1,0 +1,264 @@
+<% layout("layouts/boilerplate") -%>
+
+<div class="container py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h2 class="fw-bold mb-1">
+                <%= department.name %>
+            </h2>
+
+            <p class="text-muted mb-0">
+                Department Code:
+                <strong><%= department.code %></strong>
+            </p>
+        </div>
+
+        <div class="d-flex gap-2">
+
+            <a
+                href="/admin/departments/<%= department._id %>/edit"
+                class="btn btn-outline-primary"
+            >
+                <i class="bi bi-pencil-fill"></i>
+                Edit
+            </a>
+
+            <a
+                href="/admin/departments"
+                class="btn btn-outline-secondary"
+            >
+                <i class="bi bi-arrow-left"></i>
+                Back
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="row g-4">
+
+        <div class="col-md-4">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <h6 class="text-muted mb-2">
+                        Department Status
+                    </h6>
+
+                    <% if (department.status === "active") { %>
+
+                        <span class="badge bg-success">
+                            Active
+                        </span>
+
+                    <% } else { %>
+
+                        <span class="badge bg-danger">
+                            Inactive
+                        </span>
+
+                    <% } %>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-md-4">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <h6 class="text-muted mb-2">
+                        Head of Department
+                    </h6>
+
+                    <% if (department.hod) { %>
+
+                        <h5 class="mb-1">
+                            <%= department.hod.name %>
+                        </h5>
+
+                        <div class="text-muted small">
+                            <%= department.hod.email %>
+                        </div>
+
+                    <% } else { %>
+
+                        <span class="text-muted">
+                            No HOD Assigned
+                        </span>
+
+                    <% } %>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-md-4">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <h6 class="text-muted mb-2">
+                        Created Date
+                    </h6>
+
+                    <h5>
+                        <%= new Date(
+                            department.createdAt
+                        ).toLocaleDateString("en-IN") %>
+                    </h5>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="row g-4 mt-1">
+
+        <div class="col-md-4">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-body">
+
+                    <div class="text-muted small">
+                        Number of Programs
+                    </div>
+
+                    <div class="fs-2 fw-bold">
+                        <%= statistics.programs %>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-md-4">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-body">
+
+                    <div class="text-muted small">
+                        Number of Students
+                    </div>
+
+                    <div class="fs-2 fw-bold">
+                        <%= statistics.students %>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-md-4">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-body">
+
+                    <div class="text-muted small">
+                        Number of Faculty
+                    </div>
+
+                    <div class="fs-2 fw-bold">
+                        <%= statistics.faculty %>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="card border-0 shadow-sm mt-4">
+
+        <div class="card-body">
+
+            <h5 class="fw-bold">
+                Department Information
+            </h5>
+
+            <hr>
+
+            <div class="row">
+
+                <div class="col-md-6 mb-3">
+                    <div class="text-muted small">
+                        Department Name
+                    </div>
+
+                    <div class="fw-semibold">
+                        <%= department.name %>
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <div class="text-muted small">
+                        Department Code
+                    </div>
+
+                    <div class="fw-semibold">
+                        <%= department.code %>
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <div class="text-muted small">
+                        HOD
+                    </div>
+
+                    <div class="fw-semibold">
+                        <%= department.hod
+                            ? department.hod.name
+                            : "Not Assigned"
+                        %>
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <div class="text-muted small">
+                        Created
+                    </div>
+
+                    <div class="fw-semibold">
+                        <%= new Date(
+                            department.createdAt
+                        ).toLocaleString("en-IN") %>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

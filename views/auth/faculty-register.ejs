@@ -1,0 +1,1469 @@
+<% layout("layouts/boilerplate") %>
+
+<style>
+    .faculty-registration-page {
+        background: #f4f7fb;
+        min-height: 100vh;
+        padding: 35px 0 60px;
+    }
+
+    .registration-wrapper {
+        max-width: 1200px;
+        margin: auto;
+    }
+
+    .page-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .page-header .icon-box {
+        width: 72px;
+        height: 72px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: #0d6efd;
+        color: white;
+        border-radius: 18px;
+        font-size: 32px;
+        margin-bottom: 15px;
+        box-shadow: 0 8px 25px rgba(13, 110, 253, 0.2);
+    }
+
+    .page-header h1 {
+        color: #172033;
+        font-weight: 700;
+        font-size: 32px;
+    }
+
+    .page-header p {
+        color: #6b7280;
+        margin-bottom: 0;
+    }
+
+    .registration-card {
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: 0 12px 35px rgba(15, 23, 42, 0.07);
+    }
+
+    .card-topbar {
+        padding: 24px 32px;
+        border-bottom: 1px solid #e9edf3;
+        background: #ffffff;
+    }
+
+    .card-topbar h5 {
+        font-weight: 700;
+        color: #172033;
+        margin-bottom: 5px;
+    }
+
+    .secure-label {
+        background: #ecfdf5;
+        color: #047857;
+        padding: 8px 13px;
+        border-radius: 30px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .form-section {
+        padding: 32px;
+        border-bottom: 1px solid #edf0f4;
+    }
+
+    .form-section:last-of-type {
+        border-bottom: none;
+    }
+
+    .section-heading {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 25px;
+    }
+
+    .section-number {
+        width: 42px;
+        height: 42px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #eaf2ff;
+        color: #0d6efd;
+        border-radius: 12px;
+        font-weight: 700;
+    }
+
+    .section-heading h4 {
+        color: #172033;
+        font-size: 19px;
+        font-weight: 700;
+        margin: 0;
+    }
+
+    .section-heading p {
+        color: #8a93a3;
+        font-size: 13px;
+        margin: 4px 0 0;
+    }
+
+    .form-label {
+        color: #374151;
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
+
+    .required {
+        color: #dc3545;
+    }
+
+    .form-control,
+    .form-select {
+        min-height: 47px;
+        border-radius: 9px;
+        border: 1px solid #dce2ea;
+        font-size: 14px;
+        padding: 10px 13px;
+    }
+
+    textarea.form-control {
+        min-height: 110px;
+        resize: vertical;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+        border-color: #86b7fe;
+        box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.10);
+    }
+
+    .form-text {
+        color: #8a93a3;
+        font-size: 12px;
+        margin-top: 6px;
+    }
+
+    .input-group .form-control {
+        border-radius: 9px 0 0 9px;
+    }
+
+    .input-group .btn {
+        min-width: 48px;
+        border-radius: 0 9px 9px 0;
+    }
+
+    .terms-container {
+        margin: 30px 32px 0;
+        padding: 18px;
+        background: #f8fafc;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+    }
+
+    .terms-container label {
+        color: #4b5563;
+        font-size: 13px;
+    }
+
+    .form-footer {
+        padding: 30px 32px;
+        background: #ffffff;
+    }
+
+    .submit-button {
+        min-height: 52px;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 15px;
+    }
+
+    .login-text {
+        color: #6b7280;
+        font-size: 13px;
+    }
+
+    .login-text a {
+        color: #0d6efd;
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+    @media (max-width: 768px) {
+        .faculty-registration-page {
+            padding: 20px 0 40px;
+        }
+
+        .form-section,
+        .card-topbar,
+        .form-footer {
+            padding: 22px 18px;
+        }
+
+        .terms-container {
+            margin-left: 18px;
+            margin-right: 18px;
+        }
+
+        .page-header h1 {
+            font-size: 25px;
+        }
+    }
+</style>
+
+
+<div class="faculty-registration-page">
+
+    <div class="container">
+
+        <div class="registration-wrapper">
+
+            <!-- PAGE HEADER -->
+            <div class="page-header">
+
+                <div class="icon-box">
+                    <i class="bi bi-person-workspace"></i>
+                </div>
+
+                <h1>Faculty Registration</h1>
+
+                <p>
+                    Register as a faculty member of your university
+                    through CampusNexus AI.
+                </p>
+
+            </div>
+
+
+            <!-- REGISTRATION CARD -->
+            <div class="registration-card">
+
+                <!-- CARD TOPBAR -->
+                <div class="card-topbar">
+
+                    <div class="d-flex flex-column flex-md-row
+                                justify-content-between
+                                align-items-md-center gap-3">
+
+                        <div>
+                            <h5>Faculty Account Application</h5>
+
+                            <small class="text-muted">
+                                Please provide accurate and complete information.
+                                Fields marked with
+                                <span class="required">*</span>
+                                are mandatory.
+                            </small>
+                        </div>
+
+                        <span class="secure-label">
+                            <i class="bi bi-shield-check me-1"></i>
+                            Secure Registration
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- FORM -->
+                <form
+                    action="/auth/register/faculty"
+                    method="POST"
+                    id="facultyRegistrationForm"
+                    novalidate
+                >
+
+                    <!-- ================================= -->
+                    <!-- PERSONAL INFORMATION -->
+                    <!-- ================================= -->
+
+                    <div class="form-section">
+
+                        <div class="section-heading">
+
+                            <div class="section-number">
+                                01
+                            </div>
+
+                            <div>
+                                <h4>Personal Information</h4>
+
+                                <p>
+                                    Enter your basic personal and contact details.
+                                </p>
+                            </div>
+
+                        </div>
+
+
+                        <div class="row g-4">
+
+                            <!-- Name -->
+                            <div class="col-md-6">
+
+                                <label for="name" class="form-label">
+                                    Full Name
+                                    <span class="required">*</span>
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="name"
+                                    name="name"
+                                    class="form-control"
+                                    placeholder="Enter your full name"
+                                    minlength="2"
+                                    maxlength="100"
+                                    autocomplete="name"
+                                    required
+                                >
+
+                                <div class="invalid-feedback">
+                                    Please enter your full name.
+                                </div>
+
+                            </div>
+
+
+                            <!-- DOB -->
+                            <div class="col-md-6">
+
+                                <label for="dob" class="form-label">
+                                    Date of Birth
+                                    <span class="required">*</span>
+                                </label>
+
+                                <input
+                                    type="date"
+                                    id="dob"
+                                    name="dob"
+                                    class="form-control"
+                                    required
+                                >
+
+                                <div class="invalid-feedback">
+                                    Please select your date of birth.
+                                </div>
+
+                            </div>
+
+
+                            <!-- Gender -->
+                            <div class="col-md-6">
+
+                                <label for="gender" class="form-label">
+                                    Gender
+                                    <span class="required">*</span>
+                                </label>
+
+                                <select
+                                    id="gender"
+                                    name="gender"
+                                    class="form-select"
+                                    required
+                                >
+                                    <option value="" selected disabled>
+                                        Select gender
+                                    </option>
+
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                    <option value="other">Other</option>
+                                </select>
+
+                                <div class="invalid-feedback">
+                                    Please select your gender.
+                                </div>
+
+                            </div>
+
+
+                            <!-- Mobile -->
+                            <div class="col-md-6">
+
+                                <label for="mobile" class="form-label">
+                                    Mobile Number
+                                    <span class="required">*</span>
+                                </label>
+
+                                <input
+                                    type="tel"
+                                    id="mobile"
+                                    name="mobile"
+                                    class="form-control"
+                                    placeholder="Enter 10-digit mobile number"
+                                    pattern="[0-9]{10}"
+                                    maxlength="10"
+                                    inputmode="numeric"
+                                    autocomplete="tel"
+                                    required
+                                >
+
+                                <div class="invalid-feedback">
+                                    Enter a valid 10-digit mobile number.
+                                </div>
+
+                            </div>
+
+
+                            <!-- Email -->
+                            <div class="col-12">
+
+                                <label for="email" class="form-label">
+                                    Email Address
+                                    <span class="required">*</span>
+                                </label>
+
+                                <input
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    class="form-control"
+                                    placeholder="faculty@university.edu"
+                                    autocomplete="email"
+                                    required
+                                >
+
+                                <div class="form-text">
+                                    This email will be used for login,
+                                    OTP verification and notifications.
+                                </div>
+
+                                <div class="invalid-feedback">
+                                    Please enter a valid email address.
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ================================= -->
+                    <!-- PROFESSIONAL INFORMATION -->
+                    <!-- ================================= -->
+
+                    <div class="form-section">
+
+                        <div class="section-heading">
+
+                            <div class="section-number">
+                                02
+                            </div>
+
+                            <div>
+                                <h4>Professional Information</h4>
+
+                                <p>
+                                    Enter your employment and university details.
+                                </p>
+                            </div>
+
+                        </div>
+
+
+                        <div class="row g-4">
+
+                            <!-- Employee ID -->
+                            <div class="col-md-6">
+
+                                <label for="employeeId" class="form-label">
+                                    Employee ID
+                                    <span class="required">*</span>
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="employeeId"
+                                    name="employeeId"
+                                    class="form-control"
+                                    placeholder="e.g. FAC-2026-001"
+                                    required
+                                >
+
+                                <div class="invalid-feedback">
+                                    Please enter your employee ID.
+                                </div>
+
+                            </div>
+
+
+                            <!-- Designation -->
+                            <div class="col-md-6">
+
+                                <label for="designation" class="form-label">
+                                    Designation
+                                    <span class="required">*</span>
+                                </label>
+
+                                <select
+                                    id="designation"
+                                    name="designation"
+                                    class="form-select"
+                                    required
+                                >
+                                    <option value="" selected disabled>
+                                        Select designation
+                                    </option>
+
+                                    <option value="professor">
+                                        Professor
+                                    </option>
+
+                                    <option value="associate-professor">
+                                        Associate Professor
+                                    </option>
+
+                                    <option value="assistant-professor">
+                                        Assistant Professor
+                                    </option>
+
+                                    <option value="lecturer">
+                                        Lecturer
+                                    </option>
+
+                                    <option value="visiting-faculty">
+                                        Visiting Faculty
+                                    </option>
+
+                                    <option value="guest-faculty">
+                                        Guest Faculty
+                                    </option>
+
+                                    <option value="research-faculty">
+                                        Research Faculty
+                                    </option>
+                                </select>
+
+                                <div class="invalid-feedback">
+                                    Please select your designation.
+                                </div>
+
+                            </div>
+
+
+                            <!-- Employment Type -->
+                            <div class="col-md-6">
+
+                                <label for="employmentType" class="form-label">
+                                    Employment Type
+                                    <span class="required">*</span>
+                                </label>
+
+                                <select
+                                    id="employmentType"
+                                    name="employmentType"
+                                    class="form-select"
+                                    required
+                                >
+                                    <option value="" selected disabled>
+                                        Select employment type
+                                    </option>
+
+                                    <option value="full-time">
+                                        Full Time
+                                    </option>
+
+                                    <option value="part-time">
+                                        Part Time
+                                    </option>
+
+                                    <option value="contract">
+                                        Contract
+                                    </option>
+
+                                    <option value="visiting">
+                                        Visiting
+                                    </option>
+                                </select>
+
+                                <div class="invalid-feedback">
+                                    Please select employment type.
+                                </div>
+
+                            </div>
+
+
+                            <!-- Joining Date -->
+                            <div class="col-md-6">
+
+                                <label for="joiningDate" class="form-label">
+                                    Joining Date
+                                    <span class="required">*</span>
+                                </label>
+
+                                <input
+                                    type="date"
+                                    id="joiningDate"
+                                    name="joiningDate"
+                                    class="form-control"
+                                    required
+                                >
+
+                                <div class="invalid-feedback">
+                                    Please select joining date.
+                                </div>
+
+                            </div>
+
+
+                            <!-- Department -->
+                            <div class="col-md-6">
+
+                                <label for="department" class="form-label">
+                                    Department
+                                    <span class="required">*</span>
+                                </label>
+
+                                <select
+                                    id="department"
+                                    name="department"
+                                    class="form-select"
+                                    required
+                                >
+                                    <option value="" selected disabled>
+                                        Select department
+                                    </option>
+
+                                    <option value="computer-science">
+                                        Computer Science
+                                    </option>
+
+                                    <option value="information-technology">
+                                        Information Technology
+                                    </option>
+
+                                    <option value="management">
+                                        Management
+                                    </option>
+
+                                    <option value="commerce">
+                                        Commerce
+                                    </option>
+
+                                    <option value="mathematics">
+                                        Mathematics
+                                    </option>
+
+                                    <option value="science">
+                                        Science
+                                    </option>
+
+                                    <option value="arts">
+                                        Arts
+                                    </option>
+
+                                    <option value="biotechnology">
+                                        Biotechnology
+                                    </option>
+
+                                    <option value="zoology">
+                                        Zoology
+                                    </option>
+
+                                    <option value="botany">
+                                        Botany
+                                    </option>
+                                </select>
+
+                                <div class="invalid-feedback">
+                                    Please select your department.
+                                </div>
+
+                            </div>
+
+
+                            <!-- Program -->
+                            <div class="col-md-6">
+
+                                <label for="program" class="form-label">
+                                    Programme
+                                    <span class="required">*</span>
+                                </label>
+
+                                <select
+                                    id="program"
+                                    name="program"
+                                    class="form-select"
+                                    required
+                                >
+                                    <option value="" selected disabled>
+                                        Select programme
+                                    </option>
+
+                                    <option value="bsc-cs">
+                                        BSc Computer Science
+                                    </option>
+
+                                    <option value="bsc-itm">
+                                        BSc ITM
+                                    </option>
+
+                                    <option value="bca">
+                                        BCA
+                                    </option>
+
+                                    <option value="mba">
+                                        MBA
+                                    </option>
+
+                                    <option value="mca">
+                                        MCA
+                                    </option>
+
+                                    <option value="msc-cs">
+                                        MSc Computer Science
+                                    </option>
+
+                                    <option value="bcom">
+                                        BCom
+                                    </option>
+
+                                    <option value="bsc-mathematics">
+                                        BSc Mathematics
+                                    </option>
+
+                                    <option value="bsc-science">
+                                        BSc Science
+                                    </option>
+
+                                    <option value="ba">
+                                        BA
+                                    </option>
+
+                                    <option value="biotechnology">
+                                        Biotechnology
+                                    </option>
+
+                                    <option value="zoology">
+                                        Zoology
+                                    </option>
+
+                                    <option value="botany">
+                                        Botany
+                                    </option>
+                                </select>
+
+                                <div class="invalid-feedback">
+                                    Please select your programme.
+                                </div>
+
+                            </div>
+
+
+                            <!-- Specialization -->
+                            <div class="col-md-6">
+
+                                <label for="specialization" class="form-label">
+                                    Specialization
+                                    <span class="required">*</span>
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="specialization"
+                                    name="specialization"
+                                    class="form-control"
+                                    placeholder="e.g. Data Science, Finance, Botany"
+                                    required
+                                >
+
+                                <div class="invalid-feedback">
+                                    Please enter your specialization.
+                                </div>
+
+                            </div>
+
+
+                            <!-- Courses -->
+                            <div class="col-12">
+
+                                <label for="courses" class="form-label">
+                                    Courses / Subjects
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="courses"
+                                    name="courses"
+                                    class="form-control"
+                                    placeholder="e.g. DBMS, Operating Systems, Mathematics"
+                                >
+
+                                <div class="form-text">
+                                    Optional. Final course allocation will be
+                                    managed by the university administrator.
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ================================= -->
+                    <!-- QUALIFICATION -->
+                    <!-- ================================= -->
+
+                    <div class="form-section">
+
+                        <div class="section-heading">
+
+                            <div class="section-number">
+                                03
+                            </div>
+
+                            <div>
+                                <h4>Qualification & Experience</h4>
+
+                                <p>
+                                    Enter your academic qualification details.
+                                </p>
+                            </div>
+
+                        </div>
+
+
+                        <div class="row g-4">
+
+                            <!-- Highest Qualification -->
+                            <div class="col-md-6">
+
+                                <label for="highestQualification" class="form-label">
+                                    Highest Qualification
+                                    <span class="required">*</span>
+                                </label>
+
+                                <select
+                                    id="highestQualification"
+                                    name="highestQualification"
+                                    class="form-select"
+                                    required
+                                >
+                                    <option value="" selected disabled>
+                                        Select qualification
+                                    </option>
+
+                                    <option value="phd">PhD</option>
+                                    <option value="mphil">M.Phil</option>
+                                    <option value="postgraduate">
+                                        Postgraduate
+                                    </option>
+                                    <option value="graduate">
+                                        Graduate
+                                    </option>
+                                    <option value="other">Other</option>
+                                </select>
+
+                                <div class="invalid-feedback">
+                                    Please select your qualification.
+                                </div>
+
+                            </div>
+
+
+                            <!-- Experience -->
+                            <div class="col-md-6">
+
+                                <label for="experience" class="form-label">
+                                    Professional Experience
+                                    <span class="required">*</span>
+                                </label>
+
+                                <select
+                                    id="experience"
+                                    name="experience"
+                                    class="form-select"
+                                    required
+                                >
+                                    <option value="" selected disabled>
+                                        Select experience
+                                    </option>
+
+                                    <option value="0-2">0–2 Years</option>
+                                    <option value="3-5">3–5 Years</option>
+                                    <option value="6-10">6–10 Years</option>
+                                    <option value="11-15">11–15 Years</option>
+                                    <option value="15+">15+ Years</option>
+                                </select>
+
+                                <div class="invalid-feedback">
+                                    Please select your experience.
+                                </div>
+
+                            </div>
+
+
+                            <!-- Qualification Field -->
+                            <div class="col-md-6">
+
+                                <label for="qualificationField" class="form-label">
+                                    Qualification Field
+                                    <span class="required">*</span>
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="qualificationField"
+                                    name="qualificationField"
+                                    class="form-control"
+                                    placeholder="e.g. Computer Science"
+                                    required
+                                >
+
+                                <div class="invalid-feedback">
+                                    Please enter your qualification field.
+                                </div>
+
+                            </div>
+
+
+                            <!-- University -->
+                            <div class="col-md-6">
+
+                                <label for="qualificationUniversity" class="form-label">
+                                    University / Institution
+                                    <span class="required">*</span>
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="qualificationUniversity"
+                                    name="qualificationUniversity"
+                                    class="form-control"
+                                    placeholder="Enter institution name"
+                                    required
+                                >
+
+                                <div class="invalid-feedback">
+                                    Please enter your institution name.
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ================================= -->
+                    <!-- ADDRESS -->
+                    <!-- ================================= -->
+
+                    <div class="form-section">
+
+                        <div class="section-heading">
+
+                            <div class="section-number">
+                                04
+                            </div>
+
+                            <div>
+                                <h4>Address Information</h4>
+
+                                <p>
+                                    Enter your residential address.
+                                </p>
+                            </div>
+
+                        </div>
+
+
+                        <div class="row g-4">
+
+                            <!-- Address -->
+                            <div class="col-12">
+
+                                <label for="address" class="form-label">
+                                    Complete Address
+                                    <span class="required">*</span>
+                                </label>
+
+                                <textarea
+                                    id="address"
+                                    name="address"
+                                    class="form-control"
+                                    rows="3"
+                                    placeholder="Enter your complete address"
+                                    required
+                                ></textarea>
+
+                                <div class="invalid-feedback">
+                                    Please enter your complete address.
+                                </div>
+
+                            </div>
+
+
+                            <!-- City -->
+                            <div class="col-md-4">
+
+                                <label for="city" class="form-label">
+                                    City
+                                    <span class="required">*</span>
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="city"
+                                    name="city"
+                                    class="form-control"
+                                    placeholder="Enter city"
+                                    required
+                                >
+
+                                <div class="invalid-feedback">
+                                    Please enter your city.
+                                </div>
+
+                            </div>
+
+
+                            <!-- State -->
+                            <div class="col-md-4">
+
+                                <label for="state" class="form-label">
+                                    State
+                                    <span class="required">*</span>
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="state"
+                                    name="state"
+                                    class="form-control"
+                                    placeholder="Enter state"
+                                    required
+                                >
+
+                                <div class="invalid-feedback">
+                                    Please enter your state.
+                                </div>
+
+                            </div>
+
+
+                            <!-- PIN -->
+                            <div class="col-md-4">
+
+                                <label for="pin" class="form-label">
+                                    PIN Code
+                                    <span class="required">*</span>
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="pin"
+                                    name="pin"
+                                    class="form-control"
+                                    placeholder="6-digit PIN"
+                                    pattern="[0-9]{6}"
+                                    maxlength="6"
+                                    inputmode="numeric"
+                                    required
+                                >
+
+                                <div class="invalid-feedback">
+                                    Please enter a valid 6-digit PIN.
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ================================= -->
+                    <!-- EMERGENCY CONTACT -->
+                    <!-- ================================= -->
+
+                    <div class="form-section">
+
+                        <div class="section-heading">
+
+                            <div class="section-number">
+                                05
+                            </div>
+
+                            <div>
+                                <h4>Emergency Contact</h4>
+
+                                <p>
+                                    Provide an emergency contact person.
+                                </p>
+                            </div>
+
+                        </div>
+
+
+                        <div class="row g-4">
+
+                            <!-- Emergency Contact -->
+                            <div class="col-md-6">
+
+                                <label for="emergencyContact" class="form-label">
+                                    Emergency Contact Number
+                                    <span class="required">*</span>
+                                </label>
+
+                                <input
+                                    type="tel"
+                                    id="emergencyContact"
+                                    name="emergencyContact"
+                                    class="form-control"
+                                    placeholder="10-digit mobile number"
+                                    pattern="[0-9]{10}"
+                                    maxlength="10"
+                                    inputmode="numeric"
+                                    required
+                                >
+
+                                <div class="invalid-feedback">
+                                    Please enter a valid emergency contact number.
+                                </div>
+
+                            </div>
+
+
+                            <!-- Relation -->
+                            <div class="col-md-6">
+
+                                <label for="emergencyRelation" class="form-label">
+                                    Relationship
+                                    <span class="required">*</span>
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="emergencyRelation"
+                                    name="emergencyRelation"
+                                    class="form-control"
+                                    placeholder="e.g. Parent, Spouse, Sibling"
+                                    required
+                                >
+
+                                <div class="invalid-feedback">
+                                    Please enter the relationship.
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ================================= -->
+                    <!-- ACCOUNT SECURITY -->
+                    <!-- ================================= -->
+
+                    <div class="form-section">
+
+                        <div class="section-heading">
+
+                            <div class="section-number">
+                                06
+                            </div>
+
+                            <div>
+                                <h4>Account Security</h4>
+
+                                <p>
+                                    Create your login password.
+                                </p>
+                            </div>
+
+                        </div>
+
+
+                        <div class="row g-4">
+
+                            <!-- Password -->
+                            <div class="col-md-6">
+
+                                <label for="password" class="form-label">
+                                    Password
+                                    <span class="required">*</span>
+                                </label>
+
+                                <div class="input-group">
+
+                                    <input
+                                        type="password"
+                                        id="password"
+                                        name="password"
+                                        class="form-control"
+                                        placeholder="Create password"
+                                        minlength="6"
+                                        autocomplete="new-password"
+                                        required
+                                    >
+
+                                    <button
+                                        type="button"
+                                        class="btn btn-outline-secondary"
+                                        id="togglePassword"
+                                        aria-label="Show password"
+                                    >
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+
+                                </div>
+
+                                <div class="form-text">
+                                    Password must contain at least 6 characters.
+                                </div>
+
+                                <div class="invalid-feedback">
+                                    Please enter a valid password.
+                                </div>
+
+                            </div>
+
+
+                            <!-- Confirm Password -->
+                            <div class="col-md-6">
+
+                                <label for="confirmPassword" class="form-label">
+                                    Confirm Password
+                                    <span class="required">*</span>
+                                </label>
+
+                                <div class="input-group">
+
+                                    <input
+                                        type="password"
+                                        id="confirmPassword"
+                                        name="confirmPassword"
+                                        class="form-control"
+                                        placeholder="Confirm password"
+                                        minlength="6"
+                                        autocomplete="new-password"
+                                        required
+                                    >
+
+                                    <button
+                                        type="button"
+                                        class="btn btn-outline-secondary"
+                                        id="toggleConfirmPassword"
+                                        aria-label="Show password"
+                                    >
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+
+                                </div>
+
+                                <div class="invalid-feedback">
+                                    Passwords must match.
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- TERMS -->
+                    <div class="terms-container">
+
+                        <div class="form-check">
+
+                            <input
+                                type="checkbox"
+                                class="form-check-input"
+                                id="terms"
+                                name="terms"
+                                required
+                            >
+
+                            <label
+                                for="terms"
+                                class="form-check-label"
+                            >
+                                I confirm that all information provided by me
+                                is accurate and complete.
+                                <span class="required">*</span>
+                            </label>
+
+                            <div class="invalid-feedback">
+                                Please confirm the information.
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- FORM FOOTER -->
+                    <div class="form-footer">
+
+                        <div class="d-grid">
+
+                            <button
+                                type="submit"
+                                class="btn btn-primary submit-button"
+                                id="submitBtn"
+                            >
+                                <i class="bi bi-person-plus me-2"></i>
+                                Create Faculty Account
+                            </button>
+
+                        </div>
+
+
+                        <div class="text-center mt-4 login-text">
+
+                            Already have a faculty account?
+
+                            <a href="/auth/login/faculty">
+                                Login here
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const form = document.getElementById("facultyRegistrationForm");
+
+    const password = document.getElementById("password");
+    const confirmPassword = document.getElementById("confirmPassword");
+
+    const togglePassword = document.getElementById("togglePassword");
+    const toggleConfirmPassword =
+        document.getElementById("toggleConfirmPassword");
+
+    const submitBtn = document.getElementById("submitBtn");
+
+
+    // Password visibility
+    function toggleVisibility(input, button) {
+
+        const isHidden = input.type === "password";
+
+        input.type = isHidden ? "text" : "password";
+
+        button.innerHTML = isHidden
+            ? '<i class="bi bi-eye-slash"></i>'
+            : '<i class="bi bi-eye"></i>';
+
+        button.setAttribute(
+            "aria-label",
+            isHidden ? "Hide password" : "Show password"
+        );
+    }
+
+
+    togglePassword.addEventListener("click", function () {
+        toggleVisibility(password, togglePassword);
+    });
+
+
+    toggleConfirmPassword.addEventListener("click", function () {
+        toggleVisibility(
+            confirmPassword,
+            toggleConfirmPassword
+        );
+    });
+
+
+    // Password matching
+    function validatePasswords() {
+
+        if (confirmPassword.value === "") {
+            confirmPassword.setCustomValidity("");
+            return;
+        }
+
+        if (password.value !== confirmPassword.value) {
+            confirmPassword.setCustomValidity("Passwords do not match.");
+        } else {
+            confirmPassword.setCustomValidity("");
+        }
+    }
+
+
+    password.addEventListener("input", validatePasswords);
+    confirmPassword.addEventListener("input", validatePasswords);
+
+
+    // Mobile number cleanup
+    document.getElementById("mobile").addEventListener("input", function () {
+        this.value = this.value.replace(/\D/g, "").slice(0, 10);
+    });
+
+
+    // Emergency number cleanup
+    document
+        .getElementById("emergencyContact")
+        .addEventListener("input", function () {
+            this.value = this.value.replace(/\D/g, "").slice(0, 10);
+        });
+
+
+    // PIN cleanup
+    document.getElementById("pin").addEventListener("input", function () {
+        this.value = this.value.replace(/\D/g, "").slice(0, 6);
+    });
+
+
+    // Form validation
+    form.addEventListener("submit", function (event) {
+
+        validatePasswords();
+
+        if (!form.checkValidity()) {
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            form.classList.add("was-validated");
+
+            const firstInvalid = form.querySelector(":invalid");
+
+            if (firstInvalid) {
+                firstInvalid.focus();
+            }
+
+            return;
+        }
+
+
+        // Prevent double submission
+        submitBtn.disabled = true;
+
+        submitBtn.innerHTML = `
+            <span
+                class="spinner-border spinner-border-sm me-2"
+                role="status"
+                aria-hidden="true">
+            </span>
+            Creating Account...
+        `;
+    });
+
+});
+</script>

@@ -1,0 +1,137 @@
+<% layout("layouts/boilerplate") -%>
+<div class="container py-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-md-6 col-lg-5">
+
+            <div class="text-center mb-4">
+
+                <div class="login-page-icon bg-primary bg-opacity-10 text-primary mx-auto mb-3">
+                    <i class="bi bi-person-fill"></i>
+                </div>
+
+                <h2 class="fw-bold">
+                    Student Login
+                </h2>
+
+                <p class="text-muted">
+                    Sign in to your CampusNexus student portal
+                </p>
+
+            </div>
+
+
+            <div class="card border-0 shadow-sm rounded-4">
+
+                <div class="card-body p-4 p-md-5">
+
+                    <form
+                        action="/auth/login/student"
+                        method="POST"
+                    >
+
+                        <div class="mb-3">
+
+                            <label
+                                for="email"
+                                class="form-label fw-semibold"
+                            >
+                                Student Email
+                            </label>
+
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                class="form-control form-control-lg"
+                                placeholder="Enter your email"
+                                autocomplete="email"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="mb-3">
+
+                            <label
+                                for="password"
+                                class="form-label fw-semibold"
+                            >
+                                Password
+                            </label>
+
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                class="form-control form-control-lg"
+                                placeholder="Enter your password"
+                                autocomplete="current-password"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="text-end mb-4">
+
+                            <a
+                                href="/auth/forgot-password"
+                                class="text-decoration-none"
+                            >
+                                Forgot Password?
+                            </a>
+
+                        </div>
+
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary btn-lg w-100"
+                        >
+                            <i class="bi bi-box-arrow-in-right me-2"></i>
+                            Login
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+
+            <div class="text-center mt-4">
+
+                <a
+                    href="/auth/login"
+                    class="text-decoration-none"
+                >
+                    <i class="bi bi-arrow-left me-1"></i>
+                    Back to Login Selection
+                </a>
+
+            </div>
+
+
+            <div class="text-center mt-3">
+
+                <span class="text-muted">
+                    Don't have an account?
+                </span>
+
+                <a
+                    href="/auth/register/student"
+                    class="fw-semibold text-decoration-none"
+                >
+                    Register
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

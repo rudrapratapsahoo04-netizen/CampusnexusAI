@@ -1,0 +1,805 @@
+
+<%= layout("layouts/boilerplate") -%>
+<style>
+
+    .students-hero {
+        position: relative;
+        overflow: hidden;
+        border-radius: 24px;
+        padding: 32px;
+        color: #fff;
+        background: linear-gradient(
+            135deg,
+            #4338ca,
+            #7c3aed
+        );
+        box-shadow:
+            0 20px 45px
+            rgba(79, 70, 229, .20);
+    }
+
+    .students-hero::after {
+        content: "";
+        position: absolute;
+        width: 240px;
+        height: 240px;
+        border-radius: 50%;
+        background: rgba(255,255,255,.08);
+        right: -80px;
+        top: -100px;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+    }
+
+    .hero-icon {
+        width: 58px;
+        height: 58px;
+        border-radius: 18px;
+        background: rgba(255,255,255,.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        margin-bottom: 18px;
+    }
+
+    .students-card {
+        border: 0;
+        border-radius: 20px;
+        box-shadow:
+            0 8px 28px
+            rgba(15,23,42,.06);
+    }
+
+    .student-avatar {
+        width: 44px;
+        height: 44px;
+        border-radius: 13px;
+        background: #eef2ff;
+        color: #4f46e5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+    }
+
+    .summary-number {
+        font-size: 1.7rem;
+        font-weight: 700;
+    }
+
+    .summary-icon {
+        width: 46px;
+        height: 46px;
+        border-radius: 13px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .table thead th {
+        background: #f8fafc;
+        font-size: .78rem;
+        text-transform: uppercase;
+        letter-spacing: .04em;
+        color: #475569;
+        white-space: nowrap;
+    }
+
+    .table tbody td {
+        vertical-align: middle;
+    }
+
+    .course-chip {
+        display: inline-flex;
+        align-items: center;
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: #f1f5f9;
+        font-size: .78rem;
+        font-weight: 600;
+    }
+
+    .academic-text {
+        line-height: 1.5;
+    }
+
+    @media (max-width: 768px) {
+
+        .students-hero {
+            padding: 25px;
+            border-radius: 20px;
+        }
+
+        .table-responsive {
+            border-radius: 16px;
+        }
+
+    }
+
+</style>
+
+
+<div class="container-fluid pb-5">
+
+
+    <!-- ================================================= -->
+    <!-- HERO -->
+    <!-- ================================================= -->
+
+    <div class="students-hero mb-4">
+
+        <div class="hero-content">
+
+            <div class="hero-icon">
+                <i class="bi bi-people"></i>
+            </div>
+
+            <div class="small text-uppercase fw-semibold opacity-75">
+                Faculty Workspace
+            </div>
+
+            <h1 class="fw-bold mb-2">
+                My Students
+            </h1>
+
+            <p class="mb-0 opacity-75">
+                View students from your assigned courses
+                and sections.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- SUMMARY -->
+    <!-- ================================================= -->
+
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-4">
+
+            <div class="card students-card h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex align-items-center">
+
+                        <div
+                            class="summary-icon me-3"
+                            style="
+                                background:#eef2ff;
+                                color:#4f46e5;
+                            "
+                        >
+                            <i class="bi bi-people"></i>
+                        </div>
+
+                        <div>
+
+                            <div class="text-muted small">
+                                Students
+                            </div>
+
+                            <div class="summary-number">
+                                <%= summary.totalStudents %>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-md-4">
+
+            <div class="card students-card h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex align-items-center">
+
+                        <div
+                            class="summary-icon me-3"
+                            style="
+                                background:#ecfdf5;
+                                color:#059669;
+                            "
+                        >
+                            <i class="bi bi-book"></i>
+                        </div>
+
+                        <div>
+
+                            <div class="text-muted small">
+                                Assigned Courses
+                            </div>
+
+                            <div class="summary-number">
+                                <%= summary.totalCourses %>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-md-4">
+
+            <div class="card students-card h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex align-items-center">
+
+                        <div
+                            class="summary-icon me-3"
+                            style="
+                                background:#fff7ed;
+                                color:#ea580c;
+                            "
+                        >
+                            <i class="bi bi-diagram-3"></i>
+                        </div>
+
+                        <div>
+
+                            <div class="text-muted small">
+                                Assigned Sections
+                            </div>
+
+                            <div class="summary-number">
+                                <%= summary.totalSections %>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- FILTER -->
+    <!-- ================================================= -->
+
+    <div class="card students-card mb-4">
+
+        <div class="card-body p-4">
+
+            <div class="d-flex align-items-center mb-3">
+
+                <div
+                    class="summary-icon me-3"
+                    style="
+                        background:#eff6ff;
+                        color:#2563eb;
+                    "
+                >
+                    <i class="bi bi-funnel"></i>
+                </div>
+
+                <div>
+
+                    <h5 class="fw-bold mb-1">
+                        Student Filters
+                    </h5>
+
+                    <small class="text-muted">
+                        Filter students from your assigned academic area.
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <form
+                method="GET"
+                action="/faculty/students"
+            >
+
+                <div class="row g-3">
+
+                    <!-- Department -->
+
+                    <div class="col-lg-3 col-md-6">
+
+                        <label class="form-label fw-semibold">
+                            Department
+                        </label>
+
+                        <select
+                            name="department"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                All Assigned Departments
+                            </option>
+
+                            <% [...new Set(
+                                assignedCourses.map(
+                                    item => item.department
+                                )
+                            )].forEach(dept => { %>
+
+                                <option
+                                    value="<%= dept %>"
+                                    <%= filters.department === dept ? "selected" : "" %>
+                                >
+                                    <%= dept %>
+                                </option>
+
+                            <% }) %>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Program -->
+
+                    <div class="col-lg-3 col-md-6">
+
+                        <label class="form-label fw-semibold">
+                            Program
+                        </label>
+
+                        <select
+                            name="program"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                All Assigned Programs
+                            </option>
+
+                            <% [...new Set(
+                                assignedCourses.map(
+                                    item => item.program
+                                )
+                            )].forEach(program => { %>
+
+                                <option
+                                    value="<%= program %>"
+                                    <%= filters.program === program ? "selected" : "" %>
+                                >
+                                    <%= program %>
+                                </option>
+
+                            <% }) %>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Semester -->
+
+                    <div class="col-lg-2 col-md-6">
+
+                        <label class="form-label fw-semibold">
+                            Semester
+                        </label>
+
+                        <select
+                            name="semester"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                All
+                            </option>
+
+                            <% [...new Set(
+                                assignedCourses.map(
+                                    item => item.semester
+                                )
+                            )]
+                            .sort((a,b) => a-b)
+                            .forEach(sem => { %>
+
+                                <option
+                                    value="<%= sem %>"
+                                    <%= Number(filters.semester) === Number(sem) ? "selected" : "" %>
+                                >
+                                    Semester <%= sem %>
+                                </option>
+
+                            <% }) %>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Section -->
+
+                    <div class="col-lg-2 col-md-6">
+
+                        <label class="form-label fw-semibold">
+                            Section
+                        </label>
+
+                        <select
+                            name="section"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                All
+                            </option>
+
+                            <% [...new Set(
+                                assignedCourses.map(
+                                    item => item.section
+                                )
+                            )]
+                            .sort()
+                            .forEach(section => { %>
+
+                                <option
+                                    value="<%= section %>"
+                                    <%= filters.section === section ? "selected" : "" %>
+                                >
+                                    Section <%= section %>
+                                </option>
+
+                            <% }) %>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Course -->
+
+                    <div class="col-lg-2 col-md-6">
+
+                        <label class="form-label fw-semibold">
+                            Course
+                        </label>
+
+                        <select
+                            name="courseCode"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                All Courses
+                            </option>
+
+                            <% assignedCourses.forEach(course => { %>
+
+                                <option
+                                    value="<%= course.courseCode %>"
+                                    <%= filters.courseCode === course.courseCode ? "selected" : "" %>
+                                >
+                                    <%= course.courseCode %>
+                                </option>
+
+                            <% }) %>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Search -->
+
+                    <div class="col-lg-8 col-md-8">
+
+                        <label class="form-label fw-semibold">
+                            Search Student
+                        </label>
+
+                        <input
+                            type="text"
+                            name="search"
+                            class="form-control"
+                            placeholder="Search by name, student ID or email"
+                            value="<%= filters.search %>"
+                        >
+
+                    </div>
+
+
+                    <div class="col-lg-4 col-md-4 d-flex align-items-end gap-2">
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary px-4"
+                        >
+                            <i class="bi bi-search me-1"></i>
+                            Search
+                        </button>
+
+                        <a
+                            href="/faculty/students"
+                            class="btn btn-outline-secondary"
+                        >
+                            Reset
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- STUDENTS -->
+    <!-- ================================================= -->
+
+    <div class="card students-card">
+
+        <div class="card-body p-0">
+
+            <% if (students.length > 0) { %>
+
+                <div class="p-4 border-bottom">
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <div>
+
+                            <h5 class="fw-bold mb-1">
+                                Assigned Students
+                            </h5>
+
+                            <small class="text-muted">
+                                Students belonging to your assigned courses and sections.
+                            </small>
+
+                        </div>
+
+                        <span class="badge text-bg-primary">
+                            <%= students.length %> Students
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="table-responsive">
+
+                    <table class="table align-middle mb-0">
+
+                        <thead>
+
+                            <tr>
+
+                                <th class="ps-4">
+                                    Student
+                                </th>
+
+                                <th>
+                                    Student ID
+                                </th>
+
+                                <th>
+                                    Department
+                                </th>
+
+                                <th>
+                                    Program
+                                </th>
+
+                                <th>
+                                    Semester
+                                </th>
+
+                                <th>
+                                    Section
+                                </th>
+
+                                <th>
+                                    Status
+                                </th>
+
+                                <th class="text-end pe-4">
+                                    Actions
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            <% students.forEach(student => { %>
+
+                                <tr>
+
+                                    <td class="ps-4">
+
+                                        <div class="d-flex align-items-center">
+
+                                            <div class="student-avatar me-3">
+
+                                                <%= student.user?.name
+                                                    ? student.user.name
+                                                        .charAt(0)
+                                                        .toUpperCase()
+                                                    : "S" %>
+
+                                            </div>
+
+                                            <div>
+
+                                                <div class="fw-semibold">
+                                                    <%= student.user?.name || "Student" %>
+                                                </div>
+
+                                                <small class="text-muted">
+                                                    <%= student.user?.email || "—" %>
+                                                </small>
+
+                                            </div>
+
+                                        </div>
+
+                                    </td>
+
+
+                                    <td>
+
+                                        <span class="fw-semibold">
+                                            <%= student.studentId %>
+                                        </span>
+
+                                    </td>
+
+
+                                    <td>
+                                        <%= student.department %>
+                                    </td>
+
+
+                                    <td>
+                                        <%= student.program %>
+                                    </td>
+
+
+                                    <td>
+                                        Semester <%= student.semester %>
+                                    </td>
+
+
+                                    <td>
+
+                                        <span class="course-chip">
+                                            Section <%= student.section %>
+                                        </span>
+
+                                    </td>
+
+
+                                    <td>
+
+                                        <% if (
+                                            student.user?.isActive
+                                        ) { %>
+
+                                            <span class="badge text-bg-success">
+                                                Active
+                                            </span>
+
+                                        <% } else { %>
+
+                                            <span class="badge text-bg-secondary">
+                                                Inactive
+                                            </span>
+
+                                        <% } %>
+
+                                    </td>
+
+
+                                    <td class="text-end pe-4">
+
+                                        <a
+                                            href="/faculty/attendance?department=<%= encodeURIComponent(student.department) %>&program=<%= encodeURIComponent(student.program) %>&semester=<%= student.semester %>&section=<%= encodeURIComponent(student.section) %>"
+                                            class="btn btn-sm btn-outline-primary"
+                                            title="View Attendance"
+                                        >
+                                            <i class="bi bi-calendar-check"></i>
+                                        </a>
+
+                                    </td>
+
+                                </tr>
+
+                            <% }) %>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            <% } else { %>
+
+                <div class="text-center py-5 px-3">
+
+                    <div
+                        class="mx-auto mb-3"
+                        style="
+                            width:78px;
+                            height:78px;
+                            border-radius:22px;
+                            background:#f1f5f9;
+                            color:#64748b;
+                            display:flex;
+                            align-items:center;
+                            justify-content:center;
+                            font-size:2rem;
+                        "
+                    >
+                        <i class="bi bi-people"></i>
+                    </div>
+
+                    <h5 class="fw-bold">
+                        No Students Found
+                    </h5>
+
+                    <p class="text-muted mb-0">
+                        No students match the selected filters,
+                        or no students are currently assigned
+                        to your courses and sections.
+                    </p>
+
+                </div>
+
+            <% } %>
+
+        </div>
+
+    </div>
+
+
+    <!-- INFO -->
+
+    <div class="alert alert-info mt-4">
+
+        <i class="bi bi-info-circle me-2"></i>
+
+        <strong>Faculty access:</strong>
+
+        This page only displays students belonging to academic
+        sections assigned to the logged-in faculty member.
+        Student academic information is read-only.
+
+    </div>
+
+</div>

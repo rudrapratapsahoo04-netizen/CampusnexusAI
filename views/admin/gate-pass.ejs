@@ -1,0 +1,741 @@
+<% layout("layouts/boilerplate") -%>
+
+<div class="container-fluid py-4">
+
+    <!-- ========================================== -->
+    <!-- PAGE HEADER -->
+    <!-- ========================================== -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+        <div class="card-body p-4 p-lg-5">
+
+            <div
+                class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3"
+            >
+
+                <div>
+                    <span class="badge bg-primary-subtle text-primary mb-2 px-3 py-2">
+                        Admin Panel
+                    </span>
+
+                    <h2 class="fw-bold mb-2">
+                        Gate Pass Management
+                    </h2>
+
+                    <p class="text-muted mb-0">
+                        Review, approve and manage student gate-pass requests.
+                    </p>
+                </div>
+
+                <div class="text-lg-end">
+                    <div class="small text-muted">
+                        Total Requests
+                    </div>
+
+                    <div class="fs-3 fw-bold">
+                        <%= summary.total %>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- SUMMARY CARDS -->
+    <!-- ========================================== -->
+
+    <div class="row g-4 mb-4">
+
+        <!-- TOTAL -->
+        <div class="col-md-6 col-xl-3">
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+                <div class="card-body p-4">
+
+                    <div class="text-muted small">
+                        Total Requests
+                    </div>
+
+                    <div class="display-6 fw-bold mt-2">
+                        <%= summary.total %>
+                    </div>
+
+                    <div class="text-muted small mt-1">
+                        All gate-pass applications
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+        <!-- PENDING -->
+        <div class="col-md-6 col-xl-3">
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+                <div class="card-body p-4">
+
+                    <div class="text-muted small">
+                        Pending
+                    </div>
+
+                    <div class="display-6 fw-bold mt-2 text-warning">
+                        <%= summary.pending %>
+                    </div>
+
+                    <div class="text-muted small mt-1">
+                        Waiting for approval
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+        <!-- APPROVED -->
+        <div class="col-md-6 col-xl-3">
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+                <div class="card-body p-4">
+
+                    <div class="text-muted small">
+                        Approved
+                    </div>
+
+                    <div class="display-6 fw-bold mt-2 text-success">
+                        <%= summary.approved %>
+                    </div>
+
+                    <div class="text-muted small mt-1">
+                        Approved gate passes
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+        <!-- USED -->
+        <div class="col-md-6 col-xl-3">
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+                <div class="card-body p-4">
+
+                    <div class="text-muted small">
+                        Used
+                    </div>
+
+                    <div class="display-6 fw-bold mt-2 text-primary">
+                        <%= summary.used %>
+                    </div>
+
+                    <div class="text-muted small mt-1">
+                        Passes already used
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- FILTERS -->
+    <!-- ========================================== -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-header bg-white border-0 pt-4 px-4">
+
+            <h5 class="fw-bold mb-1">
+                Filter Gate Pass Requests
+            </h5>
+
+            <p class="text-muted small mb-0">
+                Filter requests by status, department, program or pass type.
+            </p>
+
+        </div>
+
+
+        <div class="card-body p-4">
+
+            <form
+                action="/admin/gate-pass"
+                method="GET"
+            >
+
+                <div class="row g-3">
+
+                    <!-- STATUS -->
+                    <div class="col-md-6 col-lg-3">
+
+                        <label class="form-label fw-semibold">
+                            Status
+                        </label>
+
+                        <select
+                            name="status"
+                            class="form-select"
+                        >
+
+                            <option
+                                value="all"
+                                <%= filters.status === "all" ? "selected" : "" %>
+                            >
+                                All Status
+                            </option>
+
+                            <option
+                                value="pending"
+                                <%= filters.status === "pending" ? "selected" : "" %>
+                            >
+                                Pending
+                            </option>
+
+                            <option
+                                value="approved"
+                                <%= filters.status === "approved" ? "selected" : "" %>
+                            >
+                                Approved
+                            </option>
+
+                            <option
+                                value="rejected"
+                                <%= filters.status === "rejected" ? "selected" : "" %>
+                            >
+                                Rejected
+                            </option>
+
+                            <option
+                                value="used"
+                                <%= filters.status === "used" ? "selected" : "" %>
+                            >
+                                Used
+                            </option>
+
+                            <option
+                                value="expired"
+                                <%= filters.status === "expired" ? "selected" : "" %>
+                            >
+                                Expired
+                            </option>
+
+                            <option
+                                value="cancelled"
+                                <%= filters.status === "cancelled" ? "selected" : "" %>
+                            >
+                                Cancelled
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- DEPARTMENT -->
+                    <div class="col-md-6 col-lg-3">
+
+                        <label class="form-label fw-semibold">
+                            Department
+                        </label>
+
+                        <select
+                            name="department"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                All Departments
+                            </option>
+
+                            <% departments.forEach(department => { %>
+
+                                <option
+                                    value="<%= department %>"
+                                    <%= filters.department === department ? "selected" : "" %>
+                                >
+                                    <%= department
+                                        .replace(/\b\w/g, c => c.toUpperCase()) %>
+                                </option>
+
+                            <% }) %>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- PROGRAM -->
+                    <div class="col-md-6 col-lg-3">
+
+                        <label class="form-label fw-semibold">
+                            Program
+                        </label>
+
+                        <select
+                            name="program"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                All Programs
+                            </option>
+
+                            <% programs.forEach(program => { %>
+
+                                <option
+                                    value="<%= program %>"
+                                    <%= filters.program === program ? "selected" : "" %>
+                                >
+                                    <%= program
+                                        .replace(/\b\w/g, c => c.toUpperCase()) %>
+                                </option>
+
+                            <% }) %>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- PASS TYPE -->
+                    <div class="col-md-6 col-lg-3">
+
+                        <label class="form-label fw-semibold">
+                            Pass Type
+                        </label>
+
+                        <select
+                            name="passType"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                All Pass Types
+                            </option>
+
+                            <option
+                                value="outing"
+                                <%= filters.passType === "outing" ? "selected" : "" %>
+                            >
+                                Outing
+                            </option>
+
+                            <option
+                                value="leave"
+                                <%= filters.passType === "leave" ? "selected" : "" %>
+                            >
+                                Leave
+                            </option>
+
+                            <option
+                                value="emergency"
+                                <%= filters.passType === "emergency" ? "selected" : "" %>
+                            >
+                                Emergency
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- BUTTONS -->
+                    <div class="col-12 d-flex gap-2">
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary px-4"
+                        >
+                            <i class="bi bi-funnel me-2"></i>
+                            Apply Filters
+                        </button>
+
+                        <a
+                            href="/admin/gate-pass"
+                            class="btn btn-outline-secondary px-4"
+                        >
+                            <i class="bi bi-arrow-counterclockwise me-2"></i>
+                            Reset
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- GATE PASS REQUESTS -->
+    <!-- ========================================== -->
+
+    <div class="card border-0 shadow-sm rounded-4">
+
+        <div class="card-header bg-white border-0 pt-4 px-4">
+
+            <div
+                class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2"
+            >
+
+                <div>
+                    <h5 class="fw-bold mb-1">
+                        Gate Pass Requests
+                    </h5>
+
+                    <p class="text-muted small mb-0">
+                        Review submitted student gate-pass applications.
+                    </p>
+                </div>
+
+                <span class="badge bg-primary-subtle text-primary px-3 py-2">
+                    <%= gatePasses.length %> Request(s)
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="card-body p-0">
+
+            <% if (!gatePasses.length) { %>
+
+                <!-- EMPTY STATE -->
+
+                <div class="text-center py-5">
+
+                    <i class="bi bi-ticket-perforated fs-1 text-muted"></i>
+
+                    <h5 class="mt-3 fw-semibold">
+                        No Gate Pass Requests
+                    </h5>
+
+                    <p class="text-muted mb-0">
+                        No gate-pass applications match the selected filters.
+                    </p>
+
+                </div>
+
+            <% } else { %>
+
+                <div class="table-responsive">
+
+                    <table class="table align-middle mb-0">
+
+                        <thead class="table-light">
+
+                            <tr>
+
+                                <th class="px-4">
+                                    Student
+                                </th>
+
+                                <th>
+                                    Academic
+                                </th>
+
+                                <th>
+                                    Pass Type
+                                </th>
+
+                                <th>
+                                    Exit
+                                </th>
+
+                                <th>
+                                    Return
+                                </th>
+
+                                <th>
+                                    Destination
+                                </th>
+
+                                <th>
+                                    Status
+                                </th>
+
+                                <th class="text-end px-4">
+                                    Action
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            <% gatePasses.forEach(gatePass => { %>
+
+                                <tr>
+
+                                    <!-- STUDENT -->
+                                    <td class="px-4">
+
+                                        <div class="fw-semibold">
+
+                                            <% if (gatePass.student) { %>
+
+                                                <%= gatePass.student.name %>
+
+                                            <% } else { %>
+
+                                                Unknown Student
+
+                                            <% } %>
+
+                                        </div>
+
+                                        <div class="small text-muted">
+                                            ID:
+                                            <%= gatePass.studentId %>
+                                        </div>
+
+                                    </td>
+
+
+                                    <!-- ACADEMIC -->
+                                    <td>
+
+                                        <div class="fw-semibold">
+
+                                            <%= gatePass.program
+                                                .replace(/\b\w/g, c => c.toUpperCase()) %>
+
+                                        </div>
+
+                                        <div class="small text-muted">
+
+                                            <%= gatePass.department
+                                                .replace(/\b\w/g, c => c.toUpperCase()) %>
+
+                                            · Sem
+                                            <%= gatePass.semester %>
+
+                                            · Sec
+                                            <%= gatePass.section %>
+
+                                        </div>
+
+                                    </td>
+
+
+                                    <!-- PASS TYPE -->
+                                    <td>
+
+                                        <span class="fw-semibold">
+
+                                            <%= gatePass.passType
+                                                .replace("_", " ")
+                                                .replace(/\b\w/g, c => c.toUpperCase()) %>
+
+                                        </span>
+
+                                    </td>
+
+
+                                    <!-- EXIT -->
+                                    <td>
+
+                                        <div>
+                                            <%= new Date(
+                                                gatePass.exitDate
+                                            ).toLocaleDateString() %>
+                                        </div>
+
+                                        <div class="small text-muted">
+
+                                            <%= gatePass.expectedExitTime %>
+
+                                        </div>
+
+                                    </td>
+
+
+                                    <!-- RETURN -->
+                                    <td>
+
+                                        <span class="small">
+
+                                            <%= gatePass.expectedReturnTime %>
+
+                                        </span>
+
+                                    </td>
+
+
+                                    <!-- DESTINATION -->
+                                    <td>
+
+                                        <span
+                                            class="text-muted"
+                                            style="
+                                                max-width: 180px;
+                                                display: block;
+                                            "
+                                        >
+                                            <%= gatePass.destination %>
+                                        </span>
+
+                                    </td>
+
+
+                                    <!-- STATUS -->
+                                    <td>
+
+                                        <% if (
+                                            gatePass.status === "approved"
+                                        ) { %>
+
+                                            <span class="badge bg-success-subtle text-success">
+                                                <i class="bi bi-check-circle me-1"></i>
+                                                Approved
+                                            </span>
+
+                                        <% } else if (
+                                            gatePass.status === "rejected"
+                                        ) { %>
+
+                                            <span class="badge bg-danger-subtle text-danger">
+                                                <i class="bi bi-x-circle me-1"></i>
+                                                Rejected
+                                            </span>
+
+                                        <% } else if (
+                                            gatePass.status === "used"
+                                        ) { %>
+
+                                            <span class="badge bg-primary-subtle text-primary">
+                                                <i class="bi bi-check2-all me-1"></i>
+                                                Used
+                                            </span>
+
+                                        <% } else if (
+                                            gatePass.status === "expired"
+                                        ) { %>
+
+                                            <span class="badge bg-secondary-subtle text-secondary">
+                                                <i class="bi bi-clock-history me-1"></i>
+                                                Expired
+                                            </span>
+
+                                        <% } else if (
+                                            gatePass.status === "cancelled"
+                                        ) { %>
+
+                                            <span class="badge bg-secondary-subtle text-secondary">
+                                                <i class="bi bi-slash-circle me-1"></i>
+                                                Cancelled
+                                            </span>
+
+                                        <% } else { %>
+
+                                            <span class="badge bg-warning-subtle text-warning">
+                                                <i class="bi bi-hourglass-split me-1"></i>
+                                                Pending
+                                            </span>
+
+                                        <% } %>
+
+                                    </td>
+
+
+                                    <!-- ACTION -->
+                                    <td class="text-end px-4">
+
+                                        <% if (
+                                            gatePass.status === "pending"
+                                        ) { %>
+
+                                            <div
+                                                class="d-flex justify-content-end gap-2"
+                                            >
+
+                                                <!-- APPROVE -->
+                                                <form
+                                                    action="/admin/gate-pass/<%= gatePass._id %>/approve"
+                                                    method="POST"
+                                                >
+
+                                                    <button
+                                                        type="submit"
+                                                        class="btn btn-sm btn-success"
+                                                        onclick="return confirm('Approve this gate pass request?')"
+                                                    >
+                                                        <i class="bi bi-check-lg me-1"></i>
+                                                        Approve
+                                                    </button>
+
+                                                </form>
+
+
+                                                <!-- REJECT -->
+                                                <form
+                                                    action="/admin/gate-pass/<%= gatePass._id %>/reject"
+                                                    method="POST"
+                                                >
+
+                                                    <button
+                                                        type="submit"
+                                                        class="btn btn-sm btn-outline-danger"
+                                                        onclick="return confirm('Reject this gate pass request?')"
+                                                    >
+                                                        <i class="bi bi-x-lg me-1"></i>
+                                                        Reject
+                                                    </button>
+
+                                                </form>
+
+                                            </div>
+
+                                        <% } else if (
+                                            gatePass.status === "approved"
+                                        ) { %>
+
+                                            <span class="text-success small">
+                                                <i class="bi bi-check-circle me-1"></i>
+                                                Approved
+                                            </span>
+
+                                        <% } else if (
+                                            gatePass.status === "rejected"
+                                        ) { %>
+
+                                            <span class="text-danger small">
+                                                <i class="bi bi-x-circle me-1"></i>
+                                                Rejected
+                                            </span>
+
+                                        <% } else { %>
+
+                                            <span class="text-muted small">
+                                                —
+                                            </span>
+
+                                        <% } %>
+
+                                    </td>
+
+                                </tr>
+
+                            <% }) %>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            <% } %>
+
+        </div>
+
+    </div>
+
+</div>

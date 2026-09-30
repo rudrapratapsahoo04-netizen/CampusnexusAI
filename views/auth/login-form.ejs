@@ -1,0 +1,571 @@
+<% layout("layouts/boilerplate") -%>
+
+<style>
+    /* ================================
+       LOGIN PAGE
+    ================================= */
+
+    .login-page {
+        min-height: calc(100vh - 70px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 20px;
+        position: relative;
+        overflow: hidden;
+
+        background:
+            radial-gradient(
+                circle at 20% 20%,
+                rgba(115, 43, 130, 0.45),
+                transparent 35%
+            ),
+            radial-gradient(
+                circle at 80% 80%,
+                rgba(65, 105, 225, 0.45),
+                transparent 40%
+            ),
+            linear-gradient(
+                135deg,
+                #241331 0%,
+                #4b1739 45%,
+                #18275a 100%
+            );
+    }
+
+    .login-page::before {
+        content: "";
+        position: absolute;
+        width: 500px;
+        height: 500px;
+        border-radius: 50%;
+        background: rgba(255, 80, 130, 0.15);
+        filter: blur(100px);
+        top: -180px;
+        left: -180px;
+    }
+
+    .login-page::after {
+        content: "";
+        position: absolute;
+        width: 450px;
+        height: 450px;
+        border-radius: 50%;
+        background: rgba(70, 110, 255, 0.20);
+        filter: blur(100px);
+        bottom: -180px;
+        right: -150px;
+    }
+
+    .login-wrapper {
+        width: 100%;
+        max-width: 640px;
+        position: relative;
+        z-index: 2;
+    }
+
+    /* ================================
+       GLASS CARD
+    ================================= */
+
+    .login-card {
+        position: relative;
+        width: 100%;
+        padding: 48px 55px;
+        border-radius: 28px;
+
+        background: rgba(255, 255, 255, 0.13);
+        border: 1px solid rgba(255, 255, 255, 0.16);
+
+        box-shadow:
+            0 30px 80px rgba(0, 0, 0, 0.30),
+            inset 0 1px 0 rgba(255, 255, 255, 0.12);
+
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+    }
+
+    /* ================================
+       PROFILE ICON
+    ================================= */
+
+    .login-avatar {
+        width: 150px;
+        height: 150px;
+        margin: 0 auto 35px;
+
+        border-radius: 50%;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.10);
+
+        box-shadow:
+            0 10px 30px rgba(0, 0, 0, 0.12),
+            inset 0 0 30px rgba(255, 255, 255, 0.05);
+    }
+
+    .login-avatar i {
+        font-size: 78px;
+        color: rgba(255, 255, 255, 0.70);
+    }
+
+    /* ================================
+       INPUT GROUP
+    ================================= */
+
+    .login-input-group {
+        position: relative;
+        margin-bottom: 32px;
+    }
+
+    .login-input-group i {
+        position: absolute;
+        left: 0;
+        bottom: 13px;
+
+        font-size: 24px;
+        color: rgba(255, 255, 255, 0.90);
+
+        z-index: 2;
+    }
+
+    .login-input {
+        width: 100%;
+        height: 58px;
+
+        padding: 5px 0 10px 78px;
+
+        border: none;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.70);
+        border-radius: 0;
+
+        outline: none;
+
+        background: transparent !important;
+
+        color: #ffffff !important;
+
+        font-size: 20px;
+
+        box-shadow: none !important;
+    }
+
+    .login-input::placeholder {
+        color: rgba(255, 255, 255, 0.85);
+        opacity: 1;
+    }
+
+    .login-input:focus {
+        border-bottom-color: #ffffff;
+    }
+
+    /* Chrome autofill fix */
+    .login-input:-webkit-autofill,
+    .login-input:-webkit-autofill:hover,
+    .login-input:-webkit-autofill:focus {
+        -webkit-text-fill-color: #ffffff;
+        -webkit-box-shadow: 0 0 0 1000px transparent inset;
+        transition: background-color 9999s ease-in-out 0s;
+    }
+
+    /* ================================
+       REMEMBER + FORGOT
+    ================================= */
+
+    .login-options {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+
+        margin: 8px 0 36px;
+
+        color: rgba(255, 255, 255, 0.85);
+    }
+
+    .remember-label {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    .remember-label input {
+        width: 20px;
+        height: 20px;
+
+        accent-color: #25253b;
+
+        cursor: pointer;
+    }
+
+    .forgot-link {
+        color: rgba(255, 255, 255, 0.85);
+        text-decoration: none;
+        font-size: 16px;
+    }
+
+    .forgot-link:hover {
+        color: #ffffff;
+        text-decoration: underline;
+    }
+
+    /* ================================
+       LOGIN BUTTON
+    ================================= */
+
+    .login-button {
+        width: 100%;
+        height: 72px;
+
+        border: none;
+        border-radius: 30px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        color: #ffffff;
+
+        font-size: 21px;
+        font-weight: 600;
+        letter-spacing: 3px;
+
+        background:
+            linear-gradient(
+                100deg,
+                #63002d 0%,
+                #3f145e 45%,
+                #637eea 100%
+            );
+
+        box-shadow:
+            0 12px 30px rgba(0, 0, 0, 0.18);
+
+        transition:
+            transform 0.25s ease,
+            box-shadow 0.25s ease;
+    }
+
+    .login-button:hover {
+        color: #ffffff;
+
+        transform: translateY(-2px);
+
+        box-shadow:
+            0 16px 35px rgba(0, 0, 0, 0.28);
+    }
+
+    .login-button:active {
+        transform: translateY(0);
+    }
+
+    .login-button i {
+        margin-right: 10px;
+        font-size: 20px;
+    }
+
+    /* ================================
+       BELOW CARD LINKS
+    ================================= */
+
+    .login-bottom {
+        text-align: center;
+        margin-top: 25px;
+    }
+
+    .login-bottom a {
+        color: rgba(255, 255, 255, 0.90);
+        text-decoration: none;
+    }
+
+    .login-bottom a:hover {
+        color: #ffffff;
+        text-decoration: underline;
+    }
+
+    .login-description {
+        color: rgba(255, 255, 255, 0.80);
+        text-align: center;
+        margin-bottom: 25px;
+    }
+
+    .login-description h2 {
+        color: #ffffff;
+        font-weight: 700;
+    }
+
+    /* ================================
+       ADMIN NOTICE
+    ================================= */
+
+    .admin-notice {
+        padding: 14px 18px;
+        margin-bottom: 25px;
+
+        border-radius: 12px;
+
+        color: rgba(255, 255, 255, 0.90);
+
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    /* ================================
+       MOBILE
+    ================================= */
+
+    @media (max-width: 576px) {
+
+        .login-page {
+            padding: 25px 15px;
+        }
+
+        .login-card {
+            padding: 35px 25px;
+            border-radius: 22px;
+        }
+
+        .login-avatar {
+            width: 115px;
+            height: 115px;
+            margin-bottom: 28px;
+        }
+
+        .login-avatar i {
+            font-size: 60px;
+        }
+
+        .login-input {
+            font-size: 17px;
+            padding-left: 55px;
+        }
+
+        .login-input-group i {
+            font-size: 21px;
+        }
+
+        .login-options {
+            align-items: flex-start;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .login-button {
+            height: 62px;
+            font-size: 18px;
+        }
+    }
+</style>
+
+
+<div class="login-page">
+
+    <div class="login-wrapper">
+
+        <!-- LOGIN CARD -->
+        <div class="login-card">
+
+            <!-- PROFILE ICON -->
+            <div class="login-avatar">
+
+                <% if (role === "faculty") { %>
+
+                    <i class="bi bi-person-workspace"></i>
+
+                <% } else if (role === "admin") { %>
+
+                    <i class="bi bi-shield-lock-fill"></i>
+
+                <% } else if (role === "worker") { %>
+
+                    <i class="bi bi-person-badge-fill"></i>
+
+                <% } else { %>
+
+                    <i class="bi bi-person-fill"></i>
+
+                <% } %>
+
+            </div>
+
+
+            <!-- HEADER -->
+            <div class="login-description">
+
+                <h2 class="mb-2">
+                    <%= heading %>
+                </h2>
+
+                <p class="mb-0">
+                    <%= description %>
+                </p>
+
+            </div>
+
+
+            <!-- ADMIN MESSAGE -->
+            <% if (role === "admin") { %>
+
+                <div class="admin-notice">
+
+                    <i class="bi bi-shield-check me-2"></i>
+
+                    Administrator access requires email OTP verification.
+
+                </div>
+
+            <% } %>
+
+
+            <!-- LOGIN FORM -->
+            <form
+                action="/auth/login/<%= role %>"
+                method="POST"
+                autocomplete="off"
+            >
+
+                <!-- EMAIL -->
+                <div class="login-input-group">
+
+                    <i class="bi bi-envelope-fill"></i>
+
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        class="login-input"
+                        placeholder="Email ID"
+                        autocomplete="off"
+                        value=""
+                        required
+                    >
+
+                </div>
+
+
+                <!-- PASSWORD -->
+                <div class="login-input-group">
+
+                    <i class="bi bi-lock-fill"></i>
+
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        class="login-input"
+                        placeholder="Password"
+                        autocomplete="new-password"
+                        value=""
+                        required
+                    >
+
+                </div>
+
+
+                <!-- OPTIONS -->
+                <div class="login-options">
+
+                    <label class="remember-label">
+
+                        <input
+                            type="checkbox"
+                            name="rememberMe"
+                            value="true"
+                        >
+
+                        <span>
+                            Remember me
+                        </span>
+
+                    </label>
+
+
+                    <a
+                        href="/auth/forgot-password"
+                        class="forgot-link"
+                    >
+                        Forgot Password?
+                    </a>
+
+                </div>
+
+
+                <!-- LOGIN BUTTON -->
+                <button
+                    type="submit"
+                    class="login-button"
+                >
+
+                    <% if (role === "admin") { %>
+
+                        <i class="bi bi-shield-lock"></i>
+                        ADMIN LOGIN
+
+                    <% } else if (role === "faculty") { %>
+
+                        <i class="bi bi-box-arrow-in-right"></i>
+                        FACULTY LOGIN
+
+                    <% } else if (role === "worker") { %>
+
+                        <i class="bi bi-box-arrow-in-right"></i>
+                        WORKER LOGIN
+
+                    <% } else { %>
+
+                        <i class="bi bi-box-arrow-in-right"></i>
+                        LOGIN
+
+                    <% } %>
+
+                </button>
+
+            </form>
+
+        </div>
+
+
+        <!-- BACK -->
+        <div class="login-bottom">
+
+            <a href="/auth/login">
+
+                <i class="bi bi-arrow-left me-1"></i>
+
+                Back to Login Selection
+
+            </a>
+
+        </div>
+
+
+        <!-- STUDENT REGISTER -->
+        <% if (role === "student") { %>
+
+            <div class="login-bottom mt-3">
+
+                <span style="color: rgba(255,255,255,.75);">
+                    Don't have an account?
+                </span>
+
+                <a
+                    href="/auth/register/student"
+                    class="fw-semibold ms-1"
+                >
+                    Register
+                </a>
+
+            </div>
+
+        <% } %>
+
+    </div>
+
+</div>

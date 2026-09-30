@@ -1,0 +1,339 @@
+<% layout("layouts/boilerplate") -%>
+
+<div class="container py-4">
+
+    <!-- Header -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+
+        <div>
+            <h2 class="fw-bold mb-1">
+                <i class="bi bi-calendar2-check me-2"></i>
+                My Leave Requests
+            </h2>
+
+            <p class="text-muted mb-0">
+                Track your leave applications and approval status.
+            </p>
+        </div>
+
+        <a
+            href="/student/leave/apply"
+            class="btn btn-primary mt-3 mt-md-0"
+        >
+            <i class="bi bi-plus-circle me-1"></i>
+            Apply New Leave
+        </a>
+
+    </div>
+
+
+    <% if (!leaves || leaves.length === 0) { %>
+
+        <!-- Empty State -->
+        <div class="card border-0 shadow-sm">
+            <div class="card-body text-center py-5">
+
+                <div class="mb-3">
+                    <i
+                        class="bi bi-calendar-x text-muted"
+                        style="font-size: 4rem;"
+                    ></i>
+                </div>
+
+                <h4 class="fw-bold">
+                    No Leave Requests
+                </h4>
+
+                <p class="text-muted mb-4">
+                    You have not submitted any leave request yet.
+                </p>
+
+                <a
+                    href="/student/leave/apply"
+                    class="btn btn-primary"
+                >
+                    <i class="bi bi-calendar-plus me-1"></i>
+                    Apply for Leave
+                </a>
+
+            </div>
+        </div>
+
+    <% } else { %>
+
+
+        <!-- Leave Cards -->
+        <div class="row g-4">
+
+            <% leaves.forEach((leave) => { %>
+
+                <div class="col-12">
+
+                    <div class="card border-0 shadow-sm">
+
+                        <div class="card-body p-4">
+
+                            <div class="row align-items-center">
+
+                                <!-- Leave Information -->
+                                <div class="col-lg-8">
+
+                                    <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+
+                                        <h5 class="fw-bold mb-0">
+                                            <%= leave.leaveType
+                                                .charAt(0)
+                                                .toUpperCase() +
+                                                leave.leaveType.slice(1) %>
+                                            Leave
+                                        </h5>
+
+
+                                        <% if (leave.status === "pending_admin") { %>
+
+                                            <span class="badge bg-warning text-dark">
+                                                <i class="bi bi-hourglass-split me-1"></i>
+                                                Pending Admin Review
+                                            </span>
+
+                                        <% } else if (leave.status === "forwarded_to_hod") { %>
+
+                                            <span class="badge bg-info text-dark">
+                                                <i class="bi bi-arrow-right-circle me-1"></i>
+                                                Forwarded to HOD
+                                            </span>
+
+                                        <% } else if (leave.status === "approved") { %>
+
+                                            <span class="badge bg-success">
+                                                <i class="bi bi-check-circle me-1"></i>
+                                                Approved
+                                            </span>
+
+                                        <% } else if (leave.status === "rejected") { %>
+
+                                            <span class="badge bg-danger">
+                                                <i class="bi bi-x-circle me-1"></i>
+                                                Rejected
+                                            </span>
+
+                                        <% } else if (leave.status === "cancelled") { %>
+
+                                            <span class="badge bg-secondary">
+                                                <i class="bi bi-slash-circle me-1"></i>
+                                                Cancelled
+                                            </span>
+
+                                        <% } %>
+
+                                    </div>
+
+
+                                    <!-- Dates -->
+                                    <div class="mb-3">
+
+                                        <span class="text-muted">
+                                            <i class="bi bi-calendar3 me-1"></i>
+                                            <strong>
+                                                <%= new Date(
+                                                    leave.fromDate
+                                                ).toLocaleDateString(
+                                                    "en-IN",
+                                                    {
+                                                        day: "2-digit",
+                                                        month: "short",
+                                                        year: "numeric"
+                                                    }
+                                                ) %>
+                                            </strong>
+
+                                            &nbsp;→&nbsp;
+
+                                            <strong>
+                                                <%= new Date(
+                                                    leave.toDate
+                                                ).toLocaleDateString(
+                                                    "en-IN",
+                                                    {
+                                                        day: "2-digit",
+                                                        month: "short",
+                                                        year: "numeric"
+                                                    }
+                                                ) %>
+                                            </strong>
+                                        </span>
+
+                                        <span class="badge bg-light text-dark ms-2">
+                                            <%= leave.totalDays %>
+                                            day<%= leave.totalDays > 1 ? "s" : "" %>
+                                        </span>
+
+                                    </div>
+
+
+                                    <!-- Reason -->
+                                    <div class="mb-2">
+
+                                        <small class="text-muted d-block mb-1">
+                                            Reason
+                                        </small>
+
+                                        <p class="mb-0">
+                                            <%= leave.reason %>
+                                        </p>
+
+                                    </div>
+
+
+                                    <!-- HOD Remark -->
+                                    <% if (
+                                        leave.status === "approved" ||
+                                        leave.status === "rejected"
+                                    ) { %>
+
+                                        <div class="mt-3">
+
+                                            <small class="text-muted d-block mb-1">
+                                                HOD Remarks
+                                            </small>
+
+                                            <div
+                                                class="p-3 rounded bg-light"
+                                            >
+                                                <%= leave.hodRemarks ||
+                                                    "No remarks provided." %>
+                                            </div>
+
+                                        </div>
+
+                                    <% } %>
+
+                                </div>
+
+
+                                <!-- Status Panel -->
+                                <div class="col-lg-4 mt-4 mt-lg-0">
+
+                                    <% if (leave.status === "approved") { %>
+
+                                        <div class="border border-success rounded p-4 text-center">
+
+                                            <i
+                                                class="bi bi-check-circle-fill text-success"
+                                                style="font-size: 3rem;"
+                                            ></i>
+
+                                            <h5 class="fw-bold text-success mt-2">
+                                                Leave Approved
+                                            </h5>
+
+                                            <p class="text-muted mb-0">
+                                                Your HOD has approved this leave request.
+                                            </p>
+
+                                        </div>
+
+                                    <% } else if (leave.status === "rejected") { %>
+
+                                        <div class="border border-danger rounded p-4 text-center">
+
+                                            <i
+                                                class="bi bi-x-circle-fill text-danger"
+                                                style="font-size: 3rem;"
+                                            ></i>
+
+                                            <h5 class="fw-bold text-danger mt-2">
+                                                Leave Rejected
+                                            </h5>
+
+                                            <p class="text-muted mb-0">
+                                                Your leave request was rejected by the HOD.
+                                            </p>
+
+                                        </div>
+
+                                    <% } else if (leave.status === "forwarded_to_hod") { %>
+
+                                        <div class="border border-info rounded p-4 text-center">
+
+                                            <i
+                                                class="bi bi-person-check-fill text-info"
+                                                style="font-size: 3rem;"
+                                            ></i>
+
+                                            <h5 class="fw-bold text-info mt-2">
+                                                Awaiting HOD Approval
+                                            </h5>
+
+                                            <p class="text-muted mb-0">
+                                                Your request has been forwarded to your HOD.
+                                            </p>
+
+                                        </div>
+
+                                    <% } else { %>
+
+                                        <div class="border border-warning rounded p-4 text-center">
+
+                                            <i
+                                                class="bi bi-hourglass-split text-warning"
+                                                style="font-size: 3rem;"
+                                            ></i>
+
+                                            <h5 class="fw-bold text-warning mt-2">
+                                                Under Review
+                                            </h5>
+
+                                            <p class="text-muted mb-0">
+                                                Your request is currently with the administration.
+                                            </p>
+
+                                        </div>
+
+                                    <% } %>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- Request Date -->
+                            <hr class="my-4">
+
+                            <div class="d-flex flex-wrap justify-content-between text-muted small">
+
+                                <span>
+                                    <i class="bi bi-clock me-1"></i>
+                                    Applied on
+                                    <%= new Date(
+                                        leave.createdAt
+                                    ).toLocaleDateString(
+                                        "en-IN",
+                                        {
+                                            day: "2-digit",
+                                            month: "short",
+                                            year: "numeric"
+                                        }
+                                    ) %>
+                                </span>
+
+                                <span>
+                                    Request ID:
+                                    <%= leave._id %>
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            <% }); %>
+
+        </div>
+
+    <% } %>
+
+</div>

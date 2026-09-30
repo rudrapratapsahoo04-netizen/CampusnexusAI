@@ -1,0 +1,374 @@
+
+<% layout("layouts/boilerplate") -%>
+<div class="container py-4">
+
+    <!-- Header -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+
+        <div>
+            <h2 class="fw-bold mb-1">
+                <i class="bi bi-chat-left-text me-2"></i>
+                My Complaints
+            </h2>
+
+            <p class="text-muted mb-0">
+                Track your submitted complaints and their current status.
+            </p>
+        </div>
+
+        <a
+            href="/student/complaint/apply"
+            class="btn btn-primary mt-3 mt-md-0"
+        >
+            <i class="bi bi-plus-circle me-1"></i>
+            New Complaint
+        </a>
+
+    </div>
+
+
+    <% if (!complaints || complaints.length === 0) { %>
+
+        <!-- Empty State -->
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-body text-center py-5">
+
+                <div class="mb-3">
+                    <i
+                        class="bi bi-chat-square-text text-muted"
+                        style="font-size: 4rem;"
+                    ></i>
+                </div>
+
+                <h4 class="fw-bold">
+                    No Complaints Yet
+                </h4>
+
+                <p class="text-muted mb-4">
+                    You have not submitted any complaint yet.
+                </p>
+
+                <a
+                    href="/student/complaint/apply"
+                    class="btn btn-primary"
+                >
+                    <i class="bi bi-plus-circle me-1"></i>
+                    Submit a Complaint
+                </a>
+
+            </div>
+
+        </div>
+
+    <% } else { %>
+
+
+        <!-- Complaint List -->
+        <div class="row g-4">
+
+            <% complaints.forEach((complaint) => { %>
+
+                <div class="col-12">
+
+                    <div class="card border-0 shadow-sm">
+
+                        <div class="card-body p-4">
+
+                            <div class="row">
+
+                                <!-- Complaint Information -->
+                                <div class="col-lg-8">
+
+                                    <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+
+                                        <h5 class="fw-bold mb-0">
+                                            <%= complaint.subject %>
+                                        </h5>
+
+
+                                        <!-- Status Badge -->
+                                        <% if (complaint.status === "submitted") { %>
+
+                                            <span class="badge bg-warning text-dark">
+                                                <i class="bi bi-send me-1"></i>
+                                                Submitted
+                                            </span>
+
+                                        <% } else if (complaint.status === "under_review") { %>
+
+                                            <span class="badge bg-info text-dark">
+                                                <i class="bi bi-search me-1"></i>
+                                                Under Review
+                                            </span>
+
+                                        <% } else if (complaint.status === "in_progress") { %>
+
+                                            <span class="badge bg-primary">
+                                                <i class="bi bi-hourglass-split me-1"></i>
+                                                In Progress
+                                            </span>
+
+                                        <% } else if (complaint.status === "resolved") { %>
+
+                                            <span class="badge bg-success">
+                                                <i class="bi bi-check-circle me-1"></i>
+                                                Resolved
+                                            </span>
+
+                                        <% } else if (complaint.status === "rejected") { %>
+
+                                            <span class="badge bg-danger">
+                                                <i class="bi bi-x-circle me-1"></i>
+                                                Rejected
+                                            </span>
+
+                                        <% } %>
+
+                                    </div>
+
+
+                                    <!-- Category -->
+                                    <div class="mb-2">
+
+                                        <span class="text-muted">
+                                            <i class="bi bi-tag me-1"></i>
+                                            Category:
+                                        </span>
+
+                                        <strong>
+                                            <%= complaint.category
+                                                .charAt(0)
+                                                .toUpperCase() +
+                                                complaint.category.slice(1) %>
+                                        </strong>
+
+                                    </div>
+
+
+                                    <!-- Priority -->
+                                    <div class="mb-3">
+
+                                        <span class="text-muted">
+                                            <i class="bi bi-flag me-1"></i>
+                                            Priority:
+                                        </span>
+
+
+                                        <% if (complaint.priority === "urgent") { %>
+
+                                            <span class="badge bg-danger">
+                                                Urgent
+                                            </span>
+
+                                        <% } else if (complaint.priority === "high") { %>
+
+                                            <span class="badge bg-warning text-dark">
+                                                High
+                                            </span>
+
+                                        <% } else if (complaint.priority === "medium") { %>
+
+                                            <span class="badge bg-info text-dark">
+                                                Medium
+                                            </span>
+
+                                        <% } else { %>
+
+                                            <span class="badge bg-secondary">
+                                                Low
+                                            </span>
+
+                                        <% } %>
+
+                                    </div>
+
+
+                                    <!-- Description -->
+                                    <div class="mb-3">
+
+                                        <small class="text-muted d-block mb-1">
+                                            Description
+                                        </small>
+
+                                        <p class="mb-0">
+                                            <%= complaint.description %>
+                                        </p>
+
+                                    </div>
+
+
+                                    <!-- Admin / Faculty Remarks -->
+                                    <% if (complaint.remarks) { %>
+
+                                        <div class="mt-3">
+
+                                            <small class="text-muted d-block mb-1">
+                                                Remarks
+                                            </small>
+
+                                            <div class="bg-light rounded p-3">
+
+                                                <%= complaint.remarks %>
+
+                                            </div>
+
+                                        </div>
+
+                                    <% } %>
+
+                                </div>
+
+
+                                <!-- Status Panel -->
+                                <div class="col-lg-4 mt-4 mt-lg-0">
+
+                                    <% if (complaint.status === "resolved") { %>
+
+                                        <div class="border border-success rounded p-4 text-center">
+
+                                            <i
+                                                class="bi bi-check-circle-fill text-success"
+                                                style="font-size: 3rem;"
+                                            ></i>
+
+                                            <h5 class="fw-bold text-success mt-2">
+                                                Complaint Resolved
+                                            </h5>
+
+                                            <p class="text-muted mb-0">
+                                                Your complaint has been resolved.
+                                            </p>
+
+                                        </div>
+
+
+                                    <% } else if (complaint.status === "rejected") { %>
+
+                                        <div class="border border-danger rounded p-4 text-center">
+
+                                            <i
+                                                class="bi bi-x-circle-fill text-danger"
+                                                style="font-size: 3rem;"
+                                            ></i>
+
+                                            <h5 class="fw-bold text-danger mt-2">
+                                                Complaint Rejected
+                                            </h5>
+
+                                            <p class="text-muted mb-0">
+                                                Your complaint was rejected.
+                                            </p>
+
+                                        </div>
+
+
+                                    <% } else if (complaint.status === "in_progress") { %>
+
+                                        <div class="border border-primary rounded p-4 text-center">
+
+                                            <i
+                                                class="bi bi-arrow-repeat text-primary"
+                                                style="font-size: 3rem;"
+                                            ></i>
+
+                                            <h5 class="fw-bold text-primary mt-2">
+                                                In Progress
+                                            </h5>
+
+                                            <p class="text-muted mb-0">
+                                                Your complaint is currently being handled.
+                                            </p>
+
+                                        </div>
+
+
+                                    <% } else if (complaint.status === "under_review") { %>
+
+                                        <div class="border border-info rounded p-4 text-center">
+
+                                            <i
+                                                class="bi bi-search text-info"
+                                                style="font-size: 3rem;"
+                                            ></i>
+
+                                            <h5 class="fw-bold text-info mt-2">
+                                                Under Review
+                                            </h5>
+
+                                            <p class="text-muted mb-0">
+                                                Administration is reviewing your complaint.
+                                            </p>
+
+                                        </div>
+
+
+                                    <% } else { %>
+
+                                        <div class="border border-warning rounded p-4 text-center">
+
+                                            <i
+                                                class="bi bi-clock-history text-warning"
+                                                style="font-size: 3rem;"
+                                            ></i>
+
+                                            <h5 class="fw-bold text-warning mt-2">
+                                                Complaint Submitted
+                                            </h5>
+
+                                            <p class="text-muted mb-0">
+                                                Your complaint is waiting for review.
+                                            </p>
+
+                                        </div>
+
+                                    <% } %>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- Footer -->
+                            <hr class="my-4">
+
+                            <div class="d-flex flex-wrap justify-content-between text-muted small">
+
+                                <span>
+                                    <i class="bi bi-calendar3 me-1"></i>
+
+                                    Submitted on
+
+                                    <%= new Date(
+                                        complaint.createdAt
+                                    ).toLocaleDateString(
+                                        "en-IN",
+                                        {
+                                            day: "2-digit",
+                                            month: "short",
+                                            year: "numeric"
+                                        }
+                                    ) %>
+                                </span>
+
+
+                                <span>
+                                    Complaint ID:
+                                    <%= complaint._id %>
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            <% }); %>
+
+        </div>
+
+    <% } %>
+
+</div>

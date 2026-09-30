@@ -1,0 +1,542 @@
+<% layout("layouts/boilerplate") -%>
+
+<div class="container-fluid py-4">
+
+    <!-- =========================
+         PAGE HEADER
+    ========================== -->
+    <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
+
+        <div>
+            <div class="d-flex align-items-center gap-2 mb-2">
+                <div
+                    class="bg-primary bg-opacity-10 text-primary rounded-3 d-flex align-items-center justify-content-center"
+                    style="width: 44px; height: 44px;"
+                >
+                    <i class="bi bi-calendar3 fs-4"></i>
+                </div>
+
+                <div>
+                    <h1 class="h3 fw-bold mb-0">
+                        My Timetable
+                    </h1>
+
+                    <p class="text-muted mb-0 small">
+                        Weekly class schedule
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex gap-2">
+
+            <a
+                href="/student/dashboard"
+                class="btn btn-outline-secondary"
+            >
+                <i class="bi bi-arrow-left me-1"></i>
+                Dashboard
+            </a>
+
+            <button
+                type="button"
+                class="btn btn-primary"
+                onclick="window.print()"
+            >
+                <i class="bi bi-printer me-1"></i>
+                Print
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         ACADEMIC INFORMATION
+    ========================== -->
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-body p-4">
+
+            <div class="row g-4 align-items-center">
+
+                <!-- Program -->
+                <div class="col-12 col-md-6 col-xl-3">
+
+                    <div class="d-flex align-items-center gap-3">
+
+                        <div
+                            class="bg-primary bg-opacity-10 text-primary rounded-3 d-flex align-items-center justify-content-center flex-shrink-0"
+                            style="width: 46px; height: 46px;"
+                        >
+                            <i class="bi bi-mortarboard fs-5"></i>
+                        </div>
+
+                        <div>
+                            <div class="text-muted small">
+                                Program
+                            </div>
+
+                            <div class="fw-semibold text-uppercase">
+                                <%= studentProfile.program %>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Department -->
+                <div class="col-12 col-md-6 col-xl-3">
+
+                    <div class="d-flex align-items-center gap-3">
+
+                        <div
+                            class="bg-success bg-opacity-10 text-success rounded-3 d-flex align-items-center justify-content-center flex-shrink-0"
+                            style="width: 46px; height: 46px;"
+                        >
+                            <i class="bi bi-building fs-5"></i>
+                        </div>
+
+                        <div>
+                            <div class="text-muted small">
+                                Department
+                            </div>
+
+                            <div class="fw-semibold text-capitalize">
+                                <%= studentProfile.department
+                                    .replace(/-/g, " ") %>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Semester -->
+                <div class="col-12 col-md-6 col-xl-3">
+
+                    <div class="d-flex align-items-center gap-3">
+
+                        <div
+                            class="bg-warning bg-opacity-10 text-warning rounded-3 d-flex align-items-center justify-content-center flex-shrink-0"
+                            style="width: 46px; height: 46px;"
+                        >
+                            <i class="bi bi-layers fs-5"></i>
+                        </div>
+
+                        <div>
+                            <div class="text-muted small">
+                                Semester
+                            </div>
+
+                            <div class="fw-semibold">
+                                Semester <%= studentProfile.semester %>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Section -->
+                <div class="col-12 col-md-6 col-xl-3">
+
+                    <div class="d-flex align-items-center gap-3">
+
+                        <div
+                            class="bg-info bg-opacity-10 text-info rounded-3 d-flex align-items-center justify-content-center flex-shrink-0"
+                            style="width: 46px; height: 46px;"
+                        >
+                            <i class="bi bi-people fs-5"></i>
+                        </div>
+
+                        <div>
+                            <div class="text-muted small">
+                                Section
+                            </div>
+
+                            <div class="fw-semibold">
+                                Section <%= studentProfile.section || "N/A" %>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         NO TIMETABLE STATE
+    ========================== -->
+    <% if (!timetable || timetable.length === 0) { %>
+
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-body text-center py-5">
+
+                <div
+                    class="bg-light rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3"
+                    style="width: 80px; height: 80px;"
+                >
+                    <i class="bi bi-calendar-x fs-1 text-muted"></i>
+                </div>
+
+                <h4 class="fw-bold">
+                    Timetable Not Available
+                </h4>
+
+                <p class="text-muted mb-0">
+                    No classes have been scheduled for your
+                    program, semester and section yet.
+                </p>
+
+            </div>
+
+        </div>
+
+    <% } else { %>
+
+
+        <!-- =========================
+             WEEKLY TIMETABLE
+        ========================== -->
+        <div class="row g-4">
+
+            <% days.forEach((day) => { %>
+
+                <div class="col-12">
+
+                    <div class="card border-0 shadow-sm overflow-hidden">
+
+                        <!-- Day Header -->
+                        <div class="card-header bg-white border-0 px-4 py-3">
+
+                            <div class="d-flex justify-content-between align-items-center">
+
+                                <div class="d-flex align-items-center gap-3">
+
+                                    <div
+                                        class="bg-primary text-white rounded-3 d-flex align-items-center justify-content-center"
+                                        style="width: 42px; height: 42px;"
+                                    >
+                                        <i class="bi bi-calendar-day"></i>
+                                    </div>
+
+                                    <div>
+
+                                        <h5 class="fw-bold mb-0 text-capitalize">
+                                            <%= day %>
+                                        </h5>
+
+                                        <small class="text-muted">
+                                            <%= timetableByDay[day].length %>
+                                            <%= timetableByDay[day].length === 1
+                                                ? "class"
+                                                : "classes" %>
+                                        </small>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Day Content -->
+                        <div class="card-body p-0">
+
+                            <% if (
+                                !timetableByDay[day] ||
+                                timetableByDay[day].length === 0
+                            ) { %>
+
+                                <div class="text-center py-4">
+
+                                    <i class="bi bi-calendar-minus text-muted fs-3"></i>
+
+                                    <p class="text-muted mb-0 mt-2">
+                                        No classes scheduled for this day.
+                                    </p>
+
+                                </div>
+
+                            <% } else { %>
+
+                                <div class="table-responsive">
+
+                                    <table class="table table-hover align-middle mb-0">
+
+                                        <thead class="table-light">
+
+                                            <tr>
+
+                                                <th
+                                                    class="ps-4"
+                                                    style="min-width: 160px;"
+                                                >
+                                                    Time
+                                                </th>
+
+                                                <th style="min-width: 250px;">
+                                                    Course
+                                                </th>
+
+                                                <th style="min-width: 200px;">
+                                                    Faculty
+                                                </th>
+
+                                                <th style="min-width: 140px;">
+                                                    Room
+                                                </th>
+
+                                                <th style="min-width: 120px;">
+                                                    Type
+                                                </th>
+
+                                            </tr>
+
+                                        </thead>
+
+
+                                        <tbody>
+
+                                            <% timetableByDay[day].forEach((item) => { %>
+
+                                                <tr>
+
+                                                    <!-- Time -->
+                                                    <td class="ps-4">
+
+                                                        <div class="fw-semibold">
+
+                                                            <i class="bi bi-clock me-1 text-primary"></i>
+
+                                                            <%= item.startTime %>
+
+                                                        </div>
+
+                                                        <div class="small text-muted ms-4">
+
+                                                            <%= item.endTime %>
+
+                                                        </div>
+
+                                                    </td>
+
+
+                                                    <!-- Course -->
+                                                    <td>
+
+                                                        <div class="fw-semibold">
+                                                            <%= item.courseName %>
+                                                        </div>
+
+                                                        <div class="small text-muted mt-1">
+
+                                                            <span class="badge bg-light text-dark border">
+
+                                                                <%= item.courseCode %>
+
+                                                            </span>
+
+                                                        </div>
+
+                                                    </td>
+
+
+                                                    <!-- Faculty -->
+                                                    <td>
+
+                                                        <div class="d-flex align-items-center gap-2">
+
+                                                            <div
+                                                                class="bg-secondary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
+                                                                style="width: 36px; height: 36px;"
+                                                            >
+                                                                <i class="bi bi-person text-secondary"></i>
+                                                            </div>
+
+                                                            <span>
+                                                                <%= item.facultyName %>
+                                                            </span>
+
+                                                        </div>
+
+                                                    </td>
+
+
+                                                    <!-- Room -->
+                                                    <td>
+
+                                                        <span class="badge bg-light text-dark border px-3 py-2">
+
+                                                            <i class="bi bi-geo-alt me-1 text-danger"></i>
+
+                                                            <%= item.room || "TBA" %>
+
+                                                        </span>
+
+                                                    </td>
+
+
+                                                    <!-- Type -->
+                                                    <td>
+
+                                                        <% 
+                                                            const classType =
+                                                                item.type
+                                                                    ? item.type.charAt(0).toUpperCase() +
+                                                                      item.type.slice(1)
+                                                                    : "Lecture";
+                                                        %>
+
+                                                        <span class="badge rounded-pill bg-primary-subtle text-primary px-3 py-2">
+
+                                                            <%= classType %>
+
+                                                        </span>
+
+                                                    </td>
+
+                                                </tr>
+
+                                            <% }) %>
+
+                                        </tbody>
+
+                                    </table>
+
+                                </div>
+
+                            <% } %>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            <% }) %>
+
+        </div>
+
+
+        <!-- =========================
+             LEGEND
+        ========================== -->
+        <div class="card border-0 shadow-sm mt-4">
+
+            <div class="card-body">
+
+                <div class="d-flex flex-wrap align-items-center gap-4">
+
+                    <span class="fw-semibold">
+                        Class Type:
+                    </span>
+
+                    <span class="badge rounded-pill bg-primary-subtle text-primary px-3 py-2">
+                        Lecture
+                    </span>
+
+                    <span class="badge rounded-pill bg-success-subtle text-success px-3 py-2">
+                        Lab
+                    </span>
+
+                    <span class="badge rounded-pill bg-warning-subtle text-warning px-3 py-2">
+                        Tutorial
+                    </span>
+
+                    <span class="badge rounded-pill bg-info-subtle text-info px-3 py-2">
+                        Practical
+                    </span>
+
+                    <span class="badge rounded-pill bg-secondary-subtle text-secondary px-3 py-2">
+                        Seminar
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+    <% } %>
+
+</div>
+
+
+<!-- =========================
+     PRINT STYLES
+========================== -->
+<style>
+
+    @media print {
+
+        body {
+            background: #ffffff !important;
+        }
+
+        .navbar,
+        .sidebar,
+        footer,
+        .btn,
+        button {
+            display: none !important;
+        }
+
+        .container-fluid {
+            width: 100% !important;
+            max-width: 100% !important;
+            padding: 0 !important;
+        }
+
+        .card {
+            box-shadow: none !important;
+            border: 1px solid #dee2e6 !important;
+            break-inside: avoid;
+        }
+
+        .card-header {
+            background: #ffffff !important;
+        }
+
+        .table {
+            font-size: 12px;
+        }
+
+        .table-responsive {
+            overflow: visible !important;
+        }
+
+    }
+
+
+    /* Better mobile timetable */
+    @media (max-width: 767.98px) {
+
+        .table {
+            font-size: 0.875rem;
+        }
+
+        .table th,
+        .table td {
+            white-space: nowrap;
+        }
+
+    }
+
+</style>

@@ -1,0 +1,1235 @@
+
+<% layout("layouts/boilerplate") -%>
+
+<div class="container-fluid py-4">
+
+    <!-- Page Header -->
+
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold mb-1">
+
+                <i class="bi bi-megaphone me-2"></i>
+
+                Notice Management
+
+            </h2>
+
+            <p class="text-muted mb-0">
+
+                Create and publish notices for students and faculty.
+
+            </p>
+
+        </div>
+
+
+        <div class="mt-3 mt-md-0">
+
+            <a
+                href="/admin/notices"
+                class="btn btn-outline-secondary"
+            >
+
+                <i class="bi bi-arrow-clockwise me-1"></i>
+
+                Refresh
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- Create Notice Card -->
+
+    <div class="card border-0 shadow-sm">
+
+        <div class="card-header bg-primary text-white py-3">
+
+            <h5 class="mb-0">
+
+                <i class="bi bi-plus-circle me-2"></i>
+
+                Create New Notice
+
+            </h5>
+
+        </div>
+
+
+        <div class="card-body p-4">
+
+            <form
+                action="/admin/notices/create"
+                method="POST"
+            >
+
+                <!-- Notice Title -->
+
+                <div class="mb-4">
+
+                    <label
+                        for="title"
+                        class="form-label fw-semibold"
+                    >
+
+                        Notice Title
+
+                    </label>
+
+
+                    <input
+                        type="text"
+                        id="title"
+                        name="title"
+                        class="form-control"
+                        placeholder="Enter notice title"
+                        maxlength="200"
+                        required
+                    >
+
+                </div>
+
+
+
+                <!-- Notice Type -->
+
+                <div class="mb-4">
+
+                    <label
+                        for="noticeType"
+                        class="form-label fw-semibold"
+                    >
+
+                        Notice Type
+
+                    </label>
+
+
+                    <select
+                        id="noticeType"
+                        name="noticeType"
+                        class="form-select"
+                        required
+                    >
+
+                        <option value="">
+
+                            Select notice type
+
+                        </option>
+
+                        <option value="academic">
+
+                            Academic
+
+                        </option>
+
+                        <option value="assignment">
+
+                            Assignment
+
+                        </option>
+
+                        <option value="class_cancelled">
+
+                            Class Cancelled
+
+                        </option>
+
+                        <option value="class_rescheduled">
+
+                            Class Rescheduled
+
+                        </option>
+
+                        <option value="faculty_leave">
+
+                            Faculty Leave
+
+                        </option>
+
+                        <option value="other">
+
+                            Other
+
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- Notice Content -->
+
+                <div class="mb-4">
+
+                    <label
+                        for="description"
+                        class="form-label fw-semibold"
+                    >
+
+                        Notice Content
+
+                    </label>
+
+
+                    <textarea
+                        id="description"
+                        name="description"
+                        class="form-control"
+                        rows="8"
+                        maxlength="5000"
+                        placeholder="Write the complete notice here..."
+                        required
+                    ></textarea>
+
+
+                    <div class="form-text">
+
+                        Maximum 5000 characters.
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Audience -->
+
+                <div class="mb-4">
+
+                    <label class="form-label fw-semibold">
+
+                        Publish To
+
+                    </label>
+
+
+                    <div class="row g-3">
+
+                        <div class="col-md-4">
+
+                            <div class="form-check border rounded p-3">
+
+                                <input
+                                    class="form-check-input"
+                                    type="radio"
+                                    name="audience"
+                                    id="audienceStudents"
+                                    value="students"
+                                    checked
+                                >
+
+
+                                <label
+                                    class="form-check-label"
+                                    for="audienceStudents"
+                                >
+
+                                    <strong>
+
+                                        Students
+
+                                    </strong>
+
+
+                                    <div class="small text-muted">
+
+                                        Publish this notice to students.
+
+                                    </div>
+
+                                </label>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="col-md-4">
+
+                            <div class="form-check border rounded p-3">
+
+                                <input
+                                    class="form-check-input"
+                                    type="radio"
+                                    name="audience"
+                                    id="audienceFaculty"
+                                    value="faculty"
+                                >
+
+
+                                <label
+                                    class="form-check-label"
+                                    for="audienceFaculty"
+                                >
+
+                                    <strong>
+
+                                        Faculty
+
+                                    </strong>
+
+
+                                    <div class="small text-muted">
+
+                                        Publish this notice to faculty.
+
+                                    </div>
+
+                                </label>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="col-md-4">
+
+                            <div class="form-check border rounded p-3">
+
+                                <input
+                                    class="form-check-input"
+                                    type="radio"
+                                    name="audience"
+                                    id="audienceBoth"
+                                    value="both"
+                                >
+
+
+                                <label
+                                    class="form-check-label"
+                                    for="audienceBoth"
+                                >
+
+                                    <strong>
+
+                                        Students + Faculty
+
+                                    </strong>
+
+
+                                    <div class="small text-muted">
+
+                                        Publish to both audiences.
+
+                                    </div>
+
+                                </label>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Scope -->
+
+                <div class="mb-4">
+
+                    <label
+                        for="scope"
+                        class="form-label fw-semibold"
+                    >
+
+                        Notice Scope
+
+                    </label>
+
+
+                    <select
+                        id="scope"
+                        name="scope"
+                        class="form-select"
+                        required
+                    >
+
+                        <option value="">
+
+                            Select notice scope
+
+                        </option>
+
+                        <option value="university">
+
+                            University Wide
+
+                        </option>
+
+                        <option value="department">
+
+                            Department
+
+                        </option>
+
+                        <option value="program">
+
+                            Program
+
+                        </option>
+
+                        <option value="semester">
+
+                            Semester
+
+                        </option>
+
+                        <option value="section">
+
+                            Section
+
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- Academic Target -->
+
+                <div class="border rounded p-3 mb-4">
+
+                    <h6 class="fw-bold mb-3">
+
+                        <i class="bi bi-diagram-3 me-1"></i>
+
+                        Academic Target
+
+                    </h6>
+
+
+
+                    <!-- Department -->
+
+                    <div class="mb-3">
+
+                        <label
+                            for="department"
+                            class="form-label"
+                        >
+
+                            Department
+
+                        </label>
+
+
+                        <select
+                            id="department"
+                            name="department"
+                            class="form-select"
+                        >
+
+                            <option value="">
+
+                                Select department
+
+                            </option>
+
+
+                            <% departments.forEach((department) => { %>
+
+                                <option
+                                    value="<%= department.code.toLowerCase() %>"
+                                >
+
+                                    <%= department.name %>
+                                    (<%= department.code %>)
+
+                                </option>
+
+                            <% }) %>
+
+                        </select>
+
+                    </div>
+
+
+
+                    <!-- Program -->
+
+                    <div class="mb-3">
+
+                        <label
+                            for="program"
+                            class="form-label"
+                        >
+
+                            Program
+
+                        </label>
+
+
+                        <select
+                            id="program"
+                            name="program"
+                            class="form-select"
+                            disabled
+                        >
+
+                            <option value="">
+
+                                Select program
+
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+
+                    <!-- Semester -->
+
+                    <div class="mb-3">
+
+                        <label
+                            for="semester"
+                            class="form-label"
+                        >
+
+                            Semester
+
+                        </label>
+
+
+                        <select
+                            id="semester"
+                            name="semester"
+                            class="form-select"
+                        >
+
+                            <option value="">
+
+                                Select semester
+
+                            </option>
+
+
+                            <% for (let i = 1; i <= 8; i++) { %>
+
+                                <option value="<%= i %>">
+
+                                    Semester <%= i %>
+
+                                </option>
+
+                            <% } %>
+
+                        </select>
+
+                    </div>
+
+
+
+                    <!-- Section -->
+
+                    <div class="mb-0">
+
+                        <label
+                            for="section"
+                            class="form-label"
+                        >
+
+                            Section
+
+                        </label>
+
+
+                        <select
+                            id="section"
+                            name="section"
+                            class="form-select"
+                        >
+
+                            <option value="">
+
+                                Select section
+
+                            </option>
+
+                            <option value="A">
+
+                                Section A
+
+                            </option>
+
+                            <option value="B">
+
+                                Section B
+
+                            </option>
+
+                            <option value="C">
+
+                                Section C
+
+                            </option>
+
+                            <option value="D">
+
+                                Section D
+
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Notice Date -->
+
+                <div class="mb-4">
+
+                    <label
+                        for="noticeDate"
+                        class="form-label fw-semibold"
+                    >
+
+                        Notice Date
+
+                    </label>
+
+
+                    <input
+                        type="date"
+                        id="noticeDate"
+                        name="noticeDate"
+                        class="form-control"
+                    >
+
+                </div>
+
+
+
+                <!-- Attachment -->
+
+                <div class="mb-4">
+
+                    <label
+                        for="attachment"
+                        class="form-label fw-semibold"
+                    >
+
+                        Attachment
+
+                    </label>
+
+
+                    <input
+                        type="text"
+                        id="attachment"
+                        name="attachment"
+                        class="form-control"
+                        placeholder="Optional attachment path or file reference"
+                    >
+
+                </div>
+
+
+
+                <!-- Actions -->
+
+                <div class="d-flex flex-column flex-sm-row gap-2">
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                    >
+
+                        <i class="bi bi-send me-1"></i>
+
+                        Publish Notice
+
+                    </button>
+
+
+                    <button
+                        type="reset"
+                        class="btn btn-outline-secondary"
+                    >
+
+                        <i class="bi bi-x-circle me-1"></i>
+
+                        Clear
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- Published Notices -->
+
+    <div class="card border-0 shadow-sm mt-4">
+
+        <div class="card-header bg-dark text-white py-3">
+
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2">
+
+                <h5 class="mb-0">
+
+                    <i class="bi bi-list-ul me-2"></i>
+
+                    Published Notices
+
+                </h5>
+
+
+                <span class="badge bg-light text-dark">
+
+                    <%= notices.length %> Notice(s)
+
+                </span>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="card-body p-0">
+
+            <% if (!notices || notices.length === 0) { %>
+
+                <div class="text-center py-5">
+
+                    <i class="bi bi-megaphone fs-1 text-muted"></i>
+
+
+                    <h6 class="mt-3 mb-1">
+
+                        No notices found
+
+                    </h6>
+
+
+                    <p class="text-muted mb-0">
+
+                        Published notices will appear here.
+
+                    </p>
+
+                </div>
+
+            <% } else { %>
+
+
+                <div class="table-responsive">
+
+                    <table class="table table-hover align-middle mb-0">
+
+                        <thead class="table-light">
+
+                            <tr>
+
+                                <th class="px-3">
+
+                                    Notice
+
+                                </th>
+
+                                <th>
+
+                                    Audience
+
+                                </th>
+
+                                <th>
+
+                                    Scope
+
+                                </th>
+
+                                <th>
+
+                                    Published
+
+                                </th>
+
+                                <th>
+
+                                    Status
+
+                                </th>
+
+                                <th class="text-end px-3">
+
+                                    Action
+
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+
+                        <tbody>
+
+                            <% notices.forEach((notice) => { %>
+
+                                <tr>
+
+                                    <!-- Notice -->
+
+                                    <td class="px-3">
+
+                                        <div class="fw-semibold">
+
+                                            <%= notice.title %>
+
+                                        </div>
+
+
+                                        <div class="small text-muted mt-1">
+
+                                            <%= notice.noticeType
+                                                ? notice.noticeType
+                                                    .replace(/_/g, " ")
+                                                    .replace(/\b\w/g, function (letter) {
+                                                        return letter.toUpperCase();
+                                                    })
+                                                : "Other"
+                                            %>
+
+                                        </div>
+
+                                    </td>
+
+
+
+                                    <!-- Audience -->
+
+                                    <td>
+
+                                        <% if (notice.audience === "students") { %>
+
+                                            <span class="badge bg-primary">
+
+                                                Students
+
+                                            </span>
+
+                                        <% } else if (notice.audience === "faculty") { %>
+
+                                            <span class="badge bg-info text-dark">
+
+                                                Faculty
+
+                                            </span>
+
+                                        <% } else { %>
+
+                                            <span class="badge bg-dark">
+
+                                                Students + Faculty
+
+                                            </span>
+
+                                        <% } %>
+
+                                    </td>
+
+
+
+                                    <!-- Scope -->
+
+                                    <td>
+
+                                        <span class="badge bg-secondary">
+
+                                            <%= notice.scope
+                                                ? notice.scope
+                                                    .replace(/_/g, " ")
+                                                    .replace(/\b\w/g, function (letter) {
+                                                        return letter.toUpperCase();
+                                                    })
+                                                : "University"
+                                            %>
+
+                                        </span>
+
+
+                                        <% if (notice.department) { %>
+
+                                            <div class="small text-muted mt-1">
+
+                                                <%= notice.department.toUpperCase() %>
+
+                                            </div>
+
+                                        <% } %>
+
+
+                                        <% if (notice.program) { %>
+
+                                            <div class="small text-muted">
+
+                                                <%= notice.program.toUpperCase() %>
+
+                                            </div>
+
+                                        <% } %>
+
+
+                                        <% if (notice.semester) { %>
+
+                                            <div class="small text-muted">
+
+                                                Semester <%= notice.semester %>
+
+                                            </div>
+
+                                        <% } %>
+
+
+                                        <% if (notice.section) { %>
+
+                                            <div class="small text-muted">
+
+                                                Section <%= notice.section %>
+
+                                            </div>
+
+                                        <% } %>
+
+                                    </td>
+
+
+
+                                    <!-- Published -->
+
+                                    <td>
+
+                                        <% if (notice.publishedAt) { %>
+
+                                            <div>
+
+                                                <%= new Date(
+                                                    notice.publishedAt
+                                                ).toLocaleDateString("en-IN") %>
+
+                                            </div>
+
+                                        <% } else { %>
+
+                                            <span class="text-muted">
+
+                                                —
+
+                                            </span>
+
+                                        <% } %>
+
+                                    </td>
+
+
+
+                                    <!-- Status -->
+
+                                    <td>
+
+                                        <% if (notice.isActive) { %>
+
+                                            <span class="badge bg-success">
+
+                                                Active
+
+                                            </span>
+
+                                        <% } else { %>
+
+                                            <span class="badge bg-secondary">
+
+                                                Inactive
+
+                                            </span>
+
+                                        <% } %>
+
+                                    </td>
+
+
+
+                                    <!-- Action -->
+
+                                    <td class="text-end px-3">
+
+                                        <form
+                                            action="/admin/notices/<%= notice._id %>/toggle-status"
+                                            method="POST"
+                                            class="d-inline"
+                                        >
+
+                                            <% if (notice.isActive) { %>
+
+                                                <button
+                                                    type="submit"
+                                                    class="btn btn-sm btn-outline-danger"
+                                                >
+
+                                                    <i class="bi bi-eye-slash me-1"></i>
+
+                                                    Deactivate
+
+                                                </button>
+
+                                            <% } else { %>
+
+                                                <button
+                                                    type="submit"
+                                                    class="btn btn-sm btn-outline-success"
+                                                >
+
+                                                    <i class="bi bi-eye me-1"></i>
+
+                                                    Activate
+
+                                                </button>
+
+                                            <% } %>
+
+                                        </form>
+
+                                    </td>
+
+                                </tr>
+
+                            <% }) %>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+            <% } %>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const programs =
+            <%- JSON.stringify(programs) %>;
+
+
+        const department =
+            document.getElementById("department");
+
+
+        const program =
+            document.getElementById("program");
+
+
+        const semester =
+            document.getElementById("semester");
+
+
+        const section =
+            document.getElementById("section");
+
+
+
+        /*
+
+        |--------------------------------------------------------------------------
+        | Load Programs Based On Department
+        |--------------------------------------------------------------------------
+        */
+
+        function loadPrograms() {
+
+            program.innerHTML = `
+
+                <option value="">
+
+                    Select program
+
+                </option>
+
+            `;
+
+
+            const selectedDepartment =
+                department.value;
+
+
+            if (!selectedDepartment) {
+
+                program.disabled = true;
+
+                return;
+
+            }
+
+
+
+            const filteredPrograms =
+                programs.filter(
+                    (item) => {
+
+                        if (
+                            !item.department ||
+                            !item.department.code
+                        ) {
+
+                            return false;
+
+                        }
+
+
+                        return (
+                            item.department.code
+                                .toLowerCase() ===
+                            selectedDepartment.toLowerCase()
+                        );
+
+                    }
+                );
+
+
+
+            filteredPrograms.forEach(
+                (item) => {
+
+                    const option =
+                        document.createElement(
+                            "option"
+                        );
+
+
+                    option.value =
+                        item.code.toLowerCase();
+
+
+                    option.textContent =
+                        `${item.name} (${item.code})`;
+
+
+                    program.appendChild(
+                        option
+                    );
+
+                }
+            );
+
+
+
+            program.disabled =
+                filteredPrograms.length === 0;
+
+        }
+
+
+
+        /*
+
+        |--------------------------------------------------------------------------
+        | Department Change
+        |--------------------------------------------------------------------------
+        */
+
+        department.addEventListener(
+            "change",
+            function () {
+
+                loadPrograms();
+
+                semester.value = "";
+
+                section.value = "";
+
+            }
+        );
+
+
+
+        /*
+
+        |--------------------------------------------------------------------------
+        | Program Change
+        |--------------------------------------------------------------------------
+        */
+
+        program.addEventListener(
+            "change",
+            function () {
+
+                semester.value = "";
+
+                section.value = "";
+
+            }
+        );
+
+
+
+        /*
+
+        |--------------------------------------------------------------------------
+        | Semester Change
+        |--------------------------------------------------------------------------
+        */
+
+        semester.addEventListener(
+            "change",
+            function () {
+
+                section.value = "";
+
+            }
+        );
+
+
+
+        /*
+
+        |--------------------------------------------------------------------------
+        | Initial State
+        |--------------------------------------------------------------------------
+        */
+
+        program.disabled = true;
+
+        semester.disabled = false;
+
+        section.disabled = false;
+
+    }
+);
+
+</script>

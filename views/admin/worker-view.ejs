@@ -1,0 +1,1854 @@
+<% layout("layouts/boilerplate") -%>
+
+    <style>
+
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --bg: #f4f7fb;
+            --text: #172033;
+            --muted: #6b7280;
+            --border: #e5e7eb;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background:
+                radial-gradient(
+                    circle at top left,
+                    rgba(37, 99, 235, 0.08),
+                    transparent 30%
+                ),
+                var(--bg);
+            color: var(--text);
+            font-family:
+                Inter,
+                system-ui,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                sans-serif;
+        }
+
+        .top-navbar {
+            background: rgba(255,255,255,0.92);
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(229,231,235,0.85);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .brand {
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 800;
+            letter-spacing: -0.4px;
+        }
+
+        .brand i {
+            color: var(--primary);
+        }
+
+        .admin-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background:
+                linear-gradient(
+                    135deg,
+                    #2563eb,
+                    #7c3aed
+                );
+            color: #fff;
+            font-weight: 800;
+        }
+
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 32px 20px 60px;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            text-decoration: none;
+            color: #475569;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .back-link:hover {
+            color: var(--primary);
+        }
+
+        .hero-card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 22px;
+            padding: 26px;
+            box-shadow:
+                0 12px 35px rgba(15,23,42,0.05);
+            margin-bottom: 22px;
+        }
+
+        .worker-avatar-large {
+            width: 82px;
+            height: 82px;
+            min-width: 82px;
+            border-radius: 23px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background:
+                linear-gradient(
+                    135deg,
+                    #2563eb,
+                    #7c3aed
+                );
+            color: #fff;
+            font-size: 30px;
+            font-weight: 800;
+        }
+
+        .worker-name {
+            font-size: clamp(26px,4vw,36px);
+            font-weight: 800;
+            letter-spacing: -0.8px;
+            margin-bottom: 5px;
+        }
+
+        .worker-email {
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .worker-meta {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 13px;
+        }
+
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 10px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .pill-blue {
+            background: #eff6ff;
+            color: #1d4ed8;
+        }
+
+        .pill-green {
+            background: #ecfdf5;
+            color: #047857;
+        }
+
+        .pill-red {
+            background: #fef2f2;
+            color: #b91c1c;
+        }
+
+        .section-card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow:
+                0 10px 30px rgba(15,23,42,0.04);
+            margin-bottom: 22px;
+        }
+
+        .section-header {
+            padding: 18px 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section-title {
+            margin: 0;
+            font-size: 17px;
+            font-weight: 800;
+        }
+
+        .section-body {
+            padding: 20px;
+        }
+
+        .info-item {
+            padding: 14px 0;
+            border-bottom: 1px solid #f0f2f5;
+        }
+
+        .info-item:last-child {
+            border-bottom: 0;
+        }
+
+        .info-label {
+            color: #6b7280;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            font-weight: 800;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            color: #111827;
+            font-size: 14px;
+            font-weight: 700;
+            word-break: break-word;
+        }
+
+        .salary-box {
+            background:
+                linear-gradient(
+                    135deg,
+                    #eff6ff,
+                    #f5f3ff
+                );
+            border: 1px solid #dbeafe;
+            border-radius: 16px;
+            padding: 20px;
+        }
+
+        .salary-label {
+            color: #64748b;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .salary-value {
+            font-size: 30px;
+            font-weight: 900;
+            color: #1d4ed8;
+        }
+
+        .quick-link {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            text-decoration: none;
+            color: #374151;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f2f5;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .quick-link:last-child {
+            border-bottom: 0;
+        }
+
+        .quick-link:hover {
+            color: var(--primary);
+        }
+
+        .quick-link i {
+            color: var(--primary);
+        }
+
+        .table-scroll {
+            overflow-x: auto;
+        }
+
+        .task-table {
+            min-width: 900px;
+            margin: 0;
+        }
+
+        .task-table th {
+            background: #f8fafc;
+            color: #64748b;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            font-weight: 800;
+            padding: 13px 15px;
+            white-space: nowrap;
+        }
+
+        .task-table td {
+            padding: 15px;
+            vertical-align: middle;
+            border-bottom: 1px solid #f0f2f5;
+            font-size: 13px;
+        }
+
+        .task-title {
+            font-weight: 800;
+            color: #111827;
+        }
+
+        .task-description {
+            color: #6b7280;
+            font-size: 12px;
+            margin-top: 3px;
+            max-width: 300px;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 6px 9px;
+            border-radius: 999px;
+            font-size: 10px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .status-assigned {
+            background: #eff6ff;
+            color: #1d4ed8;
+        }
+
+        .status-progress {
+            background: #fff7ed;
+            color: #c2410c;
+        }
+
+        .status-completed {
+            background: #ecfdf5;
+            color: #047857;
+        }
+
+        .status-closed {
+            background: #f3f4f6;
+            color: #4b5563;
+        }
+
+        .priority-badge {
+            display: inline-flex;
+            padding: 5px 8px;
+            border-radius: 999px;
+            font-size: 10px;
+            font-weight: 800;
+        }
+
+        .priority-low {
+            background: #f0fdf4;
+            color: #15803d;
+        }
+
+        .priority-medium {
+            background: #eff6ff;
+            color: #1d4ed8;
+        }
+
+        .priority-high {
+            background: #fff7ed;
+            color: #c2410c;
+        }
+
+        .priority-urgent {
+            background: #fef2f2;
+            color: #b91c1c;
+        }
+
+        .leave-card {
+            padding: 18px;
+            border-bottom: 1px solid #f0f2f5;
+        }
+
+        .leave-card:last-child {
+            border-bottom: 0;
+        }
+
+        .leave-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .leave-type {
+            font-weight: 800;
+            color: #111827;
+        }
+
+        .leave-date {
+            color: #64748b;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        .leave-reason {
+            margin-top: 12px;
+            background: #f8fafc;
+            border-radius: 10px;
+            padding: 12px;
+            color: #475569;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .leave-response {
+            margin-top: 10px;
+            padding: 12px;
+            border-left: 3px solid #2563eb;
+            background: #eff6ff;
+            color: #334155;
+            font-size: 13px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 45px 20px;
+        }
+
+        .empty-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 17px;
+            background: #eff6ff;
+            color: #2563eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 14px;
+            font-size: 25px;
+        }
+
+        .empty-title {
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .empty-text {
+            color: var(--muted);
+            font-size: 13px;
+            margin: 0;
+        }
+
+        @media (max-width: 767.98px) {
+
+            .main-container {
+                padding: 24px 14px 45px;
+            }
+
+            .hero-card {
+                padding: 20px;
+            }
+
+            .worker-avatar-large {
+                width: 65px;
+                height: 65px;
+                min-width: 65px;
+                border-radius: 18px;
+                font-size: 24px;
+            }
+
+            .worker-name {
+                font-size: 25px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<%
+    const workerUser =
+        worker?.user || {};
+
+    const workerName =
+        workerUser.name ||
+        "Worker";
+
+    const workerInitial =
+        workerName
+            .charAt(0)
+            .toUpperCase();
+
+    const workerType =
+        worker.workerType
+            ? worker.workerType
+                .charAt(0)
+                .toUpperCase() +
+              worker.workerType.slice(1)
+            : "Not Set";
+
+    const employmentType =
+        worker.employmentType
+            ? worker.employmentType
+                .replace("-", " ")
+                .replace(
+                    /\b\w/g,
+                    c => c.toUpperCase()
+                )
+            : "Not Set";
+%>
+
+
+<!-- ===================================================== -->
+<!-- NAVBAR -->
+<!-- ===================================================== -->
+
+<nav class="top-navbar">
+
+    <div class="container-fluid px-3 px-md-4 py-2">
+
+        <div
+            class="d-flex align-items-center justify-content-between"
+        >
+
+            <a
+                href="/admin/dashboard"
+                class="brand"
+            >
+                <i class="bi bi-mortarboard-fill me-2"></i>
+                CampusNexus
+            </a>
+
+            <div class="d-flex align-items-center gap-3">
+
+                <span class="d-none d-sm-inline text-muted small">
+                    Administrator
+                </span>
+
+                <div class="admin-avatar">
+                    <%= (
+                        currentUser?.name ||
+                        "A"
+                    ).charAt(0).toUpperCase() %>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</nav>
+
+
+<!-- ===================================================== -->
+<!-- MAIN -->
+<!-- ===================================================== -->
+
+<main class="main-container">
+
+    <a
+        href="/admin/workers"
+        class="back-link"
+    >
+        <i class="bi bi-arrow-left"></i>
+        Back to Workers
+    </a>
+
+
+    <!-- ================================================= -->
+    <!-- WORKER HERO -->
+    <!-- ================================================= -->
+
+    <div class="hero-card">
+
+        <div class="row align-items-center g-4">
+
+            <div class="col-lg-8">
+
+                <div class="d-flex align-items-center gap-3">
+
+                    <div class="worker-avatar-large">
+                        <%= workerInitial %>
+                    </div>
+
+                    <div>
+
+                        <h1 class="worker-name">
+                            <%= workerName %>
+                        </h1>
+
+                        <div class="worker-email">
+                            <%= workerUser.email || "No email available" %>
+                        </div>
+
+                        <div class="worker-meta">
+
+                            <span class="pill pill-blue">
+                                <i class="bi bi-tools"></i>
+                                <%= workerType %>
+                            </span>
+
+                            <% if (workerUser.isActive) { %>
+
+                                <span class="pill pill-green">
+                                    <i class="bi bi-check-circle-fill"></i>
+                                    Active
+                                </span>
+
+                            <% } else { %>
+
+                                <span class="pill pill-red">
+                                    <i class="bi bi-x-circle-fill"></i>
+                                    Inactive
+                                </span>
+
+                            <% } %>
+
+                            <span class="pill pill-blue">
+                                <i class="bi bi-person-badge"></i>
+                                Worker
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-lg-4">
+
+                <div class="salary-box">
+
+                    <div class="salary-label">
+                        Monthly Salary
+                    </div>
+
+                    <div class="salary-value">
+
+                        ₹<%= Number(
+                            worker.salary || 0
+                        ).toLocaleString(
+                            "en-IN"
+                        ) %>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="row g-4">
+
+        <!-- ================================================= -->
+        <!-- LEFT COLUMN -->
+        <!-- ================================================= -->
+
+        <div class="col-lg-8">
+
+
+            <!-- ============================================= -->
+            <!-- PERSONAL INFORMATION -->
+            <!-- ============================================= -->
+
+            <div class="section-card">
+
+                <div class="section-header">
+
+                    <h2 class="section-title">
+                        <i class="bi bi-person-lines-fill me-2 text-primary"></i>
+                        Personal Information
+                    </h2>
+
+                </div>
+
+                <div class="section-body">
+
+                    <div class="row">
+
+                        <div class="col-md-6">
+
+                            <div class="info-item">
+
+                                <div class="info-label">
+                                    Full Name
+                                </div>
+
+                                <div class="info-value">
+                                    <%= workerName %>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <div class="info-item">
+
+                                <div class="info-label">
+                                    Email
+                                </div>
+
+                                <div class="info-value">
+                                    <%= workerUser.email || "—" %>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <div class="info-item">
+
+                                <div class="info-label">
+                                    Mobile
+                                </div>
+
+                                <div class="info-value">
+                                    <%= worker.mobile || "—" %>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <div class="info-item">
+
+                                <div class="info-label">
+                                    Date of Birth
+                                </div>
+
+                                <div class="info-value">
+
+                                    <% if (worker.dob) { %>
+
+                                        <%= new Date(
+                                            worker.dob
+                                        ).toLocaleDateString(
+                                            "en-IN",
+                                            {
+                                                day: "2-digit",
+                                                month: "long",
+                                                year: "numeric"
+                                            }
+                                        ) %>
+
+                                    <% } else { %>
+
+                                        —
+
+                                    <% } %>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <div class="info-item">
+
+                                <div class="info-label">
+                                    Gender
+                                </div>
+
+                                <div class="info-value">
+
+                                    <%= worker.gender
+                                        ? worker.gender
+                                            .charAt(0)
+                                            .toUpperCase() +
+                                          worker.gender.slice(1)
+                                        : "—"
+                                    %>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <div class="info-item">
+
+                                <div class="info-label">
+                                    Account Status
+                                </div>
+
+                                <div class="info-value">
+
+                                    <% if (
+                                        workerUser.isActive
+                                    ) { %>
+
+                                        <span class="text-success">
+                                            <i class="bi bi-check-circle-fill me-1"></i>
+                                            Active
+                                        </span>
+
+                                    <% } else { %>
+
+                                        <span class="text-danger">
+                                            <i class="bi bi-x-circle-fill me-1"></i>
+                                            Inactive
+                                        </span>
+
+                                    <% } %>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ============================================= -->
+            <!-- EMPLOYMENT INFORMATION -->
+            <!-- ============================================= -->
+
+            <div class="section-card">
+
+                <div class="section-header">
+
+                    <h2 class="section-title">
+                        <i class="bi bi-briefcase-fill me-2 text-primary"></i>
+                        Employment Information
+                    </h2>
+
+                </div>
+
+                <div class="section-body">
+
+                    <div class="row">
+
+                        <div class="col-md-6">
+
+                            <div class="info-item">
+
+                                <div class="info-label">
+                                    Worker ID
+                                </div>
+
+                                <div class="info-value">
+                                    <%= worker.workerId || "—" %>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <div class="info-item">
+
+                                <div class="info-label">
+                                    Worker Type
+                                </div>
+
+                                <div class="info-value">
+                                    <%= workerType %>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <div class="info-item">
+
+                                <div class="info-label">
+                                    Employment Type
+                                </div>
+
+                                <div class="info-value">
+                                    <%= employmentType %>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <div class="info-item">
+
+                                <div class="info-label">
+                                    Joining Date
+                                </div>
+
+                                <div class="info-value">
+
+                                    <% if (
+                                        worker.joiningDate
+                                    ) { %>
+
+                                        <%= new Date(
+                                            worker.joiningDate
+                                        ).toLocaleDateString(
+                                            "en-IN",
+                                            {
+                                                day: "2-digit",
+                                                month: "long",
+                                                year: "numeric"
+                                            }
+                                        ) %>
+
+                                    <% } else { %>
+
+                                        —
+
+                                    <% } %>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ============================================= -->
+            <!-- ADDRESS -->
+            <!-- ============================================= -->
+
+            <div class="section-card">
+
+                <div class="section-header">
+
+                    <h2 class="section-title">
+                        <i class="bi bi-geo-alt-fill me-2 text-primary"></i>
+                        Address & Emergency Contact
+                    </h2>
+
+                </div>
+
+                <div class="section-body">
+
+                    <div class="row">
+
+                        <div class="col-md-8">
+
+                            <div class="info-item">
+
+                                <div class="info-label">
+                                    Address
+                                </div>
+
+                                <div class="info-value">
+                                    <%= worker.address || "—" %>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-4">
+
+                            <div class="info-item">
+
+                                <div class="info-label">
+                                    PIN
+                                </div>
+
+                                <div class="info-value">
+                                    <%= worker.pin || "—" %>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-4">
+
+                            <div class="info-item">
+
+                                <div class="info-label">
+                                    City
+                                </div>
+
+                                <div class="info-value">
+                                    <%= worker.city || "—" %>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-4">
+
+                            <div class="info-item">
+
+                                <div class="info-label">
+                                    State
+                                </div>
+
+                                <div class="info-value">
+                                    <%= worker.state || "—" %>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-4">
+
+                            <div class="info-item">
+
+                                <div class="info-label">
+                                    Emergency Contact
+                                </div>
+
+                                <div class="info-value">
+                                    <%= worker.emergencyContact || "—" %>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-12">
+
+                            <div class="info-item">
+
+                                <div class="info-label">
+                                    Emergency Relation
+                                </div>
+
+                                <div class="info-value">
+                                    <%= worker.emergencyRelation || "—" %>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ============================================= -->
+            <!-- ASSIGNED TASKS -->
+            <!-- ============================================= -->
+
+            <div class="section-card">
+
+                <div class="section-header">
+
+                    <div class="d-flex justify-content-between align-items-center gap-2">
+
+                        <h2 class="section-title">
+                            <i class="bi bi-list-task me-2 text-primary"></i>
+                            Assigned Work
+                        </h2>
+
+                        <a
+                            href="/admin/worker-tasks"
+                            class="btn btn-sm btn-outline-primary rounded-3 fw-semibold"
+                        >
+                            Manage Tasks
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+                <% if (
+                    worker.tasks &&
+                    worker.tasks.length > 0
+                ) { %>
+
+                    <div class="table-scroll">
+
+                        <table class="table task-table">
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>
+                                        Task
+                                    </th>
+
+                                    <th>
+                                        Priority
+                                    </th>
+
+                                    <th>
+                                        Status
+                                    </th>
+
+                                    <th>
+                                        Assigned
+                                    </th>
+
+                                    <th>
+                                        Due
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                                <% worker.tasks.forEach(task => { %>
+
+                                    <%
+                                        let taskStatus =
+                                            task.status || "assigned";
+
+                                        let statusClass =
+                                            "status-assigned";
+
+                                        let statusText =
+                                            "Assigned";
+
+                                        if (
+                                            taskStatus ===
+                                            "in-progress"
+                                        ) {
+                                            statusClass =
+                                                "status-progress";
+
+                                            statusText =
+                                                "In Progress";
+                                        }
+
+                                        if (
+                                            taskStatus ===
+                                            "completed"
+                                        ) {
+                                            statusClass =
+                                                "status-completed";
+
+                                            statusText =
+                                                "Completed";
+                                        }
+
+                                        if (
+                                            taskStatus ===
+                                            "closed"
+                                        ) {
+                                            statusClass =
+                                                "status-closed";
+
+                                            statusText =
+                                                "Closed";
+                                        }
+
+                                        const priority =
+                                            task.priority ||
+                                            "medium";
+                                    %>
+
+                                    <tr>
+
+                                        <td>
+
+                                            <div class="task-title">
+                                                <%= task.title %>
+                                            </div>
+
+                                            <div class="task-description">
+                                                <%= task.description %>
+                                            </div>
+
+                                            <% if (task.location) { %>
+
+                                                <div class="small text-muted mt-1">
+                                                    <i class="bi bi-geo-alt me-1"></i>
+                                                    <%= task.location %>
+                                                </div>
+
+                                            <% } %>
+
+                                        </td>
+
+
+                                        <td>
+
+                                            <span
+                                                class="priority-badge priority-<%= priority %>"
+                                            >
+                                                <%= priority
+                                                    .charAt(0)
+                                                    .toUpperCase() +
+                                                    priority.slice(1)
+                                                %>
+                                            </span>
+
+                                        </td>
+
+
+                                        <td>
+
+                                            <span
+                                                class="status-badge <%= statusClass %>"
+                                            >
+
+                                                <i
+                                                    class="bi
+                                                    <%= taskStatus === 'completed'
+                                                        ? 'bi-check-circle-fill'
+                                                        : taskStatus === 'closed'
+                                                            ? 'bi-lock-fill'
+                                                            : taskStatus === 'in-progress'
+                                                                ? 'bi-play-circle-fill'
+                                                                : 'bi-clock-fill'
+                                                    %>"
+                                                ></i>
+
+                                                <%= statusText %>
+
+                                            </span>
+
+                                        </td>
+
+
+                                        <td>
+
+                                            <%= task.assignedAt
+                                                ? new Date(
+                                                    task.assignedAt
+                                                ).toLocaleDateString(
+                                                    "en-IN"
+                                                )
+                                                : "—"
+                                            %>
+
+                                        </td>
+
+
+                                        <td>
+
+                                            <%= task.dueDate
+                                                ? new Date(
+                                                    task.dueDate
+                                                ).toLocaleDateString(
+                                                    "en-IN"
+                                                )
+                                                : "—"
+                                            %>
+
+                                        </td>
+
+                                    </tr>
+
+                                <% }); %>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                <% } else { %>
+
+                    <div class="empty-state">
+
+                        <div class="empty-icon">
+                            <i class="bi bi-clipboard-x"></i>
+                        </div>
+
+                        <div class="empty-title">
+                            No Tasks Assigned
+                        </div>
+
+                        <p class="empty-text">
+                            No work has been assigned to this worker yet.
+                        </p>
+
+                    </div>
+
+                <% } %>
+
+            </div>
+
+
+            <!-- ============================================= -->
+            <!-- LEAVE HISTORY -->
+            <!-- ============================================= -->
+
+            <div class="section-card">
+
+                <div class="section-header">
+
+                    <h2 class="section-title">
+                        <i class="bi bi-calendar2-week-fill me-2 text-primary"></i>
+                        Leave History
+                    </h2>
+
+                </div>
+
+
+                <% if (
+                    worker.leaves &&
+                    worker.leaves.length > 0
+                ) { %>
+
+                    <div>
+
+                        <% worker.leaves.forEach(leave => { %>
+
+                            <%
+                                let leaveStatus =
+                                    leave.status || "pending";
+
+                                let leaveClass =
+                                    leaveStatus === "approved"
+                                        ? "status-completed"
+                                        : leaveStatus === "rejected"
+                                            ? "status-closed"
+                                            : "status-assigned";
+
+                                const leaveType =
+                                    leave.leaveType
+                                        ? leave.leaveType
+                                            .charAt(0)
+                                            .toUpperCase() +
+                                          leave.leaveType.slice(1)
+                                        : "Leave";
+                            %>
+
+                            <div class="leave-card">
+
+                                <div class="leave-top">
+
+                                    <div>
+
+                                        <div class="leave-type">
+                                            <%= leaveType %>
+                                        </div>
+
+                                        <div class="leave-date">
+
+                                            <%= leave.fromDate
+                                                ? new Date(
+                                                    leave.fromDate
+                                                ).toLocaleDateString(
+                                                    "en-IN"
+                                                )
+                                                : "—"
+                                            %>
+
+                                            &nbsp; → &nbsp;
+
+                                            <%= leave.toDate
+                                                ? new Date(
+                                                    leave.toDate
+                                                ).toLocaleDateString(
+                                                    "en-IN"
+                                                )
+                                                : "—"
+                                            %>
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <span
+                                        class="status-badge <%= leaveClass %>"
+                                    >
+
+                                        <i
+                                            class="bi
+                                            <%= leaveStatus === 'approved'
+                                                ? 'bi-check-circle-fill'
+                                                : leaveStatus === 'rejected'
+                                                    ? 'bi-x-circle-fill'
+                                                    : 'bi-hourglass-split'
+                                            %>"
+                                        ></i>
+
+                                        <%= leaveStatus
+                                            .charAt(0)
+                                            .toUpperCase() +
+                                            leaveStatus.slice(1)
+                                        %>
+
+                                    </span>
+
+                                </div>
+
+
+                                <% if (leave.reason) { %>
+
+                                    <div class="leave-reason">
+
+                                        <strong>
+                                            Reason:
+                                        </strong>
+
+                                        <%= leave.reason %>
+
+                                    </div>
+
+                                <% } %>
+
+
+                                <% if (
+                                    leave.adminResponse
+                                ) { %>
+
+                                    <div class="leave-response">
+
+                                        <strong>
+                                            Admin Response:
+                                        </strong>
+
+                                        <div class="mt-1">
+                                            <%= leave.adminResponse %>
+                                        </div>
+
+                                    </div>
+
+                                <% } %>
+
+
+                                <% if (
+                                    leave.reviewedAt
+                                ) { %>
+
+                                    <div class="small text-muted mt-2">
+
+                                        <i class="bi bi-clock me-1"></i>
+
+                                        Reviewed on
+
+                                        <%= new Date(
+                                            leave.reviewedAt
+                                        ).toLocaleDateString(
+                                            "en-IN"
+                                        ) %>
+
+                                        <% if (
+                                            leave.reviewedBy
+                                        ) { %>
+
+                                            by
+                                            <strong>
+                                                <%= leave.reviewedBy.name %>
+                                            </strong>
+
+                                        <% } %>
+
+                                    </div>
+
+                                <% } %>
+
+                            </div>
+
+                        <% }); %>
+
+                    </div>
+
+                <% } else { %>
+
+                    <div class="empty-state">
+
+                        <div class="empty-icon">
+                            <i class="bi bi-calendar-x"></i>
+                        </div>
+
+                        <div class="empty-title">
+                            No Leave Applications
+                        </div>
+
+                        <p class="empty-text">
+                            This worker has not submitted any leave application yet.
+                        </p>
+
+                    </div>
+
+                <% } %>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- RIGHT COLUMN -->
+        <!-- ================================================= -->
+
+        <div class="col-lg-4">
+
+
+            <!-- ============================================= -->
+            <!-- WORKER IDENTIFICATION -->
+            <!-- ============================================= -->
+
+            <div class="section-card">
+
+                <div class="section-header">
+
+                    <h2 class="section-title">
+                        <i class="bi bi-person-vcard-fill me-2 text-primary"></i>
+                        Worker Identification
+                    </h2>
+
+                </div>
+
+                <div class="section-body">
+
+                    <div class="info-item">
+
+                        <div class="info-label">
+                            Worker ID
+                        </div>
+
+                        <div class="info-value">
+                            <%= worker.workerId || "—" %>
+                        </div>
+
+                    </div>
+
+
+                    <div class="info-item">
+
+                        <div class="info-label">
+                            Worker Type
+                        </div>
+
+                        <div class="info-value">
+                            <%= workerType %>
+                        </div>
+
+                    </div>
+
+
+                    <div class="info-item">
+
+                        <div class="info-label">
+                            Employment Type
+                        </div>
+
+                        <div class="info-value">
+                            <%= employmentType %>
+                        </div>
+
+                    </div>
+
+
+                    <div class="info-item">
+
+                        <div class="info-label">
+                            Portal Role
+                        </div>
+
+                        <div class="info-value">
+                            Worker
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ============================================= -->
+            <!-- SALARY -->
+            <!-- ============================================= -->
+
+            <div class="section-card">
+
+                <div class="section-header">
+
+                    <h2 class="section-title">
+                        <i class="bi bi-cash-stack me-2 text-primary"></i>
+                        Salary
+                    </h2>
+
+                </div>
+
+                <div class="section-body">
+
+                    <div class="salary-box">
+
+                        <div class="salary-label">
+                            Monthly Salary
+                        </div>
+
+                        <div class="salary-value">
+
+                            ₹<%= Number(
+                                worker.salary || 0
+                            ).toLocaleString(
+                                "en-IN"
+                            ) %>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ============================================= -->
+            <!-- ACCOUNT INFORMATION -->
+            <!-- ============================================= -->
+
+            <div class="section-card">
+
+                <div class="section-header">
+
+                    <h2 class="section-title">
+                        <i class="bi bi-shield-check me-2 text-primary"></i>
+                        Account Information
+                    </h2>
+
+                </div>
+
+                <div class="section-body">
+
+                    <div class="info-item">
+
+                        <div class="info-label">
+                            Account Status
+                        </div>
+
+                        <div class="info-value">
+
+                            <% if (
+                                workerUser.isActive
+                            ) { %>
+
+                                <span class="text-success">
+                                    <i class="bi bi-check-circle-fill me-1"></i>
+                                    Active
+                                </span>
+
+                            <% } else { %>
+
+                                <span class="text-danger">
+                                    <i class="bi bi-x-circle-fill me-1"></i>
+                                    Inactive
+                                </span>
+
+                            <% } %>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="info-item">
+
+                        <div class="info-label">
+                            Last Login
+                        </div>
+
+                        <div class="info-value">
+
+                            <% if (
+                                workerUser.lastLogin
+                            ) { %>
+
+                                <%= new Date(
+                                    workerUser.lastLogin
+                                ).toLocaleString(
+                                    "en-IN"
+                                ) %>
+
+                            <% } else { %>
+
+                                Never
+
+                            <% } %>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="info-item">
+
+                        <div class="info-label">
+                            Account Created
+                        </div>
+
+                        <div class="info-value">
+
+                            <% if (
+                                workerUser.createdAt
+                            ) { %>
+
+                                <%= new Date(
+                                    workerUser.createdAt
+                                ).toLocaleDateString(
+                                    "en-IN"
+                                ) %>
+
+                            <% } else { %>
+
+                                —
+
+                            <% } %>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ============================================= -->
+            <!-- QUICK ACTIONS -->
+            <!-- ============================================= -->
+
+            <div class="section-card">
+
+                <div class="section-header">
+
+                    <h2 class="section-title">
+                        <i class="bi bi-lightning-charge-fill me-2 text-primary"></i>
+                        Quick Actions
+                    </h2>
+
+                </div>
+
+                <div class="section-body">
+
+                    <a
+                        href="/admin/worker-tasks"
+                        class="quick-link"
+                    >
+                        <i class="bi bi-list-task"></i>
+                        Manage Worker Tasks
+                    </a>
+
+                    <a
+                        href="/admin/worker-leaves"
+                        class="quick-link"
+                    >
+                        <i class="bi bi-calendar-check"></i>
+                        Manage Worker Leaves
+                    </a>
+
+                    <a
+                        href="/admin/workers"
+                        class="quick-link"
+                    >
+                        <i class="bi bi-people-fill"></i>
+                        All Workers
+                    </a>
+
+                    <a
+                        href="/admin/dashboard"
+                        class="quick-link"
+                    >
+                        <i class="bi bi-speedometer2"></i>
+                        Admin Dashboard
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- ============================================= -->
+            <!-- EMERGENCY CONTACT -->
+            <!-- ============================================= -->
+
+            <div class="section-card">
+
+                <div class="section-header">
+
+                    <h2 class="section-title">
+                        <i class="bi bi-telephone-fill me-2 text-primary"></i>
+                        Emergency Contact
+                    </h2>
+
+                </div>
+
+                <div class="section-body">
+
+                    <div class="info-item">
+
+                        <div class="info-label">
+                            Contact Number
+                        </div>
+
+                        <div class="info-value">
+                            <%= worker.emergencyContact || "—" %>
+                        </div>
+
+                    </div>
+
+
+                    <div class="info-item">
+
+                        <div class="info-label">
+                            Relation
+                        </div>
+
+                        <div class="info-value">
+                            <%= worker.emergencyRelation || "—" %>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</main>
+
+
+
+
+</body>

@@ -1,0 +1,1031 @@
+
+<% layout("layouts/boilerplate") -%>
+<%
+const leaveList = Array.isArray(leaves) ? leaves : [];
+
+const pendingLeaves = leaveList.filter(
+    leave => leave.status === "pending"
+);
+
+const approvedLeaves = leaveList.filter(
+    leave => leave.status === "approved"
+);
+
+const rejectedLeaves = leaveList.filter(
+    leave => leave.status === "rejected"
+);
+
+const formatDate = (date) => {
+    if (!date) return "—";
+
+    const value = new Date(date);
+
+    if (Number.isNaN(value.getTime())) {
+        return "—";
+    }
+
+    return value.toLocaleDateString("en-IN", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric"
+    });
+};
+
+const formatLeaveType = (type) => {
+    if (!type) return "Other";
+
+    return String(type)
+        .replace(/-/g, " ")
+        .replace(/\b\w/g, char => char.toUpperCase());
+};
+
+const statusClass = (status) => {
+    if (status === "approved") return "status-approved";
+    if (status === "rejected") return "status-rejected";
+    return "status-pending";
+};
+%>
+
+
+
+    <style>
+
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #3730a3;
+            --success: #16a34a;
+            --danger: #dc2626;
+            --warning: #d97706;
+            --text: #172033;
+            --muted: #64748b;
+            --border: #e5e7eb;
+            --surface: #ffffff;
+            --background: #f5f7fb;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: var(--background);
+            color: var(--text);
+            font-family:
+                Inter,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                sans-serif;
+        }
+
+        .page-wrapper {
+            min-height: 100vh;
+            padding: 30px;
+        }
+
+        .page-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 20px;
+            margin-bottom: 28px;
+        }
+
+        .page-title {
+            margin: 0;
+            font-size: 30px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .page-subtitle {
+            margin: 7px 0 0;
+            color: var(--muted);
+            font-size: 15px;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: var(--text);
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 10px 16px;
+            font-weight: 600;
+            transition: 0.2s ease;
+        }
+
+        .back-button:hover {
+            color: var(--primary);
+            border-color: #c7d2fe;
+            background: #eef2ff;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns:
+                repeat(3, minmax(0, 1fr));
+            gap: 18px;
+            margin-bottom: 28px;
+        }
+
+        .summary-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 22px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow:
+                0 8px 25px rgba(15, 23, 42, 0.04);
+        }
+
+        .summary-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+
+        .summary-icon.pending {
+            background: #fff7ed;
+            color: var(--warning);
+        }
+
+        .summary-icon.approved {
+            background: #f0fdf4;
+            color: var(--success);
+        }
+
+        .summary-icon.rejected {
+            background: #fef2f2;
+            color: var(--danger);
+        }
+
+        .summary-label {
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .summary-number {
+            font-size: 27px;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .section-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow:
+                0 8px 25px rgba(15, 23, 42, 0.04);
+            margin-bottom: 24px;
+        }
+
+        .section-header {
+            padding: 22px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .section-title {
+            margin: 0;
+            font-size: 19px;
+            font-weight: 800;
+        }
+
+        .section-description {
+            margin: 4px 0 0;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .leave-count {
+            background: #eef2ff;
+            color: var(--primary);
+            border-radius: 999px;
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .leave-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1000px;
+        }
+
+        .leave-table th {
+            background: #f8fafc;
+            color: #475569;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            font-weight: 800;
+            padding: 15px 18px;
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+        }
+
+        .leave-table td {
+            padding: 18px;
+            border-bottom: 1px solid #eef2f7;
+            vertical-align: top;
+            font-size: 14px;
+        }
+
+        .leave-table tr:last-child td {
+            border-bottom: 0;
+        }
+
+        .worker-info {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .worker-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: #eef2ff;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            flex-shrink: 0;
+        }
+
+        .worker-name {
+            font-weight: 800;
+            color: var(--text);
+            margin-bottom: 3px;
+        }
+
+        .worker-email {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .leave-type {
+            display: inline-flex;
+            align-items: center;
+            background: #f1f5f9;
+            color: #334155;
+            border-radius: 8px;
+            padding: 6px 10px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .date-range {
+            font-weight: 700;
+            color: #334155;
+            white-space: nowrap;
+        }
+
+        .reason {
+            max-width: 300px;
+            color: #475569;
+            line-height: 1.55;
+            word-break: break-word;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            border-radius: 999px;
+            padding: 7px 11px;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .status-pending {
+            color: #92400e;
+            background: #fffbeb;
+        }
+
+        .status-approved {
+            color: #166534;
+            background: #f0fdf4;
+        }
+
+        .status-rejected {
+            color: #991b1b;
+            background: #fef2f2;
+        }
+
+        .review-box {
+            min-width: 250px;
+        }
+
+        .review-form textarea {
+            min-height: 75px;
+            resize: vertical;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            font-size: 13px;
+            padding: 10px 12px;
+        }
+
+        .review-form textarea:focus {
+            border-color: #818cf8;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+        }
+
+        .review-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .btn-review {
+            border: 0;
+            border-radius: 9px;
+            padding: 8px 12px;
+            font-size: 12px;
+            font-weight: 800;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-approve {
+            color: #fff;
+            background: var(--success);
+        }
+
+        .btn-reject {
+            color: #fff;
+            background: var(--danger);
+        }
+
+        .admin-response {
+            max-width: 280px;
+            padding: 11px 13px;
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: #475569;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .reviewed-by {
+            color: var(--muted);
+            font-size: 11px;
+            margin-top: 7px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 55px 25px;
+        }
+
+        .empty-icon {
+            width: 65px;
+            height: 65px;
+            border-radius: 18px;
+            background: #eef2ff;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 27px;
+        }
+
+        .empty-title {
+            font-weight: 800;
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .empty-text {
+            color: var(--muted);
+            font-size: 14px;
+            margin: 0;
+        }
+
+        @media (max-width: 900px) {
+
+            .page-wrapper {
+                padding: 20px;
+            }
+
+            .summary-grid {
+                grid-template-columns:
+                    repeat(2, minmax(0, 1fr));
+            }
+
+            .page-header {
+                flex-direction: column;
+            }
+
+        }
+
+        @media (max-width: 600px) {
+
+            .page-wrapper {
+                padding: 14px;
+            }
+
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .page-title {
+                font-size: 24px;
+            }
+
+            .section-header {
+                padding: 18px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="page-wrapper">
+
+    <!-- HEADER -->
+
+    <div class="page-header">
+
+        <div>
+
+            <h1 class="page-title">
+                <i class="bi bi-calendar2-check me-2"></i>
+                Worker Leave Management
+            </h1>
+
+            <p class="page-subtitle">
+                Review worker leave applications and manage
+                approval or rejection requests.
+            </p>
+
+        </div>
+
+        <a
+            href="/admin/workers"
+            class="back-button"
+        >
+            <i class="bi bi-arrow-left"></i>
+            Worker Management
+        </a>
+
+    </div>
+
+
+    <!-- SUMMARY -->
+
+    <div class="summary-grid">
+
+        <div class="summary-card">
+
+            <div class="summary-icon pending">
+                <i class="bi bi-hourglass-split"></i>
+            </div>
+
+            <div>
+
+                <div class="summary-label">
+                    Pending Requests
+                </div>
+
+                <div class="summary-number">
+                    <%= pendingLeaves.length %>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <div class="summary-icon approved">
+                <i class="bi bi-check-circle"></i>
+            </div>
+
+            <div>
+
+                <div class="summary-label">
+                    Approved
+                </div>
+
+                <div class="summary-number">
+                    <%= approvedLeaves.length %>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <div class="summary-icon rejected">
+                <i class="bi bi-x-circle"></i>
+            </div>
+
+            <div>
+
+                <div class="summary-label">
+                    Rejected
+                </div>
+
+                <div class="summary-number">
+                    <%= rejectedLeaves.length %>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- PENDING LEAVES -->
+
+    <div class="section-card">
+
+        <div class="section-header">
+
+            <div>
+
+                <h2 class="section-title">
+                    Pending Leave Requests
+                </h2>
+
+                <p class="section-description">
+                    These applications require administrator
+                    action.
+                </p>
+
+            </div>
+
+            <span class="leave-count">
+                <%= pendingLeaves.length %> Pending
+            </span>
+
+        </div>
+
+
+        <% if (pendingLeaves.length === 0) { %>
+
+            <div class="empty-state">
+
+                <div class="empty-icon">
+                    <i class="bi bi-check2-circle"></i>
+                </div>
+
+                <div class="empty-title">
+                    No Pending Leave Requests
+                </div>
+
+                <p class="empty-text">
+                    There are currently no worker leave
+                    applications waiting for approval.
+                </p>
+
+            </div>
+
+        <% } else { %>
+
+            <div class="table-wrapper">
+
+                <table class="leave-table">
+
+                    <thead>
+
+                        <tr>
+                            <th>Worker</th>
+                            <th>Leave Type</th>
+                            <th>Dates</th>
+                            <th>Reason</th>
+                            <th>Status</th>
+                            <th>Admin Action</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                    <% pendingLeaves.forEach(leave => { %>
+
+                        <tr>
+
+                            <td>
+
+                                <div class="worker-info">
+
+                                    <div class="worker-avatar">
+
+                                        <%
+                                        const workerName =
+                                            leave.worker?.name ||
+                                            "Worker";
+
+                                        const initial =
+                                            workerName
+                                                .charAt(0)
+                                                .toUpperCase();
+                                        %>
+
+                                        <%= initial %>
+
+                                    </div>
+
+                                    <div>
+
+                                        <div class="worker-name">
+                                            <%= workerName %>
+                                        </div>
+
+                                        <div class="worker-email">
+                                            <%= leave.worker?.email || "—" %>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+
+                            <td>
+
+                                <span class="leave-type">
+                                    <%= formatLeaveType(leave.leaveType) %>
+                                </span>
+
+                            </td>
+
+
+                            <td>
+
+                                <div class="date-range">
+
+                                    <%= formatDate(leave.fromDate) %>
+
+                                    <br>
+
+                                    <span class="text-muted">
+                                        to
+                                    </span>
+
+                                    <br>
+
+                                    <%= formatDate(leave.toDate) %>
+
+                                </div>
+
+                            </td>
+
+
+                            <td>
+
+                                <div class="reason">
+                                    <%= leave.reason || "No reason provided." %>
+                                </div>
+
+                            </td>
+
+
+                            <td>
+
+                                <span
+                                    class="status-badge <%= statusClass(leave.status) %>"
+                                >
+
+                                    <i class="bi bi-clock"></i>
+
+                                    Pending
+
+                                </span>
+
+                            </td>
+
+
+                            <td>
+
+                                <div class="review-box">
+
+                                    <form
+                                        method="POST"
+                                        action="/admin/worker-leaves/<%= leave._id %>/review"
+                                        class="review-form"
+                                    >
+
+                                        <textarea
+                                            name="adminResponse"
+                                            maxlength="1500"
+                                            placeholder="Optional response to worker..."
+                                        ></textarea>
+
+                                        <div class="review-buttons">
+
+                                            <button
+                                                type="submit"
+                                                name="status"
+                                                value="approved"
+                                                class="btn-review btn-approve"
+                                            >
+
+                                                <i class="bi bi-check-lg"></i>
+
+                                                Approve
+
+                                            </button>
+
+
+                                            <button
+                                                type="submit"
+                                                name="status"
+                                                value="rejected"
+                                                class="btn-review btn-reject"
+                                            >
+
+                                                <i class="bi bi-x-lg"></i>
+
+                                                Reject
+
+                                            </button>
+
+                                        </div>
+
+                                    </form>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                    <% }) %>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        <% } %>
+
+    </div>
+
+
+    <!-- LEAVE HISTORY -->
+
+    <div class="section-card">
+
+        <div class="section-header">
+
+            <div>
+
+                <h2 class="section-title">
+                    Leave History
+                </h2>
+
+                <p class="section-description">
+                    Previously reviewed worker leave applications.
+                </p>
+
+            </div>
+
+            <span class="leave-count">
+                <%= approvedLeaves.length + rejectedLeaves.length %>
+                Reviewed
+            </span>
+
+        </div>
+
+
+        <% if (
+            approvedLeaves.length === 0 &&
+            rejectedLeaves.length === 0
+        ) { %>
+
+            <div class="empty-state">
+
+                <div class="empty-icon">
+                    <i class="bi bi-calendar-x"></i>
+                </div>
+
+                <div class="empty-title">
+                    No Leave History
+                </div>
+
+                <p class="empty-text">
+                    Reviewed leave applications will appear here.
+                </p>
+
+            </div>
+
+        <% } else { %>
+
+            <div class="table-wrapper">
+
+                <table class="leave-table">
+
+                    <thead>
+
+                        <tr>
+                            <th>Worker</th>
+                            <th>Leave Type</th>
+                            <th>Dates</th>
+                            <th>Reason</th>
+                            <th>Status</th>
+                            <th>Admin Response</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                    <% [...approvedLeaves, ...rejectedLeaves]
+                        .sort(
+                            (a, b) =>
+                                new Date(b.reviewedAt || b.createdAt) -
+                                new Date(a.reviewedAt || a.createdAt)
+                        )
+                        .forEach(leave => { %>
+
+                        <tr>
+
+                            <td>
+
+                                <div class="worker-info">
+
+                                    <div class="worker-avatar">
+
+                                        <%
+                                        const historyWorkerName =
+                                            leave.worker?.name ||
+                                            "Worker";
+
+                                        const historyInitial =
+                                            historyWorkerName
+                                                .charAt(0)
+                                                .toUpperCase();
+                                        %>
+
+                                        <%= historyInitial %>
+
+                                    </div>
+
+                                    <div>
+
+                                        <div class="worker-name">
+                                            <%= historyWorkerName %>
+                                        </div>
+
+                                        <div class="worker-email">
+                                            <%= leave.worker?.email || "—" %>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+
+                            <td>
+
+                                <span class="leave-type">
+                                    <%= formatLeaveType(leave.leaveType) %>
+                                </span>
+
+                            </td>
+
+
+                            <td>
+
+                                <div class="date-range">
+
+                                    <%= formatDate(leave.fromDate) %>
+
+                                    <br>
+
+                                    <span class="text-muted">
+                                        to
+                                    </span>
+
+                                    <br>
+
+                                    <%= formatDate(leave.toDate) %>
+
+                                </div>
+
+                            </td>
+
+
+                            <td>
+
+                                <div class="reason">
+                                    <%= leave.reason || "No reason provided." %>
+                                </div>
+
+                            </td>
+
+
+                            <td>
+
+                                <span
+                                    class="status-badge <%= statusClass(leave.status) %>"
+                                >
+
+                                    <% if (leave.status === "approved") { %>
+
+                                        <i class="bi bi-check-circle"></i>
+                                        Approved
+
+                                    <% } else { %>
+
+                                        <i class="bi bi-x-circle"></i>
+                                        Rejected
+
+                                    <% } %>
+
+                                </span>
+
+                                <% if (leave.reviewedAt) { %>
+
+                                    <div class="reviewed-by">
+                                        Reviewed:
+                                        <%= formatDate(leave.reviewedAt) %>
+                                    </div>
+
+                                <% } %>
+
+                            </td>
+
+
+                            <td>
+
+                                <div class="admin-response">
+
+                                    <%= leave.adminResponse ||
+                                        "No response provided." %>
+
+                                </div>
+
+                                <% if (leave.reviewedBy?.name) { %>
+
+                                    <div class="reviewed-by">
+                                        By:
+                                        <%= leave.reviewedBy.name %>
+                                    </div>
+
+                                <% } %>
+
+                            </td>
+
+                        </tr>
+
+                    <% }) %>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        <% } %>
+
+    </div>
+
+</div>
+
+
+
+
+</body>

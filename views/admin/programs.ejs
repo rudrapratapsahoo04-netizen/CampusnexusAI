@@ -1,0 +1,328 @@
+<% layout("layouts/boilerplate") -%>
+
+<div class="container-fluid py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-1">Program Management</h2>
+            <p class="text-muted mb-0">
+                Manage university academic programs
+            </p>
+        </div>
+
+        <a href="/admin/programs/new" class="btn btn-primary">
+            <i class="bi bi-plus-lg me-1"></i>
+            Add Program
+        </a>
+    </div>
+
+    <!-- SUMMARY -->
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="text-muted small">Total Programs</div>
+                    <h3 class="fw-bold mb-0">
+                        <%= summary.total %>
+                    </h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="text-muted small">Active Programs</div>
+                    <h3 class="fw-bold text-success mb-0">
+                        <%= summary.active %>
+                    </h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="text-muted small">Inactive Programs</div>
+                    <h3 class="fw-bold text-danger mb-0">
+                        <%= summary.inactive %>
+                    </h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="text-muted small">Students</div>
+                    <h3 class="fw-bold mb-0">
+                        <%= summary.students %>
+                    </h3>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- FILTERS -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+
+            <form method="GET" action="/admin/programs">
+
+                <div class="row g-3 align-items-end">
+
+                    <div class="col-md-4">
+                        <label class="form-label">
+                            Search
+                        </label>
+
+                        <input
+                            type="text"
+                            name="search"
+                            class="form-control"
+                            placeholder="Program name or code"
+                            value="<%= filters.search %>"
+                        >
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label">
+                            Department
+                        </label>
+
+                        <select
+                            name="department"
+                            class="form-select"
+                        >
+                            <option value="">
+                                All Departments
+                            </option>
+
+                            <% departments.forEach(department => { %>
+
+                                <option
+                                    value="<%= department._id %>"
+                                    <%= String(filters.department) === String(department._id) ? "selected" : "" %>
+                                >
+                                    <%= department.name %>
+                                    (<%= department.code %>)
+                                </option>
+
+                            <% }); %>
+
+                        </select>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label">
+                            Status
+                        </label>
+
+                        <select
+                            name="status"
+                            class="form-select"
+                        >
+                            <option value="">
+                                All Status
+                            </option>
+
+                            <option
+                                value="active"
+                                <%= filters.status === "active" ? "selected" : "" %>
+                            >
+                                Active
+                            </option>
+
+                            <option
+                                value="inactive"
+                                <%= filters.status === "inactive" ? "selected" : "" %>
+                            >
+                                Inactive
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-2">
+                        <button
+                            type="submit"
+                            class="btn btn-primary w-100"
+                        >
+                            <i class="bi bi-search me-1"></i>
+                            Filter
+                        </button>
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+    <!-- PROGRAM TABLE -->
+    <div class="card border-0 shadow-sm">
+
+        <div class="card-body p-0">
+
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle mb-0">
+
+                    <thead class="table-light">
+
+                        <tr>
+                            <th class="px-4">Program</th>
+                            <th>Code</th>
+                            <th>Department</th>
+                            <th>Duration</th>
+                            <th>Semesters</th>
+                            <th>Students</th>
+                            <th>Faculty</th>
+                            <th>Status</th>
+                            <th class="text-end px-4">Actions</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        <% if (!programs.length) { %>
+
+                            <tr>
+                                <td
+                                    colspan="9"
+                                    class="text-center py-5 text-muted"
+                                >
+                                    No programs found.
+                                </td>
+                            </tr>
+
+                        <% } else { %>
+
+                            <% programs.forEach(program => { %>
+
+                                <tr>
+
+                                    <td class="px-4">
+
+                                        <div class="fw-semibold">
+                                            <%= program.name %>
+                                        </div>
+
+                                        <% if (program.description) { %>
+                                            <div class="small text-muted">
+                                                <%= program.description.length > 80
+                                                    ? program.description.substring(0, 80) + "..."
+                                                    : program.description
+                                                %>
+                                            </div>
+                                        <% } %>
+
+                                    </td>
+
+                                    <td>
+                                        <span class="fw-semibold">
+                                            <%= program.code %>
+                                        </span>
+                                    </td>
+
+                                    <td>
+
+                                        <% if (program.department) { %>
+
+                                            <div class="fw-semibold">
+                                                <%= program.department.name %>
+                                            </div>
+
+                                            <div class="small text-muted">
+                                                <%= program.department.code %>
+                                            </div>
+
+                                        <% } else { %>
+
+                                            <span class="text-muted">
+                                                Not Assigned
+                                            </span>
+
+                                        <% } %>
+
+                                    </td>
+
+                                    <td>
+                                        <%= program.durationYears %>
+                                        year<%= program.durationYears > 1 ? "s" : "" %>
+                                    </td>
+
+                                    <td>
+                                        <%= program.totalSemesters %>
+                                    </td>
+
+                                    <td>
+                                        <%= program.studentCount %>
+                                    </td>
+
+                                    <td>
+                                        <%= program.facultyCount %>
+                                    </td>
+
+                                    <td>
+
+                                        <% if (program.status === "active") { %>
+
+                                            <span class="badge bg-success-subtle text-success">
+                                                Active
+                                            </span>
+
+                                        <% } else { %>
+
+                                            <span class="badge bg-danger-subtle text-danger">
+                                                Inactive
+                                            </span>
+
+                                        <% } %>
+
+                                    </td>
+
+                                    <td class="text-end px-4">
+
+                                        <div class="d-flex justify-content-end gap-1">
+
+                                                      <a
+                                                            href="/admin/programs/<%= program._id %>"
+                                                           class="btn btn-sm btn-outline-primary"
+                                                       >
+                                                         <i class="bi bi-eye me-1"></i>
+                                                          View
+                                                      </a>
+
+                                                       <a
+                                                           href="/admin/programs/<%= program._id %>/edit"
+                                                              class="btn btn-sm btn-outline-secondary"
+                                                         >
+                                                             <i class="bi bi-pencil me-1"></i>
+                                                                   Edit
+                                                            </a>
+
+                                                 </div>
+
+                                    </td>
+
+                                </tr>
+
+                            <% }); %>
+
+                        <% } %>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

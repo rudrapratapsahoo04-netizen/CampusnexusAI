@@ -1,0 +1,2254 @@
+<% layout("layouts/boilerplate") -%>
+
+<style>
+    /* =========================================================
+       CAMPUSNEXUS STUDENT REGISTRATION
+       UI ONLY — FORM LOGIC PRESERVED
+       ========================================================= */
+
+    .registration-page {
+        --cn-primary: #4f46e5;
+        --cn-primary-dark: #3730a3;
+        --cn-secondary: #7c3aed;
+        --cn-accent: #06b6d4;
+        --cn-pink: #ec4899;
+        --cn-text: #172033;
+        --cn-muted: #64748b;
+        --cn-border: rgba(148, 163, 184, 0.22);
+
+        position: relative;
+        min-height: 100vh;
+        overflow: hidden;
+        padding: 30px 0 70px;
+
+        background:
+            radial-gradient(circle at 10% 10%, rgba(99, 102, 241, 0.22), transparent 28%),
+            radial-gradient(circle at 90% 12%, rgba(6, 182, 212, 0.20), transparent 28%),
+            radial-gradient(circle at 85% 85%, rgba(236, 72, 153, 0.18), transparent 30%),
+            radial-gradient(circle at 15% 85%, rgba(124, 58, 237, 0.17), transparent 30%),
+            linear-gradient(135deg, #f8fbff 0%, #eef2ff 45%, #f8f5ff 100%);
+}
+
+/* Animated background lights */
+.registration-page::before,
+.registration-page::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    filter: blur(2px);
+    z-index: 0;
+}
+
+.registration-page::before {
+    width: 360px;
+    height: 360px;
+    top: 5%;
+    left: -120px;
+    background: rgba(79, 70, 229, 0.12);
+    animation: registrationFloatOne 9s ease-in-out infinite;
+}
+
+.registration-page::after {
+    width: 420px;
+    height: 420px;
+    right: -150px;
+    bottom: 5%;
+    background: rgba(6, 182, 212, 0.12);
+    animation: registrationFloatTwo 11s ease-in-out infinite;
+}
+
+.registration-page .container {
+    position: relative;
+    z-index: 2;
+}
+
+/* =========================================================
+   PAGE HEADER
+   ========================================================= */
+
+.registration-page > .container > .text-center {
+    animation: registrationHeaderIn 0.8s ease both;
+}
+
+.registration-icon {
+    width: 78px;
+    height: 78px;
+    margin: 0 auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 24px;
+
+    color: #fff;
+    font-size: 31px;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--cn-primary),
+            var(--cn-secondary)
+        );
+
+    box-shadow:
+        0 18px 40px rgba(79, 70, 229, 0.28),
+        0 8px 20px rgba(124, 58, 237, 0.16);
+
+    animation:
+        registrationIconIn 0.8s cubic-bezier(.2,.8,.2,1) both,
+        registrationIconFloat 4s ease-in-out 1s infinite;
+
+    position: relative;
+}
+
+.registration-icon::before {
+    content: "";
+    position: absolute;
+    inset: -7px;
+    border-radius: 29px;
+    border: 1px solid rgba(79, 70, 229, 0.20);
+    animation: registrationPulse 2.8s ease-in-out infinite;
+}
+
+.registration-icon i {
+    position: relative;
+    z-index: 2;
+}
+
+.registration-page h1 {
+    color: var(--cn-text);
+    letter-spacing: -0.7px;
+}
+
+.registration-page > .container > .text-center p {
+    color: var(--cn-muted) !important;
+    font-size: 1.02rem;
+}
+
+/* =========================================================
+   MAIN REGISTRATION CARD
+   ========================================================= */
+
+.registration-card {
+    position: relative;
+
+    max-width: 1100px;
+    margin: 0 auto;
+
+    overflow: hidden;
+
+    border: 1px solid rgba(255, 255, 255, 0.75);
+    border-radius: 26px;
+
+    background: rgba(255, 255, 255, 0.86);
+
+    box-shadow:
+        0 35px 80px rgba(15, 23, 42, 0.13),
+        0 10px 30px rgba(79, 70, 229, 0.08);
+
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+
+    animation: registrationCardIn 0.9s cubic-bezier(.2,.8,.2,1) 0.15s both;
+}
+
+.registration-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+
+    height: 5px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #4f46e5,
+            #7c3aed,
+            #06b6d4,
+            #ec4899
+        );
+
+    background-size: 250% 100%;
+    animation: gradientMove 6s linear infinite;
+}
+
+/* =========================================================
+   FORM HEADER
+   ========================================================= */
+
+.registration-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+
+    padding: 28px 32px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(79, 70, 229, 0.075),
+            rgba(124, 58, 237, 0.055),
+            rgba(6, 182, 212, 0.045)
+        );
+
+    border-bottom: 1px solid rgba(148, 163, 184, 0.14);
+}
+
+.registration-header h4 {
+    color: var(--cn-text);
+}
+
+.registration-header p {
+    font-size: 0.92rem;
+}
+
+.registration-header .badge {
+    border-radius: 12px;
+    font-weight: 600;
+
+    box-shadow:
+        0 8px 18px rgba(79, 70, 229, 0.08);
+}
+
+/* =========================================================
+   FORM SECTIONS
+   ========================================================= */
+
+.form-section {
+    margin: 22px 28px;
+    padding: 26px;
+
+    border: 1px solid var(--cn-border);
+    border-radius: 20px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.95),
+            rgba(248, 250, 255, 0.88)
+        );
+
+    box-shadow:
+        0 10px 28px rgba(15, 23, 42, 0.055);
+
+    transition:
+        transform 0.35s ease,
+        box-shadow 0.35s ease,
+        border-color 0.35s ease;
+
+    animation: sectionReveal 0.65s ease both;
+}
+
+.form-section:nth-of-type(1) {
+    animation-delay: 0.20s;
+}
+
+.form-section:nth-of-type(2) {
+    animation-delay: 0.28s;
+}
+
+.form-section:nth-of-type(3) {
+    animation-delay: 0.36s;
+}
+
+.form-section:nth-of-type(4) {
+    animation-delay: 0.44s;
+}
+
+.form-section:nth-of-type(5) {
+    animation-delay: 0.52s;
+}
+
+.form-section:nth-of-type(6) {
+    animation-delay: 0.60s;
+}
+
+.form-section:hover {
+    transform: translateY(-3px);
+
+    border-color: rgba(99, 102, 241, 0.20);
+
+    box-shadow:
+        0 18px 38px rgba(15, 23, 42, 0.085),
+        0 5px 15px rgba(79, 70, 229, 0.055);
+}
+
+/* =========================================================
+   SECTION TITLE
+   ========================================================= */
+
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+
+    margin-bottom: 25px;
+    padding-bottom: 16px;
+
+    border-bottom: 1px solid rgba(148, 163, 184, 0.16);
+}
+
+.section-icon {
+    flex: 0 0 auto;
+
+    width: 46px;
+    height: 46px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 14px;
+
+    color: #fff;
+    font-size: 19px;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--cn-primary),
+            var(--cn-secondary)
+        );
+
+    box-shadow:
+        0 9px 20px rgba(79, 70, 229, 0.18);
+
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+.form-section:hover .section-icon {
+    transform: translateY(-2px) rotate(-3deg);
+
+    box-shadow:
+        0 13px 25px rgba(79, 70, 229, 0.24);
+}
+
+.section-title h5 {
+    margin: 0 0 4px;
+
+    color: var(--cn-text);
+    font-weight: 700;
+}
+
+.section-title p {
+    margin: 0;
+
+    color: var(--cn-muted);
+    font-size: 0.86rem;
+}
+
+/* =========================================================
+   LABELS
+   ========================================================= */
+
+.registration-page .form-label {
+    color: #334155;
+    font-size: 0.91rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.registration-page .text-danger {
+    font-weight: 700;
+}
+
+/* =========================================================
+   INPUTS
+   ========================================================= */
+
+.registration-page .form-control,
+.registration-page .form-select {
+    min-height: 48px;
+
+    border: 1px solid #dbe2ea;
+    border-radius: 11px;
+
+    color: #1e293b;
+    background: rgba(255, 255, 255, 0.92);
+
+    box-shadow:
+        0 3px 10px rgba(15, 23, 42, 0.025);
+
+    transition:
+        border-color 0.25s ease,
+        box-shadow 0.25s ease,
+        transform 0.25s ease,
+        background 0.25s ease;
+}
+
+.registration-page textarea.form-control {
+    min-height: auto;
+    padding-top: 13px;
+}
+
+.registration-page .form-control:hover,
+.registration-page .form-select:hover {
+    border-color: rgba(99, 102, 241, 0.38);
+
+    background: #fff;
+}
+
+.registration-page .form-control:focus,
+.registration-page .form-select:focus {
+    border-color: rgba(79, 70, 229, 0.62);
+
+    background: #fff;
+
+    outline: none;
+
+    box-shadow:
+        0 0 0 4px rgba(79, 70, 229, 0.09),
+        0 9px 20px rgba(79, 70, 229, 0.08);
+
+    transform: translateY(-1px);
+}
+
+.registration-page .input-group {
+    border-radius: 11px;
+}
+
+.registration-page .input-group-text {
+    min-width: 48px;
+
+    justify-content: center;
+
+    color: #6366f1;
+
+    border-color: #dbe2ea;
+    background:
+        linear-gradient(
+            135deg,
+            #f5f7ff,
+            #f8faff
+        );
+}
+
+.registration-page .input-group .form-control {
+    border-left: 0;
+}
+
+.registration-page .input-group:focus-within .input-group-text {
+    border-color: rgba(79, 70, 229, 0.62);
+
+    color: var(--cn-primary);
+
+    box-shadow:
+        0 0 0 4px rgba(79, 70, 229, 0.09);
+}
+
+/* =========================================================
+   PASSWORD TOGGLE
+   ========================================================= */
+
+.password-toggle {
+    min-width: 50px;
+
+    border-color: #dbe2ea !important;
+    background: #fff !important;
+
+    transition:
+        transform 0.25s ease,
+        color 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+.password-toggle:hover {
+    color: var(--cn-primary) !important;
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 6px 14px rgba(79, 70, 229, 0.10);
+}
+
+.password-toggle:active {
+    transform: scale(0.96);
+}
+
+/* =========================================================
+   FORM TEXT
+   ========================================================= */
+
+.registration-page .form-text {
+    color: #64748b;
+    font-size: 0.78rem;
+    margin-top: 6px;
+}
+
+/* =========================================================
+   TERMS
+   ========================================================= */
+
+.registration-terms {
+    margin: 24px 28px 10px;
+    padding: 20px 22px;
+
+    border: 1px solid rgba(99, 102, 241, 0.13);
+    border-radius: 17px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(238, 242, 255, 0.85),
+            rgba(240, 249, 255, 0.78)
+        );
+
+    box-shadow:
+        0 8px 22px rgba(15, 23, 42, 0.045);
+}
+
+.registration-terms .form-check-input {
+    width: 18px;
+    height: 18px;
+
+    margin-top: 3px;
+
+    cursor: pointer;
+
+    border-color: #cbd5e1;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.registration-terms .form-check-input:hover {
+    transform: scale(1.08);
+}
+
+.registration-terms .form-check-input:focus {
+    box-shadow:
+        0 0 0 4px rgba(79, 70, 229, 0.10);
+}
+
+.registration-terms .form-check-label {
+    color: #475569;
+    line-height: 1.65;
+    cursor: pointer;
+}
+
+/* =========================================================
+   ACTION BUTTONS
+   ========================================================= */
+
+.registration-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+
+    margin: 25px 28px 0;
+    padding-top: 23px;
+
+    border-top: 1px solid rgba(148, 163, 184, 0.16);
+}
+
+.registration-actions .btn {
+    min-height: 50px;
+
+    border-radius: 12px;
+
+    font-weight: 600;
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        background 0.25s ease;
+}
+
+.registration-actions .btn-primary {
+    border: none;
+
+    background:
+        linear-gradient(
+            135deg,
+            #4f46e5,
+            #7c3aed
+        );
+
+    box-shadow:
+        0 12px 25px rgba(79, 70, 229, 0.22);
+}
+
+.registration-actions .btn-primary:hover {
+    transform: translateY(-3px);
+
+    background:
+        linear-gradient(
+            135deg,
+            #4338ca,
+            #6d28d9
+        );
+
+    box-shadow:
+        0 17px 32px rgba(79, 70, 229, 0.30);
+}
+
+.registration-actions .btn-primary:active {
+    transform: translateY(0) scale(0.98);
+}
+
+.registration-actions .btn-outline-secondary {
+    border-color: #cbd5e1;
+    color: #475569;
+    background: rgba(255, 255, 255, 0.72);
+}
+
+.registration-actions .btn-outline-secondary:hover {
+    transform: translateY(-2px);
+
+    color: #334155;
+    background: #fff;
+
+    border-color: #94a3b8;
+
+    box-shadow:
+        0 10px 20px rgba(15, 23, 42, 0.08);
+}
+
+/* =========================================================
+   LOGIN LINK
+   ========================================================= */
+
+.registration-card form > .text-center {
+    padding-bottom: 30px;
+}
+
+.registration-card form > .text-center a {
+    color: var(--cn-primary) !important;
+
+    transition:
+        color 0.2s ease,
+        letter-spacing 0.2s ease;
+}
+
+.registration-card form > .text-center a:hover {
+    color: var(--cn-primary-dark) !important;
+    letter-spacing: 0.15px;
+}
+
+/* =========================================================
+   SELECT / DISABLED OPTIONS
+   ========================================================= */
+
+.registration-page option {
+    color: #1e293b;
+    background: #fff;
+}
+
+.registration-page select:disabled,
+.registration-page input:disabled,
+.registration-page textarea:disabled {
+    cursor: not-allowed;
+}
+
+/* =========================================================
+   ANIMATIONS
+   ========================================================= */
+
+@keyframes registrationHeaderIn {
+    from {
+        opacity: 0;
+        transform: translateY(-22px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes registrationIconIn {
+    from {
+        opacity: 0;
+        transform: scale(0.65) rotate(-10deg);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) rotate(0);
+    }
+}
+
+@keyframes registrationIconFloat {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-6px);
+    }
+}
+
+@keyframes registrationPulse {
+    0%,
+    100% {
+        opacity: 0.35;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.05;
+        transform: scale(1.08);
+    }
+}
+
+@keyframes registrationCardIn {
+    from {
+        opacity: 0;
+        transform: translateY(35px) scale(0.985);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes sectionReveal {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes registrationFloatOne {
+    0%,
+    100% {
+        transform: translate3d(0, 0, 0);
+    }
+
+    50% {
+        transform: translate3d(45px, 25px, 0);
+    }
+}
+
+@keyframes registrationFloatTwo {
+    0%,
+    100% {
+        transform: translate3d(0, 0, 0);
+    }
+
+    50% {
+        transform: translate3d(-35px, -30px, 0);
+    }
+}
+
+@keyframes gradientMove {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 767.98px) {
+    .registration-page {
+        padding: 20px 0 45px;
+    }
+
+    .registration-icon {
+        width: 68px;
+        height: 68px;
+        border-radius: 20px;
+        font-size: 27px;
+    }
+
+    .registration-page h1 {
+        font-size: 1.75rem;
+    }
+
+    .registration-page > .container > .text-center p {
+        font-size: 0.93rem;
+    }
+
+    .registration-card {
+        border-radius: 20px;
+    }
+
+    .registration-header {
+        align-items: flex-start;
+        flex-direction: column;
+
+        padding: 22px;
+    }
+
+    .registration-header .badge {
+        align-self: flex-start;
+    }
+
+    .form-section {
+        margin: 16px;
+        padding: 20px;
+
+        border-radius: 17px;
+    }
+
+    .section-title {
+        align-items: flex-start;
+    }
+
+    .section-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+    }
+
+    .registration-terms {
+        margin: 18px 16px 8px;
+    }
+
+    .registration-actions {
+        flex-direction: column-reverse;
+        margin: 20px 16px 0;
+    }
+
+    .registration-actions .btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .registration-page h1 {
+        font-size: 1.5rem;
+    }
+
+    .registration-card {
+        margin: 0 7px;
+    }
+
+    .form-section {
+        padding: 17px;
+    }
+
+    .section-title {
+        gap: 11px;
+    }
+
+    .section-title h5 {
+        font-size: 1rem;
+    }
+
+    .section-title p {
+        font-size: 0.78rem;
+    }
+
+    .registration-terms {
+        padding: 17px;
+    }
+}
+
+/* =========================================================
+   ACCESSIBILITY
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+    .registration-page *,
+    .registration-page::before,
+    .registration-page::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+</style>
+
+
+<div class="registration-page">
+
+    <div class="container py-5">
+
+        <!-- PAGE HEADER -->
+        <div class="text-center mb-5">
+
+            <div class="registration-icon">
+                <i class="bi bi-person-plus-fill"></i>
+            </div>
+
+            <h1 class="fw-bold mt-3 mb-2">
+                Create Your CampusNexus Account
+            </h1>
+
+            <p class="text-muted mb-0">
+                Register as a university student and access your campus services.
+            </p>
+
+        </div>
+
+
+        <!-- REGISTRATION CARD -->
+        <div class="registration-card">
+
+            <!-- FORM HEADER -->
+            <div class="registration-header">
+
+                <div>
+                    <h4 class="fw-bold mb-1">
+                        Student Registration
+                    </h4>
+
+                    <p class="text-muted mb-0">
+                        Please provide accurate information.
+                    </p>
+                </div>
+
+                <span class="badge bg-primary-subtle text-primary px-3 py-2">
+                    <i class="bi bi-mortarboard me-1"></i>
+                    Student Account
+                </span>
+
+            </div>
+
+
+            <form
+                action="/auth/register/student"
+                method="POST"
+                id="registrationForm"
+            >
+
+                <!-- ==========================================
+                     PERSONAL INFORMATION
+                =========================================== -->
+
+                <div class="form-section">
+
+                    <div class="section-title">
+
+                        <div class="section-icon">
+                            <i class="bi bi-person"></i>
+                        </div>
+
+                        <div>
+                            <h5>Personal Information</h5>
+                            <p>
+                                Basic information about the student
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="row g-4">
+
+                        <!-- NAME -->
+                        <div class="col-md-6">
+
+                            <label
+                                for="name"
+                                class="form-label"
+                            >
+                                Full Name
+                                <span class="text-danger">*</span>
+                            </label>
+
+                            <div class="input-group">
+
+                                <span class="input-group-text">
+                                    <i class="bi bi-person"></i>
+                                </span>
+
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="name"
+                                    name="name"
+                                    placeholder="Enter your full name"
+                                    minlength="2"
+                                    maxlength="100"
+                                    required
+                                    autocomplete="name"
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- DATE OF BIRTH -->
+                        <div class="col-md-3">
+
+                            <label
+                                for="dob"
+                                class="form-label"
+                            >
+                                Date of Birth
+                                <span class="text-danger">*</span>
+                            </label>
+
+                            <input
+                                type="date"
+                                class="form-control"
+                                id="dob"
+                                name="dob"
+                                required
+                            >
+
+                        </div>
+
+
+                        <!-- GENDER -->
+                        <div class="col-md-3">
+
+                            <label
+                                for="gender"
+                                class="form-label"
+                            >
+                                Gender
+                                <span class="text-danger">*</span>
+                            </label>
+
+                            <select
+                                class="form-select"
+                                id="gender"
+                                name="gender"
+                                required
+                            >
+
+                                <option
+                                    value=""
+                                    selected
+                                    disabled
+                                >
+                                    Select
+                                </option>
+
+                                <option value="male">
+                                    Male
+                                </option>
+
+                                <option value="female">
+                                    Female
+                                </option>
+
+                                <option value="other">
+                                    Other
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- MOBILE -->
+                        <div class="col-md-6">
+
+                            <label
+                                for="mobile"
+                                class="form-label"
+                            >
+                                Mobile Number
+                                <span class="text-danger">*</span>
+                            </label>
+
+                            <div class="input-group">
+
+                                <span class="input-group-text">
+                                    <i class="bi bi-phone"></i>
+                                </span>
+
+                                <input
+                                    type="tel"
+                                    class="form-control"
+                                    id="mobile"
+                                    name="mobile"
+                                    placeholder="Enter 10-digit mobile number"
+                                    pattern="[0-9]{10}"
+                                    maxlength="10"
+                                    required
+                                    autocomplete="tel"
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- EMAIL -->
+                        <div class="col-md-6">
+
+                            <label
+                                for="email"
+                                class="form-label"
+                            >
+                                Email Address
+                                <span class="text-danger">*</span>
+                            </label>
+
+                            <div class="input-group">
+
+                                <span class="input-group-text">
+                                    <i class="bi bi-envelope"></i>
+                                </span>
+
+                                <input
+                                    type="email"
+                                    class="form-control"
+                                    id="email"
+                                    name="email"
+                                    placeholder="student@example.com"
+                                    required
+                                    autocomplete="email"
+                                >
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ==========================================
+                     ACADEMIC INFORMATION
+                =========================================== -->
+
+                <div class="form-section">
+
+                    <div class="section-title">
+
+                        <div class="section-icon">
+                            <i class="bi bi-mortarboard"></i>
+                        </div>
+
+                        <div>
+                            <h5>Academic Information</h5>
+                            <p>
+                                University and programme details
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="row g-4">
+
+                        <!-- STUDENT ID -->
+                        <div class="col-md-6">
+
+                            <label
+                                for="studentId"
+                                class="form-label"
+                            >
+                                Student ID / Roll Number
+                                <span class="text-danger">*</span>
+                            </label>
+
+                            <div class="input-group">
+
+                                <span class="input-group-text">
+                                    <i class="bi bi-person-vcard"></i>
+                                </span>
+
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="studentId"
+                                    name="studentId"
+                                    placeholder="Enter student ID / roll number"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- DEPARTMENT -->
+                        <div class="col-md-6">
+
+                            <label
+                                for="department"
+                                class="form-label"
+                            >
+                                Department
+                                <span class="text-danger">*</span>
+                            </label>
+
+                            <select
+                                class="form-select"
+                                id="department"
+                                name="department"
+                                required
+                            >
+
+                                <option
+                                    value=""
+                                    selected
+                                    disabled
+                                >
+                                    Select Department
+                                </option>
+
+                                <% if (departments && departments.length > 0) { %>
+
+                                    <% departments.forEach((department) => { %>
+
+                                        <option
+                                            value="<%= department._id %>"
+                                        >
+                                            <%= department.name %>
+
+                                            <% if (department.code) { %>
+                                                (<%= department.code %>)
+                                            <% } %>
+                                        </option>
+
+                                    <% }) %>
+
+                                <% } else { %>
+
+                                    <option
+                                        value=""
+                                        disabled
+                                    >
+                                        No departments available
+                                    </option>
+
+                                <% } %>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- PROGRAM -->
+                        <div class="col-md-6">
+
+                            <label
+                                for="program"
+                                class="form-label"
+                            >
+                                Programme
+                                <span class="text-danger">*</span>
+                            </label>
+
+                            <select
+                                class="form-select"
+                                id="program"
+                                name="program"
+                                required
+                            >
+
+                                <option
+                                    value=""
+                                    selected
+                                    disabled
+                                >
+                                    Select Programme
+                                </option>
+
+                                <% if (programs && programs.length > 0) { %>
+
+                                    <% programs.forEach((program) => { %>
+
+                                        <option
+                                            value="<%= program._id %>"
+                                            data-department="<%= program.department?._id || program.department %>"
+                                        >
+                                            <%= program.name %>
+
+                                            <% if (program.code) { %>
+                                                (<%= program.code %>)
+                                            <% } %>
+                                        </option>
+
+                                    <% }) %>
+
+                                <% } else { %>
+
+                                    <option value="" disabled>
+                                        No programmes available
+                                    </option>
+
+                                <% } %>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- SEMESTER -->
+                        <div class="col-md-3">
+
+                            <label
+                                for="semester"
+                                class="form-label"
+                            >
+                                Semester
+                                <span class="text-danger">*</span>
+                            </label>
+
+                            <select
+                                class="form-select"
+                                id="semester"
+                                name="semester"
+                                required
+                            >
+
+                                <option
+                                    value=""
+                                    selected
+                                    disabled
+                                >
+                                    Select
+                                </option>
+
+                                <% for (let i = 1; i <= 8; i++) { %>
+
+                                    <option value="<%= i %>">
+                                        Semester <%= i %>
+                                    </option>
+
+                                <% } %>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- SECTION -->
+                        <div class="col-md-3">
+
+                            <label
+                                for="section"
+                                class="form-label"
+                            >
+                                Section
+                                <span class="text-danger">*</span>
+                            </label>
+
+                            <select
+                                class="form-select"
+                                id="section"
+                                name="section"
+                            >
+
+                                <option
+                                    value=""
+                                    selected
+                                    disabled
+                                >
+                                    Select
+                                </option>
+
+                                <option value="A">
+                                    Section A
+                                </option>
+
+                                <option value="B">
+                                    Section B
+                                </option>
+
+                                <option value="C">
+                                    Section C
+                                </option>
+
+                                <option value="D">
+                                    Section D
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- BATCH -->
+                        <div class="col-md-6">
+
+                            <label
+                                for="batch"
+                                class="form-label"
+                            >
+                                Batch / Admission Year
+                                <span class="text-danger">*</span>
+                            </label>
+
+                            <select
+                                class="form-select"
+                                id="batch"
+                                name="batch"
+                                required
+                            >
+
+                                <option
+                                    value=""
+                                    selected
+                                    disabled
+                                >
+                                    Select Batch
+                                </option>
+
+                                <%
+                                    const currentYear =
+                                        new Date().getFullYear();
+
+                                    for (
+                                        let year = currentYear;
+                                        year >= currentYear - 5;
+                                        year--
+                                    ) {
+                                %>
+
+                                    <option value="<%= year %>">
+                                        <%= year %> -
+                                        <%= year + 1 %>
+                                    </option>
+
+                                <% } %>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ==========================================
+                     ADDRESS INFORMATION
+                =========================================== -->
+
+                <div class="form-section">
+
+                    <div class="section-title">
+
+                        <div class="section-icon">
+                            <i class="bi bi-geo-alt"></i>
+                        </div>
+
+                        <div>
+                            <h5>Address Information</h5>
+                            <p>
+                                Your current and permanent address
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="row g-4">
+
+                        <!-- PERMANENT ADDRESS -->
+                        <div class="col-12">
+
+                            <label
+                                for="permanentAddress"
+                                class="form-label"
+                            >
+                                Permanent Address
+                                <span class="text-danger">*</span>
+                            </label>
+
+                            <textarea
+                                class="form-control"
+                                id="permanentAddress"
+                                name="permanentAddress"
+                                rows="3"
+                                placeholder="Enter your permanent address"
+                                required
+                            ></textarea>
+
+                        </div>
+
+
+                        <!-- CURRENT ADDRESS -->
+                        <div class="col-12">
+
+                            <div class="form-check mb-2">
+
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    id="sameAddress"
+                                >
+
+                                <label
+                                    class="form-check-label"
+                                    for="sameAddress"
+                                >
+                                    Current address is same as permanent address
+                                </label>
+
+                            </div>
+
+                            <label
+                                for="currentAddress"
+                                class="form-label"
+                            >
+                                Current Address
+                            </label>
+
+                            <textarea
+                                class="form-control"
+                                id="currentAddress"
+                                name="currentAddress"
+                                rows="3"
+                                placeholder="Enter your current address"
+                            ></textarea>
+
+                        </div>
+
+
+                        <!-- CITY -->
+                        <div class="col-md-4">
+
+                            <label
+                                for="city"
+                                class="form-label"
+                            >
+                                City
+                                <span class="text-danger">*</span>
+                            </label>
+
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="city"
+                                name="city"
+                                placeholder="Enter city"
+                                required
+                            >
+
+                        </div>
+
+
+                        <!-- STATE -->
+                        <div class="col-md-4">
+
+                            <label
+                                for="state"
+                                class="form-label"
+                            >
+                                State
+                                <span class="text-danger">*</span>
+                            </label>
+
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="state"
+                                name="state"
+                                placeholder="Enter state"
+                                required
+                            >
+
+                        </div>
+
+
+                        <!-- PIN -->
+                        <div class="col-md-4">
+
+                            <label
+                                for="pin"
+                                class="form-label"
+                            >
+                                PIN Code
+                                <span class="text-danger">*</span>
+                            </label>
+
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="pin"
+                                name="pin"
+                                placeholder="6-digit PIN"
+                                pattern="[0-9]{6}"
+                                maxlength="6"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ==========================================
+                     GUARDIAN INFORMATION
+                =========================================== -->
+
+                <div class="form-section">
+
+                    <div class="section-title">
+
+                        <div class="section-icon">
+                            <i class="bi bi-people"></i>
+                        </div>
+
+                        <div>
+                            <h5>Guardian Information</h5>
+                            <p>
+                                Parent or guardian contact details
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="row g-4">
+
+                        <!-- GUARDIAN NAME -->
+                        <div class="col-md-6">
+
+                            <label
+                                for="guardianName"
+                                class="form-label"
+                            >
+                                Guardian Name
+                                <span class="text-danger">*</span>
+                            </label>
+
+                            <div class="input-group">
+
+                                <span class="input-group-text">
+                                    <i class="bi bi-person"></i>
+                                </span>
+
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="guardianName"
+                                    name="guardianName"
+                                    placeholder="Parent / Guardian name"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- GUARDIAN MOBILE -->
+                        <div class="col-md-6">
+
+                            <label
+                                for="guardianMobile"
+                                class="form-label"
+                            >
+                                Guardian Mobile
+                                <span class="text-danger">*</span>
+                            </label>
+
+                            <div class="input-group">
+
+                                <span class="input-group-text">
+                                    <i class="bi bi-phone"></i>
+                                </span>
+
+                                <input
+                                    type="tel"
+                                    class="form-control"
+                                    id="guardianMobile"
+                                    name="guardianMobile"
+                                    placeholder="10-digit mobile number"
+                                    pattern="[0-9]{10}"
+                                    maxlength="10"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- EMERGENCY CONTACT -->
+                        <div class="col-md-6">
+
+                            <label
+                                for="emergencyContact"
+                                class="form-label"
+                            >
+                                Emergency Contact
+                                <span class="text-danger">*</span>
+                            </label>
+
+                            <div class="input-group">
+
+                                <span class="input-group-text">
+                                    <i class="bi bi-telephone-plus"></i>
+                                </span>
+
+                                <input
+                                    type="tel"
+                                    class="form-control"
+                                    id="emergencyContact"
+                                    name="emergencyContact"
+                                    placeholder="Emergency contact number"
+                                    pattern="[0-9]{10}"
+                                    maxlength="10"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ==========================================
+                     HOSTEL INFORMATION
+                =========================================== -->
+
+                <div class="form-section">
+
+                    <div class="section-title">
+
+                        <div class="section-icon">
+                            <i class="bi bi-building"></i>
+                        </div>
+
+                        <div>
+                            <h5>Campus & Hostel</h5>
+                            <p>
+                                Hostel accommodation details
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="row g-4">
+
+                        <!-- HOSTEL REQUIRED -->
+                        <div class="col-md-4">
+
+                            <label
+                                for="hostelRequired"
+                                class="form-label"
+                            >
+                                Hostel Required?
+                                <span class="text-danger">*</span>
+                            </label>
+
+                            <select
+                                class="form-select"
+                                id="hostelRequired"
+                                name="hostelRequired"
+                                required
+                            >
+
+                                <option
+                                    value=""
+                                    selected
+                                    disabled
+                                >
+                                    Select
+                                </option>
+
+                                <option value="yes">
+                                    Yes
+                                </option>
+
+                                <option value="no">
+                                    No
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- HOSTEL NAME -->
+                        <div class="col-md-4">
+
+                            <label
+                                for="hostelName"
+                                class="form-label"
+                            >
+                                Hostel Name
+                            </label>
+
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="hostelName"
+                                name="hostelName"
+                                placeholder="If applicable"
+                            >
+
+                        </div>
+
+
+                        <!-- ROOM -->
+                        <div class="col-md-4">
+
+                            <label
+                                for="roomNumber"
+                                class="form-label"
+                            >
+                                Room Number
+                            </label>
+
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="roomNumber"
+                                name="roomNumber"
+                                placeholder="If assigned"
+                            >
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ==========================================
+                     ACCOUNT SECURITY
+                =========================================== -->
+
+                <div class="form-section">
+
+                    <div class="section-title">
+
+                        <div class="section-icon">
+                            <i class="bi bi-shield-lock"></i>
+                        </div>
+
+                        <div>
+                            <h5>Account Security</h5>
+                            <p>
+                                Create your secure CampusNexus password
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="row g-4">
+
+                        <!-- PASSWORD -->
+                        <div class="col-md-6">
+
+                            <label
+                                for="password"
+                                class="form-label"
+                            >
+                                Password
+                                <span class="text-danger">*</span>
+                            </label>
+
+                            <div class="input-group">
+
+                                <input
+                                    type="password"
+                                    class="form-control"
+                                    id="password"
+                                    name="password"
+                                    placeholder="Create password"
+                                    minlength="6"
+                                    required
+                                    autocomplete="new-password"
+                                >
+
+                                <button
+                                    type="button"
+                                    class="btn btn-outline-secondary password-toggle"
+                                    data-target="password"
+                                >
+                                    <i class="bi bi-eye"></i>
+                                </button>
+
+                            </div>
+
+                            <div class="form-text">
+                                Minimum 6 characters.
+                            </div>
+
+                        </div>
+
+
+                        <!-- CONFIRM PASSWORD -->
+                        <div class="col-md-6">
+
+                            <label
+                                for="confirmPassword"
+                                class="form-label"
+                            >
+                                Confirm Password
+                                <span class="text-danger">*</span>
+                            </label>
+
+                            <div class="input-group">
+
+                                <input
+                                    type="password"
+                                    class="form-control"
+                                    id="confirmPassword"
+                                    name="confirmPassword"
+                                    placeholder="Confirm password"
+                                    minlength="6"
+                                    required
+                                    autocomplete="new-password"
+                                >
+
+                                <button
+                                    type="button"
+                                    class="btn btn-outline-secondary password-toggle"
+                                    data-target="confirmPassword"
+                                >
+                                    <i class="bi bi-eye"></i>
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ==========================================
+                     TERMS
+                =========================================== -->
+
+                <div class="registration-terms">
+
+                    <div class="form-check">
+
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            id="terms"
+                            name="termsAccepted"
+                            value="yes"
+                            required
+                        >
+
+                        <label
+                            class="form-check-label"
+                            for="terms"
+                        >
+                            I confirm that the information provided above
+                            is accurate and I agree to the university's
+                            terms and conditions.
+
+                            <span class="text-danger">*</span>
+                        </label>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ACTIONS -->
+
+                <div class="registration-actions">
+
+                    <a
+                        href="/auth/login"
+                        class="btn btn-outline-secondary btn-lg"
+                    >
+                        <i class="bi bi-arrow-left me-2"></i>
+                        Back to Login
+                    </a>
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary btn-lg px-5"
+                    >
+                        <i class="bi bi-person-plus-fill me-2"></i>
+                        Create Account
+                    </button>
+
+                </div>
+
+
+                <!-- LOGIN LINK -->
+
+                <div class="text-center mt-4">
+
+                    <p class="text-muted mb-0">
+
+                        Already have an account?
+
+                        <a
+                            href="/auth/login"
+                            class="fw-semibold text-decoration-none"
+                        >
+                            Login here
+                        </a>
+
+                    </p>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    // ========================================================
+    // DEPARTMENT → PROGRAM FILTERING
+    // ========================================================
+
+    const departmentSelect =
+        document.getElementById("department");
+
+    const programSelect =
+        document.getElementById("program");
+
+    if (departmentSelect && programSelect) {
+
+        const allProgramOptions =
+            Array.from(
+                programSelect.querySelectorAll(
+                    "option[data-department]"
+                )
+            );
+
+        function filterPrograms() {
+
+            const selectedDepartment =
+                String(
+                    departmentSelect.value || ""
+                ).trim();
+
+            // Reset program selection
+            programSelect.value = "";
+
+            // Show / hide programs
+            allProgramOptions.forEach((option) => {
+
+                const optionDepartment =
+                    String(
+                        option.dataset.department || ""
+                    ).trim();
+
+                if (
+                    selectedDepartment &&
+                    optionDepartment === selectedDepartment
+                ) {
+
+                    option.style.display = "";
+
+                } else {
+
+                    option.style.display = "none";
+
+                }
+
+            });
+        }
+
+        departmentSelect.addEventListener(
+            "change",
+            filterPrograms
+        );
+
+        // Initial state
+        filterPrograms();
+    }
+
+
+    // ========================================================
+    // PASSWORD VISIBILITY
+    // ========================================================
+
+    document
+        .querySelectorAll(".password-toggle")
+        .forEach((button) => {
+
+            button.addEventListener("click", () => {
+
+                const targetId =
+                    button.dataset.target;
+
+                const input =
+                    document.getElementById(targetId);
+
+                const icon =
+                    button.querySelector("i");
+
+                if (!input || !icon) {
+                    return;
+                }
+
+                if (input.type === "password") {
+
+                    input.type = "text";
+
+                    icon.classList.remove(
+                        "bi-eye"
+                    );
+
+                    icon.classList.add(
+                        "bi-eye-slash"
+                    );
+
+                } else {
+
+                    input.type = "password";
+
+                    icon.classList.remove(
+                        "bi-eye-slash"
+                    );
+
+                    icon.classList.add(
+                        "bi-eye"
+                    );
+
+                }
+
+            });
+
+        });
+
+
+    // ========================================================
+    // SAME ADDRESS
+    // ========================================================
+
+    const sameAddress =
+        document.getElementById("sameAddress");
+
+    const permanentAddress =
+        document.getElementById("permanentAddress");
+
+    const currentAddress =
+        document.getElementById("currentAddress");
+
+    if (
+        sameAddress &&
+        permanentAddress &&
+        currentAddress
+    ) {
+
+        sameAddress.addEventListener(
+            "change",
+            () => {
+
+                if (sameAddress.checked) {
+
+                    currentAddress.value =
+                        permanentAddress.value;
+
+                    currentAddress.setAttribute(
+                        "readonly",
+                        "readonly"
+                    );
+
+                } else {
+
+                    currentAddress.removeAttribute(
+                        "readonly"
+                    );
+
+                }
+
+            }
+        );
+
+
+        permanentAddress.addEventListener(
+            "input",
+            () => {
+
+                if (sameAddress.checked) {
+
+                    currentAddress.value =
+                        permanentAddress.value;
+
+                }
+
+            }
+        );
+
+    }
+
+
+    // ========================================================
+    // PASSWORD MATCH VALIDATION
+    // ========================================================
+
+    const form =
+        document.getElementById(
+            "registrationForm"
+        );
+
+    const password =
+        document.getElementById(
+            "password"
+        );
+
+    const confirmPassword =
+        document.getElementById(
+            "confirmPassword"
+        );
+
+    if (
+        form &&
+        password &&
+        confirmPassword
+    ) {
+
+        form.addEventListener(
+            "submit",
+            (event) => {
+
+                if (
+                    password.value !==
+                    confirmPassword.value
+                ) {
+
+                    event.preventDefault();
+
+                    confirmPassword.setCustomValidity(
+                        "Passwords do not match."
+                    );
+
+                    confirmPassword.reportValidity();
+
+                } else {
+
+                    confirmPassword.setCustomValidity(
+                        ""
+                    );
+
+                }
+
+            }
+        );
+
+    }
+
+});
+</script>

@@ -1,0 +1,1268 @@
+<% layout("layouts/boilerplate") -%>
+    <style>
+        :root {
+            --primary: #0d6efd;
+            --dark: #172033;
+            --muted: #6c757d;
+            --light-bg: #f5f7fb;
+            --border: #e7eaf0;
+        }
+
+        body {
+            margin: 0;
+            background: var(--light-bg);
+            color: #212529;
+            font-family:
+                Inter,
+                system-ui,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                sans-serif;
+        }
+
+        .navbar {
+            background: #ffffff;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .brand {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--dark);
+            text-decoration: none;
+        }
+
+        .brand span {
+            color: var(--primary);
+        }
+
+        .page-wrapper {
+            padding: 30px 0 50px;
+        }
+
+        .page-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--dark);
+        }
+
+        .page-subtitle {
+            color: var(--muted);
+            margin-bottom: 0;
+        }
+
+        .stat-card,
+        .panel-card,
+        .task-card {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            box-shadow:
+                0 8px 25px rgba(23, 32, 51, 0.05);
+        }
+
+        .stat-card {
+            padding: 20px;
+            height: 100%;
+        }
+
+        .stat-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            background: rgba(13, 110, 253, 0.08);
+            color: var(--primary);
+        }
+
+        .stat-number {
+            font-size: 1.65rem;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .stat-label {
+            color: var(--muted);
+            font-size: 0.86rem;
+        }
+
+        .panel-card {
+            overflow: hidden;
+        }
+
+        .panel-header {
+            padding: 20px 22px;
+            border-bottom: 1px solid var(--border);
+            background: #ffffff;
+        }
+
+        .panel-title {
+            margin: 0;
+            font-weight: 750;
+            color: var(--dark);
+        }
+
+        .panel-body {
+            padding: 22px;
+        }
+
+        .form-label {
+            font-size: 0.88rem;
+            font-weight: 650;
+            color: #344054;
+        }
+
+        .form-control,
+        .form-select {
+            border-radius: 11px;
+            min-height: 44px;
+            border-color: #dfe3ea;
+        }
+
+        textarea.form-control {
+            min-height: 105px;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: rgba(13, 110, 253, 0.55);
+            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.1);
+        }
+
+        .btn {
+            border-radius: 10px;
+            font-weight: 650;
+        }
+
+        .worker-select-box {
+            background: #f8faff;
+            border: 1px solid #e1e8f5;
+            border-radius: 14px;
+            padding: 15px;
+        }
+
+        .worker-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: rgba(13, 110, 253, 0.1);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+        }
+
+        .task-table th {
+            background: #f8f9fb;
+            color: #667085;
+            font-size: 0.76rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            white-space: nowrap;
+        }
+
+        .task-table td {
+            vertical-align: middle;
+            padding-top: 15px;
+            padding-bottom: 15px;
+        }
+
+        .task-title {
+            font-weight: 750;
+            color: var(--dark);
+        }
+
+        .task-description {
+            max-width: 330px;
+            color: #667085;
+            font-size: 0.86rem;
+        }
+
+        .badge-status {
+            padding: 7px 10px;
+            border-radius: 999px;
+            font-size: 0.72rem;
+            font-weight: 750;
+        }
+
+        .status-assigned {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-progress {
+            background: #cff4fc;
+            color: #055160;
+        }
+
+        .status-completed {
+            background: #d1e7dd;
+            color: #0f5132;
+        }
+
+        .status-closed {
+            background: #e2e3e5;
+            color: #41464b;
+        }
+
+        .priority-badge {
+            padding: 6px 9px;
+            border-radius: 8px;
+            font-size: 0.72rem;
+            font-weight: 700;
+        }
+
+        .priority-low {
+            background: #e9f7ef;
+            color: #198754;
+        }
+
+        .priority-medium {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .priority-high {
+            background: #ffe5d0;
+            color: #b54708;
+        }
+
+        .priority-urgent {
+            background: #f8d7da;
+            color: #842029;
+        }
+
+        .empty-state {
+            padding: 55px 20px;
+            text-align: center;
+            color: var(--muted);
+        }
+
+        .empty-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 15px;
+            border-radius: 18px;
+            background: #f1f3f7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.7rem;
+        }
+
+        .message-box {
+            background: #f8f9fa;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px 12px;
+            font-size: 0.84rem;
+            color: #495057;
+            max-width: 300px;
+        }
+
+        .completion-message {
+            background: #edf8f1;
+            border-color: #ccebd7;
+        }
+
+        .table-responsive {
+            border-radius: 0 0 18px 18px;
+        }
+
+        .mobile-task {
+            display: none;
+        }
+
+        @media (max-width: 991.98px) {
+            .desktop-task {
+                display: none;
+            }
+
+            .mobile-task {
+                display: block;
+            }
+
+            .page-wrapper {
+                padding-top: 22px;
+            }
+        }
+
+        @media (max-width: 575.98px) {
+            .page-title {
+                font-size: 1.45rem;
+            }
+
+            .panel-body {
+                padding: 17px;
+            }
+
+            .stat-card {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg sticky-top">
+    <div class="container-fluid px-3 px-lg-4">
+
+        <a
+            href="/admin/dashboard"
+            class="brand"
+        >
+            Campus<span>Nexus</span>
+        </a>
+
+        <div class="d-flex align-items-center gap-2">
+
+            <a
+                href="/admin/workers"
+                class="btn btn-outline-primary btn-sm"
+            >
+                <i class="bi bi-people me-1"></i>
+                Workers
+            </a>
+
+            <a
+                href="/admin/dashboard"
+                class="btn btn-light btn-sm"
+            >
+                <i class="bi bi-speedometer2 me-1"></i>
+                Dashboard
+            </a>
+
+        </div>
+    </div>
+</nav>
+
+
+<main class="page-wrapper">
+
+    <div class="container-fluid px-3 px-lg-4">
+
+        <!-- HEADER -->
+        <div
+            class="d-flex flex-column flex-lg-row
+                   justify-content-between
+                   align-items-lg-center gap-3 mb-4"
+        >
+
+            <div>
+                <h1 class="page-title mb-1">
+                    Worker Task Management
+                </h1>
+
+                <p class="page-subtitle">
+                    Assign work, monitor progress and close completed tasks.
+                </p>
+            </div>
+
+            <div>
+                <a
+                    href="/admin/workers"
+                    class="btn btn-outline-secondary"
+                >
+                    <i class="bi bi-arrow-left me-1"></i>
+                    Back to Workers
+                </a>
+            </div>
+
+        </div>
+
+
+        <!-- SUMMARY -->
+        <div class="row g-3 mb-4">
+
+            <div class="col-6 col-xl-3">
+                <div class="stat-card">
+                    <div class="d-flex align-items-center gap-3">
+
+                        <div class="stat-icon">
+                            <i class="bi bi-list-task"></i>
+                        </div>
+
+                        <div>
+                            <div class="stat-number">
+                                <%= summary?.total ?? tasks?.length ?? 0 %>
+                            </div>
+
+                            <div class="stat-label">
+                                Total Tasks
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-6 col-xl-3">
+                <div class="stat-card">
+                    <div class="d-flex align-items-center gap-3">
+
+                        <div
+                            class="stat-icon"
+                            style="color:#856404;background:#fff8df;"
+                        >
+                            <i class="bi bi-clock-history"></i>
+                        </div>
+
+                        <div>
+                            <div class="stat-number">
+                                <%= summary?.assigned ?? 0 %>
+                            </div>
+
+                            <div class="stat-label">
+                                Assigned
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-6 col-xl-3">
+                <div class="stat-card">
+                    <div class="d-flex align-items-center gap-3">
+
+                        <div
+                            class="stat-icon"
+                            style="color:#055160;background:#e8faff;"
+                        >
+                            <i class="bi bi-arrow-repeat"></i>
+                        </div>
+
+                        <div>
+                            <div class="stat-number">
+                                <%= summary?.inProgress ?? 0 %>
+                            </div>
+
+                            <div class="stat-label">
+                                In Progress
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-6 col-xl-3">
+                <div class="stat-card">
+                    <div class="d-flex align-items-center gap-3">
+
+                        <div
+                            class="stat-icon"
+                            style="color:#0f5132;background:#e9f8ef;"
+                        >
+                            <i class="bi bi-check2-circle"></i>
+                        </div>
+
+                        <div>
+                            <div class="stat-number">
+                                <%= summary?.completed ?? 0 %>
+                            </div>
+
+                            <div class="stat-label">
+                                Completed
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="row g-4">
+
+            <!-- CREATE TASK -->
+            <div class="col-xl-4">
+
+                <div class="panel-card">
+
+                    <div class="panel-header">
+
+                        <h5 class="panel-title">
+                            <i class="bi bi-plus-circle me-2 text-primary"></i>
+                            Assign New Work
+                        </h5>
+
+                    </div>
+
+
+                    <div class="panel-body">
+
+                        <form
+                            method="POST"
+                            action="/admin/worker-tasks/create"
+                        >
+
+                            <div class="mb-3">
+
+                                <label
+                                    for="worker"
+                                    class="form-label"
+                                >
+                                    Select Worker
+                                </label>
+
+                                <select
+                                    id="worker"
+                                    name="worker"
+                                    class="form-select"
+                                    required
+                                >
+
+                                    <option value="">
+                                        Select a worker
+                                    </option>
+
+                                    <% if (workers && workers.length) { %>
+
+                                        <% workers.forEach(function(item) { %>
+
+                                            <% const workerUser = item.user || item; %>
+
+                                            <option
+                                                value="<%= workerUser._id %>"
+                                            >
+                                                <%= workerUser.name %>
+                                                <% if (item.workerType) { %>
+                                                    -
+                                                    <%= item.workerType %>
+                                                <% } %>
+                                            </option>
+
+                                        <% }) %>
+
+                                    <% } %>
+
+                                </select>
+
+                            </div>
+
+
+                            <div class="mb-3">
+
+                                <label
+                                    for="title"
+                                    class="form-label"
+                                >
+                                    Task Title
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="title"
+                                    name="title"
+                                    class="form-control"
+                                    maxlength="150"
+                                    placeholder="e.g. Repair hostel water pipe"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <div class="mb-3">
+
+                                <label
+                                    for="description"
+                                    class="form-label"
+                                >
+                                    Task Description
+                                </label>
+
+                                <textarea
+                                    id="description"
+                                    name="description"
+                                    class="form-control"
+                                    maxlength="2000"
+                                    placeholder="Describe the work that needs to be completed..."
+                                    required
+                                ></textarea>
+
+                            </div>
+
+
+                            <div class="mb-3">
+
+                                <label
+                                    for="location"
+                                    class="form-label"
+                                >
+                                    Location
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="location"
+                                    name="location"
+                                    class="form-control"
+                                    maxlength="300"
+                                    placeholder="e.g. Boys Hostel Block A"
+                                >
+
+                            </div>
+
+
+                            <div class="row g-3">
+
+                                <div class="col-sm-6">
+
+                                    <label
+                                        for="taskType"
+                                        class="form-label"
+                                    >
+                                        Task Type
+                                    </label>
+
+                                    <select
+                                        id="taskType"
+                                        name="taskType"
+                                        class="form-select"
+                                    >
+
+                                        <option value="plumbing">
+                                            Plumbing
+                                        </option>
+
+                                        <option value="electrical">
+                                            Electrical
+                                        </option>
+
+                                        <option value="carpentry">
+                                            Carpentry
+                                        </option>
+
+                                        <option value="cleaning">
+                                            Cleaning
+                                        </option>
+
+                                        <option value="gardening">
+                                            Gardening
+                                        </option>
+
+                                        <option value="security">
+                                            Security
+                                        </option>
+
+                                        <option value="maintenance">
+                                            Maintenance
+                                        </option>
+
+                                        <option value="technical">
+                                            Technical
+                                        </option>
+
+                                        <option value="other" selected>
+                                            Other
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+
+                                <div class="col-sm-6">
+
+                                    <label
+                                        for="priority"
+                                        class="form-label"
+                                    >
+                                        Priority
+                                    </label>
+
+                                    <select
+                                        id="priority"
+                                        name="priority"
+                                        class="form-select"
+                                    >
+
+                                        <option value="low">
+                                            Low
+                                        </option>
+
+                                        <option value="medium" selected>
+                                            Medium
+                                        </option>
+
+                                        <option value="high">
+                                            High
+                                        </option>
+
+                                        <option value="urgent">
+                                            Urgent
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="mt-3 mb-4">
+
+                                <label
+                                    for="dueDate"
+                                    class="form-label"
+                                >
+                                    Due Date
+                                </label>
+
+                                <input
+                                    type="date"
+                                    id="dueDate"
+                                    name="dueDate"
+                                    class="form-control"
+                                >
+
+                            </div>
+
+
+                            <button
+                                type="submit"
+                                class="btn btn-primary w-100 py-2"
+                            >
+                                <i class="bi bi-send me-2"></i>
+                                Assign Work
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- TASK LIST -->
+            <div class="col-xl-8">
+
+                <div class="panel-card">
+
+                    <div
+                        class="panel-header
+                               d-flex flex-column flex-md-row
+                               justify-content-between
+                               align-items-md-center gap-2"
+                    >
+
+                        <div>
+                            <h5 class="panel-title">
+                                Assigned Work
+                            </h5>
+
+                            <small class="text-muted">
+                                Track worker task progress
+                            </small>
+                        </div>
+
+                        <span class="badge bg-light text-dark">
+                            <%= tasks?.length || 0 %> tasks
+                        </span>
+
+                    </div>
+
+
+                    <% if (tasks && tasks.length) { %>
+
+                        <!-- DESKTOP TABLE -->
+                        <div class="table-responsive desktop-task">
+
+                            <table class="table table-hover mb-0 task-table">
+
+                                <thead>
+
+                                    <tr>
+                                        <th>Task</th>
+                                        <th>Worker</th>
+                                        <th>Priority</th>
+                                        <th>Status</th>
+                                        <th>Due</th>
+                                        <th>Action</th>
+                                    </tr>
+
+                                </thead>
+
+                                <tbody>
+
+                                    <% tasks.forEach(function(task) { %>
+
+                                        <tr>
+
+                                            <td>
+
+                                                <div class="task-title">
+                                                    <%= task.title %>
+                                                </div>
+
+                                                <div class="task-description mt-1">
+                                                    <%= task.description %>
+                                                </div>
+
+                                                <% if (task.location) { %>
+
+                                                    <div
+                                                        class="small text-muted mt-1"
+                                                    >
+                                                        <i class="bi bi-geo-alt me-1"></i>
+                                                        <%= task.location %>
+                                                    </div>
+
+                                                <% } %>
+
+                                            </td>
+
+
+                                            <td>
+
+                                                <div class="d-flex align-items-center gap-2">
+
+                                                    <div class="worker-avatar">
+                                                        <%= (
+                                                            task.worker?.name ||
+                                                            "W"
+                                                        ).charAt(0).toUpperCase() %>
+                                                    </div>
+
+                                                    <div>
+                                                        <div class="fw-semibold">
+                                                            <%= task.worker?.name || "Worker" %>
+                                                        </div>
+
+                                                        <% if (task.worker?.email) { %>
+
+                                                            <div class="small text-muted">
+                                                                <%= task.worker.email %>
+                                                            </div>
+
+                                                        <% } %>
+                                                    </div>
+
+                                                </div>
+
+                                            </td>
+
+
+                                            <td>
+
+                                                <%
+                                                    const priority =
+                                                        String(
+                                                            task.priority || "medium"
+                                                        ).toLowerCase();
+                                                %>
+
+                                                <span
+                                                    class="priority-badge priority-<%= priority %>"
+                                                >
+                                                    <%= priority.charAt(0).toUpperCase() + priority.slice(1) %>
+                                                </span>
+
+                                            </td>
+
+
+                                            <td>
+
+                                                <%
+                                                    const status =
+                                                        String(
+                                                            task.status || "assigned"
+                                                        ).toLowerCase();
+                                                %>
+
+                                                <% if (status === "in-progress") { %>
+
+                                                    <span class="badge-status status-progress">
+                                                        In Progress
+                                                    </span>
+
+                                                <% } else if (status === "completed") { %>
+
+                                                    <span class="badge-status status-completed">
+                                                        Completed
+                                                    </span>
+
+                                                <% } else if (status === "closed") { %>
+
+                                                    <span class="badge-status status-closed">
+                                                        Closed
+                                                    </span>
+
+                                                <% } else { %>
+
+                                                    <span class="badge-status status-assigned">
+                                                        Assigned
+                                                    </span>
+
+                                                <% } %>
+
+                                            </td>
+
+
+                                            <td>
+
+                                                <% if (task.dueDate) { %>
+
+                                                    <span class="small">
+                                                        <%= new Date(
+                                                            task.dueDate
+                                                        ).toLocaleDateString(
+                                                            "en-IN",
+                                                            {
+                                                                day: "2-digit",
+                                                                month: "short",
+                                                                year: "numeric"
+                                                            }
+                                                        ) %>
+                                                    </span>
+
+                                                <% } else { %>
+
+                                                    <span class="text-muted small">
+                                                        No deadline
+                                                    </span>
+
+                                                <% } %>
+
+                                            </td>
+
+
+                                            <td>
+
+                                                <% if (status === "completed") { %>
+
+                                                    <form
+                                                        method="POST"
+                                                        action="/admin/worker-tasks/<%= task._id %>/close"
+                                                        onsubmit="return confirm('Close this completed task?');"
+                                                    >
+
+                                                        <button
+                                                            type="submit"
+                                                            class="btn btn-success btn-sm"
+                                                        >
+                                                            <i class="bi bi-check2-circle me-1"></i>
+                                                            Close
+                                                        </button>
+
+                                                    </form>
+
+                                                <% } else if (status === "closed") { %>
+
+                                                    <span class="text-muted small">
+                                                        <i class="bi bi-check-circle me-1"></i>
+                                                        Closed
+                                                    </span>
+
+                                                <% } else { %>
+
+                                                    <span class="text-muted small">
+                                                        Monitoring
+                                                    </span>
+
+                                                <% } %>
+
+                                            </td>
+
+                                        </tr>
+
+
+                                        <% if (task.workerCompletionMessage) { %>
+
+                                            <tr>
+
+                                                <td colspan="6">
+
+                                                    <div
+                                                        class="message-box completion-message"
+                                                    >
+
+                                                        <div class="fw-semibold mb-1">
+                                                            <i
+                                                                class="bi bi-chat-left-text me-1"
+                                                            ></i>
+                                                            Worker Completion Message
+                                                        </div>
+
+                                                        <%= task.workerCompletionMessage %>
+
+                                                    </div>
+
+                                                </td>
+
+                                            </tr>
+
+                                        <% } %>
+
+
+                                        <% if (task.adminResponse) { %>
+
+                                            <tr>
+
+                                                <td colspan="6">
+
+                                                    <div class="message-box">
+
+                                                        <div class="fw-semibold mb-1">
+                                                            <i
+                                                                class="bi bi-reply me-1"
+                                                            ></i>
+                                                            Admin Response
+                                                        </div>
+
+                                                        <%= task.adminResponse %>
+
+                                                    </div>
+
+                                                </td>
+
+                                            </tr>
+
+                                        <% } %>
+
+                                    <% }) %>
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+
+                        <!-- MOBILE CARDS -->
+                        <div class="mobile-task p-3">
+
+                            <% tasks.forEach(function(task) { %>
+
+                                <div class="task-card p-3 mb-3">
+
+                                    <div
+                                        class="d-flex justify-content-between
+                                               align-items-start gap-2 mb-3"
+                                    >
+
+                                        <div>
+
+                                            <div class="task-title">
+                                                <%= task.title %>
+                                            </div>
+
+                                            <div class="small text-muted mt-1">
+                                                <i class="bi bi-person me-1"></i>
+                                                <%= task.worker?.name || "Worker" %>
+                                            </div>
+
+                                        </div>
+
+
+                                        <%
+                                            const mobileStatus =
+                                                String(
+                                                    task.status || "assigned"
+                                                ).toLowerCase();
+                                        %>
+
+                                        <% if (mobileStatus === "in-progress") { %>
+
+                                            <span class="badge-status status-progress">
+                                                In Progress
+                                            </span>
+
+                                        <% } else if (mobileStatus === "completed") { %>
+
+                                            <span class="badge-status status-completed">
+                                                Completed
+                                            </span>
+
+                                        <% } else if (mobileStatus === "closed") { %>
+
+                                            <span class="badge-status status-closed">
+                                                Closed
+                                            </span>
+
+                                        <% } else { %>
+
+                                            <span class="badge-status status-assigned">
+                                                Assigned
+                                            </span>
+
+                                        <% } %>
+
+                                    </div>
+
+
+                                    <p class="small text-muted mb-3">
+                                        <%= task.description %>
+                                    </p>
+
+
+                                    <div class="d-flex flex-wrap gap-2 mb-3">
+
+                                        <%
+                                            const mobilePriority =
+                                                String(
+                                                    task.priority || "medium"
+                                                ).toLowerCase();
+                                        %>
+
+                                        <span
+                                            class="priority-badge priority-<%= mobilePriority %>"
+                                        >
+                                            <i class="bi bi-flag me-1"></i>
+                                            <%= mobilePriority.charAt(0).toUpperCase() + mobilePriority.slice(1) %>
+                                        </span>
+
+
+                                        <% if (task.taskType) { %>
+
+                                            <span class="badge bg-light text-dark">
+                                                <%= task.taskType %>
+                                            </span>
+
+                                        <% } %>
+
+
+                                        <% if (task.dueDate) { %>
+
+                                            <span class="badge bg-light text-dark">
+                                                <i class="bi bi-calendar3 me-1"></i>
+
+                                                <%= new Date(
+                                                    task.dueDate
+                                                ).toLocaleDateString(
+                                                    "en-IN",
+                                                    {
+                                                        day: "2-digit",
+                                                        month: "short",
+                                                        year: "numeric"
+                                                    }
+                                                ) %>
+                                            </span>
+
+                                        <% } %>
+
+                                    </div>
+
+
+                                    <% if (task.location) { %>
+
+                                        <div class="small text-muted mb-3">
+                                            <i class="bi bi-geo-alt me-1"></i>
+                                            <%= task.location %>
+                                        </div>
+
+                                    <% } %>
+
+
+                                    <% if (task.workerCompletionMessage) { %>
+
+                                        <div
+                                            class="message-box
+                                                   completion-message mb-3"
+                                        >
+
+                                            <div class="fw-semibold mb-1">
+                                                <i
+                                                    class="bi bi-chat-left-text me-1"
+                                                ></i>
+                                                Worker Message
+                                            </div>
+
+                                            <%= task.workerCompletionMessage %>
+
+                                        </div>
+
+                                    <% } %>
+
+
+                                    <% if (mobileStatus === "completed") { %>
+
+                                        <form
+                                            method="POST"
+                                            action="/admin/worker-tasks/<%= task._id %>/close"
+                                            onsubmit="return confirm('Close this completed task?');"
+                                        >
+
+                                            <button
+                                                type="submit"
+                                                class="btn btn-success w-100"
+                                            >
+                                                <i
+                                                    class="bi bi-check2-circle me-1"
+                                                ></i>
+                                                Close Completed Task
+                                            </button>
+
+                                        </form>
+
+                                    <% } else if (mobileStatus === "closed") { %>
+
+                                        <div class="text-center text-success small">
+                                            <i class="bi bi-check-circle me-1"></i>
+                                            Task Closed
+                                        </div>
+
+                                    <% } else { %>
+
+                                        <div class="text-center text-muted small">
+                                            <i class="bi bi-eye me-1"></i>
+                                            Monitoring Task
+                                        </div>
+
+                                    <% } %>
+
+                                </div>
+
+                            <% }) %>
+
+                        </div>
+
+                    <% } else { %>
+
+                        <div class="empty-state">
+
+                            <div class="empty-icon">
+                                <i class="bi bi-clipboard-x"></i>
+                            </div>
+
+                            <h5 class="fw-bold">
+                                No Worker Tasks
+                            </h5>
+
+                            <p class="mb-0">
+                                No tasks have been assigned yet.
+                                Use the form to assign work to a worker.
+                            </p>
+
+                        </div>
+
+                    <% } %>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</main>
+
+
+
+
+</body>

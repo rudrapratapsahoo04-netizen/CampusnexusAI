@@ -1,0 +1,309 @@
+<% layout("layouts/boilerplate") -%>
+
+<div class="container-fluid py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-1">
+                <%= isEdit ? "Edit Program" : "Add Program" %>
+            </h2>
+
+            <p class="text-muted mb-0">
+                <%= isEdit
+                    ? "Update academic program details"
+                    : "Create a new academic program"
+                %>
+            </p>
+        </div>
+
+        <a
+            href="/admin/programs"
+            class="btn btn-outline-secondary"
+        >
+            <i class="bi bi-arrow-left me-1"></i>
+            Back
+        </a>
+    </div>
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-8">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-body p-4">
+
+                    <form
+                        action="<%= isEdit
+                            ? '/admin/programs/' + program._id + '/edit'
+                            : '/admin/programs'
+                        %>"
+                        method="POST"
+                    >
+
+                        <!-- DEPARTMENT -->
+
+                        <div class="mb-3">
+
+                            <label
+                                for="department"
+                                class="form-label fw-semibold"
+                            >
+                                Department
+                                <span class="text-danger">*</span>
+                            </label>
+
+                            <select
+                                id="department"
+                                name="department"
+                                class="form-select"
+                                required
+                            >
+
+                                <option value="">
+                                    Select Department
+                                </option>
+
+                                <% departments.forEach(department => { %>
+
+                                    <option
+                                        value="<%= department._id %>"
+                                        <%= isEdit &&
+                                            program.department &&
+                                            String(program.department._id) === String(department._id)
+                                                ? "selected"
+                                                : ""
+                                        %>
+                                    >
+                                        <%= department.name %>
+                                        (<%= department.code %>)
+                                    </option>
+
+                                <% }); %>
+
+                            </select>
+
+                            <div class="form-text">
+                                Select the department that owns this program.
+                            </div>
+
+                        </div>
+
+
+                        <!-- PROGRAM NAME -->
+
+                        <div class="mb-3">
+
+                            <label
+                                for="name"
+                                class="form-label fw-semibold"
+                            >
+                                Program Name
+                                <span class="text-danger">*</span>
+                            </label>
+
+                            <input
+                                type="text"
+                                id="name"
+                                name="name"
+                                class="form-control"
+                                placeholder="e.g. Bachelor of Computer Applications"
+                                minlength="2"
+                                maxlength="150"
+                                value="<%= isEdit ? program.name : '' %>"
+                                required
+                            >
+
+                        </div>
+
+
+                        <!-- PROGRAM CODE -->
+
+                        <div class="mb-3">
+
+                            <label
+                                for="code"
+                                class="form-label fw-semibold"
+                            >
+                                Program Code
+                                <span class="text-danger">*</span>
+                            </label>
+
+                            <input
+                                type="text"
+                                id="code"
+                                name="code"
+                                class="form-control text-uppercase"
+                                placeholder="e.g. BCA"
+                                maxlength="30"
+                                value="<%= isEdit ? program.code : '' %>"
+                                required
+                            >
+
+                            <div class="form-text">
+                                Code must be unique within the selected department.
+                            </div>
+
+                        </div>
+
+
+                        <div class="row">
+
+                            <!-- DURATION -->
+
+                            <div class="col-md-6 mb-3">
+
+                                <label
+                                    for="durationYears"
+                                    class="form-label fw-semibold"
+                                >
+                                    Duration
+                                    <span class="text-danger">*</span>
+                                </label>
+
+                                <select
+                                    id="durationYears"
+                                    name="durationYears"
+                                    class="form-select"
+                                    required
+                                >
+
+                                    <option value="">
+                                        Select Duration
+                                    </option>
+
+                                    <% for (let i = 1; i <= 6; i++) { %>
+
+                                        <option
+                                            value="<%= i %>"
+                                            <%= isEdit &&
+                                                Number(program.durationYears) === i
+                                                    ? "selected"
+                                                    : ""
+                                            %>
+                                        >
+                                            <%= i %> Year<%= i > 1 ? "s" : "" %>
+                                        </option>
+
+                                    <% } %>
+
+                                </select>
+
+                            </div>
+
+
+                            <!-- SEMESTERS -->
+
+                            <div class="col-md-6 mb-3">
+
+                                <label
+                                    for="totalSemesters"
+                                    class="form-label fw-semibold"
+                                >
+                                    Total Semesters
+                                    <span class="text-danger">*</span>
+                                </label>
+
+                                <select
+                                    id="totalSemesters"
+                                    name="totalSemesters"
+                                    class="form-select"
+                                    required
+                                >
+
+                                    <option value="">
+                                        Select Semesters
+                                    </option>
+
+                                    <% for (let i = 1; i <= 12; i++) { %>
+
+                                        <option
+                                            value="<%= i %>"
+                                            <%= isEdit &&
+                                                Number(program.totalSemesters) === i
+                                                    ? "selected"
+                                                    : ""
+                                            %>
+                                        >
+                                            <%= i %>
+                                        </option>
+
+                                    <% } %>
+
+                                </select>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- DESCRIPTION -->
+
+                        <div class="mb-4">
+
+                            <label
+                                for="description"
+                                class="form-label fw-semibold"
+                            >
+                                Description
+                            </label>
+
+                            <textarea
+                                id="description"
+                                name="description"
+                                class="form-control"
+                                rows="4"
+                                maxlength="500"
+                                placeholder="Enter a short description of the program..."
+                            ><%= isEdit ? (program.description || "") : "" %></textarea>
+
+                            <div class="form-text">
+                                Maximum 500 characters.
+                            </div>
+
+                        </div>
+
+
+                        <!-- ACTIONS -->
+
+                        <div class="d-flex justify-content-end gap-2">
+
+                            <a
+                                href="/admin/programs"
+                                class="btn btn-outline-secondary"
+                            >
+                                Cancel
+                            </a>
+
+                            <button
+                                type="submit"
+                                class="btn btn-primary"
+                            >
+
+                                <i
+                                    class="bi <%= isEdit
+                                        ? 'bi-save'
+                                        : 'bi-check-lg'
+                                    %> me-1"
+                                ></i>
+
+                                <%= isEdit
+                                    ? "Update Program"
+                                    : "Create Program"
+                                %>
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

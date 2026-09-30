@@ -1,0 +1,5192 @@
+<% layout("layouts/boilerplate") -%>
+
+<div class="student-dashboard">
+
+    <!-- =========================================================
+         SIDEBAR
+    ========================================================== -->
+
+    <aside class="student-sidebar">
+
+        <div class="sidebar-brand">
+
+            <div class="brand-logo">
+                <img
+                    src="/images/logo3.png"
+                    alt="CampusNexus"
+                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                >
+
+                <span class="brand-fallback">
+                    <i class="bi bi-mortarboard-fill"></i>
+                </span>
+            </div>
+
+            <div class="brand-text">
+                <strong>CampusNexus</strong>
+                <span>Student Portal</span>
+            </div>
+
+        </div>
+
+
+        <!-- PROFILE -->
+
+        <div class="sidebar-profile">
+
+            <div class="sidebar-avatar">
+                <%= (currentUser?.name || "S").charAt(0).toUpperCase() %>
+            </div>
+
+            <div class="sidebar-profile-info">
+                <strong>
+                    <%= currentUser?.name || "Student" %>
+                </strong>
+
+                <span>
+                    Student
+                </span>
+            </div>
+
+        </div>
+
+
+        <!-- MAIN MENU -->
+
+        <div class="sidebar-label">
+            MAIN MENU
+        </div>
+
+        <nav class="sidebar-nav">
+
+            <a
+                href="/student/dashboard"
+                class="sidebar-link active"
+            >
+                <i class="bi bi-grid-1x2-fill"></i>
+                <span>Dashboard</span>
+            </a>
+
+
+            <a
+                href="/student/profile"
+                class="sidebar-link"
+            >
+                <i class="bi bi-person-vcard"></i>
+                <span>My Profile</span>
+            </a>
+
+
+            <a
+                href="/student/timetable"
+                class="sidebar-link"
+            >
+                <i class="bi bi-calendar3"></i>
+                <span>Timetable</span>
+            </a>
+
+
+            <a
+                href="/student/attendance"
+                class="sidebar-link"
+            >
+                <i class="bi bi-calendar-check"></i>
+                <span>Attendance</span>
+            </a>
+
+
+            <a
+                href="/student/notices"
+                class="sidebar-link"
+            >
+                <i class="bi bi-megaphone"></i>
+                <span>Notices</span>
+            </a>
+
+
+            <a
+                href="/student/fees"
+                class="sidebar-link"
+            >
+                <i class="bi bi-wallet2"></i>
+                <span>Fees</span>
+            </a>
+
+        </nav>
+
+
+        <!-- SERVICES -->
+
+        <div class="sidebar-label services-label">
+            SERVICES
+        </div>
+
+        <nav class="sidebar-nav">
+
+            <a
+                href="/student/group-links"
+                class="sidebar-link"
+            >
+                <i class="bi bi-people"></i>
+                <span>Group Links</span>
+            </a>
+
+
+            <a
+                href="/student/leave"
+                class="sidebar-link"
+            >
+                <i class="bi bi-file-earmark-text"></i>
+                <span>Leave</span>
+            </a>
+
+
+            <a
+                href="/student/complaints"
+                class="sidebar-link"
+            >
+                <i class="bi bi-chat-left-text"></i>
+                <span>Complaints</span>
+            </a>
+
+
+            <a
+                href="/student/lost-found"
+                class="sidebar-link"
+            >
+                <i class="bi bi-search-heart"></i>
+                <span>Lost & Found</span>
+            </a>
+
+
+            <a
+                href="/student/gate-passes"
+                class="sidebar-link"
+            >
+                <i class="bi bi-door-open"></i>
+                <span>Gate Pass</span>
+            </a>
+
+
+            <a
+                href="/student/certificates"
+                class="sidebar-link"
+            >
+                <i class="bi bi-file-earmark-check"></i>
+                <span>Certificates</span>
+            </a>
+
+        </nav>
+
+
+        <!-- SIDEBAR BOTTOM -->
+
+        <div class="sidebar-bottom">
+
+            <div class="sidebar-help">
+
+                <div class="help-icon">
+                    <i class="bi bi-headset"></i>
+                </div>
+
+                <div>
+                    <strong>Need Help?</strong>
+                    <span>Contact campus support</span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </aside>
+
+
+    <!-- =========================================================
+         MAIN AREA
+    ========================================================== -->
+
+    <main class="student-main">
+
+
+        <!-- TOPBAR -->
+
+        <header class="student-topbar">
+
+            <div class="mobile-brand">
+
+                <button
+                    type="button"
+                    class="mobile-menu-btn"
+                    id="mobileMenuBtn"
+                >
+                    <i class="bi bi-list"></i>
+                </button>
+
+                <strong>CampusNexus</strong>
+
+            </div>
+
+
+            <div class="topbar-search">
+
+                <i class="bi bi-search"></i>
+
+                <input
+                    type="text"
+                    placeholder="Search services..."
+                    id="dashboardSearch"
+                >
+
+            </div>
+
+
+            <div class="topbar-actions">
+
+                <!-- NOTIFICATION -->
+
+                <button
+                    type="button"
+                    class="topbar-icon-btn notification-trigger"
+                    id="notificationButton"
+                    title="Notifications"
+                >
+
+                    <i class="bi bi-bell"></i>
+
+                    <% if ((unreadNotificationCount || 0) > 0) { %>
+
+                        <span class="notification-dot">
+                            <%= unreadNotificationCount %>
+                        </span>
+
+                    <% } %>
+
+                </button>
+
+
+                <!-- PROFILE -->
+
+                <a
+                    href="/student/profile"
+                    class="topbar-user"
+                >
+
+                    <div class="topbar-avatar">
+                        <%= (currentUser?.name || "S").charAt(0).toUpperCase() %>
+                    </div>
+
+                    <div class="topbar-user-info">
+
+                        <strong>
+                            <%= currentUser?.name || "Student" %>
+                        </strong>
+
+                        <span>
+                            Student
+                        </span>
+
+                    </div>
+
+                    <i class="bi bi-chevron-down"></i>
+
+                </a>
+
+            </div>
+
+        </header>
+
+
+        <!-- MOBILE OVERLAY -->
+
+        <div
+            class="sidebar-overlay"
+            id="sidebarOverlay"
+        ></div>
+
+
+        <!-- =====================================================
+             DASHBOARD CONTENT
+        ====================================================== -->
+
+        <div class="dashboard-content">
+
+
+            <!-- HERO -->
+
+            <section class="welcome-hero">
+
+                <div class="hero-content">
+
+                    <div class="hero-small">
+                        <i class="bi bi-stars"></i>
+                        STUDENT DASHBOARD
+                    </div>
+
+                    <h1>
+                        Hello,
+                        <%= currentUser?.name || "Student" %> 👋
+                    </h1>
+
+                    <p>
+                        Welcome back! Manage your academic life,
+                        campus services and university information
+                        from one place.
+                    </p>
+
+                    <div class="hero-actions">
+
+                        <a
+                            href="/student/profile"
+                            class="hero-btn primary"
+                        >
+                            <i class="bi bi-person"></i>
+                            My Profile
+                        </a>
+
+                        <a
+                            href="/student/timetable"
+                            class="hero-btn light"
+                        >
+                            <i class="bi bi-calendar3"></i>
+                            View Timetable
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+                <div class="hero-visual">
+
+                    <div class="hero-circle circle-one"></div>
+                    <div class="hero-circle circle-two"></div>
+
+                    <div class="hero-student-card">
+
+                        <div class="hero-student-avatar">
+                            <%= (currentUser?.name || "S").charAt(0).toUpperCase() %>
+                        </div>
+
+                        <div>
+
+                            <span>Student Account</span>
+
+                            <strong>
+                                <%= currentUser?.name || "Student" %>
+                            </strong>
+
+                            <small>
+                                <%= currentUser?.email || "Email not available" %>
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                    <div class="floating-icon icon-one">
+                        <i class="bi bi-book"></i>
+                    </div>
+
+                    <div class="floating-icon icon-two">
+                        <i class="bi bi-calendar-check"></i>
+                    </div>
+
+                    <div class="floating-icon icon-three">
+                        <i class="bi bi-mortarboard-fill"></i>
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 QUICK STATS
+            ================================================== -->
+
+            <section class="stats-grid">
+
+
+                <div class="modern-stat stat-blue">
+
+                    <div class="stat-top">
+
+                        <div class="stat-icon">
+                            <i class="bi bi-calendar-check"></i>
+                        </div>
+
+                        <span class="stat-arrow">
+                            <i class="bi bi-arrow-up-right"></i>
+                        </span>
+
+                    </div>
+
+                    <div class="stat-number">
+                        0%
+                    </div>
+
+                    <div class="stat-title">
+                        Attendance
+                    </div>
+
+                    <div class="stat-description">
+                        Overall attendance
+                    </div>
+
+                    <div class="stat-progress">
+                        <span style="width: 0%;"></span>
+                    </div>
+
+                </div>
+
+
+                <div class="modern-stat stat-purple">
+
+                    <div class="stat-top">
+
+                        <div class="stat-icon">
+                            <i class="bi bi-journal-bookmark"></i>
+                        </div>
+
+                        <span class="stat-arrow">
+                            <i class="bi bi-arrow-up-right"></i>
+                        </span>
+
+                    </div>
+
+                    <div class="stat-number">
+                        0
+                    </div>
+
+                    <div class="stat-title">
+                        Courses
+                    </div>
+
+                    <div class="stat-description">
+                        Active courses
+                    </div>
+
+                    <div class="stat-mini-line"></div>
+
+                </div>
+
+
+                <div class="modern-stat stat-orange">
+
+                    <div class="stat-top">
+
+                        <div class="stat-icon">
+                            <i class="bi bi-hourglass-split"></i>
+                        </div>
+
+                        <span class="stat-arrow">
+                            <i class="bi bi-arrow-up-right"></i>
+                        </span>
+
+                    </div>
+
+                    <div class="stat-number">
+                        0
+                    </div>
+
+                    <div class="stat-title">
+                        Pending
+                    </div>
+
+                    <div class="stat-description">
+                        Pending requests
+                    </div>
+
+                    <div class="stat-mini-line"></div>
+
+                </div>
+
+
+                <div class="modern-stat stat-pink">
+
+                    <div class="stat-top">
+
+                        <div class="stat-icon">
+                            <i class="bi bi-bell"></i>
+                        </div>
+
+                        <span class="stat-arrow">
+                            <i class="bi bi-arrow-up-right"></i>
+                        </span>
+
+                    </div>
+
+                    <div class="stat-number">
+                        <%= unreadNotificationCount || 0 %>
+                    </div>
+
+                    <div class="stat-title">
+                        Notifications
+                    </div>
+
+                    <div class="stat-description">
+                        Unread notifications
+                    </div>
+
+                    <div class="stat-mini-line"></div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 MAIN GRID
+            ================================================== -->
+
+            <div class="dashboard-grid">
+
+
+                <!-- LEFT COLUMN -->
+
+                <div class="dashboard-left">
+
+
+                    <!-- TODAY CLASSES -->
+
+                    <section class="dashboard-panel">
+
+                        <div class="panel-header">
+
+                            <div class="panel-title">
+
+                                <div class="panel-icon blue">
+                                    <i class="bi bi-calendar-day"></i>
+                                </div>
+
+                                <div>
+
+                                    <h3>
+                                        Today's Classes
+                                    </h3>
+
+                                    <p>
+                                        Your scheduled classes for today
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                            <a
+                                href="/student/timetable"
+                                class="panel-link"
+                            >
+                                View Timetable
+                                <i class="bi bi-arrow-right"></i>
+                            </a>
+
+                        </div>
+
+
+                        <div class="empty-modern">
+
+                            <div class="empty-modern-icon">
+                                <i class="bi bi-calendar2-x"></i>
+                            </div>
+
+                            <h4>
+                                No classes scheduled
+                            </h4>
+
+                            <p>
+                                Your today's class schedule will appear here.
+                            </p>
+
+                            <a
+                                href="/student/timetable"
+                                class="small-action-btn"
+                            >
+                                <i class="bi bi-calendar-week"></i>
+                                Open Timetable
+                            </a>
+
+                        </div>
+
+                    </section>
+
+
+                    <!-- STUDENT SERVICES -->
+
+                    <section class="dashboard-panel">
+
+                        <div class="panel-header">
+
+                            <div class="panel-title">
+
+                                <div class="panel-icon purple">
+                                    <i class="bi bi-grid-1x2-fill"></i>
+                                </div>
+
+                                <div>
+
+                                    <h3>
+                                        Student Services
+                                    </h3>
+
+                                    <p>
+                                        Quick access to your campus services
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="service-grid">
+
+
+                            <a
+                                href="/student/profile"
+                                class="service-card service-blue"
+                            >
+
+                                <div class="service-icon">
+                                    <i class="bi bi-person-vcard"></i>
+                                </div>
+
+                                <div class="service-text">
+                                    <strong>My Profile</strong>
+                                    <span>View profile details</span>
+                                </div>
+
+                                <i class="bi bi-arrow-up-right service-arrow"></i>
+
+                            </a>
+
+
+                            <a
+                                href="/student/timetable"
+                                class="service-card service-purple"
+                            >
+
+                                <div class="service-icon">
+                                    <i class="bi bi-calendar3"></i>
+                                </div>
+
+                                <div class="service-text">
+                                    <strong>Timetable</strong>
+                                    <span>View weekly timetable</span>
+                                </div>
+
+                                <i class="bi bi-arrow-up-right service-arrow"></i>
+
+                            </a>
+
+
+                            <a
+                                href="/student/attendance"
+                                class="service-card service-green"
+                            >
+
+                                <div class="service-icon">
+                                    <i class="bi bi-calendar-check"></i>
+                                </div>
+
+                                <div class="service-text">
+                                    <strong>Attendance</strong>
+                                    <span>Check attendance</span>
+                                </div>
+
+                                <i class="bi bi-arrow-up-right service-arrow"></i>
+
+                            </a>
+
+
+                            <a
+                                href="/student/notices"
+                                class="service-card service-orange"
+                            >
+
+                                <div class="service-icon">
+                                    <i class="bi bi-megaphone"></i>
+                                </div>
+
+                                <div class="service-text">
+                                    <strong>Notices</strong>
+                                    <span>University announcements</span>
+                                </div>
+
+                                <i class="bi bi-arrow-up-right service-arrow"></i>
+
+                            </a>
+
+
+                            <a
+                                href="/student/fees"
+                                class="service-card service-cyan"
+                            >
+
+                                <div class="service-icon">
+                                    <i class="bi bi-wallet2"></i>
+                                </div>
+
+                                <div class="service-text">
+                                    <strong>Fees</strong>
+                                    <span>View fee information</span>
+                                </div>
+
+                                <i class="bi bi-arrow-up-right service-arrow"></i>
+
+                            </a>
+
+
+                            <a
+                                href="/student/group-links"
+                                class="service-card service-indigo"
+                            >
+
+                                <div class="service-icon">
+                                    <i class="bi bi-people"></i>
+                                </div>
+
+                                <div class="service-text">
+                                    <strong>Group Links</strong>
+                                    <span>Official college groups</span>
+                                </div>
+
+                                <i class="bi bi-arrow-up-right service-arrow"></i>
+
+                            </a>
+
+
+                            <a
+                                href="/student/leave"
+                                class="service-card service-yellow"
+                            >
+
+                                <div class="service-icon">
+                                    <i class="bi bi-file-earmark-text"></i>
+                                </div>
+
+                                <div class="service-text">
+                                    <strong>Leave</strong>
+                                    <span>Apply and track leave</span>
+                                </div>
+
+                                <i class="bi bi-arrow-up-right service-arrow"></i>
+
+                            </a>
+
+
+                            <a
+                                href="/student/complaints"
+                                class="service-card service-red"
+                            >
+
+                                <div class="service-icon">
+                                    <i class="bi bi-chat-left-text"></i>
+                                </div>
+
+                                <div class="service-text">
+                                    <strong>Complaints</strong>
+                                    <span>Submit a complaint</span>
+                                </div>
+
+                                <i class="bi bi-arrow-up-right service-arrow"></i>
+
+                            </a>
+
+
+                            <a
+                                href="/student/lost-found"
+                                class="service-card service-teal"
+                            >
+
+                                <div class="service-icon">
+                                    <i class="bi bi-search-heart"></i>
+                                </div>
+
+                                <div class="service-text">
+                                    <strong>Lost & Found</strong>
+                                    <span>Report lost items</span>
+                                </div>
+
+                                <i class="bi bi-arrow-up-right service-arrow"></i>
+
+                            </a>
+
+
+                            <a
+                                href="/student/gate-passes"
+                                class="service-card service-dark"
+                            >
+
+                                <div class="service-icon">
+                                    <i class="bi bi-door-open"></i>
+                                </div>
+
+                                <div class="service-text">
+                                    <strong>Gate Pass</strong>
+                                    <span>Apply and view gate pass</span>
+                                </div>
+
+                                <i class="bi bi-arrow-up-right service-arrow"></i>
+
+                            </a>
+
+
+                            <a
+                                href="/student/certificates"
+                                class="service-card service-pink"
+                            >
+
+                                <div class="service-icon">
+                                    <i class="bi bi-file-earmark-check"></i>
+                                </div>
+
+                                <div class="service-text">
+                                    <strong>Certificates</strong>
+                                    <span>Apply for certificates</span>
+                                </div>
+
+                                <i class="bi bi-arrow-up-right service-arrow"></i>
+
+                            </a>
+
+                        </div>
+
+                    </section>
+
+                </div>
+
+
+                <!-- =================================================
+                     RIGHT COLUMN
+                ================================================== -->
+
+                <div class="dashboard-right">
+
+
+                    <!-- NOTIFICATIONS -->
+
+                    <section class="dashboard-panel notification-panel">
+
+                        <div class="panel-header">
+
+                            <div class="panel-title">
+
+                                <div class="panel-icon red">
+                                    <i class="bi bi-bell-fill"></i>
+                                </div>
+
+                                <div>
+
+                                    <h3>
+                                        Notifications
+                                    </h3>
+
+                                    <p>
+                                        Latest updates for you
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                            <% if ((unreadNotificationCount || 0) > 0) { %>
+
+                                <span class="new-badge">
+                                    <%= unreadNotificationCount %> New
+                                </span>
+
+                            <% } %>
+
+                        </div>
+
+
+                        <% if (notifications && notifications.length > 0) { %>
+
+                            <div class="notification-list">
+
+                                <% notifications.slice(0, 6).forEach(notification => { %>
+
+                                    <div
+                                        class="notification-item <%= notification.isRead ? '' : 'unread' %>"
+                                    >
+
+                                        <div class="notification-item-icon">
+
+                                            <i class="bi bi-bell-fill"></i>
+
+                                        </div>
+
+
+                                        <div class="notification-item-content">
+
+                                            <div class="notification-item-top">
+
+                                                <strong>
+                                                    <%= notification.title %>
+                                                </strong>
+
+                                                <% if (!notification.isRead) { %>
+
+                                                    <span class="unread-dot"></span>
+
+                                                <% } %>
+
+                                            </div>
+
+
+                                            <p>
+                                                <%= notification.message %>
+                                            </p>
+
+
+                                            <small>
+
+                                                <i class="bi bi-clock"></i>
+
+                                                <%= new Date(
+                                                    notification.createdAt
+                                                ).toLocaleString("en-IN", {
+                                                    day: "numeric",
+                                                    month: "short",
+                                                    year: "numeric",
+                                                    hour: "2-digit",
+                                                    minute: "2-digit"
+                                                }) %>
+
+                                            </small>
+
+                                        </div>
+
+                                    </div>
+
+                                <% }) %>
+
+                            </div>
+
+                        <% } else { %>
+
+                            <div class="empty-modern compact">
+
+                                <div class="empty-modern-icon">
+                                    <i class="bi bi-bell-slash"></i>
+                                </div>
+
+                                <h4>
+                                    No notifications
+                                </h4>
+
+                                <p>
+                                    You don't have any notifications yet.
+                                </p>
+
+                            </div>
+
+                        <% } %>
+
+                    </section>
+
+
+                    <!-- LATEST NOTICES -->
+
+                    <section class="dashboard-panel">
+
+                        <div class="panel-header">
+
+                            <div class="panel-title">
+
+                                <div class="panel-icon orange">
+                                    <i class="bi bi-megaphone-fill"></i>
+                                </div>
+
+                                <div>
+
+                                    <h3>
+                                        Latest Notices
+                                    </h3>
+
+                                    <p>
+                                        Important university updates
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                            <a
+                                href="/student/notices"
+                                class="panel-link"
+                            >
+                                View All
+                            </a>
+
+                        </div>
+
+
+                        <div class="empty-modern compact">
+
+                            <div class="empty-modern-icon orange">
+                                <i class="bi bi-bell-slash"></i>
+                            </div>
+
+                            <h4>
+                                No notices yet
+                            </h4>
+
+                            <p>
+                                New notices will appear here.
+                            </p>
+
+                        </div>
+
+                    </section>
+
+
+                    <!-- ACADEMIC INFORMATION -->
+
+                    <section class="dashboard-panel">
+
+                        <div class="panel-header">
+
+                            <div class="panel-title">
+
+                                <div class="panel-icon blue">
+                                    <i class="bi bi-mortarboard-fill"></i>
+                                </div>
+
+                                <div>
+
+                                    <h3>
+                                        Academic Information
+                                    </h3>
+
+                                    <p>
+                                        Your current academic details
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="academic-list">
+
+                            <div class="academic-row">
+
+                                <span>
+                                    <i class="bi bi-building"></i>
+                                    Department
+                                </span>
+
+                                <strong>
+                                    Not Assigned
+                                </strong>
+
+                            </div>
+
+
+                            <div class="academic-row">
+
+                                <span>
+                                    <i class="bi bi-book"></i>
+                                    Program
+                                </span>
+
+                                <strong>
+                                    Not Assigned
+                                </strong>
+
+                            </div>
+
+
+                            <div class="academic-row">
+
+                                <span>
+                                    <i class="bi bi-layers"></i>
+                                    Semester
+                                </span>
+
+                                <strong>
+                                    Not Assigned
+                                </strong>
+
+                            </div>
+
+
+                            <div class="academic-row">
+
+                                <span>
+                                    <i class="bi bi-diagram-3"></i>
+                                    Section
+                                </span>
+
+                                <strong>
+                                    Not Assigned
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+                    </section>
+
+
+                    <!-- CAMPUS SERVICES -->
+
+                    <section class="dashboard-panel">
+
+                        <div class="panel-header">
+
+                            <div class="panel-title">
+
+                                <div class="panel-icon green">
+                                    <i class="bi bi-building-check"></i>
+                                </div>
+
+                                <div>
+
+                                    <h3>
+                                        Campus Services
+                                    </h3>
+
+                                    <p>
+                                        Essential campus facilities
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="campus-service-list">
+
+
+                            <a
+                                href="#"
+                                class="campus-service-item"
+                            >
+
+                                <div class="campus-service-icon library">
+                                    <i class="bi bi-book"></i>
+                                </div>
+
+                                <div>
+                                    <strong>Library</strong>
+                                    <span>Access library services</span>
+                                </div>
+
+                                <i class="bi bi-arrow-up-right"></i>
+
+                            </a>
+
+
+                            <a
+                                href="/student/gate-passes"
+                                class="campus-service-item"
+                            >
+
+                                <div class="campus-service-icon gate">
+                                    <i class="bi bi-door-open"></i>
+                                </div>
+
+                                <div>
+                                    <strong>Gate Pass</strong>
+                                    <span>Apply and view gate pass</span>
+                                </div>
+
+                                <i class="bi bi-arrow-up-right"></i>
+
+                            </a>
+
+
+                            <a
+                                href="/student/certificates"
+                                class="campus-service-item"
+                            >
+
+                                <div class="campus-service-icon certificate">
+                                    <i class="bi bi-file-earmark-medical"></i>
+                                </div>
+
+                                <div>
+                                    <strong>Certificates</strong>
+                                    <span>Apply for certificates</span>
+                                </div>
+
+                                <i class="bi bi-arrow-up-right"></i>
+
+                            </a>
+
+                        </div>
+
+                    </section>
+
+
+                    <!-- GROUP PROMO -->
+
+                    <section class="group-promo">
+
+                        <div class="promo-decoration"></div>
+
+                        <div class="promo-icon">
+                            <i class="bi bi-people-fill"></i>
+                        </div>
+
+                        <span>
+                            OFFICIAL CAMPUS GROUPS
+                        </span>
+
+                        <h3>
+                            College Group Links
+                        </h3>
+
+                        <p>
+                            Join official university, department
+                            and class groups.
+                        </p>
+
+                        <a
+                            href="/student/group-links"
+                            class="promo-button"
+                        >
+                            Open Groups
+                            <i class="bi bi-arrow-right"></i>
+                        </a>
+
+                    </section>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+<!-- =============================================================
+     CAMPUSNEXUS AI
+============================================================== -->
+
+<div class="floating-ai" id="floatingAI">
+
+    <!-- AI CHAT WINDOW -->
+    <div class="ai-chat-window" id="aiChatWindow">
+
+        <!-- HEADER -->
+        <div class="ai-chat-header">
+
+            <div class="ai-chat-brand">
+
+                <div class="ai-chat-logo">
+                    <img
+                        src="/images/logo3.png"
+                        alt="CampusNexus AI"
+                        onerror="this.style.display='none';"
+                    >
+                </div>
+
+                <div class="ai-chat-brand-text">
+                    <strong>CampusNexus AI</strong>
+                    <span>Your campus assistant</span>
+                </div>
+
+            </div>
+
+            <button
+                type="button"
+                class="ai-close"
+                id="aiClose"
+                aria-label="Close AI"
+            >
+                <i class="bi bi-x-lg"></i>
+            </button>
+
+        </div>
+
+
+        <!-- MESSAGES -->
+        <div class="ai-chat-messages" id="aiChatMessages">
+
+            <div class="ai-message ai-assistant-message">
+
+                <div class="ai-message-avatar">
+                    <i class="bi bi-stars"></i>
+                </div>
+
+                <div class="ai-message-content">
+
+                    Hi <%= currentUser?.name || "Student" %> 👋
+
+                    <br><br>
+
+                    I'm your CampusNexus AI assistant.
+
+                    <br><br>
+
+                    Ask me about your attendance, courses,
+                    timetable, notices, fees and other
+                    campus information.
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- QUICK ACTIONS -->
+        <div class="ai-quick-actions">
+
+            <button type="button" class="ai-quick">
+                Attendance
+            </button>
+
+            <button type="button" class="ai-quick">
+                Timetable
+            </button>
+
+            <button type="button" class="ai-quick">
+                Courses
+            </button>
+
+            <button type="button" class="ai-quick">
+                Fees
+            </button>
+
+        </div>
+
+
+        <!-- INPUT -->
+        <div class="ai-chat-input-area">
+
+            <textarea
+                id="aiInput"
+                placeholder="Ask CampusNexus AI..."
+                rows="1"
+            ></textarea>
+
+            <button
+                type="button"
+                class="ai-send"
+                id="aiSend"
+                title="Send"
+            >
+                <i class="bi bi-send-fill"></i>
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- FLOATING AI BUTTON -->
+    <button
+        type="button"
+        class="ai-floating-button"
+        id="dashboardAIButton"
+        title="CampusNexus AI"
+        aria-label="Open CampusNexus AI"
+    >
+
+        <span class="ai-ring"></span>
+
+        <span class="ai-button-icon">
+
+            <img
+                src="/images/logo3.png"
+                alt="AI"
+                onerror="this.style.display='none';"
+            >
+
+            <i class="bi bi-stars"></i>
+
+        </span>
+
+        <span class="ai-online"></span>
+
+    </button>
+
+</div>
+
+
+
+<!-- =============================================================
+     DASHBOARD CSS
+============================================================== -->
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+
+.student-dashboard {
+
+    --primary: #6d28d9;
+    --primary-light: #8b5cf6;
+    --secondary: #2563eb;
+    --cyan: #06b6d4;
+
+    --text: #172033;
+    --muted: #718096;
+    --border: #e7e8f0;
+
+    min-height: 100vh;
+
+    display: flex;
+
+    background:
+        radial-gradient(
+            circle at 75% 0%,
+            rgba(139,92,246,.10),
+            transparent 30%
+        ),
+        #f6f7fb;
+
+    color: var(--text);
+
+    font-family:
+        Inter,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+}
+
+
+/* =============================================================
+   SIDEBAR
+============================================================= */
+
+.student-sidebar {
+
+    width: 245px;
+
+    min-height: 100vh;
+
+    position: sticky;
+
+    top: 0;
+
+    flex-shrink: 0;
+
+    padding: 22px 15px;
+
+    color: #fff;
+
+    background:
+        linear-gradient(
+            180deg,
+            #32127a 0%,
+            #4c1d95 42%,
+            #5b21b6 100%
+        );
+
+    box-shadow:
+        8px 0 30px rgba(49,18,122,.14);
+
+    z-index: 100;
+}
+
+
+.sidebar-brand {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 11px;
+
+    padding: 3px 8px 25px;
+}
+
+
+.brand-logo {
+
+    width: 39px;
+    height: 39px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background: rgba(255,255,255,.18);
+
+    overflow: hidden;
+}
+
+
+.brand-logo img {
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+}
+
+
+.brand-fallback {
+
+    display: none;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    height: 100%;
+
+    font-size: 18px;
+}
+
+
+.brand-text {
+
+    display: flex;
+
+    flex-direction: column;
+}
+
+
+.brand-text strong {
+
+    font-size: 15px;
+
+    letter-spacing: -.02em;
+}
+
+
+.brand-text span {
+
+    margin-top: 2px;
+
+    color: rgba(255,255,255,.58);
+
+    font-size: 10px;
+}
+
+
+.sidebar-profile {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 11px;
+
+    margin-bottom: 25px;
+
+    border-radius: 15px;
+
+    background: rgba(255,255,255,.10);
+
+    border: 1px solid rgba(255,255,255,.08);
+}
+
+
+.sidebar-avatar {
+
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    color: #4c1d95;
+
+    background: #fff;
+
+    font-size: 14px;
+
+    font-weight: 800;
+}
+
+
+.sidebar-profile-info {
+
+    min-width: 0;
+
+    display: flex;
+
+    flex-direction: column;
+}
+
+
+.sidebar-profile-info strong {
+
+    overflow: hidden;
+
+    color: #fff;
+
+    font-size: 12px;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+
+.sidebar-profile-info span {
+
+    margin-top: 2px;
+
+    color: rgba(255,255,255,.55);
+
+    font-size: 9px;
+}
+
+
+.sidebar-label {
+
+    padding: 0 10px;
+
+    margin-bottom: 8px;
+
+    color: rgba(255,255,255,.40);
+
+    font-size: 9px;
+
+    font-weight: 800;
+
+    letter-spacing: .12em;
+}
+
+
+.services-label {
+
+    margin-top: 23px;
+}
+
+
+.sidebar-nav {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 4px;
+}
+
+
+.sidebar-link {
+
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 11px;
+
+    padding: 10px 11px;
+
+    border-radius: 11px;
+
+    color: rgba(255,255,255,.66);
+
+    text-decoration: none;
+
+    font-size: 11px;
+
+    font-weight: 600;
+
+    transition: .2s ease;
+}
+
+
+.sidebar-link i {
+
+    width: 17px;
+
+    text-align: center;
+
+    font-size: 14px;
+}
+
+
+.sidebar-link:hover {
+
+    color: #fff;
+
+    background: rgba(255,255,255,.10);
+
+    transform: translateX(2px);
+}
+
+
+.sidebar-link.active {
+
+    color: #4c1d95;
+
+    background: #fff;
+
+    box-shadow:
+        0 8px 18px rgba(0,0,0,.12);
+}
+
+
+.sidebar-bottom {
+
+    margin-top: 25px;
+
+    padding: 0 4px;
+}
+
+
+.sidebar-help {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    padding: 11px;
+
+    border-radius: 13px;
+
+    background: rgba(255,255,255,.08);
+}
+
+
+.help-icon {
+
+    width: 31px;
+    height: 31px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background: rgba(255,255,255,.12);
+
+    font-size: 13px;
+}
+
+
+.sidebar-help div:last-child {
+
+    display: flex;
+
+    flex-direction: column;
+}
+
+
+.sidebar-help strong {
+
+    color: #fff;
+
+    font-size: 10px;
+}
+
+
+.sidebar-help span {
+
+    margin-top: 2px;
+
+    color: rgba(255,255,255,.50);
+
+    font-size: 8px;
+}
+
+
+/* =============================================================
+   MAIN
+============================================================= */
+
+.student-main {
+
+    flex: 1;
+
+    min-width: 0;
+}
+
+
+/* =============================================================
+   TOPBAR
+============================================================= */
+
+.student-topbar {
+
+    height: 68px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    padding: 0 30px;
+
+    background: rgba(255,255,255,.84);
+
+    border-bottom: 1px solid #e9eaf0;
+
+    backdrop-filter: blur(15px);
+
+    position: sticky;
+
+    top: 0;
+
+    z-index: 80;
+}
+
+
+.topbar-search {
+
+    width: 330px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    padding: 9px 13px;
+
+    border-radius: 11px;
+
+    background: #f5f5fa;
+
+    border: 1px solid #ececf3;
+}
+
+
+.topbar-search i {
+
+    color: #999aaa;
+
+    font-size: 13px;
+}
+
+
+.topbar-search input {
+
+    width: 100%;
+
+    border: 0;
+
+    outline: 0;
+
+    background: transparent;
+
+    color: #333;
+
+    font-size: 11px;
+}
+
+
+.topbar-search input::placeholder {
+
+    color: #a1a1b0;
+}
+
+
+.topbar-actions {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 13px;
+}
+
+
+.topbar-icon-btn {
+
+    position: relative;
+
+    width: 36px;
+    height: 36px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid #e9e9f0;
+
+    border-radius: 11px;
+
+    color: #626477;
+
+    background: #fff;
+
+    cursor: pointer;
+
+    transition: .2s ease;
+}
+
+
+.topbar-icon-btn:hover {
+
+    color: var(--primary);
+
+    border-color: #ddd3f8;
+
+    background: #f8f5ff;
+}
+
+
+.notification-dot {
+
+    position: absolute;
+
+    min-width: 15px;
+    height: 15px;
+
+    top: -4px;
+    right: -4px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 0 4px;
+
+    border: 2px solid #fff;
+
+    border-radius: 999px;
+
+    color: #fff;
+
+    background: #ef4444;
+
+    font-size: 7px;
+
+    font-weight: 800;
+}
+
+
+.topbar-user {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    color: inherit;
+
+    text-decoration: none;
+}
+
+
+.topbar-avatar {
+
+    width: 35px;
+    height: 35px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 11px;
+
+    color: #fff;
+
+    background:
+        linear-gradient(
+            135deg,
+            #7c3aed,
+            #2563eb
+        );
+
+    font-size: 12px;
+
+    font-weight: 800;
+}
+
+
+.topbar-user-info {
+
+    display: flex;
+
+    flex-direction: column;
+}
+
+
+.topbar-user-info strong {
+
+    color: #303344;
+
+    font-size: 10px;
+}
+
+
+.topbar-user-info span {
+
+    margin-top: 1px;
+
+    color: #9a9baa;
+
+    font-size: 8px;
+}
+
+
+.topbar-user > i {
+
+    margin-left: 2px;
+
+    color: #a0a0af;
+
+    font-size: 9px;
+}
+
+
+.mobile-brand {
+
+    display: none;
+}
+
+
+/* =============================================================
+   CONTENT
+============================================================= */
+
+.dashboard-content {
+
+    width: 100%;
+
+    max-width: 1500px;
+
+    margin: 0 auto;
+
+    padding: 25px 30px 55px;
+}
+
+
+/* =============================================================
+   HERO
+============================================================= */
+
+.welcome-hero {
+
+    position: relative;
+
+    min-height: 245px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    overflow: hidden;
+
+    margin-bottom: 22px;
+
+    padding: 30px 35px;
+
+    border-radius: 25px;
+
+    color: #fff;
+
+    background:
+        linear-gradient(
+            115deg,
+            #4c1d95 0%,
+            #6d28d9 42%,
+            #7c3aed 72%,
+            #2563eb 100%
+        );
+
+    box-shadow:
+        0 20px 40px rgba(76,29,149,.20);
+}
+
+
+.welcome-hero::before {
+
+    content: "";
+
+    position: absolute;
+
+    width: 390px;
+    height: 390px;
+
+    right: 100px;
+    top: -250px;
+
+    border-radius: 50%;
+
+    border: 1px solid rgba(255,255,255,.12);
+}
+
+
+.welcome-hero::after {
+
+    content: "";
+
+    position: absolute;
+
+    width: 270px;
+    height: 270px;
+
+    right: -90px;
+    bottom: -170px;
+
+    border-radius: 50%;
+
+    background: rgba(255,255,255,.08);
+}
+
+
+.hero-content {
+
+    position: relative;
+
+    z-index: 3;
+
+    max-width: 620px;
+}
+
+
+.hero-small {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+    padding: 5px 10px;
+
+    margin-bottom: 10px;
+
+    border-radius: 999px;
+
+    color: rgba(255,255,255,.85);
+
+    background: rgba(255,255,255,.12);
+
+    border: 1px solid rgba(255,255,255,.10);
+
+    font-size: 8px;
+
+    font-weight: 800;
+
+    letter-spacing: .12em;
+}
+
+
+.hero-content h1 {
+
+    margin: 0;
+
+    color: #fff;
+
+    font-size: clamp(26px, 3vw, 38px);
+
+    font-weight: 800;
+
+    letter-spacing: -.04em;
+}
+
+
+.hero-content p {
+
+    max-width: 550px;
+
+    margin: 9px 0 18px;
+
+    color: rgba(255,255,255,.70);
+
+    font-size: 11px;
+
+    line-height: 1.7;
+}
+
+
+.hero-actions {
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 8px;
+}
+
+
+.hero-btn {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    padding: 9px 13px;
+
+    border-radius: 10px;
+
+    text-decoration: none;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    transition: .2s ease;
+}
+
+
+.hero-btn.primary {
+
+    color: #4c1d95;
+
+    background: #fff;
+}
+
+
+.hero-btn.light {
+
+    color: #fff;
+
+    background: rgba(255,255,255,.12);
+
+    border: 1px solid rgba(255,255,255,.16);
+}
+
+
+.hero-btn:hover {
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 8px 18px rgba(0,0,0,.13);
+}
+
+
+.hero-visual {
+
+    width: 350px;
+    height: 190px;
+
+    position: relative;
+
+    z-index: 2;
+}
+
+
+.hero-student-card {
+
+    position: absolute;
+
+    right: 25px;
+    top: 45px;
+
+    width: 245px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 14px;
+
+    border-radius: 18px;
+
+    background: rgba(255,255,255,.13);
+
+    border: 1px solid rgba(255,255,255,.20);
+
+    backdrop-filter: blur(15px);
+
+    box-shadow:
+        0 15px 35px rgba(0,0,0,.12);
+
+    transform: rotate(2deg);
+}
+
+
+.hero-student-avatar {
+
+    width: 47px;
+    height: 47px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 15px;
+
+    color: #5b21b6;
+
+    background: #fff;
+
+    font-size: 17px;
+
+    font-weight: 800;
+}
+
+
+.hero-student-card > div:last-child {
+
+    display: flex;
+
+    flex-direction: column;
+
+    min-width: 0;
+}
+
+
+.hero-student-card span {
+
+    color: rgba(255,255,255,.55);
+
+    font-size: 8px;
+}
+
+
+.hero-student-card strong {
+
+    margin-top: 2px;
+
+    color: #fff;
+
+    font-size: 11px;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+}
+
+
+.hero-student-card small {
+
+    margin-top: 3px;
+
+    color: rgba(255,255,255,.58);
+
+    font-size: 7px;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+}
+
+
+.hero-circle {
+
+    position: absolute;
+
+    border-radius: 50%;
+
+    border: 1px solid rgba(255,255,255,.12);
+}
+
+
+.circle-one {
+
+    width: 180px;
+    height: 180px;
+
+    right: 10px;
+    top: 0;
+}
+
+
+.circle-two {
+
+    width: 90px;
+    height: 90px;
+
+    right: 200px;
+    bottom: 0;
+}
+
+
+.floating-icon {
+
+    position: absolute;
+
+    width: 37px;
+    height: 37px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    color: #fff;
+
+    background: rgba(255,255,255,.13);
+
+    border: 1px solid rgba(255,255,255,.18);
+
+    backdrop-filter: blur(8px);
+
+    font-size: 13px;
+}
+
+
+.icon-one {
+
+    right: 4px;
+    top: 10px;
+
+    transform: rotate(-8deg);
+}
+
+
+.icon-two {
+
+    left: 15px;
+    bottom: 5px;
+
+    transform: rotate(7deg);
+}
+
+
+.icon-three {
+
+    right: 65px;
+    bottom: 0;
+
+    transform: rotate(-4deg);
+}
+
+
+/* =============================================================
+   STATS
+============================================================= */
+
+.stats-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: 13px;
+
+    margin-bottom: 20px;
+}
+
+
+.modern-stat {
+
+    position: relative;
+
+    overflow: hidden;
+
+    min-height: 145px;
+
+    padding: 17px;
+
+    border-radius: 18px;
+
+    background: #fff;
+
+    border: 1px solid var(--border);
+
+    box-shadow:
+        0 7px 25px rgba(20,20,50,.045);
+
+    transition: .25s ease;
+}
+
+
+.modern-stat:hover {
+
+    transform: translateY(-4px);
+
+    box-shadow:
+        0 15px 32px rgba(20,20,50,.08);
+}
+
+
+.modern-stat::after {
+
+    content: "";
+
+    position: absolute;
+
+    width: 110px;
+    height: 110px;
+
+    right: -55px;
+    bottom: -55px;
+
+    border-radius: 50%;
+
+    background: currentColor;
+
+    opacity: .045;
+}
+
+
+.stat-top {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+}
+
+
+.stat-icon {
+
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 11px;
+
+    font-size: 14px;
+}
+
+
+.stat-arrow {
+
+    width: 26px;
+    height: 26px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 8px;
+
+    background: #f7f7fa;
+
+    font-size: 10px;
+}
+
+
+.stat-number {
+
+    margin-top: 15px;
+
+    color: #222536;
+
+    font-size: 24px;
+
+    line-height: 1;
+
+    font-weight: 800;
+
+    letter-spacing: -.04em;
+}
+
+
+.stat-title {
+
+    margin-top: 6px;
+
+    color: #4a4d5c;
+
+    font-size: 10px;
+
+    font-weight: 800;
+}
+
+
+.stat-description {
+
+    margin-top: 3px;
+
+    color: #a0a2ae;
+
+    font-size: 8px;
+}
+
+
+.stat-progress {
+
+    height: 3px;
+
+    margin-top: 10px;
+
+    overflow: hidden;
+
+    border-radius: 99px;
+
+    background: #f0f1f5;
+}
+
+
+.stat-progress span {
+
+    display: block;
+
+    height: 100%;
+
+    border-radius: inherit;
+}
+
+
+.stat-mini-line {
+
+    width: 45%;
+
+    height: 3px;
+
+    margin-top: 10px;
+
+    border-radius: 99px;
+
+    background: currentColor;
+
+    opacity: .25;
+}
+
+
+.stat-blue {
+
+    color: #2563eb;
+}
+
+
+.stat-blue .stat-icon {
+
+    color: #2563eb;
+
+    background: #eff6ff;
+}
+
+
+.stat-blue .stat-progress span {
+
+    background: #2563eb;
+}
+
+
+.stat-purple {
+
+    color: #7c3aed;
+}
+
+
+.stat-purple .stat-icon {
+
+    color: #7c3aed;
+
+    background: #f5f3ff;
+}
+
+
+.stat-orange {
+
+    color: #ea580c;
+}
+
+
+.stat-orange .stat-icon {
+
+    color: #ea580c;
+
+    background: #fff7ed;
+}
+
+
+.stat-pink {
+
+    color: #db2777;
+}
+
+
+.stat-pink .stat-icon {
+
+    color: #db2777;
+
+    background: #fdf2f8;
+}
+
+
+/* =============================================================
+   DASHBOARD GRID
+============================================================= */
+
+.dashboard-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1.65fr)
+        minmax(320px, .85fr);
+
+    gap: 18px;
+
+    align-items: start;
+}
+
+
+.dashboard-left,
+.dashboard-right {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 18px;
+}
+
+
+.dashboard-panel {
+
+    padding: 18px;
+
+    border-radius: 19px;
+
+    background: #fff;
+
+    border: 1px solid var(--border);
+
+    box-shadow:
+        0 7px 25px rgba(20,20,50,.04);
+}
+
+
+.panel-header {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 12px;
+
+    margin-bottom: 17px;
+}
+
+
+.panel-title {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    min-width: 0;
+}
+
+
+.panel-icon {
+
+    width: 37px;
+    height: 37px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 11px;
+
+    font-size: 13px;
+}
+
+
+.panel-icon.blue {
+
+    color: #2563eb;
+
+    background: #eff6ff;
+}
+
+
+.panel-icon.purple {
+
+    color: #7c3aed;
+
+    background: #f5f3ff;
+}
+
+
+.panel-icon.red {
+
+    color: #dc2626;
+
+    background: #fef2f2;
+}
+
+
+.panel-icon.orange {
+
+    color: #ea580c;
+
+    background: #fff7ed;
+}
+
+
+.panel-icon.green {
+
+    color: #059669;
+
+    background: #ecfdf5;
+}
+
+
+.panel-title h3 {
+
+    margin: 0;
+
+    color: #292c3c;
+
+    font-size: 12px;
+
+    font-weight: 800;
+}
+
+
+.panel-title p {
+
+    margin: 3px 0 0;
+
+    color: #a0a2ae;
+
+    font-size: 8px;
+}
+
+
+.panel-link {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+    flex-shrink: 0;
+
+    color: #6d28d9;
+
+    text-decoration: none;
+
+    font-size: 8px;
+
+    font-weight: 800;
+}
+
+
+.panel-link:hover {
+
+    color: #4c1d95;
+}
+
+
+/* =============================================================
+   EMPTY
+============================================================= */
+
+.empty-modern {
+
+    min-height: 220px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    flex-direction: column;
+
+    padding: 25px;
+
+    border-radius: 14px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #fafaff,
+            #f8f9fd
+        );
+
+    border: 1px dashed #e4e5ed;
+
+    text-align: center;
+}
+
+
+.empty-modern.compact {
+
+    min-height: 145px;
+}
+
+
+.empty-modern-icon {
+
+    width: 45px;
+    height: 45px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 9px;
+
+    border-radius: 14px;
+
+    color: #7c3aed;
+
+    background: #f5f3ff;
+
+    font-size: 16px;
+}
+
+
+.empty-modern-icon.orange {
+
+    color: #ea580c;
+
+    background: #fff7ed;
+}
+
+
+.empty-modern h4 {
+
+    margin: 0;
+
+    color: #464958;
+
+    font-size: 11px;
+
+    font-weight: 800;
+}
+
+
+.empty-modern p {
+
+    max-width: 280px;
+
+    margin: 5px 0 12px;
+
+    color: #a0a2ae;
+
+    font-size: 8px;
+
+    line-height: 1.5;
+}
+
+
+.small-action-btn {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+    padding: 7px 10px;
+
+    border-radius: 8px;
+
+    color: #6d28d9;
+
+    background: #f5f3ff;
+
+    text-decoration: none;
+
+    font-size: 8px;
+
+    font-weight: 800;
+}
+
+
+/* =============================================================
+   SERVICES
+============================================================= */
+
+.service-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 9px;
+}
+
+
+.service-card {
+
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    min-height: 70px;
+
+    padding: 11px;
+
+    overflow: hidden;
+
+    border-radius: 13px;
+
+    border: 1px solid #eeeeF3;
+
+    background: #fcfcfe;
+
+    color: inherit;
+
+    text-decoration: none;
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease,
+        border-color .2s ease;
+}
+
+
+.service-card:hover {
+
+    color: inherit;
+
+    transform: translateY(-3px);
+
+    background: #fff;
+
+    box-shadow:
+        0 10px 25px rgba(20,20,50,.07);
+}
+
+
+.service-icon {
+
+    width: 37px;
+    height: 37px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 11px;
+
+    font-size: 13px;
+}
+
+
+.service-text {
+
+    min-width: 0;
+
+    display: flex;
+
+    flex-direction: column;
+}
+
+
+.service-text strong {
+
+    color: #373a49;
+
+    font-size: 9px;
+
+    font-weight: 800;
+}
+
+
+.service-text span {
+
+    margin-top: 3px;
+
+    color: #9a9ca9;
+
+    font-size: 7px;
+}
+
+
+.service-arrow {
+
+    margin-left: auto;
+
+    color: #b3b4c0;
+
+    font-size: 9px;
+
+    transition: .2s ease;
+}
+
+
+.service-card:hover .service-arrow {
+
+    transform: translate(2px,-2px);
+
+    color: currentColor;
+}
+
+
+.service-blue .service-icon {
+
+    color: #2563eb;
+    background: #eff6ff;
+}
+
+
+.service-purple .service-icon {
+
+    color: #7c3aed;
+    background: #f5f3ff;
+}
+
+
+.service-green .service-icon {
+
+    color: #059669;
+    background: #ecfdf5;
+}
+
+
+.service-orange .service-icon {
+
+    color: #ea580c;
+    background: #fff7ed;
+}
+
+
+.service-cyan .service-icon {
+
+    color: #0891b2;
+    background: #ecfeff;
+}
+
+
+.service-indigo .service-icon {
+
+    color: #4f46e5;
+    background: #eef2ff;
+}
+
+
+.service-yellow .service-icon {
+
+    color: #ca8a04;
+    background: #fefce8;
+}
+
+
+.service-red .service-icon {
+
+    color: #dc2626;
+    background: #fef2f2;
+}
+
+
+.service-teal .service-icon {
+
+    color: #0f766e;
+    background: #f0fdfa;
+}
+
+
+.service-dark .service-icon {
+
+    color: #475569;
+    background: #f1f5f9;
+}
+
+
+.service-pink .service-icon {
+
+    color: #db2777;
+    background: #fdf2f8;
+}
+
+
+/* =============================================================
+   NOTIFICATIONS
+============================================================= */
+
+.new-badge {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    padding: 5px 8px;
+
+    border-radius: 999px;
+
+    color: #dc2626;
+
+    background: #fef2f2;
+
+    font-size: 7px;
+
+    font-weight: 800;
+}
+
+
+.notification-list {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 7px;
+}
+
+
+.notification-item {
+
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 9px;
+
+    padding: 10px;
+
+    border-radius: 12px;
+
+    border: 1px solid #f0f0f4;
+
+    background: #fafafd;
+
+    transition: .2s ease;
+}
+
+
+.notification-item:hover {
+
+    background: #fff;
+
+    border-color: #e5e1f4;
+
+    transform: translateX(2px);
+}
+
+
+.notification-item.unread {
+
+    background: #fff8fa;
+
+    border-color: #fde1e8;
+}
+
+
+.notification-item-icon {
+
+    width: 31px;
+    height: 31px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 9px;
+
+    color: #db2777;
+
+    background: #fdf2f8;
+
+    font-size: 10px;
+}
+
+
+.notification-item-content {
+
+    flex: 1;
+
+    min-width: 0;
+}
+
+
+.notification-item-top {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 5px;
+}
+
+
+.notification-item-top strong {
+
+    overflow: hidden;
+
+    color: #3e4150;
+
+    font-size: 8px;
+
+    font-weight: 800;
+
+    white-space: nowrap;
+
+    text-overflow: ellipsis;
+}
+
+
+.notification-item-content p {
+
+    margin: 3px 0 5px;
+
+    color: #777a88;
+
+    font-size: 7px;
+
+    line-height: 1.45;
+
+    word-break: break-word;
+}
+
+
+.notification-item-content small {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 3px;
+
+    color: #a7a8b4;
+
+    font-size: 6px;
+}
+
+
+.unread-dot {
+
+    width: 6px;
+    height: 6px;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+
+    background: #ef4444;
+}
+
+
+/* =============================================================
+   ACADEMIC
+============================================================= */
+
+.academic-list {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 4px;
+}
+
+
+.academic-row {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 10px;
+
+    padding: 9px 8px;
+
+    border-radius: 9px;
+}
+
+
+.academic-row:hover {
+
+    background: #fafaff;
+}
+
+
+.academic-row span {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    color: #808391;
+
+    font-size: 8px;
+}
+
+
+.academic-row span i {
+
+    width: 17px;
+
+    color: #7c3aed;
+
+    text-align: center;
+}
+
+
+.academic-row strong {
+
+    color: #4d5060;
+
+    font-size: 8px;
+}
+
+
+/* =============================================================
+   CAMPUS SERVICES
+============================================================= */
+
+.campus-service-list {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 6px;
+}
+
+
+.campus-service-item {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    padding: 9px;
+
+    border-radius: 11px;
+
+    color: inherit;
+
+    text-decoration: none;
+
+    background: #fafafd;
+
+    border: 1px solid #f0f0f4;
+
+    transition: .2s ease;
+}
+
+
+.campus-service-item:hover {
+
+    color: inherit;
+
+    background: #fff;
+
+    transform: translateX(3px);
+
+    box-shadow:
+        0 7px 16px rgba(20,20,50,.05);
+}
+
+
+.campus-service-icon {
+
+    width: 32px;
+    height: 32px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 9px;
+
+    font-size: 11px;
+}
+
+
+.campus-service-icon.library {
+
+    color: #2563eb;
+    background: #eff6ff;
+}
+
+
+.campus-service-icon.gate {
+
+    color: #059669;
+    background: #ecfdf5;
+}
+
+
+.campus-service-icon.certificate {
+
+    color: #7c3aed;
+    background: #f5f3ff;
+}
+
+
+.campus-service-item div:nth-child(2) {
+
+    display: flex;
+
+    flex-direction: column;
+}
+
+
+.campus-service-item strong {
+
+    color: #454856;
+
+    font-size: 8px;
+}
+
+
+.campus-service-item span {
+
+    margin-top: 2px;
+
+    color: #a1a3ae;
+
+    font-size: 7px;
+}
+
+
+.campus-service-item > i {
+
+    margin-left: auto;
+
+    color: #a7a8b4;
+
+    font-size: 8px;
+}
+
+
+/* =============================================================
+   GROUP PROMO
+============================================================= */
+
+.group-promo {
+
+    position: relative;
+
+    overflow: hidden;
+
+    padding: 20px;
+
+    border-radius: 18px;
+
+    color: #fff;
+
+    background:
+        linear-gradient(
+            135deg,
+            #4c1d95,
+            #7c3aed,
+            #2563eb
+        );
+
+    box-shadow:
+        0 14px 30px rgba(76,29,149,.16);
+}
+
+
+.group-promo::before {
+
+    content: "";
+
+    position: absolute;
+
+    width: 150px;
+    height: 150px;
+
+    right: -70px;
+    top: -70px;
+
+    border-radius: 50%;
+
+    border: 1px solid rgba(255,255,255,.13);
+}
+
+
+.group-promo::after {
+
+    content: "";
+
+    position: absolute;
+
+    width: 90px;
+    height: 90px;
+
+    left: -45px;
+    bottom: -45px;
+
+    border-radius: 50%;
+
+    background: rgba(255,255,255,.06);
+}
+
+
+.promo-icon {
+
+    position: relative;
+
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 10px;
+
+    border-radius: 11px;
+
+    background: rgba(255,255,255,.13);
+
+    font-size: 14px;
+}
+
+
+.group-promo > span {
+
+    position: relative;
+
+    color: rgba(255,255,255,.58);
+
+    font-size: 7px;
+
+    font-weight: 800;
+
+    letter-spacing: .1em;
+}
+
+
+.group-promo h3 {
+
+    position: relative;
+
+    margin: 5px 0 4px;
+
+    color: #fff;
+
+    font-size: 14px;
+
+    font-weight: 800;
+}
+
+
+.group-promo p {
+
+    position: relative;
+
+    margin: 0 0 13px;
+
+    color: rgba(255,255,255,.63);
+
+    font-size: 8px;
+
+    line-height: 1.5;
+}
+
+
+.promo-button {
+
+    position: relative;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    padding: 7px 10px;
+
+    border-radius: 8px;
+
+    color: #4c1d95;
+
+    background: #fff;
+
+    text-decoration: none;
+
+    font-size: 8px;
+
+    font-weight: 800;
+}
+
+
+/* =============================================================
+   AI BUTTON
+============================================================= */
+
+.ai-floating-button {
+
+    position: fixed;
+
+    right: 25px;
+
+    bottom: 25px;
+
+    width: 56px;
+    height: 56px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border: 0;
+
+    border-radius: 50%;
+
+    cursor: pointer;
+
+    color: #fff;
+
+    background:
+        linear-gradient(
+            135deg,
+            #7c3aed,
+            #2563eb
+        );
+
+    box-shadow:
+        0 12px 30px rgba(76,29,149,.30);
+
+    z-index: 200;
+
+    transition: .25s ease;
+}
+
+
+.ai-floating-button:hover {
+
+    transform: translateY(-5px) scale(1.04);
+
+    box-shadow:
+        0 18px 35px rgba(76,29,149,.35);
+}
+
+
+.ai-button-icon {
+
+    position: relative;
+
+    width: 33px;
+    height: 33px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+
+    border-radius: 50%;
+
+    background: rgba(255,255,255,.15);
+}
+
+
+.ai-button-icon img {
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+}
+
+
+.ai-button-icon i {
+
+    position: absolute;
+
+    font-size: 17px;
+}
+
+
+.ai-online {
+
+    position: absolute;
+
+    right: 2px;
+    bottom: 3px;
+
+    width: 10px;
+    height: 10px;
+
+    border: 2px solid #fff;
+
+    border-radius: 50%;
+
+    background: #22c55e;
+}
+
+
+.ai-ring {
+
+    position: absolute;
+
+    inset: -5px;
+
+    border: 1px solid rgba(124,58,237,.20);
+
+    border-radius: 50%;
+
+    animation: aiPulse 2s infinite;
+}
+
+
+@keyframes aiPulse {
+
+    0% {
+        transform: scale(.95);
+        opacity: .8;
+    }
+
+    70% {
+        transform: scale(1.12);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1.12);
+        opacity: 0;
+    }
+
+}
+
+
+/* =============================================================
+   CAMPUSNEXUS AI FLOATING CHAT
+============================================================= */
+.floating-ai{position:fixed;right:24px;bottom:24px;width:62px;height:62px;z-index:9999;font-family:inherit}
+.ai-floating-button{position:relative;width:62px;height:62px;padding:0;border:0;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:visible;background:linear-gradient(135deg,#6d28d9,#9333ea 55%,#c026d3);box-shadow:0 14px 32px rgba(109,40,217,.32),0 4px 12px rgba(15,23,42,.16);transition:transform .25s ease,box-shadow .25s ease}
+.ai-floating-button:hover{transform:translateY(-4px) scale(1.03);box-shadow:0 18px 38px rgba(109,40,217,.38),0 6px 16px rgba(15,23,42,.18)}
+.ai-floating-button:active{transform:scale(.96)}
+.ai-button-icon{position:relative;width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#fff;border:3px solid rgba(255,255,255,.92);z-index:2}
+.ai-button-icon img{width:100%;height:100%;object-fit:cover;display:block}
+.ai-button-icon i{position:absolute;inset:0;display:none;align-items:center;justify-content:center;color:#6d28d9;background:#fff;font-size:20px}
+.ai-ring{position:absolute;inset:-5px;border:2px solid rgba(147,51,234,.28);border-radius:50%;animation:aiPulse 2.2s ease-out infinite}
+.ai-online{position:absolute;right:3px;bottom:4px;width:13px;height:13px;border-radius:50%;background:#22c55e;border:3px solid #fff;z-index:3}
+.ai-chat-window{position:absolute;right:0;bottom:76px;width:360px;height:500px;display:none;flex-direction:column;overflow:hidden;background:rgba(255,255,255,.98);border:1px solid #e7e2f3;border-radius:20px;box-shadow:0 24px 60px rgba(15,23,42,.20);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.floating-ai.ai-open .ai-chat-window{display:flex;animation:aiChatIn .22s ease both}
+.ai-chat-header{min-height:68px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;color:#fff;background:linear-gradient(135deg,#4c1d95,#6d28d9 55%,#9333ea)}
+.ai-chat-brand{min-width:0;display:flex;align-items:center;gap:10px}
+.ai-chat-logo{width:42px;height:42px;flex:0 0 42px;overflow:hidden;display:flex;align-items:center;justify-content:center;border-radius:50%;background:#fff;border:2px solid rgba(255,255,255,.85)}
+.ai-chat-logo img{width:100%;height:100%;object-fit:cover}
+.ai-chat-brand-text{min-width:0;display:flex;flex-direction:column}
+.ai-chat-brand-text strong{font-size:14px;line-height:1.2;font-weight:800}
+.ai-chat-brand-text span{margin-top:3px;font-size:11px;color:rgba(255,255,255,.78)}
+.ai-close{width:34px;height:34px;flex:0 0 34px;border:1px solid rgba(255,255,255,.2);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;background:rgba(255,255,255,.1);cursor:pointer;transition:.2s ease}
+.ai-close:hover{background:rgba(255,255,255,.2);transform:rotate(90deg)}
+.ai-chat-messages{flex:1;min-height:0;padding:16px;overflow-y:auto;background:linear-gradient(180deg,#faf9ff,#fff)}
+.ai-message{display:flex;align-items:flex-start;gap:9px;max-width:94%}
+.ai-message-avatar{width:30px;height:30px;flex:0 0 30px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#6d28d9;background:#ede9fe}
+.ai-message-content{padding:11px 13px;border:1px solid #e8e2f4;border-radius:14px 14px 14px 5px;color:#334155;background:#fff;box-shadow:0 5px 16px rgba(15,23,42,.06);font-size:12px;line-height:1.55}
+.ai-quick-actions{padding:9px 12px;display:flex;gap:7px;overflow-x:auto;border-top:1px solid #eeeaf5;background:#fff;scrollbar-width:none}
+.ai-quick-actions::-webkit-scrollbar{display:none}
+.ai-quick{flex:0 0 auto;padding:7px 10px;border:1px solid #ddd6fe;border-radius:999px;color:#6d28d9;background:#faf5ff;font-size:11px;font-weight:700;cursor:pointer;transition:.2s ease}
+.ai-quick:hover{color:#fff;border-color:#7c3aed;background:#7c3aed;transform:translateY(-1px)}
+.ai-chat-input-area{padding:11px;display:flex;align-items:flex-end;gap:8px;border-top:1px solid #eeeaf5;background:#fff}
+.ai-chat-input-area textarea{flex:1;min-height:42px;max-height:82px;resize:none;padding:11px 12px;border:1px solid #ddd6fe;border-radius:12px;outline:none;color:#1e293b;background:#fafafa;font-family:inherit;font-size:12px;line-height:1.4;transition:.2s ease}
+.ai-chat-input-area textarea:focus{border-color:#8b5cf6;box-shadow:0 0 0 3px rgba(139,92,246,.12);background:#fff}
+.ai-send{width:42px;height:42px;flex:0 0 42px;border:0;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;background:linear-gradient(135deg,#6d28d9,#9333ea);cursor:pointer;box-shadow:0 8px 18px rgba(109,40,217,.22);transition:.2s ease}
+.ai-send:hover{transform:translateY(-2px);box-shadow:0 11px 22px rgba(109,40,217,.28)}
+@keyframes aiPulse{0%{transform:scale(.94);opacity:.8}70%,100%{transform:scale(1.18);opacity:0}}
+@keyframes aiChatIn{from{opacity:0;transform:translateY(10px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+
+/* =============================================================
+   MOBILE
+============================================================= */
+
+.sidebar-overlay {
+
+    display: none;
+}
+
+
+@media (max-width: 1100px) {
+
+    .student-sidebar {
+
+        width: 215px;
+    }
+
+
+    .dashboard-content {
+
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+
+    .student-topbar {
+
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+
+    .dashboard-grid {
+
+        grid-template-columns:
+            minmax(0, 1fr);
+    }
+
+
+    .dashboard-right {
+
+        display: grid;
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        align-items: start;
+    }
+
+
+    .group-promo {
+
+        grid-column: span 2;
+    }
+
+}
+
+
+@media (max-width: 850px) {
+
+    .student-sidebar {
+
+        position: fixed;
+
+        left: -260px;
+
+        top: 0;
+
+        bottom: 0;
+
+        width: 245px;
+
+        transition: .25s ease;
+    }
+
+
+    .student-sidebar.open {
+
+        left: 0;
+    }
+
+
+    .sidebar-overlay {
+
+        position: fixed;
+
+        inset: 0;
+
+        display: block;
+
+        background: rgba(15,23,42,.35);
+
+        opacity: 0;
+
+        visibility: hidden;
+
+        transition: .2s ease;
+
+        z-index: 90;
+    }
+
+
+    .sidebar-overlay.show {
+
+        opacity: 1;
+
+        visibility: visible;
+    }
+
+
+    .mobile-brand {
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 9px;
+    }
+
+
+    .mobile-brand strong {
+
+        color: #4c1d95;
+
+        font-size: 13px;
+    }
+
+
+    .mobile-menu-btn {
+
+        width: 34px;
+        height: 34px;
+
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+
+        border: 1px solid #e7e7ef;
+
+        border-radius: 10px;
+
+        color: #4c1d95;
+
+        background: #fff;
+
+        cursor: pointer;
+    }
+
+
+    .topbar-search {
+
+        display: none;
+    }
+
+
+    .welcome-hero {
+
+        min-height: 220px;
+    }
+
+
+    .hero-visual {
+
+        display: none;
+    }
+
+
+    .stats-grid {
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .student-topbar {
+
+        height: 60px;
+
+        padding:
+            0 13px;
+    }
+
+
+    .topbar-user-info,
+    .topbar-user > i {
+
+        display: none;
+    }
+
+
+    .dashboard-content {
+
+        padding:
+            15px 13px 45px;
+    }
+
+
+    .welcome-hero {
+
+        padding: 23px 20px;
+
+        border-radius: 20px;
+    }
+
+
+    .hero-content h1 {
+
+        font-size: 26px;
+    }
+
+
+    .hero-content p {
+
+        font-size: 9px;
+    }
+
+
+    .stats-grid {
+
+        gap: 8px;
+    }
+
+
+    .modern-stat {
+
+        min-height: 130px;
+
+        padding: 13px;
+    }
+
+
+    .stat-number {
+
+        font-size: 21px;
+    }
+
+
+    .dashboard-grid {
+
+        gap: 12px;
+    }
+
+
+    .dashboard-right {
+
+        display: flex;
+    }
+
+
+    .service-grid {
+
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .dashboard-panel {
+
+        padding: 13px;
+    }
+
+
+    .panel-header {
+
+        align-items: flex-start;
+    }
+
+
+    .panel-link {
+
+        font-size: 7px;
+    }
+
+
+    .group-promo {
+
+        grid-column: auto;
+    }
+
+
+    .floating-ai { right: 15px; bottom: 15px; }
+
+    .ai-floating-button { width: 56px; height: 56px; }
+
+    .ai-button-icon { width: 42px; height: 42px; }
+
+    .ai-chat-window {
+        right: 0;
+        bottom: 68px;
+        width: min(340px, calc(100vw - 30px));
+        height: min(500px, calc(100vh - 100px));
+    }
+
+}
+
+
+@media (max-width: 420px) {
+
+    .stats-grid {
+
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .welcome-hero {
+
+        min-height: auto;
+    }
+
+
+    .hero-actions {
+
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+
+    .hero-btn {
+
+        justify-content: center;
+    }
+
+
+    .topbar-actions {
+
+        gap: 6px;
+    }
+
+    .floating-ai { right: 12px; bottom: 12px; }
+
+    .ai-floating-button { width: 52px; height: 52px; }
+
+    .ai-button-icon { width: 39px; height: 39px; }
+
+    .ai-chat-window {
+        width: calc(100vw - 24px);
+        height: min(470px, calc(100vh - 88px));
+    }
+
+    <style>
+
+.ai-user-message {
+    justify-content: flex-end;
+    margin-left: auto;
+    max-width: 88%;
+}
+
+.ai-user-message .ai-message-content {
+    color: #ffffff;
+    background: linear-gradient(
+        135deg,
+        #6d28d9,
+        #9333ea
+    );
+    border: none;
+    border-radius: 14px 14px 5px 14px;
+}
+
+.ai-loading-dots {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    min-width: 35px;
+}
+
+.ai-loading-dots span {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #7c3aed;
+    animation: aiLoading 1.2s infinite ease-in-out;
+}
+
+.ai-loading-dots span:nth-child(2) {
+    animation-delay: .15s;
+}
+
+.ai-loading-dots span:nth-child(3) {
+    animation-delay: .30s;
+}
+
+@keyframes aiLoading {
+
+    0%,
+    60%,
+    100% {
+        transform: translateY(0);
+        opacity: .35;
+    }
+
+    30% {
+        transform: translateY(-4px);
+        opacity: 1;
+    }
+
+}
+
+.ai-send:disabled {
+    pointer-events: none;
+}
+
+@media (max-width: 600px) {
+
+    .floating-ai {
+        right: 14px;
+        bottom: 14px;
+    }
+
+    .ai-chat-window {
+        position: fixed;
+        right: 10px;
+        left: 10px;
+        bottom: 84px;
+        width: auto;
+        height: min(520px, calc(100vh - 110px));
+    }
+
+}
+
+</style>
+
+
+}
+
+</style>
+
+
+<!-- =============================================================
+     DASHBOARD JS
+============================================================== -->
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    /* =========================================================
+       CAMPUSNEXUS LOCAL AI
+       ---------------------------------------------------------
+       This frontend sends ONLY the user's question.
+       The backend identifies the logged-in student using
+       req.session.user and fetches only that student's data.
+
+       NO GEMINI
+       NO OPENAI
+       NO API KEY
+       ========================================================= */
+
+
+    const floatingAI =
+        document.getElementById("floatingAI");
+
+    const aiButton =
+        document.getElementById("dashboardAIButton");
+
+    const aiWindow =
+        document.getElementById("aiChatWindow");
+
+    const aiClose =
+        document.getElementById("aiClose");
+
+    const aiInput =
+        document.getElementById("aiInput");
+
+    const aiSend =
+        document.getElementById("aiSend");
+
+    const aiMessages =
+        document.getElementById("aiChatMessages");
+
+
+    /* =========================================================
+       BASIC ELEMENT CHECK
+    ========================================================= */
+
+    if (!floatingAI) {
+        console.error(
+            "CampusNexus AI: #floatingAI not found."
+        );
+        return;
+    }
+
+    if (!aiButton) {
+        console.error(
+            "CampusNexus AI: #dashboardAIButton not found."
+        );
+        return;
+    }
+
+    if (!aiWindow) {
+        console.error(
+            "CampusNexus AI: #aiChatWindow not found."
+        );
+        return;
+    }
+
+    if (!aiInput) {
+        console.error(
+            "CampusNexus AI: #aiInput not found."
+        );
+        return;
+    }
+
+    if (!aiSend) {
+        console.error(
+            "CampusNexus AI: #aiSend not found."
+        );
+        return;
+    }
+
+    if (!aiMessages) {
+        console.error(
+            "CampusNexus AI: #aiChatMessages not found."
+        );
+        return;
+    }
+
+
+    /* =========================================================
+       STATE
+    ========================================================= */
+
+    let isSending = false;
+
+
+    /* =========================================================
+       OPEN AI
+    ========================================================= */
+
+    aiButton.addEventListener(
+        "click",
+        function (event) {
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            const isOpen =
+                floatingAI.classList.contains("ai-open");
+
+            if (isOpen) {
+
+                floatingAI.classList.remove(
+                    "ai-open"
+                );
+
+            } else {
+
+                floatingAI.classList.add(
+                    "ai-open"
+                );
+
+                setTimeout(function () {
+
+                    aiInput.focus();
+
+                }, 150);
+
+            }
+
+        }
+    );
+
+
+    /* =========================================================
+       CLOSE AI
+    ========================================================= */
+
+    if (aiClose) {
+
+        aiClose.addEventListener(
+            "click",
+            function (event) {
+
+                event.preventDefault();
+                event.stopPropagation();
+
+                floatingAI.classList.remove(
+                    "ai-open"
+                );
+
+            }
+        );
+
+    }
+
+
+    /* =========================================================
+       STOP CLICK PROPAGATION
+    ========================================================= */
+
+    aiWindow.addEventListener(
+        "click",
+        function (event) {
+
+            event.stopPropagation();
+
+        }
+    );
+
+
+    /* =========================================================
+       QUICK ACTIONS
+    ========================================================= */
+
+    const quickButtons =
+        document.querySelectorAll(
+            ".ai-quick"
+        );
+
+
+    quickButtons.forEach(
+        function (button) {
+
+            button.addEventListener(
+                "click",
+                function () {
+
+                    const text =
+                        button.textContent.trim();
+
+                    if (!text) {
+                        return;
+                    }
+
+                    aiInput.value = text;
+
+                    aiInput.focus();
+
+                    autoResizeInput();
+
+                }
+            );
+
+        }
+    );
+
+
+    /* =========================================================
+       INPUT AUTO RESIZE
+    ========================================================= */
+
+    function autoResizeInput() {
+
+        aiInput.style.height = "auto";
+
+        aiInput.style.height =
+            Math.min(
+                aiInput.scrollHeight,
+                100
+            ) + "px";
+
+    }
+
+
+    aiInput.addEventListener(
+        "input",
+        autoResizeInput
+    );
+
+
+    /* =========================================================
+       ENTER TO SEND
+       SHIFT + ENTER = NEW LINE
+    ========================================================= */
+
+    aiInput.addEventListener(
+        "keydown",
+        function (event) {
+
+            if (
+                event.key === "Enter" &&
+                !event.shiftKey
+            ) {
+
+                event.preventDefault();
+
+                sendMessage();
+
+            }
+
+        }
+    );
+
+
+    /* =========================================================
+       ESCAPE TO CLOSE
+    ========================================================= */
+
+    document.addEventListener(
+        "keydown",
+        function (event) {
+
+            if (
+                event.key === "Escape" &&
+                floatingAI.classList.contains("ai-open")
+            ) {
+
+                floatingAI.classList.remove(
+                    "ai-open"
+                );
+
+            }
+
+        }
+    );
+
+
+    /* =========================================================
+       SEND BUTTON
+    ========================================================= */
+
+    aiSend.addEventListener(
+        "click",
+        function (event) {
+
+            event.preventDefault();
+
+            sendMessage();
+
+        }
+    );
+
+
+    /* =========================================================
+       SEND MESSAGE
+    ========================================================= */
+
+    async function sendMessage() {
+
+        if (isSending) {
+            return;
+        }
+
+
+        const message =
+            aiInput.value.trim();
+
+
+        if (!message) {
+
+            aiInput.focus();
+
+            return;
+
+        }
+
+
+        /* -----------------------------------------------------
+           LOCK SEND
+        ----------------------------------------------------- */
+
+        isSending = true;
+
+        aiSend.disabled = true;
+
+        aiSend.style.opacity = "0.6";
+
+        aiSend.style.cursor = "not-allowed";
+
+
+        /* -----------------------------------------------------
+           SHOW USER MESSAGE
+        ----------------------------------------------------- */
+
+        addUserMessage(
+            message
+        );
+
+
+        /* -----------------------------------------------------
+           CLEAR INPUT
+        ----------------------------------------------------- */
+
+        aiInput.value = "";
+
+        aiInput.style.height = "40px";
+
+
+        /* -----------------------------------------------------
+           SHOW LOADING
+        ----------------------------------------------------- */
+
+        const loadingMessage =
+            addLoadingMessage();
+
+
+        scrollMessagesToBottom();
+
+
+        try {
+
+            /* =================================================
+               LOCAL BACKEND REQUEST
+
+               IMPORTANT:
+               We intentionally DO NOT send studentId.
+
+               Backend gets the logged-in student from:
+
+               req.session.user
+               ================================================= */
+
+            const response =
+                await fetch(
+                    "/api/ai/chat",
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json",
+
+                            "Accept":
+                                "application/json"
+                        },
+
+                        credentials:
+                            "same-origin",
+
+                        body: JSON.stringify({
+                            message: message
+                        })
+                    }
+                );
+
+
+            /* -------------------------------------------------
+               REMOVE LOADING
+            ------------------------------------------------- */
+
+            removeMessage(
+                loadingMessage
+            );
+
+
+            /* -------------------------------------------------
+               READ RESPONSE SAFELY
+            ------------------------------------------------- */
+
+            let data = null;
+
+            try {
+
+                data =
+                    await response.json();
+
+            } catch (jsonError) {
+
+                data = null;
+
+            }
+
+
+            /* -------------------------------------------------
+               HTTP ERROR
+            ------------------------------------------------- */
+
+            if (!response.ok) {
+
+                let errorText =
+                    "Sorry, I couldn't process your request.";
+
+                if (
+                    data &&
+                    typeof data.reply === "string"
+                ) {
+
+                    errorText =
+                        data.reply;
+
+                } else if (
+                    data &&
+                    typeof data.message === "string"
+                ) {
+
+                    errorText =
+                        data.message;
+
+                } else if (
+                    response.status === 401
+                ) {
+
+                    errorText =
+                        "Your session has expired. Please login again.";
+
+                } else if (
+                    response.status === 400
+                ) {
+
+                    errorText =
+                        "Please enter a valid question.";
+
+                } else if (
+                    response.status === 404
+                ) {
+
+                    errorText =
+                        "AI service is not available. Please check the /api/ai/chat route.";
+
+                } else if (
+                    response.status >= 500
+                ) {
+
+                    errorText =
+                        "CampusNexus AI server error. Please try again.";
+
+                }
+
+                addAssistantMessage(
+                    errorText
+                );
+
+                scrollMessagesToBottom();
+
+                return;
+
+            }
+
+
+            /* -------------------------------------------------
+               SUCCESS RESPONSE
+            ------------------------------------------------- */
+
+            let answer =
+                "I couldn't find an answer.";
+
+            if (
+                data &&
+                typeof data.reply === "string" &&
+                data.reply.trim()
+            ) {
+
+                answer =
+                    data.reply.trim();
+
+            } else if (
+                data &&
+                typeof data.response === "string" &&
+                data.response.trim()
+            ) {
+
+                answer =
+                    data.response.trim();
+
+            } else if (
+                data &&
+                typeof data.answer === "string" &&
+                data.answer.trim()
+            ) {
+
+                answer =
+                    data.answer.trim();
+
+            } else if (
+                data &&
+                typeof data.message === "string" &&
+                data.message.trim()
+            ) {
+
+                answer =
+                    data.message.trim();
+
+            }
+
+
+            /* -------------------------------------------------
+               SHOW AI ANSWER
+            ------------------------------------------------- */
+
+            addAssistantMessage(
+                answer
+            );
+
+
+            scrollMessagesToBottom();
+
+
+        } catch (error) {
+
+            console.error(
+                "CampusNexus AI error:",
+                error
+            );
+
+
+            removeMessage(
+                loadingMessage
+            );
+
+
+            addAssistantMessage(
+                "Unable to connect to CampusNexus AI. Please check your server and try again."
+            );
+
+
+            scrollMessagesToBottom();
+
+        } finally {
+
+            /* -------------------------------------------------
+               UNLOCK SEND
+            ------------------------------------------------- */
+
+            isSending = false;
+
+            aiSend.disabled = false;
+
+            aiSend.style.opacity = "1";
+
+            aiSend.style.cursor = "pointer";
+
+            aiInput.focus();
+
+        }
+
+    
+
+}
+
+
+    
+
+
+    /* =========================================================
+       ADD USER MESSAGE
+    ========================================================= */
+
+    function addUserMessage(
+        message
+    ) {
+
+        const wrapper =
+            document.createElement("div");
+
+        wrapper.className =
+            "ai-message ai-user-message";
+
+
+        const content =
+            document.createElement("div");
+
+        content.className =
+            "ai-message-content";
+
+
+        /*
+         * textContent is intentional.
+         *
+         * It prevents user input from being
+         * interpreted as HTML.
+         */
+
+        content.textContent =
+            message;
+
+
+        wrapper.appendChild(
+            content
+        );
+
+
+        aiMessages.appendChild(
+            wrapper
+        );
+
+
+        scrollMessagesToBottom();
+
+
+        return wrapper;
+
+    }
+
+
+    /* =========================================================
+       ADD ASSISTANT MESSAGE
+    ========================================================= */
+
+    function addAssistantMessage(
+        message
+    ) {
+
+        const wrapper =
+            document.createElement("div");
+
+        wrapper.className =
+            "ai-message ai-assistant-message";
+
+
+        const avatar =
+            document.createElement("div");
+
+        avatar.className =
+            "ai-message-avatar";
+
+
+        avatar.innerHTML =
+            '<i class="bi bi-stars"></i>';
+
+
+        const content =
+            document.createElement("div");
+
+        content.className =
+            "ai-message-content";
+
+
+        /*
+         * We use textContent instead of innerHTML
+         * so database text cannot inject HTML.
+         */
+
+        content.textContent =
+            message;
+
+
+        wrapper.appendChild(
+            avatar
+        );
+
+        wrapper.appendChild(
+            content
+        );
+
+
+        aiMessages.appendChild(
+            wrapper
+        );
+
+
+        scrollMessagesToBottom();
+
+
+        return wrapper;
+
+    }
+
+
+    /* =========================================================
+       LOADING MESSAGE
+    ========================================================= */
+
+    function addLoadingMessage() {
+
+        const wrapper =
+            document.createElement("div");
+
+        wrapper.className =
+            "ai-message ai-assistant-message";
+
+
+        const avatar =
+            document.createElement("div");
+
+        avatar.className =
+            "ai-message-avatar";
+
+
+        avatar.innerHTML =
+            '<i class="bi bi-stars"></i>';
+
+
+        const content =
+            document.createElement("div");
+
+        content.className =
+            "ai-message-content";
+
+
+        content.innerHTML = `
+            <span class="ai-loading-dots">
+                <span></span>
+                <span></span>
+                <span></span>
+            </span>
+        `;
+
+
+        wrapper.appendChild(
+            avatar
+        );
+
+        wrapper.appendChild(
+            content
+        );
+
+
+        aiMessages.appendChild(
+            wrapper
+        );
+
+
+        return wrapper;
+
+    }
+
+
+    /* =========================================================
+       REMOVE MESSAGE
+    ========================================================= */
+
+    function removeMessage(
+        element
+    ) {
+
+        if (
+            element &&
+            element.parentNode
+        ) {
+
+            element.parentNode.removeChild(
+                element
+            );
+
+        }
+
+    }
+
+
+    /* =========================================================
+       SCROLL CHAT
+    ========================================================= */
+
+    function scrollMessagesToBottom() {
+
+        requestAnimationFrame(
+            function () {
+
+                aiMessages.scrollTop =
+                    aiMessages.scrollHeight;
+
+            }
+        );
+
+    }
+
+
+    /* =========================================================
+       INITIALIZE
+    ========================================================= */
+
+    console.log(
+        "CampusNexus Local AI initialized."
+    );
+
+});
+</script>

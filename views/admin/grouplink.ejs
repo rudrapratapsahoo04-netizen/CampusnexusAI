@@ -1,0 +1,1321 @@
+
+<% layout("layouts/boilerplate") -%>
+
+<div class="container-fluid py-4">
+
+    <!-- ========================================== -->
+    <!-- PAGE HEADER -->
+    <!-- ========================================== -->
+
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+
+        <div>
+            <h3 class="fw-bold mb-1">
+                <i class="bi bi-link-45deg me-2"></i>
+                College Group Links
+            </h3>
+
+            <p class="text-muted mb-0">
+                Manage official college groups and provide relevant links to students.
+            </p>
+        </div>
+
+        <button
+            type="button"
+            class="btn btn-primary"
+            data-bs-toggle="modal"
+            data-bs-target="#createGroupModal"
+        >
+            <i class="bi bi-plus-lg me-1"></i>
+            Add Group Link
+        </button>
+
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- SUMMARY CARDS -->
+    <!-- ========================================== -->
+
+    <div class="row g-3 mb-4">
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <div>
+
+                            <small class="text-muted">
+                                Total Groups
+                            </small>
+
+                            <h3 class="fw-bold mb-0">
+                                <%= groupLinks.length %>
+                            </h3>
+
+                        </div>
+
+                        <div class="bg-primary-subtle text-primary rounded-circle p-3">
+                            <i class="bi bi-collection fs-4"></i>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <div>
+
+                            <small class="text-muted">
+                                Active Groups
+                            </small>
+
+                            <h3 class="fw-bold mb-0">
+                                <%= groupLinks.filter(
+                                    group => group.isActive
+                                ).length %>
+                            </h3>
+
+                        </div>
+
+                        <div class="bg-success-subtle text-success rounded-circle p-3">
+                            <i class="bi bi-check-circle fs-4"></i>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <div>
+
+                            <small class="text-muted">
+                                Inactive Groups
+                            </small>
+
+                            <h3 class="fw-bold mb-0">
+                                <%= groupLinks.filter(
+                                    group => !group.isActive
+                                ).length %>
+                            </h3>
+
+                        </div>
+
+                        <div class="bg-secondary-subtle text-secondary rounded-circle p-3">
+                            <i class="bi bi-pause-circle fs-4"></i>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <div>
+
+                            <small class="text-muted">
+                                Student Visibility
+                            </small>
+
+                            <h6 class="fw-bold mb-0 mt-1">
+                                Scope Based
+                            </h6>
+
+                        </div>
+
+                        <div class="bg-info-subtle text-info rounded-circle p-3">
+                            <i class="bi bi-people fs-4"></i>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- GROUP LINKS TABLE -->
+    <!-- ========================================== -->
+
+    <div class="card border-0 shadow-sm">
+
+        <div class="card-header bg-white border-0 py-3">
+
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
+
+                <div>
+
+                    <h5 class="fw-bold mb-1">
+                        All College Groups
+                    </h5>
+
+                    <small class="text-muted">
+                        Only active groups will be visible to eligible students.
+                    </small>
+
+                </div>
+
+                <div style="max-width: 280px; width: 100%;">
+
+                    <div class="input-group">
+
+                        <span class="input-group-text bg-white">
+                            <i class="bi bi-search"></i>
+                        </span>
+
+                        <input
+                            type="text"
+                            id="groupSearch"
+                            class="form-control"
+                            placeholder="Search groups..."
+                        >
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="card-body p-0">
+
+            <% if (groupLinks.length === 0) { %>
+
+                <div class="text-center py-5 px-3">
+
+                    <div class="mb-3">
+                        <i class="bi bi-link-45deg display-4 text-muted"></i>
+                    </div>
+
+                    <h5 class="fw-bold">
+                        No Group Links Added
+                    </h5>
+
+                    <p class="text-muted mb-3">
+                        Add official college WhatsApp, Telegram, Discord
+                        or class group links.
+                    </p>
+
+                    <button
+                        type="button"
+                        class="btn btn-primary"
+                        data-bs-toggle="modal"
+                        data-bs-target="#createGroupModal"
+                    >
+                        <i class="bi bi-plus-lg me-1"></i>
+                        Add First Group
+                    </button>
+
+                </div>
+
+            <% } else { %>
+
+                <div class="table-responsive">
+
+                    <table class="table table-hover align-middle mb-0">
+
+                        <thead class="table-light">
+
+                            <tr>
+
+                                <th class="ps-4">
+                                    Group
+                                </th>
+
+                                <th>
+                                    Platform
+                                </th>
+
+                                <th>
+                                    Visibility
+                                </th>
+
+                                <th>
+                                    Academic Scope
+                                </th>
+
+                                <th>
+                                    Status
+                                </th>
+
+                                <th class="text-end pe-4">
+                                    Actions
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody id="groupTableBody">
+
+                            <% groupLinks.forEach(group => { %>
+
+                                <tr
+                                    class="group-row"
+                                    data-search="<%= (
+                                        group.groupName +
+                                        ' ' +
+                                        group.platform +
+                                        ' ' +
+                                        group.scope +
+                                        ' ' +
+                                        (group.department || '') +
+                                        ' ' +
+                                        (group.program || '') +
+                                        ' ' +
+                                        (group.section || '')
+                                    ).toLowerCase() %>"
+                                >
+
+                                    <!-- GROUP -->
+
+                                    <td class="ps-4">
+
+                                        <div class="d-flex align-items-center gap-3">
+
+                                            <div
+                                                class="rounded-circle bg-primary-subtle text-primary d-flex align-items-center justify-content-center"
+                                                style="width: 42px; height: 42px;"
+                                            >
+                                                <i class="bi bi-people"></i>
+                                            </div>
+
+                                            <div>
+
+                                                <div class="fw-semibold">
+                                                    <%= group.groupName %>
+                                                </div>
+
+                                                <% if (group.description) { %>
+
+                                                    <small class="text-muted">
+
+                                                        <%= group.description.length > 70
+                                                            ? group.description.substring(0, 70) + "..."
+                                                            : group.description
+                                                        %>
+
+                                                    </small>
+
+                                                <% } %>
+
+                                            </div>
+
+                                        </div>
+
+                                    </td>
+
+
+                                    <!-- PLATFORM -->
+
+                                    <td>
+
+                                        <% if (group.platform === "whatsapp") { %>
+
+                                            <span class="badge text-bg-success">
+                                                <i class="bi bi-whatsapp me-1"></i>
+                                                WhatsApp
+                                            </span>
+
+                                        <% } else if (group.platform === "telegram") { %>
+
+                                            <span class="badge text-bg-info">
+                                                <i class="bi bi-telegram me-1"></i>
+                                                Telegram
+                                            </span>
+
+                                        <% } else if (group.platform === "discord") { %>
+
+                                            <span class="badge text-bg-primary">
+                                                Discord
+                                            </span>
+
+                                        <% } else if (group.platform === "class_group") { %>
+
+                                            <span class="badge text-bg-secondary">
+                                                Class Group
+                                            </span>
+
+                                        <% } else if (group.platform === "department_group") { %>
+
+                                            <span class="badge text-bg-dark">
+                                                Department
+                                            </span>
+
+                                        <% } else if (group.platform === "program_group") { %>
+
+                                            <span class="badge text-bg-warning">
+                                                Program
+                                            </span>
+
+                                        <% } else { %>
+
+                                            <span class="badge text-bg-light border text-dark">
+                                                Other
+                                            </span>
+
+                                        <% } %>
+
+                                    </td>
+
+
+                                    <!-- VISIBILITY -->
+
+                                    <td>
+
+                                        <% if (group.scope === "university") { %>
+
+                                            <span class="badge bg-primary-subtle text-primary">
+                                                <i class="bi bi-building me-1"></i>
+                                                University
+                                            </span>
+
+                                        <% } else if (group.scope === "department") { %>
+
+                                            <span class="badge bg-info-subtle text-info">
+                                                Department
+                                            </span>
+
+                                        <% } else if (group.scope === "program") { %>
+
+                                            <span class="badge bg-warning-subtle text-warning-emphasis">
+                                                Program
+                                            </span>
+
+                                        <% } else if (group.scope === "semester") { %>
+
+                                            <span class="badge bg-secondary-subtle text-secondary">
+                                                Semester
+                                            </span>
+
+                                        <% } else if (group.scope === "section") { %>
+
+                                            <span class="badge bg-success-subtle text-success">
+                                                Section
+                                            </span>
+
+                                        <% } else { %>
+
+                                            <span class="badge bg-light text-dark border">
+                                                Other
+                                            </span>
+
+                                        <% } %>
+
+                                    </td>
+
+
+                                    <!-- ACADEMIC SCOPE -->
+
+                                    <td>
+
+                                        <div class="small">
+
+                                            <% if (group.department) { %>
+
+                                                <div>
+                                                    <strong>Dept:</strong>
+                                                    <%= group.department.toUpperCase() %>
+                                                </div>
+
+                                            <% } %>
+
+
+                                            <% if (group.program) { %>
+
+                                                <div>
+                                                    <strong>Program:</strong>
+                                                    <%= group.program.toUpperCase() %>
+                                                </div>
+
+                                            <% } %>
+
+
+                                            <% if (group.semester) { %>
+
+                                                <div>
+                                                    <strong>Semester:</strong>
+                                                    <%= group.semester %>
+                                                </div>
+
+                                            <% } %>
+
+
+                                            <% if (group.section) { %>
+
+                                                <div>
+                                                    <strong>Section:</strong>
+                                                    <%= group.section %>
+                                                </div>
+
+                                            <% } %>
+
+
+                                            <% if (
+                                                !group.department &&
+                                                !group.program &&
+                                                !group.semester &&
+                                                !group.section
+                                            ) { %>
+
+                                                <span class="text-muted">
+                                                    All Students
+                                                </span>
+
+                                            <% } %>
+
+                                        </div>
+
+                                    </td>
+
+
+                                    <!-- STATUS -->
+
+                                    <td>
+
+                                        <% if (group.isActive) { %>
+
+                                            <span class="badge bg-success-subtle text-success">
+
+                                                <i
+                                                    class="bi bi-circle-fill me-1"
+                                                    style="font-size: 7px;"
+                                                ></i>
+
+                                                Active
+
+                                            </span>
+
+                                        <% } else { %>
+
+                                            <span class="badge bg-secondary-subtle text-secondary">
+
+                                                <i
+                                                    class="bi bi-circle-fill me-1"
+                                                    style="font-size: 7px;"
+                                                ></i>
+
+                                                Inactive
+
+                                            </span>
+
+                                        <% } %>
+
+                                    </td>
+
+
+                                    <!-- ACTIONS -->
+
+                                    <td class="text-end pe-4">
+
+                                        <div class="d-flex justify-content-end gap-2">
+
+                                            <a
+                                                href="<%= group.groupLink %>"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                class="btn btn-sm btn-outline-primary"
+                                                title="Open Group Link"
+                                            >
+                                                <i class="bi bi-box-arrow-up-right"></i>
+                                            </a>
+
+
+                                            <form
+                                                action="/admin/grouplink/<%= group._id %>/toggle-status"
+                                                method="POST"
+                                                class="d-inline"
+                                            >
+
+                                                <button
+                                                    type="submit"
+                                                    class="btn btn-sm <%= group.isActive ? 'btn-outline-warning' : 'btn-outline-success' %>"
+                                                    title="<%= group.isActive ? 'Deactivate' : 'Activate' %>"
+                                                >
+
+                                                    <% if (group.isActive) { %>
+
+                                                        <i class="bi bi-pause"></i>
+
+                                                    <% } else { %>
+
+                                                        <i class="bi bi-play"></i>
+
+                                                    <% } %>
+
+                                                </button>
+
+                                            </form>
+
+
+                                            <form
+                                                action="/admin/grouplink/<%= group._id %>/delete"
+                                                method="POST"
+                                                class="d-inline delete-group-form"
+                                            >
+
+                                                <button
+                                                    type="submit"
+                                                    class="btn btn-sm btn-outline-danger"
+                                                    title="Delete"
+                                                >
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+
+                                            </form>
+
+                                        </div>
+
+                                    </td>
+
+                                </tr>
+
+                            <% }) %>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            <% } %>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ========================================== -->
+<!-- CREATE GROUP MODAL -->
+<!-- ========================================== -->
+
+<div
+    class="modal fade"
+    id="createGroupModal"
+    tabindex="-1"
+    aria-labelledby="createGroupModalLabel"
+    aria-hidden="true"
+>
+
+    <div
+        class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable"
+        style="max-width: 900px;"
+    >
+
+        <div class="modal-content border-0 shadow">
+
+            <!-- MODAL HEADER -->
+
+            <div class="modal-header px-4 py-3">
+
+                <div>
+
+                    <h5
+                        class="modal-title fw-bold mb-1"
+                        id="createGroupModalLabel"
+                    >
+                        <i class="bi bi-plus-circle me-2"></i>
+                        Add College Group Link
+                    </h5>
+
+                    <small class="text-muted">
+                        Create an official group and define which students can see it.
+                    </small>
+
+                </div>
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                ></button>
+
+            </div>
+
+
+            <!-- FORM -->
+
+            <form
+                action="/admin/grouplink/create"
+                method="POST"
+                id="createGroupForm"
+            >
+
+                <!-- MODAL BODY -->
+
+                <div
+                    class="modal-body px-4"
+                    style="max-height: calc(100vh - 180px); overflow-y: auto;"
+                >
+
+                    <!-- ========================================== -->
+                    <!-- GROUP INFORMATION -->
+                    <!-- ========================================== -->
+
+                    <h6 class="fw-bold mb-3">
+
+                        <i class="bi bi-info-circle me-1"></i>
+
+                        Group Information
+
+                    </h6>
+
+
+                    <div class="row g-3 mb-4">
+
+                        <div class="col-md-7">
+
+                            <label class="form-label">
+
+                                Group Name
+
+                                <span class="text-danger">*</span>
+
+                            </label>
+
+                            <input
+                                type="text"
+                                name="groupName"
+                                class="form-control"
+                                placeholder="e.g. BCA Semester 3 WhatsApp Group"
+                                maxlength="150"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="col-md-5">
+
+                            <label class="form-label">
+
+                                Platform
+
+                                <span class="text-danger">*</span>
+
+                            </label>
+
+                            <select
+                                name="platform"
+                                class="form-select"
+                                required
+                            >
+
+                                <option value="">
+                                    Select Platform
+                                </option>
+
+                                <option value="whatsapp">
+                                    WhatsApp
+                                </option>
+
+                                <option value="telegram">
+                                    Telegram
+                                </option>
+
+                                <option value="discord">
+                                    Discord
+                                </option>
+
+                                <option value="class_group">
+                                    Class Group
+                                </option>
+
+                                <option value="department_group">
+                                    Department Group
+                                </option>
+
+                                <option value="program_group">
+                                    Program Group
+                                </option>
+
+                                <option value="other">
+                                    Other
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="col-12">
+
+                            <label class="form-label">
+
+                                Group Link
+
+                                <span class="text-danger">*</span>
+
+                            </label>
+
+                            <input
+                                type="url"
+                                name="groupLink"
+                                class="form-control"
+                                placeholder="https://chat.whatsapp.com/..."
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="col-12">
+
+                            <label class="form-label">
+                                Description
+                            </label>
+
+                            <textarea
+                                name="description"
+                                class="form-control"
+                                rows="3"
+                                maxlength="1000"
+                                placeholder="Short description about this group..."
+                            ></textarea>
+
+                        </div>
+
+                    </div>
+
+
+                    <hr>
+
+
+                    <!-- ========================================== -->
+                    <!-- STUDENT VISIBILITY -->
+                    <!-- ========================================== -->
+
+                    <h6 class="fw-bold mb-3 mt-4">
+
+                        <i class="bi bi-eye me-1"></i>
+
+                        Student Visibility
+
+                    </h6>
+
+
+                    <div class="alert alert-info">
+
+                        <i class="bi bi-info-circle me-1"></i>
+
+                        Choose the academic level where this group should be visible.
+                        University groups are visible to all students.
+
+                    </div>
+
+
+                    <div class="row g-3">
+
+                        <!-- VISIBILITY SCOPE -->
+
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+
+                                Visibility Scope
+
+                                <span class="text-danger">*</span>
+
+                            </label>
+
+                            <select
+                                name="scope"
+                                id="groupScope"
+                                class="form-select"
+                                required
+                            >
+
+                                <option value="university">
+                                    University — All Students
+                                </option>
+
+                                <option value="department">
+                                    Department
+                                </option>
+
+                                <option value="program">
+                                    Program
+                                </option>
+
+                                <option value="semester">
+                                    Semester
+                                </option>
+
+                                <option value="section">
+                                    Section
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- DEPARTMENT -->
+
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+                                Department
+                            </label>
+
+                            <input
+                                type="text"
+                                name="department"
+                                id="groupDepartment"
+                                class="form-control"
+                                placeholder="e.g. computer science"
+                            >
+
+                        </div>
+
+
+                        <!-- PROGRAM -->
+
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+                                Program
+                            </label>
+
+                            <input
+                                type="text"
+                                name="program"
+                                id="groupProgram"
+                                class="form-control"
+                                placeholder="e.g. bca"
+                            >
+
+                        </div>
+
+
+                        <!-- SEMESTER -->
+
+                        <div class="col-md-3">
+
+                            <label class="form-label">
+                                Semester
+                            </label>
+
+                            <select
+                                name="semester"
+                                id="groupSemester"
+                                class="form-select"
+                            >
+
+                                <option value="">
+                                    Select
+                                </option>
+
+                                <% for (let i = 1; i <= 8; i++) { %>
+
+                                    <option value="<%= i %>">
+                                        Semester <%= i %>
+                                    </option>
+
+                                <% } %>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- SECTION -->
+
+                        <div class="col-md-3">
+
+                            <label class="form-label">
+                                Section
+                            </label>
+
+                            <input
+                                type="text"
+                                name="section"
+                                id="groupSection"
+                                class="form-control"
+                                placeholder="A"
+                                maxlength="10"
+                            >
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ========================================== -->
+                <!-- MODAL FOOTER -->
+                <!-- ========================================== -->
+
+                <div class="modal-footer px-4 py-3 bg-light border-top">
+
+                    <button
+                        type="button"
+                        class="btn btn-outline-secondary"
+                        data-bs-dismiss="modal"
+                    >
+                        <i class="bi bi-x-lg me-1"></i>
+                        Cancel
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary px-4"
+                        id="createGroupSubmit"
+                    >
+                        <i class="bi bi-check-lg me-1"></i>
+                        Create Group Link
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ========================================== -->
+<!-- PAGE SCRIPT -->
+<!-- ========================================== -->
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        /* ========================================== */
+        /* GROUP SEARCH */
+        /* ========================================== */
+
+        const searchInput =
+            document.getElementById(
+                "groupSearch"
+            );
+
+        const rows =
+            document.querySelectorAll(
+                ".group-row"
+            );
+
+        if (searchInput) {
+
+            searchInput.addEventListener(
+                "input",
+                function () {
+
+                    const searchValue =
+                        this.value
+                            .toLowerCase()
+                            .trim();
+
+                    rows.forEach(
+                        function (row) {
+
+                            const searchText =
+                                row.dataset.search
+                                    .toLowerCase();
+
+                            row.style.display =
+                                searchText.includes(
+                                    searchValue
+                                )
+                                    ? ""
+                                    : "none";
+
+                        }
+                    );
+
+                }
+            );
+
+        }
+
+
+        /* ========================================== */
+        /* VISIBILITY SCOPE */
+        /* ========================================== */
+
+        const scopeSelect =
+            document.getElementById(
+                "groupScope"
+            );
+
+        const departmentInput =
+            document.getElementById(
+                "groupDepartment"
+            );
+
+        const programInput =
+            document.getElementById(
+                "groupProgram"
+            );
+
+        const semesterInput =
+            document.getElementById(
+                "groupSemester"
+            );
+
+        const sectionInput =
+            document.getElementById(
+                "groupSection"
+            );
+
+
+        function updateScopeFields() {
+
+            if (
+                !scopeSelect ||
+                !departmentInput ||
+                !programInput ||
+                !semesterInput ||
+                !sectionInput
+            ) {
+                return;
+            }
+
+
+            const scope =
+                scopeSelect.value;
+
+
+            /* ========================================== */
+            /* UNIVERSITY */
+            /* ========================================== */
+
+            if (scope === "university") {
+
+                departmentInput.value = "";
+                programInput.value = "";
+                semesterInput.value = "";
+                sectionInput.value = "";
+
+                departmentInput.disabled = true;
+                programInput.disabled = true;
+                semesterInput.disabled = true;
+                sectionInput.disabled = true;
+
+                departmentInput.required = false;
+                programInput.required = false;
+                semesterInput.required = false;
+                sectionInput.required = false;
+
+                return;
+            }
+
+
+            /* ========================================== */
+            /* DEPARTMENT */
+            /* ========================================== */
+
+            if (scope === "department") {
+
+                departmentInput.disabled = false;
+                programInput.disabled = true;
+                semesterInput.disabled = true;
+                sectionInput.disabled = true;
+
+                departmentInput.required = true;
+                programInput.required = false;
+                semesterInput.required = false;
+                sectionInput.required = false;
+
+                programInput.value = "";
+                semesterInput.value = "";
+                sectionInput.value = "";
+
+                return;
+            }
+
+
+            /* ========================================== */
+            /* PROGRAM */
+            /* ========================================== */
+
+            if (scope === "program") {
+
+                departmentInput.disabled = false;
+                programInput.disabled = false;
+                semesterInput.disabled = true;
+                sectionInput.disabled = true;
+
+                departmentInput.required = true;
+                programInput.required = true;
+                semesterInput.required = false;
+                sectionInput.required = false;
+
+                semesterInput.value = "";
+                sectionInput.value = "";
+
+                return;
+            }
+
+
+            /* ========================================== */
+            /* SEMESTER */
+            /* ========================================== */
+
+            if (scope === "semester") {
+
+                departmentInput.disabled = false;
+                programInput.disabled = false;
+                semesterInput.disabled = false;
+                sectionInput.disabled = true;
+
+                departmentInput.required = true;
+                programInput.required = true;
+                semesterInput.required = true;
+                sectionInput.required = false;
+
+                sectionInput.value = "";
+
+                return;
+            }
+
+
+            /* ========================================== */
+            /* SECTION */
+            /* ========================================== */
+
+            if (scope === "section") {
+
+                departmentInput.disabled = false;
+                programInput.disabled = false;
+                semesterInput.disabled = false;
+                sectionInput.disabled = false;
+
+                departmentInput.required = true;
+                programInput.required = true;
+                semesterInput.required = true;
+                sectionInput.required = true;
+
+            }
+
+        }
+
+
+        if (scopeSelect) {
+
+            scopeSelect.addEventListener(
+                "change",
+                updateScopeFields
+            );
+
+            updateScopeFields();
+
+        }
+
+
+        /* ========================================== */
+        /* DELETE CONFIRMATION */
+        /* ========================================== */
+
+        const deleteForms =
+            document.querySelectorAll(
+                ".delete-group-form"
+            );
+
+        deleteForms.forEach(
+            function (form) {
+
+                form.addEventListener(
+                    "submit",
+                    function (event) {
+
+                        const confirmed =
+                            confirm(
+                                "Are you sure you want to delete this group link?"
+                            );
+
+                        if (!confirmed) {
+                            event.preventDefault();
+                        }
+
+                    }
+                );
+
+            }
+        );
+
+
+        /* ========================================== */
+        /* PREVENT DOUBLE SUBMIT */
+        /* ========================================== */
+
+        const createForm =
+            document.getElementById(
+                "createGroupForm"
+            );
+
+        const createSubmit =
+            document.getElementById(
+                "createGroupSubmit"
+            );
+
+        if (createForm && createSubmit) {
+
+            createForm.addEventListener(
+                "submit",
+                function () {
+
+                    createSubmit.disabled = true;
+
+                    createSubmit.innerHTML =
+                        '<span class="spinner-border spinner-border-sm me-1"></span>' +
+                        'Creating...';
+
+                }
+            );
+
+        }
+
+    }
+);
+
+</script>

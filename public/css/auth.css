@@ -1,0 +1,362 @@
+/* AUTHENTICATION STYLES */
+
+.auth-container {
+    min-height: calc(100vh - 140px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    background: #f8f9fa;
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 480px;
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 35px;
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
+}
+
+
+/* AUTH ICON */
+
+.auth-icon {
+    width: 70px;
+    height: 70px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 18px;
+    background: #e8f1ff;
+    color: #0d6efd;
+    font-size: 30px;
+}
+
+
+/* ROLE SELECTION */
+
+.role-selection-card {
+    max-width: 620px;
+}
+
+.role-options {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.role-option {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 18px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    transition: transform 0.2s ease,
+                box-shadow 0.2s ease,
+                border-color 0.2s ease;
+}
+
+.role-option:hover {
+    transform: translateY(-2px);
+    border-color: #0d6efd;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+.role-icon {
+    min-width: 54px;
+    width: 54px;
+    height: 54px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+    font-size: 23px;
+}
+
+.student-icon {
+    background: #e8f1ff;
+    color: #0d6efd;
+}
+
+.faculty-icon {
+    background: #e9f8ef;
+    color: #198754;
+}
+
+.admin-icon {
+    background: #fff0f0;
+    color: #dc3545;
+}
+
+.role-content {
+    flex: 1;
+}
+
+.role-content h5 {
+    margin: 0 0 5px;
+    color: #212529;
+    font-weight: 700;
+}
+
+.role-content p {
+    margin: 0;
+    color: #6c757d;
+    font-size: 0.88rem;
+    line-height: 1.5;
+}
+
+.role-arrow {
+    color: #adb5bd;
+    font-size: 18px;
+    transition: transform 0.2s ease,
+                color 0.2s ease;
+}
+
+.role-option:hover .role-arrow {
+    color: #0d6efd;
+    transform: translateX(4px);
+}
+
+
+/* FORM */
+
+.form-control {
+    border-radius: 10px;
+    min-height: 45px;
+}
+
+.input-group-text {
+    border-radius: 10px 0 0 10px;
+}
+
+.form-control:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.12);
+}
+
+
+/* BUTTON */
+
+.auth-card .btn-primary {
+    border-radius: 10px;
+    font-weight: 600;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 576px) {
+
+    .auth-container {
+        padding: 25px 15px;
+    }
+
+    .auth-card {
+        padding: 25px 18px;
+        border-radius: 16px;
+    }
+
+    .role-option {
+        padding: 14px;
+        gap: 12px;
+    }
+
+    .role-icon {
+        min-width: 46px;
+        width: 46px;
+        height: 46px;
+        font-size: 19px;
+    }
+
+    .role-content h5 {
+        font-size: 0.98rem;
+    }
+
+    .role-content p {
+        font-size: 0.78rem;
+    }
+
+    .role-arrow {
+        font-size: 16px;
+    }
+}
+
+
+/* ==========================================
+   REGISTRATION PAGE
+========================================== */
+
+.registration-page {
+    background: #f8f9fa;
+    min-height: calc(100vh - 140px);
+}
+
+.registration-icon {
+    width: 72px;
+    height: 72px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #e8f1ff;
+    color: #0d6efd;
+    border-radius: 20px;
+    font-size: 30px;
+}
+
+.registration-card {
+    max-width: 1000px;
+    margin: 0 auto;
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+}
+
+.registration-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 28px 35px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.form-section {
+    padding: 35px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 28px;
+}
+
+.section-icon {
+    width: 46px;
+    height: 46px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: #e8f1ff;
+    color: #0d6efd;
+    font-size: 20px;
+}
+
+.section-title h5 {
+    margin: 0 0 3px;
+    font-weight: 700;
+}
+
+.section-title p {
+    margin: 0;
+    color: #6c757d;
+    font-size: 0.88rem;
+}
+
+.form-label {
+    font-weight: 600;
+    color: #343a40;
+    margin-bottom: 8px;
+}
+
+.form-control,
+.form-select {
+    min-height: 46px;
+    border-radius: 10px;
+    border-color: #dee2e6;
+}
+
+textarea.form-control {
+    min-height: auto;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.12);
+}
+
+.input-group-text {
+    background: #f8f9fa;
+    border-color: #dee2e6;
+    color: #6c757d;
+}
+
+.password-toggle {
+    min-width: 48px;
+}
+
+.registration-terms {
+    padding: 25px 35px;
+    background: #f8f9fa;
+}
+
+.registration-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 30px 35px 0;
+}
+
+.registration-actions .btn {
+    border-radius: 10px;
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+
+    .registration-page {
+        padding: 0;
+    }
+
+    .registration-card {
+        border-radius: 0;
+    }
+
+    .registration-header {
+        padding: 25px 20px;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .form-section {
+        padding: 25px 20px;
+    }
+
+    .registration-terms {
+        padding: 20px;
+    }
+
+    .registration-actions {
+        padding: 25px 20px 0;
+        flex-direction: column-reverse;
+    }
+
+    .registration-actions .btn {
+        width: 100%;
+    }
+
+}
+
+
+/* FACULTY REGISTRATION */
+
+.faculty-registration-icon {
+    background: #e9f8ef;
+    color: #198754;
+}
+
+.faculty-section-icon {
+    background: #e9f8ef;
+    color: #198754;
+}

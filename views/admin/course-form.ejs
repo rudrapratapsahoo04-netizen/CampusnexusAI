@@ -1,0 +1,1719 @@
+<% layout("layouts/boilerplate") -%>
+
+<div class="container-fluid py-4">
+
+    <!-- ========================================== -->
+    <!-- PAGE HEADER -->
+    <!-- ========================================== -->
+
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+
+        <div>
+
+            <div class="d-flex align-items-center gap-2 mb-1">
+
+                <span class="badge bg-primary-subtle text-primary">
+
+                    <i class="bi bi-book-half me-1"></i>
+
+                    Academic Management
+
+                </span>
+
+            </div>
+
+
+            <h2 class="fw-bold mb-1">
+
+                <%= isEdit
+                    ? "Edit Course"
+                    : "Add Course"
+                %>
+
+            </h2>
+
+
+            <p class="text-muted mb-0">
+
+                <%= isEdit
+                    ? "Update course information and academic mapping."
+                    : "Create a new course and map it to a university program."
+                %>
+
+            </p>
+
+        </div>
+
+
+        <div>
+
+            <a
+                href="/admin/courses"
+                class="btn btn-outline-secondary"
+            >
+
+                <i class="bi bi-arrow-left me-1"></i>
+
+                Back to Courses
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- COURSE FORM -->
+    <!-- ========================================== -->
+
+    <form
+        method="POST"
+        action="<%= isEdit
+            ? '/admin/courses/' + course._id + '/edit'
+            : '/admin/courses'
+        %>"
+        id="courseForm"
+    >
+
+        <div class="row g-4">
+
+
+            <!-- ================================== -->
+            <!-- LEFT COLUMN -->
+            <!-- ================================== -->
+
+            <div class="col-12 col-xl-8">
+
+
+                <!-- COURSE INFORMATION -->
+
+                <div class="card border-0 shadow-sm mb-4">
+
+                    <div class="card-header bg-white border-bottom py-3">
+
+                        <div class="d-flex align-items-center">
+
+                            <div
+                                class="rounded-3 bg-primary-subtle text-primary d-flex align-items-center justify-content-center me-3"
+                                style="width: 42px; height: 42px;"
+                            >
+
+                                <i class="bi bi-book fs-5"></i>
+
+                            </div>
+
+
+                            <div>
+
+                                <h5 class="mb-0 fw-semibold">
+
+                                    Course Information
+
+                                </h5>
+
+                                <small class="text-muted">
+
+                                    Basic information about the course.
+
+                                </small>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="card-body">
+
+                        <div class="row g-3">
+
+
+                            <!-- COURSE CODE -->
+
+                            <div class="col-12 col-md-6">
+
+                                <label
+                                    for="courseCode"
+                                    class="form-label fw-semibold"
+                                >
+
+                                    Course Code
+                                    <span class="text-danger">*</span>
+
+                                </label>
+
+
+                                <input
+                                    type="text"
+                                    class="form-control text-uppercase"
+                                    id="courseCode"
+                                    name="courseCode"
+                                    value="<%= isEdit ? course.courseCode : '' %>"
+                                    maxlength="30"
+                                    placeholder="e.g. CS301"
+                                    required
+                                >
+
+
+                                <div class="form-text">
+
+                                    Unique code within the selected program.
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- COURSE NAME -->
+
+                            <div class="col-12 col-md-6">
+
+                                <label
+                                    for="courseName"
+                                    class="form-label fw-semibold"
+                                >
+
+                                    Course Name
+                                    <span class="text-danger">*</span>
+
+                                </label>
+
+
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="courseName"
+                                    name="courseName"
+                                    value="<%= isEdit ? course.courseName : '' %>"
+                                    maxlength="150"
+                                    placeholder="e.g. Data Structures"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <!-- SHORT NAME -->
+
+                            <div class="col-12 col-md-6">
+
+                                <label
+                                    for="shortName"
+                                    class="form-label fw-semibold"
+                                >
+
+                                    Short Name
+
+                                </label>
+
+
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="shortName"
+                                    name="shortName"
+                                    value="<%= isEdit ? (course.shortName || '') : '' %>"
+                                    maxlength="50"
+                                    placeholder="e.g. DS"
+                                >
+
+                            </div>
+
+
+                            <!-- COURSE TYPE -->
+
+                            <div class="col-12 col-md-6">
+
+                                <label
+                                    for="courseType"
+                                    class="form-label fw-semibold"
+                                >
+
+                                    Course Type
+                                    <span class="text-danger">*</span>
+
+                                </label>
+
+
+                                <select
+                                    class="form-select"
+                                    id="courseType"
+                                    name="courseType"
+                                    required
+                                >
+
+                                    <option value="">
+                                        Select Course Type
+                                    </option>
+
+
+                                    <option
+                                        value="core"
+                                        <%= isEdit && course.courseType === 'core' ? 'selected' : '' %>
+                                    >
+                                        Core
+                                    </option>
+
+
+                                    <option
+                                        value="elective"
+                                        <%= isEdit && course.courseType === 'elective' ? 'selected' : '' %>
+                                    >
+                                        Elective
+                                    </option>
+
+
+                                    <option
+                                        value="practical"
+                                        <%= isEdit && course.courseType === 'practical' ? 'selected' : '' %>
+                                    >
+                                        Practical / Lab
+                                    </option>
+
+
+                                    <option
+                                        value="tutorial"
+                                        <%= isEdit && course.courseType === 'tutorial' ? 'selected' : '' %>
+                                    >
+                                        Tutorial
+                                    </option>
+
+
+                                    <option
+                                        value="project"
+                                        <%= isEdit && course.courseType === 'project' ? 'selected' : '' %>
+                                    >
+                                        Project
+                                    </option>
+
+
+                                    <option
+                                        value="internship"
+                                        <%= isEdit && course.courseType === 'internship' ? 'selected' : '' %>
+                                    >
+                                        Internship
+                                    </option>
+
+
+                                    <option
+                                        value="seminar"
+                                        <%= isEdit && course.courseType === 'seminar' ? 'selected' : '' %>
+                                    >
+                                        Seminar
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+                            <!-- DESCRIPTION -->
+
+                            <div class="col-12">
+
+                                <label
+                                    for="description"
+                                    class="form-label fw-semibold"
+                                >
+
+                                    Description
+
+                                </label>
+
+
+                                <textarea
+                                    class="form-control"
+                                    id="description"
+                                    name="description"
+                                    rows="4"
+                                    maxlength="1000"
+                                    placeholder="Brief description of the course..."
+                                ><%= isEdit ? (course.description || '') : '' %></textarea>
+
+
+                                <div class="form-text">
+
+                                    Maximum 1000 characters.
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ================================== -->
+                <!-- ACADEMIC MAPPING -->
+                <!-- ================================== -->
+
+                <div class="card border-0 shadow-sm mb-4">
+
+                    <div class="card-header bg-white border-bottom py-3">
+
+                        <div class="d-flex align-items-center">
+
+                            <div
+                                class="rounded-3 bg-success-subtle text-success d-flex align-items-center justify-content-center me-3"
+                                style="width: 42px; height: 42px;"
+                            >
+
+                                <i class="bi bi-diagram-3 fs-5"></i>
+
+                            </div>
+
+
+                            <div>
+
+                                <h5 class="mb-0 fw-semibold">
+
+                                    Academic Mapping
+
+                                </h5>
+
+                                <small class="text-muted">
+
+                                    Connect the course with department, program and semester.
+
+                                </small>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="card-body">
+
+                        <div class="row g-3">
+
+
+                            <!-- DEPARTMENT -->
+
+                            <div class="col-12 col-md-6">
+
+                                <label
+                                    for="department"
+                                    class="form-label fw-semibold"
+                                >
+
+                                    Department
+                                    <span class="text-danger">*</span>
+
+                                </label>
+
+
+                                <select
+                                    class="form-select"
+                                    id="department"
+                                    name="department"
+                                    required
+                                >
+
+                                    <option value="">
+                                        Select Department
+                                    </option>
+
+
+                                    <% departments.forEach(department => { %>
+
+                                        <option
+                                            value="<%= department._id %>"
+                                            <%= isEdit && course.department && String(course.department._id) === String(department._id) ? 'selected' : '' %>
+                                        >
+
+                                            <%= department.name %>
+
+                                            <% if (department.code) { %>
+                                                (<%= department.code %>)
+                                            <% } %>
+
+                                        </option>
+
+                                    <% }) %>
+
+                                </select>
+
+                            </div>
+
+
+                            <!-- PROGRAM -->
+
+                            <div class="col-12 col-md-6">
+
+                                <label
+                                    for="program"
+                                    class="form-label fw-semibold"
+                                >
+
+                                    Program
+                                    <span class="text-danger">*</span>
+
+                                </label>
+
+
+                                <select
+                                    class="form-select"
+                                    id="program"
+                                    name="program"
+                                    required
+                                >
+
+                                    <option value="">
+                                        Select Program
+                                    </option>
+
+
+                                    <% programs.forEach(program => { %>
+
+                                        <option
+                                            value="<%= program._id %>"
+                                            data-department="<%= program.department %>"
+                                            data-semesters="<%= program.totalSemesters || 8 %>"
+                                            <%= isEdit && course.program && String(course.program._id) === String(program._id) ? 'selected' : '' %>
+                                        >
+
+                                            <%= program.name %>
+
+                                            <% if (program.code) { %>
+                                                (<%= program.code %>)
+                                            <% } %>
+
+                                        </option>
+
+                                    <% }) %>
+
+                                </select>
+
+
+                                <div class="form-text">
+
+                                    Programs are filtered according to the selected department.
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- SEMESTER -->
+
+                            <div class="col-12 col-md-6">
+
+                                <label
+                                    for="semester"
+                                    class="form-label fw-semibold"
+                                >
+
+                                    Semester
+                                    <span class="text-danger">*</span>
+
+                                </label>
+
+
+                                <select
+                                    class="form-select"
+                                    id="semester"
+                                    name="semester"
+                                    required
+                                >
+
+                                    <option value="">
+                                        Select Semester
+                                    </option>
+
+
+                                    <% for (let i = 1; i <= 12; i++) { %>
+
+                                        <option
+                                            value="<%= i %>"
+                                            <%= isEdit && Number(course.semester) === i ? 'selected' : '' %>
+                                        >
+
+                                            Semester <%= i %>
+
+                                        </option>
+
+                                    <% } %>
+
+                                </select>
+
+
+                                <div
+                                    id="semesterHelp"
+                                    class="form-text"
+                                >
+
+                                    Select a program first.
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- ACADEMIC INFO -->
+
+                            <div class="col-12 col-md-6">
+
+                                <div class="alert alert-light border h-100 mb-0">
+
+                                    <div class="d-flex">
+
+                                        <i class="bi bi-info-circle text-primary me-2 mt-1"></i>
+
+                                        <div>
+
+                                            <div class="fw-semibold mb-1">
+
+                                                Academic Hierarchy
+
+                                            </div>
+
+                                            <small class="text-muted">
+
+                                                Department →
+                                                Program →
+                                                Semester →
+                                                Course
+
+                                            </small>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ================================== -->
+                <!-- COURSE WORKLOAD -->
+                <!-- ================================== -->
+
+                <div class="card border-0 shadow-sm mb-4">
+
+                    <div class="card-header bg-white border-bottom py-3">
+
+                        <div class="d-flex align-items-center">
+
+                            <div
+                                class="rounded-3 bg-warning-subtle text-warning-emphasis d-flex align-items-center justify-content-center me-3"
+                                style="width: 42px; height: 42px;"
+                            >
+
+                                <i class="bi bi-clock-history fs-5"></i>
+
+                            </div>
+
+
+                            <div>
+
+                                <h5 class="mb-0 fw-semibold">
+
+                                    Course Workload
+
+                                </h5>
+
+                                <small class="text-muted">
+
+                                    Define credits and weekly academic hours.
+
+                                </small>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="card-body">
+
+                        <div class="row g-3">
+
+
+                            <!-- CREDITS -->
+
+                            <div class="col-12 col-md-4">
+
+                                <label
+                                    for="credits"
+                                    class="form-label fw-semibold"
+                                >
+
+                                    Credits
+                                    <span class="text-danger">*</span>
+
+                                </label>
+
+
+                                <input
+                                    type="number"
+                                    class="form-control"
+                                    id="credits"
+                                    name="credits"
+                                    min="0"
+                                    max="30"
+                                    step="0.5"
+                                    value="<%= isEdit ? course.credits : '' %>"
+                                    placeholder="e.g. 4"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <!-- THEORY HOURS -->
+
+                            <div class="col-12 col-md-4">
+
+                                <label
+                                    for="theoryHours"
+                                    class="form-label fw-semibold"
+                                >
+
+                                    Theory Hours
+
+                                </label>
+
+
+                                <input
+                                    type="number"
+                                    class="form-control"
+                                    id="theoryHours"
+                                    name="theoryHours"
+                                    min="0"
+                                    max="20"
+                                    step="1"
+                                    value="<%= isEdit ? (course.theoryHours || 0) : 0 %>"
+                                >
+
+                            </div>
+
+
+                            <!-- PRACTICAL HOURS -->
+
+                            <div class="col-12 col-md-4">
+
+                                <label
+                                    for="practicalHours"
+                                    class="form-label fw-semibold"
+                                >
+
+                                    Practical Hours
+
+                                </label>
+
+
+                                <input
+                                    type="number"
+                                    class="form-control"
+                                    id="practicalHours"
+                                    name="practicalHours"
+                                    min="0"
+                                    max="20"
+                                    step="1"
+                                    value="<%= isEdit ? (course.practicalHours || 0) : 0 %>"
+                                >
+
+                            </div>
+
+
+                            <!-- TOTAL -->
+
+                            <div class="col-12">
+
+                                <div
+                                    class="alert alert-primary-subtle border-0 mb-0"
+                                    id="workloadSummary"
+                                >
+
+                                    <div class="d-flex align-items-center">
+
+                                        <i class="bi bi-calculator me-2"></i>
+
+                                        <div>
+
+                                            <strong>
+                                                Total Contact Hours:
+                                            </strong>
+
+                                            <span id="totalHours">
+                                                0
+                                            </span>
+
+                                            <span class="text-muted">
+                                                hours
+                                            </span>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ================================== -->
+                <!-- FORM ACTIONS -->
+                <!-- ================================== -->
+
+                <div class="card border-0 shadow-sm">
+
+                    <div class="card-body">
+
+                        <div class="d-flex flex-column flex-sm-row justify-content-between gap-2">
+
+                            <a
+                                href="/admin/courses"
+                                class="btn btn-outline-secondary"
+                            >
+
+                                <i class="bi bi-x-lg me-1"></i>
+
+                                Cancel
+
+                            </a>
+
+
+                            <button
+                                type="submit"
+                                class="btn btn-primary px-4"
+                                id="submitButton"
+                            >
+
+                                <i
+                                    class="bi <%= isEdit ? 'bi-save' : 'bi-check-lg' %> me-1"
+                                ></i>
+
+                                <%= isEdit
+                                    ? "Update Course"
+                                    : "Create Course"
+                                %>
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================================== -->
+            <!-- RIGHT COLUMN -->
+            <!-- ================================== -->
+
+            <div class="col-12 col-xl-4">
+
+
+                <!-- COURSE PREVIEW -->
+
+                <div class="card border-0 shadow-sm mb-4">
+
+                    <div class="card-header bg-white border-bottom py-3">
+
+                        <h5 class="mb-0 fw-semibold">
+
+                            <i class="bi bi-eye me-2 text-primary"></i>
+
+                            Course Preview
+
+                        </h5>
+
+                    </div>
+
+
+                    <div class="card-body">
+
+                        <div class="text-center mb-4">
+
+                            <div
+                                class="rounded-4 bg-primary-subtle text-primary d-inline-flex align-items-center justify-content-center mb-3"
+                                style="width: 76px; height: 76px;"
+                            >
+
+                                <i class="bi bi-book-half fs-2"></i>
+
+                            </div>
+
+
+                            <h5
+                                class="fw-bold mb-1"
+                                id="previewCourseName"
+                            >
+
+                                <%= isEdit
+                                    ? course.courseName
+                                    : "Course Name"
+                                %>
+
+                            </h5>
+
+
+                            <div
+                                class="text-muted"
+                                id="previewCourseCode"
+                            >
+
+                                <%= isEdit
+                                    ? course.courseCode
+                                    : "COURSE-CODE"
+                                %>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="border rounded-3 overflow-hidden">
+
+                            <div class="d-flex justify-content-between px-3 py-2 border-bottom">
+
+                                <span class="text-muted">
+                                    Department
+                                </span>
+
+                                <span
+                                    class="fw-semibold text-end"
+                                    id="previewDepartment"
+                                >
+                                    —
+                                </span>
+
+                            </div>
+
+
+                            <div class="d-flex justify-content-between px-3 py-2 border-bottom">
+
+                                <span class="text-muted">
+                                    Program
+                                </span>
+
+                                <span
+                                    class="fw-semibold text-end"
+                                    id="previewProgram"
+                                >
+                                    —
+                                </span>
+
+                            </div>
+
+
+                            <div class="d-flex justify-content-between px-3 py-2 border-bottom">
+
+                                <span class="text-muted">
+                                    Semester
+                                </span>
+
+                                <span
+                                    class="fw-semibold"
+                                    id="previewSemester"
+                                >
+                                    —
+                                </span>
+
+                            </div>
+
+
+                            <div class="d-flex justify-content-between px-3 py-2 border-bottom">
+
+                                <span class="text-muted">
+                                    Type
+                                </span>
+
+                                <span
+                                    class="fw-semibold"
+                                    id="previewType"
+                                >
+                                    —
+                                </span>
+
+                            </div>
+
+
+                            <div class="d-flex justify-content-between px-3 py-2">
+
+                                <span class="text-muted">
+                                    Credits
+                                </span>
+
+                                <span
+                                    class="fw-semibold"
+                                    id="previewCredits"
+                                >
+                                    —
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- COURSE TYPE GUIDE -->
+
+                <div class="card border-0 shadow-sm mb-4">
+
+                    <div class="card-header bg-white border-bottom py-3">
+
+                        <h5 class="mb-0 fw-semibold">
+
+                            <i class="bi bi-info-circle me-2 text-primary"></i>
+
+                            Course Types
+
+                        </h5>
+
+                    </div>
+
+
+                    <div class="card-body">
+
+                        <div class="d-flex gap-3 mb-3">
+
+                            <i class="bi bi-book text-primary fs-5"></i>
+
+                            <div>
+
+                                <div class="fw-semibold">
+                                    Core
+                                </div>
+
+                                <small class="text-muted">
+                                    Mandatory subject for the program.
+                                </small>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="d-flex gap-3 mb-3">
+
+                            <i class="bi bi-list-stars text-success fs-5"></i>
+
+                            <div>
+
+                                <div class="fw-semibold">
+                                    Elective
+                                </div>
+
+                                <small class="text-muted">
+                                    Student-selectable academic subject.
+                                </small>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="d-flex gap-3 mb-3">
+
+                            <i class="bi bi-pc-display text-warning fs-5"></i>
+
+                            <div>
+
+                                <div class="fw-semibold">
+                                    Practical / Lab
+                                </div>
+
+                                <small class="text-muted">
+                                    Laboratory or practical-based course.
+                                </small>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="d-flex gap-3">
+
+                            <i class="bi bi-kanban text-danger fs-5"></i>
+
+                            <div>
+
+                                <div class="fw-semibold">
+                                    Project
+                                </div>
+
+                                <small class="text-muted">
+                                    Academic project or capstone work.
+                                </small>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- IMPORTANT NOTE -->
+
+                <div class="alert alert-warning border-0 shadow-sm">
+
+                    <div class="d-flex">
+
+                        <i class="bi bi-shield-check fs-5 me-2"></i>
+
+                        <div>
+
+                            <div class="fw-semibold mb-1">
+                                Academic Data
+                            </div>
+
+                            <small>
+                                Course changes affect timetable,
+                                faculty assignment and future
+                                academic modules.
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+<!-- ========================================== -->
+<!-- COURSE FORM SCRIPT -->
+<!-- ========================================== -->
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const departmentSelect =
+            document.getElementById(
+                "department"
+            );
+
+        const programSelect =
+            document.getElementById(
+                "program"
+            );
+
+        const semesterSelect =
+            document.getElementById(
+                "semester"
+            );
+
+        const semesterHelp =
+            document.getElementById(
+                "semesterHelp"
+            );
+
+        const courseNameInput =
+            document.getElementById(
+                "courseName"
+            );
+
+        const courseCodeInput =
+            document.getElementById(
+                "courseCode"
+            );
+
+        const courseTypeSelect =
+            document.getElementById(
+                "courseType"
+            );
+
+        const creditsInput =
+            document.getElementById(
+                "credits"
+            );
+
+        const theoryHoursInput =
+            document.getElementById(
+                "theoryHours"
+            );
+
+        const practicalHoursInput =
+            document.getElementById(
+                "practicalHours"
+            );
+
+
+        const previewCourseName =
+            document.getElementById(
+                "previewCourseName"
+            );
+
+        const previewCourseCode =
+            document.getElementById(
+                "previewCourseCode"
+            );
+
+        const previewDepartment =
+            document.getElementById(
+                "previewDepartment"
+            );
+
+        const previewProgram =
+            document.getElementById(
+                "previewProgram"
+            );
+
+        const previewSemester =
+            document.getElementById(
+                "previewSemester"
+            );
+
+        const previewType =
+            document.getElementById(
+                "previewType"
+            );
+
+        const previewCredits =
+            document.getElementById(
+                "previewCredits"
+            );
+
+        const totalHours =
+            document.getElementById(
+                "totalHours"
+            );
+
+
+        if (
+            !departmentSelect ||
+            !programSelect
+        ) {
+            return;
+        }
+
+
+        /*
+         * Store original program options.
+         */
+
+        const originalProgramOptions =
+            Array.from(
+                programSelect.options
+            ).map(
+                option =>
+                    option.cloneNode(true)
+            );
+
+
+        /*
+         * Original selected program.
+         * Useful during edit mode.
+         */
+
+        const initialProgram =
+            programSelect.value;
+
+
+        /*
+         * Filter programs according
+         * to selected department.
+         */
+
+        function filterPrograms(
+            preserveSelection = false
+        ) {
+
+            const selectedDepartment =
+                departmentSelect.value;
+
+            const currentProgram =
+                programSelect.value;
+
+            programSelect.innerHTML = "";
+
+
+            const placeholder =
+                document.createElement(
+                    "option"
+                );
+
+            placeholder.value = "";
+            placeholder.textContent =
+                "Select Program";
+
+            programSelect.appendChild(
+                placeholder
+            );
+
+
+            originalProgramOptions
+                .forEach(
+                    option => {
+
+                        if (
+                            !option.value
+                        ) {
+                            return;
+                        }
+
+
+                        const optionDepartment =
+                            option.dataset.department;
+
+
+                        if (
+                            selectedDepartment &&
+                            optionDepartment !==
+                                selectedDepartment
+                        ) {
+                            return;
+                        }
+
+
+                        programSelect.appendChild(
+                            option.cloneNode(true)
+                        );
+
+                    }
+                );
+
+
+            if (
+                preserveSelection &&
+                currentProgram &&
+                Array.from(
+                    programSelect.options
+                ).some(
+                    option =>
+                        option.value ===
+                        currentProgram
+                )
+            ) {
+
+                programSelect.value =
+                    currentProgram;
+
+            } else if (
+                initialProgram &&
+                Array.from(
+                    programSelect.options
+                ).some(
+                    option =>
+                        option.value ===
+                        initialProgram
+                )
+            ) {
+
+                programSelect.value =
+                    initialProgram;
+
+            } else {
+
+                programSelect.value =
+                    "";
+
+            }
+
+
+            updateSemesterOptions();
+
+            updatePreview();
+
+        }
+
+
+        /*
+         * Limit semester according
+         * to program duration.
+         */
+
+        function updateSemesterOptions() {
+
+            const selectedOption =
+                programSelect.options[
+                    programSelect.selectedIndex
+                ];
+
+            const totalSemesters =
+                selectedOption?.dataset
+                    ?.semesters
+                    ? Number(
+                        selectedOption
+                            .dataset
+                            .semesters
+                    )
+                    : 0;
+
+
+            const currentSemester =
+                semesterSelect.value;
+
+
+            Array.from(
+                semesterSelect.options
+            ).forEach(
+                option => {
+
+                    if (!option.value) {
+                        return;
+                    }
+
+
+                    const semester =
+                        Number(
+                            option.value
+                        );
+
+
+                    if (
+                        totalSemesters &&
+                        semester >
+                            totalSemesters
+                    ) {
+
+                        option.hidden = true;
+
+                    } else {
+
+                        option.hidden = false;
+
+                    }
+
+                }
+            );
+
+
+            if (
+                !totalSemesters
+            ) {
+
+                semesterHelp.textContent =
+                    "Select a program to see available semesters.";
+
+                return;
+            }
+
+
+            semesterHelp.textContent =
+                `This program has ${totalSemesters} semester${
+                    totalSemesters === 1
+                        ? ""
+                        : "s"
+                }.`;
+
+
+
+            if (
+                currentSemester &&
+                Number(currentSemester) >
+                    totalSemesters
+            ) {
+
+                semesterSelect.value =
+                    "";
+
+            }
+
+        }
+
+
+        /*
+         * Course preview.
+         */
+
+        function updatePreview() {
+
+            if (
+                previewCourseName
+            ) {
+
+                previewCourseName.textContent =
+                    courseNameInput.value.trim() ||
+                    "Course Name";
+
+            }
+
+
+            if (
+                previewCourseCode
+            ) {
+
+                previewCourseCode.textContent =
+                    courseCodeInput.value
+                        .trim()
+                        .toUpperCase() ||
+                    "COURSE-CODE";
+
+            }
+
+
+            if (
+                previewDepartment
+            ) {
+
+                const selected =
+                    departmentSelect.options[
+                        departmentSelect
+                            .selectedIndex
+                    ];
+
+                previewDepartment.textContent =
+                    selected?.value
+                        ? selected.textContent
+                            .trim()
+                        : "—";
+
+            }
+
+
+            if (
+                previewProgram
+            ) {
+
+                const selected =
+                    programSelect.options[
+                        programSelect
+                            .selectedIndex
+                    ];
+
+                previewProgram.textContent =
+                    selected?.value
+                        ? selected.textContent
+                            .trim()
+                        : "—";
+
+            }
+
+
+            if (
+                previewSemester
+            ) {
+
+                previewSemester.textContent =
+                    semesterSelect.value
+                        ? `Semester ${semesterSelect.value}`
+                        : "—";
+
+            }
+
+
+            if (
+                previewType
+            ) {
+
+                const selected =
+                    courseTypeSelect.options[
+                        courseTypeSelect
+                            .selectedIndex
+                    ];
+
+                previewType.textContent =
+                    selected?.value
+                        ? selected.textContent
+                            .trim()
+                        : "—";
+
+            }
+
+
+            if (
+                previewCredits
+            ) {
+
+                previewCredits.textContent =
+                    creditsInput.value
+                        ? creditsInput.value
+                        : "—";
+
+            }
+
+
+            updateTotalHours();
+
+        }
+
+
+        /*
+         * Total workload.
+         */
+
+        function updateTotalHours() {
+
+            const theory =
+                Number(
+                    theoryHoursInput.value
+                ) || 0;
+
+            const practical =
+                Number(
+                    practicalHoursInput.value
+                ) || 0;
+
+            totalHours.textContent =
+                theory + practical;
+
+        }
+
+
+        /*
+         * Department change.
+         */
+
+        departmentSelect.addEventListener(
+            "change",
+            function () {
+
+                /*
+                 * Department changed,
+                 * therefore previous program
+                 * may no longer be valid.
+                 */
+
+                const selectedDepartment =
+                    departmentSelect.value;
+
+                programSelect.innerHTML = "";
+
+
+                const placeholder =
+                    document.createElement(
+                        "option"
+                    );
+
+                placeholder.value = "";
+                placeholder.textContent =
+                    "Select Program";
+
+                programSelect.appendChild(
+                    placeholder
+                );
+
+
+                originalProgramOptions
+                    .forEach(
+                        option => {
+
+                            if (
+                                !option.value
+                            ) {
+                                return;
+                            }
+
+
+                            if (
+                                !selectedDepartment ||
+                                option.dataset.department ===
+                                    selectedDepartment
+                            ) {
+
+                                programSelect.appendChild(
+                                    option.cloneNode(true)
+                                );
+
+                            }
+
+                        }
+                    );
+
+
+                updateSemesterOptions();
+                updatePreview();
+
+            }
+        );
+
+
+        /*
+         * Program change.
+         */
+
+        programSelect.addEventListener(
+            "change",
+            function () {
+
+                updateSemesterOptions();
+                updatePreview();
+
+            }
+        );
+
+
+        /*
+         * Other live preview fields.
+         */
+
+        courseNameInput.addEventListener(
+            "input",
+            updatePreview
+        );
+
+        courseCodeInput.addEventListener(
+            "input",
+            updatePreview
+        );
+
+        courseTypeSelect.addEventListener(
+            "change",
+            updatePreview
+        );
+
+        semesterSelect.addEventListener(
+            "change",
+            updatePreview
+        );
+
+        creditsInput.addEventListener(
+            "input",
+            updatePreview
+        );
+
+        theoryHoursInput.addEventListener(
+            "input",
+            updateTotalHours
+        );
+
+        practicalHoursInput.addEventListener(
+            "input",
+            updateTotalHours
+        );
+
+
+        /*
+         * Initial state.
+         */
+
+        filterPrograms(true);
+
+        updatePreview();
+
+    }
+);
+
+</script>

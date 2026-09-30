@@ -1,0 +1,1339 @@
+
+<% layout("layouts/boilerplate") -%>
+
+<div class="container-fluid py-4">
+
+    <!-- ==========================================
+         PAGE HEADER
+    =========================================== -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4">
+
+        <div>
+            <h2 class="fw-bold mb-1">
+                <i class="bi bi-wallet2 me-2"></i>
+                Student Fee Management
+            </h2>
+
+            <p class="text-muted mb-0">
+                Manage semester-wise fee and payment details.
+            </p>
+        </div>
+
+        <div class="mt-3 mt-md-0">
+
+            <a
+                href="/admin/fee"
+                class="btn btn-outline-secondary"
+            >
+                <i class="bi bi-arrow-left me-1"></i>
+                Back to Students
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         STUDENT INFORMATION
+    =========================================== -->
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-header bg-white py-3">
+
+            <h5 class="fw-semibold mb-0">
+                <i class="bi bi-person-badge me-2"></i>
+                Student Information
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row g-4">
+
+                <div class="col-md-3">
+
+                    <small class="text-muted d-block">
+                        Student ID
+                    </small>
+
+                    <strong>
+                        <%= studentProfile.studentId || "N/A" %>
+                    </strong>
+
+                </div>
+
+
+                <div class="col-md-3">
+
+                    <small class="text-muted d-block">
+                        Student Name
+                    </small>
+
+                    <strong>
+                        <%= studentProfile.user?.name || "N/A" %>
+                    </strong>
+
+                </div>
+
+
+                <div class="col-md-3">
+
+                    <small class="text-muted d-block">
+                        Department
+                    </small>
+
+                    <strong class="text-capitalize">
+                        <%= studentProfile.department || "N/A" %>
+                    </strong>
+
+                </div>
+
+
+                <div class="col-md-3">
+
+                    <small class="text-muted d-block">
+                        Program
+                    </small>
+
+                    <strong class="text-capitalize">
+                        <%= studentProfile.program || "N/A" %>
+                    </strong>
+
+                </div>
+
+
+                <div class="col-md-3">
+
+                    <small class="text-muted d-block">
+                        Current Semester
+                    </small>
+
+                    <span class="badge bg-primary">
+
+                        Semester
+                        <%= studentProfile.semester || "N/A" %>
+
+                    </span>
+
+                </div>
+
+
+                <div class="col-md-3">
+
+                    <small class="text-muted d-block">
+                        Section
+                    </small>
+
+                    <strong>
+                        <%= studentProfile.section || "N/A" %>
+                    </strong>
+
+                </div>
+
+
+                <div class="col-md-6">
+
+                    <small class="text-muted d-block">
+                        Email
+                    </small>
+
+                    <strong>
+                        <%= studentProfile.user?.email || "N/A" %>
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         EXISTING FEE RECORDS
+    =========================================== -->
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-header bg-white py-3">
+
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+
+                <div>
+
+                    <h5 class="fw-semibold mb-1">
+
+                        <i class="bi bi-receipt me-2"></i>
+                        Fee Records
+
+                    </h5>
+
+                    <small class="text-muted">
+                        Existing academic session and semester fee records.
+                    </small>
+
+                </div>
+
+
+                <div class="d-flex align-items-center gap-2">
+
+                    <span class="badge bg-secondary">
+
+                        <%= fees.length %>
+                        Record<%= fees.length === 1 ? "" : "s" %>
+
+                    </span>
+
+
+                    <a
+                        href="#feeFormSection"
+                        class="btn btn-primary btn-sm"
+                    >
+
+                        <i class="bi bi-plus-circle me-1"></i>
+                        Add Fee Record
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="card-body p-0">
+
+            <% if (fees.length === 0) { %>
+
+                <div class="text-center py-5 px-3">
+
+                    <i
+                        class="bi bi-receipt text-muted"
+                        style="font-size: 3rem;"
+                    ></i>
+
+                    <h5 class="fw-semibold mt-3">
+                        No Fee Record Found
+                    </h5>
+
+                    <p class="text-muted mb-3">
+                        Create the first fee record using the form below.
+                    </p>
+
+                    <a
+                        href="#feeFormSection"
+                        class="btn btn-primary"
+                    >
+
+                        <i class="bi bi-plus-circle me-1"></i>
+                        Add First Fee Record
+
+                    </a>
+
+                </div>
+
+            <% } else { %>
+
+                <div class="table-responsive">
+
+                    <table class="table table-hover align-middle mb-0">
+
+                        <thead class="table-light">
+
+                            <tr>
+
+                                <th class="px-4">
+                                    Academic Session
+                                </th>
+
+                                <th>
+                                    Semester
+                                </th>
+
+                                <th>
+                                    Total
+                                </th>
+
+                                <th>
+                                    Paid
+                                </th>
+
+                                <th>
+                                    Due
+                                </th>
+
+                                <th>
+                                    Status
+                                </th>
+
+                                <th class="text-end px-4">
+                                    Action
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            <% fees.forEach(fee => { %>
+
+                                <tr>
+
+                                    <td class="px-4 fw-semibold">
+
+                                        <%= fee.academicSession %>
+
+                                    </td>
+
+
+                                    <td>
+
+                                        Semester
+                                        <%= fee.semester %>
+
+                                    </td>
+
+
+                                    <td>
+
+                                        ₹<%= Number(
+                                            fee.totalFee || 0
+                                        ).toLocaleString("en-IN") %>
+
+                                    </td>
+
+
+                                    <td class="text-success fw-semibold">
+
+                                        ₹<%= Number(
+                                            fee.paidAmount || 0
+                                        ).toLocaleString("en-IN") %>
+
+                                    </td>
+
+
+                                    <td class="text-danger fw-semibold">
+
+                                        ₹<%= Number(
+                                            fee.dueAmount || 0
+                                        ).toLocaleString("en-IN") %>
+
+                                    </td>
+
+
+                                    <td>
+
+                                        <% if (fee.paymentStatus === "paid") { %>
+
+                                            <span class="badge bg-success">
+
+                                                <i class="bi bi-check-circle me-1"></i>
+                                                Paid
+
+                                            </span>
+
+                                        <% } else if (fee.paymentStatus === "partially_paid") { %>
+
+                                            <span class="badge bg-warning text-dark">
+
+                                                <i class="bi bi-hourglass-split me-1"></i>
+                                                Partially Paid
+
+                                            </span>
+
+                                        <% } else if (fee.paymentStatus === "overdue") { %>
+
+                                            <span class="badge bg-danger">
+
+                                                <i class="bi bi-exclamation-circle me-1"></i>
+                                                Overdue
+
+                                            </span>
+
+                                        <% } else { %>
+
+                                            <span class="badge bg-secondary">
+
+                                                <i class="bi bi-clock me-1"></i>
+                                                Pending
+
+                                            </span>
+
+                                        <% } %>
+
+                                    </td>
+
+
+                                    <td class="text-end px-4">
+
+                                        <button
+                                            type="button"
+                                            class="btn btn-sm btn-outline-primary edit-fee-btn"
+                                            data-fee="<%= JSON.stringify(fee) %>"
+                                        >
+
+                                            <i class="bi bi-pencil me-1"></i>
+                                            Edit
+
+                                        </button>
+
+                                    </td>
+
+                                </tr>
+
+                            <% }) %>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            <% } %>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         FEE FORM
+    =========================================== -->
+    <div
+        id="feeFormSection"
+        class="card border-0 shadow-sm"
+    >
+
+        <div class="card-header bg-white py-3">
+
+            <h5 class="fw-semibold mb-1">
+
+                <i class="bi bi-plus-circle me-2"></i>
+
+                <span id="formTitle">
+                    Add Fee Record
+                </span>
+
+            </h5>
+
+            <small class="text-muted">
+                Enter the fee breakdown and payment information.
+            </small>
+
+        </div>
+
+
+        <div class="card-body p-4">
+
+            <form
+                action="/admin/fee/save"
+                method="POST"
+                id="feeForm"
+            >
+
+                <!-- Hidden Fields -->
+
+                <input
+                    type="hidden"
+                    name="feeId"
+                    id="feeId"
+                    value=""
+                >
+
+
+                <input
+                    type="hidden"
+                    name="studentProfileId"
+                    value="<%= studentProfile._id %>"
+                >
+
+
+                <!-- ==========================================
+                     ACADEMIC INFORMATION
+                =========================================== -->
+                <h6 class="fw-bold mb-3">
+                    Academic Information
+                </h6>
+
+
+                <div class="row g-3 mb-4">
+
+                    <div class="col-md-6">
+
+                        <label
+                            for="academicSession"
+                            class="form-label fw-semibold"
+                        >
+                            Academic Session
+                        </label>
+
+                        <input
+                            type="text"
+                            name="academicSession"
+                            id="academicSession"
+                            class="form-control"
+                            placeholder="Example: 2026-27"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <label
+                            for="semester"
+                            class="form-label fw-semibold"
+                        >
+                            Semester
+                        </label>
+
+                        <select
+                            name="semester"
+                            id="semester"
+                            class="form-select"
+                            required
+                        >
+
+                            <option value="">
+                                Select Semester
+                            </option>
+
+                            <% for (let i = 1; i <= 8; i++) { %>
+
+                                <option
+                                    value="<%= i %>"
+                                    <%= Number(studentProfile.semester) === i ? "selected" : "" %>
+                                >
+                                    Semester <%= i %>
+                                </option>
+
+                            <% } %>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ==========================================
+                     FEE BREAKDOWN
+                =========================================== -->
+                <h6 class="fw-bold mb-3">
+                    Fee Breakdown
+                </h6>
+
+
+                <div class="row g-3 mb-4">
+
+                    <!-- Tuition -->
+
+                    <div class="col-md-4">
+
+                        <label
+                            for="tuitionFee"
+                            class="form-label"
+                        >
+                            Tuition Fee
+                        </label>
+
+                        <div class="input-group">
+
+                            <span class="input-group-text">
+                                ₹
+                            </span>
+
+                            <input
+                                type="number"
+                                name="tuitionFee"
+                                id="tuitionFee"
+                                class="form-control fee-component"
+                                min="0"
+                                step="0.01"
+                                value="0"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Examination -->
+
+                    <div class="col-md-4">
+
+                        <label
+                            for="examinationFee"
+                            class="form-label"
+                        >
+                            Examination Fee
+                        </label>
+
+                        <div class="input-group">
+
+                            <span class="input-group-text">
+                                ₹
+                            </span>
+
+                            <input
+                                type="number"
+                                name="examinationFee"
+                                id="examinationFee"
+                                class="form-control fee-component"
+                                min="0"
+                                step="0.01"
+                                value="0"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Hostel -->
+
+                    <div class="col-md-4">
+
+                        <label
+                            for="hostelFee"
+                            class="form-label"
+                        >
+                            Hostel Fee
+                        </label>
+
+                        <div class="input-group">
+
+                            <span class="input-group-text">
+                                ₹
+                            </span>
+
+                            <input
+                                type="number"
+                                name="hostelFee"
+                                id="hostelFee"
+                                class="form-control fee-component"
+                                min="0"
+                                step="0.01"
+                                value="0"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Library -->
+
+                    <div class="col-md-4">
+
+                        <label
+                            for="libraryFee"
+                            class="form-label"
+                        >
+                            Library Fee
+                        </label>
+
+                        <div class="input-group">
+
+                            <span class="input-group-text">
+                                ₹
+                            </span>
+
+                            <input
+                                type="number"
+                                name="libraryFee"
+                                id="libraryFee"
+                                class="form-control fee-component"
+                                min="0"
+                                step="0.01"
+                                value="0"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Transport -->
+
+                    <div class="col-md-4">
+
+                        <label
+                            for="transportFee"
+                            class="form-label"
+                        >
+                            Transport Fee
+                        </label>
+
+                        <div class="input-group">
+
+                            <span class="input-group-text">
+                                ₹
+                            </span>
+
+                            <input
+                                type="number"
+                                name="transportFee"
+                                id="transportFee"
+                                class="form-control fee-component"
+                                min="0"
+                                step="0.01"
+                                value="0"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Other -->
+
+                    <div class="col-md-4">
+
+                        <label
+                            for="otherFee"
+                            class="form-label"
+                        >
+                            Other Fee
+                        </label>
+
+                        <div class="input-group">
+
+                            <span class="input-group-text">
+                                ₹
+                            </span>
+
+                            <input
+                                type="number"
+                                name="otherFee"
+                                id="otherFee"
+                                class="form-control fee-component"
+                                min="0"
+                                step="0.01"
+                                value="0"
+                            >
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ==========================================
+                     PAYMENT DETAILS
+                =========================================== -->
+                <h6 class="fw-bold mb-3">
+                    Payment Details
+                </h6>
+
+
+                <div class="row g-3 mb-4">
+
+                    <!-- Total -->
+
+                    <div class="col-md-4">
+
+                        <label class="form-label">
+                            Total Fee
+                        </label>
+
+                        <div class="input-group">
+
+                            <span class="input-group-text">
+                                ₹
+                            </span>
+
+                            <input
+                                type="text"
+                                id="totalFeeDisplay"
+                                class="form-control fw-bold"
+                                value="0"
+                                readonly
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Paid -->
+
+                    <div class="col-md-4">
+
+                        <label
+                            for="paidAmount"
+                            class="form-label fw-semibold"
+                        >
+                            Paid Amount
+                        </label>
+
+                        <div class="input-group">
+
+                            <span class="input-group-text">
+                                ₹
+                            </span>
+
+                            <input
+                                type="number"
+                                name="paidAmount"
+                                id="paidAmount"
+                                class="form-control"
+                                min="0"
+                                step="0.01"
+                                value="0"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Due -->
+
+                    <div class="col-md-4">
+
+                        <label class="form-label">
+                            Due Amount
+                        </label>
+
+                        <div class="input-group">
+
+                            <span class="input-group-text">
+                                ₹
+                            </span>
+
+                            <input
+                                type="text"
+                                id="dueAmountDisplay"
+                                class="form-control fw-bold text-danger"
+                                value="0"
+                                readonly
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Due Date -->
+
+                    <div class="col-md-6">
+
+                        <label
+                            for="dueDate"
+                            class="form-label fw-semibold"
+                        >
+                            Due Date
+                        </label>
+
+                        <input
+                            type="date"
+                            name="dueDate"
+                            id="dueDate"
+                            class="form-control"
+                        >
+
+                    </div>
+
+
+                    <!-- Status -->
+
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            Payment Status
+                        </label>
+
+                        <div class="form-control bg-light">
+
+                            <span
+                                id="paymentStatusDisplay"
+                                class="badge bg-secondary"
+                            >
+                                Pending
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Remarks -->
+
+                    <div class="col-12">
+
+                        <label
+                            for="remarks"
+                            class="form-label fw-semibold"
+                        >
+                            Admin Remarks
+                        </label>
+
+                        <textarea
+                            name="remarks"
+                            id="remarks"
+                            class="form-control"
+                            rows="3"
+                            maxlength="1000"
+                            placeholder="Optional remarks about the fee/payment"
+                        ></textarea>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ==========================================
+                     ACTIONS
+                =========================================== -->
+                <div class="d-flex flex-column flex-sm-row gap-2">
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                    >
+
+                        <i class="bi bi-save me-2"></i>
+                        Save Fee
+
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="btn btn-outline-secondary"
+                        id="resetFeeForm"
+                    >
+
+                        <i class="bi bi-arrow-counterclockwise me-2"></i>
+                        Reset
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ==========================================
+     FEE MANAGEMENT SCRIPT
+=========================================== -->
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const feeForm =
+        document.getElementById("feeForm");
+
+    const feeId =
+        document.getElementById("feeId");
+
+    const academicSession =
+        document.getElementById("academicSession");
+
+    const semester =
+        document.getElementById("semester");
+
+    const tuitionFee =
+        document.getElementById("tuitionFee");
+
+    const examinationFee =
+        document.getElementById("examinationFee");
+
+    const hostelFee =
+        document.getElementById("hostelFee");
+
+    const libraryFee =
+        document.getElementById("libraryFee");
+
+    const transportFee =
+        document.getElementById("transportFee");
+
+    const otherFee =
+        document.getElementById("otherFee");
+
+    const paidAmount =
+        document.getElementById("paidAmount");
+
+    const dueDate =
+        document.getElementById("dueDate");
+
+    const remarks =
+        document.getElementById("remarks");
+
+    const totalFeeDisplay =
+        document.getElementById("totalFeeDisplay");
+
+    const dueAmountDisplay =
+        document.getElementById("dueAmountDisplay");
+
+    const paymentStatusDisplay =
+        document.getElementById("paymentStatusDisplay");
+
+    const formTitle =
+        document.getElementById("formTitle");
+
+    const resetFeeForm =
+        document.getElementById("resetFeeForm");
+
+
+    // ==========================================
+    // CALCULATE FEE
+    // ==========================================
+    function calculateFee() {
+
+        const total =
+            Number(tuitionFee.value || 0) +
+            Number(examinationFee.value || 0) +
+            Number(hostelFee.value || 0) +
+            Number(libraryFee.value || 0) +
+            Number(transportFee.value || 0) +
+            Number(otherFee.value || 0);
+
+
+        let paid =
+            Number(paidAmount.value || 0);
+
+
+        if (paid < 0) {
+
+            paid = 0;
+
+            paidAmount.value = 0;
+
+        }
+
+
+        if (paid > total) {
+
+            paid = total;
+
+            paidAmount.value = total;
+
+        }
+
+
+        const due =
+            Math.max(total - paid, 0);
+
+
+        totalFeeDisplay.value =
+            total.toLocaleString("en-IN", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+
+
+        dueAmountDisplay.value =
+            due.toLocaleString("en-IN", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+
+
+        // ==========================================
+        // PAYMENT STATUS
+        // ==========================================
+        paymentStatusDisplay.className =
+            "badge";
+
+
+        if (total > 0 && paid >= total) {
+
+            paymentStatusDisplay.textContent =
+                "Paid";
+
+            paymentStatusDisplay.classList.add(
+                "bg-success"
+            );
+
+        } else if (paid > 0 && paid < total) {
+
+            paymentStatusDisplay.textContent =
+                "Partially Paid";
+
+            paymentStatusDisplay.classList.add(
+                "bg-warning",
+                "text-dark"
+            );
+
+        } else {
+
+            paymentStatusDisplay.textContent =
+                "Pending";
+
+            paymentStatusDisplay.classList.add(
+                "bg-secondary"
+            );
+
+        }
+
+
+        // ==========================================
+        // OVERDUE
+        // ==========================================
+        if (
+            due > 0 &&
+            dueDate.value
+        ) {
+
+            const selectedDueDate =
+                new Date(
+                    `${dueDate.value}T23:59:59`
+                );
+
+            const today =
+                new Date();
+
+            if (selectedDueDate < today) {
+
+                paymentStatusDisplay.textContent =
+                    "Overdue";
+
+                paymentStatusDisplay.className =
+                    "badge bg-danger";
+
+            }
+
+        }
+
+    }
+
+
+    // ==========================================
+    // COMPONENT INPUT LISTENERS
+    // ==========================================
+    document
+        .querySelectorAll(".fee-component")
+        .forEach(function (input) {
+
+            input.addEventListener(
+                "input",
+                calculateFee
+            );
+
+        });
+
+
+    paidAmount.addEventListener(
+        "input",
+        calculateFee
+    );
+
+
+    dueDate.addEventListener(
+        "change",
+        calculateFee
+    );
+
+
+    // ==========================================
+    // EDIT EXISTING FEE
+    // ==========================================
+    document
+        .querySelectorAll(".edit-fee-btn")
+        .forEach(function (button) {
+
+            button.addEventListener(
+                "click",
+                function () {
+
+                    let fee;
+
+                    try {
+
+                        fee =
+                            JSON.parse(
+                                this.dataset.fee
+                            );
+
+                    } catch (error) {
+
+                        console.error(
+                            "Unable to read fee data:",
+                            error
+                        );
+
+                        return;
+
+                    }
+
+
+                    feeId.value =
+                        fee._id || "";
+
+
+                    academicSession.value =
+                        fee.academicSession || "";
+
+
+                    semester.value =
+                        fee.semester || "";
+
+
+                    tuitionFee.value =
+                        fee.tuitionFee || 0;
+
+
+                    examinationFee.value =
+                        fee.examinationFee || 0;
+
+
+                    hostelFee.value =
+                        fee.hostelFee || 0;
+
+
+                    libraryFee.value =
+                        fee.libraryFee || 0;
+
+
+                    transportFee.value =
+                        fee.transportFee || 0;
+
+
+                    otherFee.value =
+                        fee.otherFee || 0;
+
+
+                    paidAmount.value =
+                        fee.paidAmount || 0;
+
+
+                    dueDate.value =
+                        fee.dueDate
+                            ? new Date(fee.dueDate)
+                                .toISOString()
+                                .split("T")[0]
+                            : "";
+
+
+                    remarks.value =
+                        fee.remarks || "";
+
+
+                    formTitle.textContent =
+                        "Edit Fee Record";
+
+
+                    calculateFee();
+
+
+                    const formSection =
+                        document.getElementById(
+                            "feeFormSection"
+                        );
+
+
+                    formSection.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start"
+                    });
+
+                }
+            );
+
+        });
+
+
+    // ==========================================
+    // RESET FORM
+    // ==========================================
+    resetFeeForm.addEventListener(
+        "click",
+        function () {
+
+            feeForm.reset();
+
+
+            feeId.value = "";
+
+
+            academicSession.value = "";
+
+
+            semester.value = "";
+
+
+            tuitionFee.value = 0;
+
+
+            examinationFee.value = 0;
+
+
+            hostelFee.value = 0;
+
+
+            libraryFee.value = 0;
+
+
+            transportFee.value = 0;
+
+
+            otherFee.value = 0;
+
+
+            paidAmount.value = 0;
+
+
+            dueDate.value = "";
+
+
+            remarks.value = "";
+
+
+            totalFeeDisplay.value =
+                "0.00";
+
+
+            dueAmountDisplay.value =
+                "0.00";
+
+
+            formTitle.textContent =
+                "Add Fee Record";
+
+
+            paymentStatusDisplay.textContent =
+                "Pending";
+
+
+            paymentStatusDisplay.className =
+                "badge bg-secondary";
+
+
+            // Restore current semester
+            const currentSemester =
+                "<%= studentProfile.semester || "" %>";
+
+            if (currentSemester) {
+
+                semester.value =
+                    currentSemester;
+
+            }
+
+        }
+    );
+
+
+    // ==========================================
+    // INITIAL CALCULATION
+    // ==========================================
+    calculateFee();
+
+});
+
+</script>

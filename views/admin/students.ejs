@@ -1,0 +1,2183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        <%= title || "Student Management" %> | CampusNexus AI
+    </title>
+
+    <!-- Bootstrap -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <!-- Bootstrap Icons -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+        rel="stylesheet"
+    >
+
+    <style>
+
+        /* ==========================================
+           ROOT
+        ========================================== */
+
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #3730a3;
+            --secondary: #7c3aed;
+
+            --success: #16a34a;
+            --warning: #d97706;
+            --danger: #dc2626;
+
+            --dark: #111827;
+            --muted: #64748b;
+
+            --bg: #f5f7fb;
+            --card: #ffffff;
+            --border: #e5e7eb;
+
+            --shadow:
+                0 12px 35px rgba(15, 23, 42, 0.08);
+
+            --radius: 18px;
+        }
+
+
+        /* ==========================================
+           BODY
+        ========================================== */
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+
+            min-height: 100vh;
+
+            background:
+                radial-gradient(
+                    circle at 10% 10%,
+                    rgba(99, 102, 241, 0.08),
+                    transparent 28%
+                ),
+                radial-gradient(
+                    circle at 90% 20%,
+                    rgba(124, 58, 237, 0.08),
+                    transparent 30%
+                ),
+                var(--bg);
+
+            color: var(--dark);
+
+            font-family:
+                Inter,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                sans-serif;
+        }
+
+
+        /* ==========================================
+           PAGE WRAPPER
+        ========================================== */
+
+        .page-wrapper {
+            padding: 28px;
+            max-width: 1800px;
+            margin: auto;
+        }
+
+
+        /* ==========================================
+           PAGE HEADER
+        ========================================== */
+
+        .page-header {
+            position: relative;
+            overflow: hidden;
+
+            padding: 30px;
+
+            border-radius: 24px;
+
+            color: white;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #312e81 0%,
+                    #4f46e5 48%,
+                    #7c3aed 100%
+                );
+
+            box-shadow:
+                0 20px 50px rgba(79, 70, 229, 0.25);
+
+            margin-bottom: 24px;
+        }
+
+        .page-header::before {
+            content: "";
+
+            position: absolute;
+
+            width: 280px;
+            height: 280px;
+
+            right: -100px;
+            top: -130px;
+
+            border-radius: 50%;
+
+            background:
+                rgba(255, 255, 255, 0.10);
+        }
+
+        .page-header::after {
+            content: "";
+
+            position: absolute;
+
+            width: 180px;
+            height: 180px;
+
+            right: 180px;
+            bottom: -120px;
+
+            border-radius: 50%;
+
+            background:
+                rgba(255, 255, 255, 0.07);
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 20px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .header-icon {
+            width: 64px;
+            height: 64px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 18px;
+
+            background:
+                rgba(255, 255, 255, 0.16);
+
+            backdrop-filter: blur(12px);
+
+            font-size: 29px;
+
+            box-shadow:
+                inset 0 1px 0 rgba(255,255,255,.2);
+        }
+
+        .header-title {
+            margin: 0;
+
+            font-size: 29px;
+            font-weight: 800;
+
+            letter-spacing: -0.5px;
+        }
+
+        .header-subtitle {
+            margin: 5px 0 0;
+
+            color:
+                rgba(255,255,255,.78);
+
+            font-size: 14px;
+        }
+
+        .header-count {
+            padding: 12px 18px;
+
+            border-radius: 14px;
+
+            background:
+                rgba(255,255,255,.13);
+
+            backdrop-filter: blur(10px);
+
+            border:
+                1px solid rgba(255,255,255,.16);
+
+            text-align: center;
+        }
+
+        .header-count strong {
+            display: block;
+
+            font-size: 24px;
+            line-height: 1;
+        }
+
+        .header-count span {
+            display: block;
+
+            margin-top: 5px;
+
+            font-size: 11px;
+
+            text-transform: uppercase;
+
+            letter-spacing: .7px;
+
+            opacity: .75;
+        }
+
+
+        /* ==========================================
+           SUMMARY CARDS
+        ========================================== */
+
+        .summary-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(5, minmax(0, 1fr));
+
+            gap: 16px;
+
+            margin-bottom: 24px;
+        }
+
+        .summary-card {
+            position: relative;
+            overflow: hidden;
+
+            background: var(--card);
+
+            border:
+                1px solid rgba(226, 232, 240, .8);
+
+            border-radius: var(--radius);
+
+            padding: 20px;
+
+            box-shadow: var(--shadow);
+
+            transition:
+                transform .25s ease,
+                box-shadow .25s ease;
+        }
+
+        .summary-card:hover {
+            transform: translateY(-4px);
+
+            box-shadow:
+                0 18px 40px rgba(15,23,42,.12);
+        }
+
+        .summary-card::after {
+            content: "";
+
+            position: absolute;
+
+            width: 90px;
+            height: 90px;
+
+            right: -30px;
+            bottom: -35px;
+
+            border-radius: 50%;
+
+            background:
+                rgba(79,70,229,.05);
+        }
+
+        .summary-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            margin-bottom: 16px;
+        }
+
+        .summary-icon {
+            width: 44px;
+            height: 44px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 13px;
+
+            font-size: 20px;
+        }
+
+        .icon-blue {
+            color: #4338ca;
+            background: #eef2ff;
+        }
+
+        .icon-green {
+            color: #15803d;
+            background: #dcfce7;
+        }
+
+        .icon-orange {
+            color: #b45309;
+            background: #fef3c7;
+        }
+
+        .icon-red {
+            color: #b91c1c;
+            background: #fee2e2;
+        }
+
+        .icon-purple {
+            color: #6d28d9;
+            background: #f3e8ff;
+        }
+
+        .summary-label {
+            margin: 0;
+
+            color: var(--muted);
+
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .summary-value {
+            margin: 2px 0 0;
+
+            font-size: 28px;
+            font-weight: 800;
+
+            letter-spacing: -1px;
+        }
+
+
+        /* ==========================================
+           FILTER CARD
+        ========================================== */
+
+        .filter-card {
+            background: var(--card);
+
+            border:
+                1px solid var(--border);
+
+            border-radius: var(--radius);
+
+            box-shadow: var(--shadow);
+
+            padding: 22px;
+
+            margin-bottom: 24px;
+        }
+
+        .filter-heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            margin-bottom: 18px;
+        }
+
+        .filter-title {
+            display: flex;
+            align-items: center;
+
+            gap: 9px;
+
+            margin: 0;
+
+            font-size: 17px;
+            font-weight: 750;
+        }
+
+        .filter-title i {
+            color: var(--primary);
+        }
+
+        .filter-reset {
+            color: var(--muted);
+
+            font-size: 13px;
+
+            text-decoration: none;
+        }
+
+        .filter-reset:hover {
+            color: var(--primary);
+        }
+
+        .form-label {
+            font-size: 12px;
+
+            font-weight: 700;
+
+            color: #475569;
+
+            margin-bottom: 7px;
+        }
+
+        .form-control,
+        .form-select {
+            min-height: 44px;
+
+            border-radius: 11px;
+
+            border-color: #dbe1ea;
+
+            font-size: 13px;
+
+            box-shadow: none !important;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: #818cf8;
+
+            box-shadow:
+                0 0 0 3px rgba(99,102,241,.10) !important;
+        }
+
+        .search-wrapper {
+            position: relative;
+        }
+
+        .search-wrapper i {
+            position: absolute;
+
+            left: 14px;
+            top: 50%;
+
+            transform:
+                translateY(-50%);
+
+            color: #94a3b8;
+
+            z-index: 2;
+        }
+
+        .search-wrapper input {
+            padding-left: 40px;
+        }
+
+        .filter-actions {
+            display: flex;
+
+            align-items: end;
+
+            gap: 8px;
+        }
+
+        .btn-filter {
+            min-height: 44px;
+
+            padding: 0 20px;
+
+            border: 0;
+
+            border-radius: 11px;
+
+            color: white;
+
+            font-size: 13px;
+            font-weight: 700;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--primary),
+                    var(--secondary)
+                );
+
+            transition:
+                transform .2s ease,
+                box-shadow .2s ease;
+        }
+
+        .btn-filter:hover {
+            color: white;
+
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 8px 20px rgba(79,70,229,.25);
+        }
+
+
+        /* ==========================================
+           TABLE CARD
+        ========================================== */
+
+        .table-card {
+            background: var(--card);
+
+            border:
+                1px solid var(--border);
+
+            border-radius: var(--radius);
+
+            box-shadow: var(--shadow);
+
+            overflow: hidden;
+        }
+
+        .table-header {
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 15px;
+
+            padding: 20px 22px;
+
+            border-bottom:
+                1px solid var(--border);
+        }
+
+        .table-heading {
+            margin: 0;
+
+            font-size: 18px;
+
+            font-weight: 800;
+        }
+
+        .table-subheading {
+            margin: 4px 0 0;
+
+            color: var(--muted);
+
+            font-size: 12px;
+        }
+
+        .result-badge {
+            padding: 8px 12px;
+
+            border-radius: 10px;
+
+            background: #eef2ff;
+
+            color: #4338ca;
+
+            font-size: 12px;
+
+            font-weight: 700;
+        }
+
+
+        /* ==========================================
+           STUDENT TABLE
+        ========================================== */
+
+        .students-table {
+            margin: 0;
+
+            min-width: 1150px;
+        }
+
+        .students-table thead th {
+            padding: 14px 16px;
+
+            background: #f8fafc;
+
+            color: #64748b;
+
+            border-bottom:
+                1px solid var(--border);
+
+            font-size: 10px;
+
+            font-weight: 800;
+
+            text-transform: uppercase;
+
+            letter-spacing: .7px;
+
+            white-space: nowrap;
+        }
+
+        .students-table tbody td {
+            padding: 15px 16px;
+
+            vertical-align: middle;
+
+            border-bottom:
+                1px solid #eef2f6;
+
+            font-size: 13px;
+        }
+
+        .students-table tbody tr {
+            transition:
+                background .2s ease;
+        }
+
+        .students-table tbody tr:hover {
+            background:
+                #fafbff;
+        }
+
+        .students-table tbody tr:last-child td {
+            border-bottom: 0;
+        }
+
+
+        /* ==========================================
+           STUDENT IDENTITY
+        ========================================== */
+
+        .student-info {
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            min-width: 220px;
+        }
+
+        .student-avatar {
+            width: 44px;
+            height: 44px;
+
+            flex-shrink: 0;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 13px;
+
+            color: white;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #4f46e5,
+                    #7c3aed
+                );
+
+            font-size: 16px;
+
+            font-weight: 800;
+
+            box-shadow:
+                0 7px 15px rgba(79,70,229,.20);
+        }
+
+        .student-name {
+            margin: 0;
+
+            font-size: 14px;
+
+            font-weight: 750;
+
+            color: #172033;
+        }
+
+        .student-email {
+            margin-top: 3px;
+
+            max-width: 200px;
+
+            color: #94a3b8;
+
+            font-size: 11px;
+
+            white-space: nowrap;
+
+            overflow: hidden;
+
+            text-overflow: ellipsis;
+        }
+
+        .student-mobile {
+            margin-top: 2px;
+
+            color: #64748b;
+
+            font-size: 11px;
+        }
+
+
+        /* ==========================================
+           ACADEMIC INFORMATION
+        ========================================== */
+
+        .student-id {
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 5px;
+
+            padding: 6px 9px;
+
+            border-radius: 8px;
+
+            background: #f1f5f9;
+
+            color: #334155;
+
+            font-size: 11px;
+
+            font-weight: 800;
+
+            letter-spacing: .3px;
+        }
+
+        .academic-main {
+            color: #334155;
+
+            font-size: 12px;
+
+            font-weight: 700;
+        }
+
+        .academic-sub {
+            margin-top: 3px;
+
+            color: #94a3b8;
+
+            font-size: 11px;
+        }
+
+        .semester-pill {
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            min-width: 34px;
+            height: 28px;
+
+            padding: 0 8px;
+
+            border-radius: 8px;
+
+            background: #eef2ff;
+
+            color: #4338ca;
+
+            font-size: 11px;
+
+            font-weight: 800;
+        }
+
+        .section-pill {
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            min-width: 34px;
+            height: 28px;
+
+            padding: 0 8px;
+
+            border-radius: 8px;
+
+            background: #f3e8ff;
+
+            color: #7e22ce;
+
+            font-size: 11px;
+
+            font-weight: 800;
+        }
+
+        .batch-text {
+            color: #475569;
+
+            font-size: 12px;
+
+            font-weight: 700;
+        }
+
+
+        /* ==========================================
+           STATUS BADGES
+        ========================================== */
+
+        .status-badge {
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 6px;
+
+            padding: 7px 10px;
+
+            border-radius: 9px;
+
+            font-size: 10px;
+
+            font-weight: 800;
+
+            white-space: nowrap;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+
+            border-radius: 50%;
+
+            background: currentColor;
+        }
+
+        .status-active {
+            color: #15803d;
+
+            background: #dcfce7;
+        }
+
+        .status-inactive {
+            color: #b91c1c;
+
+            background: #fee2e2;
+        }
+
+        .status-approved {
+            color: #15803d;
+
+            background: #dcfce7;
+        }
+
+        .status-pending {
+            color: #b45309;
+
+            background: #fef3c7;
+        }
+
+        .status-rejected {
+            color: #b91c1c;
+
+            background: #fee2e2;
+        }
+
+        .status-complete {
+            color: #0369a1;
+
+            background: #e0f2fe;
+        }
+
+        .status-incomplete {
+            color: #64748b;
+
+            background: #f1f5f9;
+        }
+
+
+        /* ==========================================
+           ACTION BUTTONS
+        ========================================== */
+
+        .action-group {
+            display: flex;
+
+            align-items: center;
+
+            gap: 6px;
+        }
+
+        .action-btn {
+            width: 34px;
+            height: 34px;
+
+            display: inline-flex;
+
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 9px;
+
+            border: 1px solid #e2e8f0;
+
+            background: white;
+
+            color: #64748b;
+
+            text-decoration: none;
+
+            transition:
+                all .2s ease;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+
+            color: var(--primary);
+
+            border-color: #c7d2fe;
+
+            background: #eef2ff;
+
+            box-shadow:
+                0 5px 12px rgba(79,70,229,.10);
+        }
+
+        .action-view {
+            color: #4338ca;
+            background: #eef2ff;
+            border-color: #e0e7ff;
+        }
+
+        .action-edit {
+            color: #b45309;
+            background: #fffbeb;
+            border-color: #fde68a;
+        }
+
+
+        /* ==========================================
+           EMPTY STATE
+        ========================================== */
+
+        .empty-state {
+            padding: 75px 25px;
+
+            text-align: center;
+        }
+
+        .empty-icon {
+            width: 78px;
+            height: 78px;
+
+            margin:
+                0 auto 18px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 22px;
+
+            background: #eef2ff;
+
+            color: #6366f1;
+
+            font-size: 34px;
+        }
+
+        .empty-title {
+            margin: 0;
+
+            font-size: 19px;
+
+            font-weight: 800;
+        }
+
+        .empty-text {
+            max-width: 450px;
+
+            margin: 8px auto 0;
+
+            color: var(--muted);
+
+            font-size: 13px;
+        }
+
+
+        /* ==========================================
+           TABLE FOOTER
+        ========================================== */
+
+        .table-footer {
+            padding: 15px 22px;
+
+            border-top:
+                1px solid var(--border);
+
+            background: #fafbfc;
+
+            color: var(--muted);
+
+            font-size: 12px;
+        }
+
+
+        /* ==========================================
+           RESPONSIVE
+        ========================================== */
+
+        @media (max-width: 1200px) {
+
+            .summary-grid {
+                grid-template-columns:
+                    repeat(3, minmax(0, 1fr));
+            }
+
+        }
+
+
+        @media (max-width: 768px) {
+
+            .page-wrapper {
+                padding: 15px;
+            }
+
+            .page-header {
+                padding: 22px;
+            }
+
+            .header-content {
+                align-items: flex-start;
+
+                flex-direction: column;
+            }
+
+            .header-count {
+                width: 100%;
+            }
+
+            .header-title {
+                font-size: 23px;
+            }
+
+            .summary-grid {
+                grid-template-columns:
+                    repeat(2, minmax(0, 1fr));
+            }
+
+            .filter-card {
+                padding: 16px;
+            }
+
+            .table-header {
+                align-items: flex-start;
+
+                flex-direction: column;
+            }
+
+        }
+
+
+        @media (max-width: 480px) {
+
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header-left {
+                align-items: flex-start;
+            }
+
+            .header-icon {
+                width: 52px;
+                height: 52px;
+            }
+
+            .header-title {
+                font-size: 20px;
+            }
+
+        }
+
+
+        /* ==========================================
+           REDUCED MOTION
+        ========================================== */
+
+        @media (prefers-reduced-motion: reduce) {
+
+            *,
+            *::before,
+            *::after {
+                scroll-behavior: auto !important;
+
+                transition: none !important;
+
+                animation: none !important;
+            }
+
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+<div class="page-wrapper">
+
+
+    <!-- ==========================================
+         PAGE HEADER
+    ========================================== -->
+
+    <section class="page-header">
+
+        <div class="header-content">
+
+            <div class="header-left">
+
+                <div class="header-icon">
+                    <i class="bi bi-mortarboard-fill"></i>
+                </div>
+
+                <div>
+
+                    <h1 class="header-title">
+                        Student Management
+                    </h1>
+
+                    <p class="header-subtitle">
+                        Manage university students, academic information,
+                        account status and approval records.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="header-count">
+
+                <strong>
+                    <%= summary.total %>
+                </strong>
+
+                <span>
+                    Students Found
+                </span>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ==========================================
+         SUMMARY
+    ========================================== -->
+
+    <section class="summary-grid">
+
+
+        <!-- TOTAL -->
+
+        <div class="summary-card">
+
+            <div class="summary-top">
+
+                <div class="summary-icon icon-blue">
+                    <i class="bi bi-people-fill"></i>
+                </div>
+
+            </div>
+
+            <p class="summary-label">
+                Total Students
+            </p>
+
+            <div class="summary-value">
+                <%= summary.total %>
+            </div>
+
+        </div>
+
+
+        <!-- ACTIVE -->
+
+        <div class="summary-card">
+
+            <div class="summary-top">
+
+                <div class="summary-icon icon-green">
+                    <i class="bi bi-person-check-fill"></i>
+                </div>
+
+            </div>
+
+            <p class="summary-label">
+                Active Accounts
+            </p>
+
+            <div class="summary-value">
+                <%= summary.active %>
+            </div>
+
+        </div>
+
+
+        <!-- PENDING -->
+
+        <div class="summary-card">
+
+            <div class="summary-top">
+
+                <div class="summary-icon icon-orange">
+                    <i class="bi bi-hourglass-split"></i>
+                </div>
+
+            </div>
+
+            <p class="summary-label">
+                Pending Approval
+            </p>
+
+            <div class="summary-value">
+                <%= summary.pending %>
+            </div>
+
+        </div>
+
+
+        <!-- APPROVED -->
+
+        <div class="summary-card">
+
+            <div class="summary-top">
+
+                <div class="summary-icon icon-purple">
+                    <i class="bi bi-patch-check-fill"></i>
+                </div>
+
+            </div>
+
+            <p class="summary-label">
+                Approved
+            </p>
+
+            <div class="summary-value">
+                <%= summary.approved %>
+            </div>
+
+        </div>
+
+
+        <!-- INCOMPLETE -->
+
+        <div class="summary-card">
+
+            <div class="summary-top">
+
+                <div class="summary-icon icon-red">
+                    <i class="bi bi-exclamation-circle-fill"></i>
+                </div>
+
+            </div>
+
+            <p class="summary-label">
+                Incomplete Profiles
+            </p>
+
+            <div class="summary-value">
+                <%= summary.incomplete %>
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+    <!-- ==========================================
+         FILTERS
+    ========================================== -->
+
+    <section class="filter-card">
+
+
+        <div class="filter-heading">
+
+            <h2 class="filter-title">
+
+                <i class="bi bi-funnel-fill"></i>
+
+                Student Filters
+
+            </h2>
+
+
+            <a
+                href="/admin/students"
+                class="filter-reset"
+            >
+                <i class="bi bi-arrow-counterclockwise"></i>
+                Reset Filters
+            </a>
+
+        </div>
+
+
+        <form
+            method="GET"
+            action="/admin/students"
+        >
+
+            <div class="row g-3">
+
+
+                <!-- SEARCH -->
+
+                <div class="col-12 col-lg-4">
+
+                    <label class="form-label">
+                        Search Student
+                    </label>
+
+                    <div class="search-wrapper">
+
+                        <i class="bi bi-search"></i>
+
+                        <input
+                            type="text"
+                            name="search"
+                            class="form-control"
+                            placeholder="Name, email, student ID, mobile..."
+                            value="<%= filters.search || '' %>"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- DEPARTMENT -->
+
+                <div class="col-6 col-lg-2">
+
+                    <label class="form-label">
+                        Department
+                    </label>
+
+                    <select
+                        name="department"
+                        class="form-select"
+                    >
+
+                        <option value="">
+                            All Departments
+                        </option>
+
+                        <% filterOptions.departments.forEach(department => { %>
+
+                            <option
+                                value="<%= department %>"
+                                <%= filters.department === department ? "selected" : "" %>
+                            >
+                                <%= department.toUpperCase() %>
+                            </option>
+
+                        <% }) %>
+
+                    </select>
+
+                </div>
+
+
+                <!-- PROGRAM -->
+
+                <div class="col-6 col-lg-2">
+
+                    <label class="form-label">
+                        Program
+                    </label>
+
+                    <select
+                        name="program"
+                        class="form-select"
+                    >
+
+                        <option value="">
+                            All Programs
+                        </option>
+
+                        <% filterOptions.programs.forEach(program => { %>
+
+                            <option
+                                value="<%= program %>"
+                                <%= filters.program === program ? "selected" : "" %>
+                            >
+                                <%= program.toUpperCase() %>
+                            </option>
+
+                        <% }) %>
+
+                    </select>
+
+                </div>
+
+
+                <!-- SEMESTER -->
+
+                <div class="col-6 col-lg-2">
+
+                    <label class="form-label">
+                        Semester
+                    </label>
+
+                    <select
+                        name="semester"
+                        class="form-select"
+                    >
+
+                        <option value="">
+                            All
+                        </option>
+
+                        <% for (let semester = 1; semester <= 8; semester++) { %>
+
+                            <option
+                                value="<%= semester %>"
+                                <%= String(filters.semester) === String(semester) ? "selected" : "" %>
+                            >
+                                Semester <%= semester %>
+                            </option>
+
+                        <% } %>
+
+                    </select>
+
+                </div>
+
+
+                <!-- SECTION -->
+
+                <div class="col-6 col-lg-2">
+
+                    <label class="form-label">
+                        Section
+                    </label>
+
+                    <select
+                        name="section"
+                        class="form-select"
+                    >
+
+                        <option value="">
+                            All Sections
+                        </option>
+
+                        <% filterOptions.sections.forEach(section => { %>
+
+                            <option
+                                value="<%= section %>"
+                                <%= filters.section === section ? "selected" : "" %>
+                            >
+                                <%= section %>
+                            </option>
+
+                        <% }) %>
+
+                    </select>
+
+                </div>
+
+
+                <!-- BATCH -->
+
+                <div class="col-6 col-lg-2">
+
+                    <label class="form-label">
+                        Batch
+                    </label>
+
+                    <select
+                        name="batch"
+                        class="form-select"
+                    >
+
+                        <option value="">
+                            All Batches
+                        </option>
+
+                        <% filterOptions.batches.forEach(batch => { %>
+
+                            <option
+                                value="<%= batch %>"
+                                <%= String(filters.batch) === String(batch) ? "selected" : "" %>
+                            >
+                                <%= batch %>
+                            </option>
+
+                        <% }) %>
+
+                    </select>
+
+                </div>
+
+
+                <!-- ACCOUNT STATUS -->
+
+                <div class="col-6 col-lg-2">
+
+                    <label class="form-label">
+                        Account Status
+                    </label>
+
+                    <select
+                        name="status"
+                        class="form-select"
+                    >
+
+                        <option value="">
+                            All Status
+                        </option>
+
+                        <option
+                            value="active"
+                            <%= filters.status === "active" ? "selected" : "" %>
+                        >
+                            Active
+                        </option>
+
+                        <option
+                            value="inactive"
+                            <%= filters.status === "inactive" ? "selected" : "" %>
+                        >
+                            Inactive
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- APPROVAL -->
+
+                <div class="col-6 col-lg-2">
+
+                    <label class="form-label">
+                        Academic Approval
+                    </label>
+
+                    <select
+                        name="approval"
+                        class="form-select"
+                    >
+
+                        <option value="">
+                            All
+                        </option>
+
+                        <option
+                            value="pending"
+                            <%= filters.approval === "pending" ? "selected" : "" %>
+                        >
+                            Pending
+                        </option>
+
+                        <option
+                            value="approved"
+                            <%= filters.approval === "approved" ? "selected" : "" %>
+                        >
+                            Approved
+                        </option>
+
+                        <option
+                            value="rejected"
+                            <%= filters.approval === "rejected" ? "selected" : "" %>
+                        >
+                            Rejected
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- BUTTON -->
+
+                <div class="col-12 col-lg-2">
+
+                    <label class="form-label d-block">
+                        &nbsp;
+                    </label>
+
+                    <button
+                        type="submit"
+                        class="btn btn-filter w-100"
+                    >
+                        <i class="bi bi-search me-1"></i>
+                        Apply Filters
+                    </button>
+
+                </div>
+
+
+            </div>
+
+        </form>
+
+    </section>
+
+
+    <!-- ==========================================
+         STUDENT TABLE
+    ========================================== -->
+
+    <section class="table-card">
+
+
+        <!-- TABLE HEADER -->
+
+        <div class="table-header">
+
+            <div>
+
+                <h2 class="table-heading">
+                    All Students
+                </h2>
+
+                <p class="table-subheading">
+                    Complete student academic and account overview
+                </p>
+
+            </div>
+
+
+            <div class="result-badge">
+
+                <i class="bi bi-list-check me-1"></i>
+
+                <%= students.length %> Records
+
+            </div>
+
+        </div>
+
+
+        <% if (students && students.length > 0) { %>
+
+
+            <div class="table-responsive">
+
+                <table class="table students-table">
+
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Student
+                            </th>
+
+                            <th>
+                                Student ID
+                            </th>
+
+                            <th>
+                                Department
+                            </th>
+
+                            <th>
+                                Program
+                            </th>
+
+                            <th>
+                                Semester
+                            </th>
+
+                            <th>
+                                Section
+                            </th>
+
+                            <th>
+                                Batch
+                            </th>
+
+                            <th>
+                                Account
+                            </th>
+
+                            <th>
+                                Academic
+                            </th>
+
+                            <th>
+                                Profile
+                            </th>
+
+                            <th>
+                                Actions
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+
+                        <% students.forEach((student, index) => { %>
+
+
+                            <%
+                                const studentName =
+                                    student.user?.name || "Unknown Student";
+
+                                const firstLetter =
+                                    studentName
+                                        .trim()
+                                        .charAt(0)
+                                        .toUpperCase();
+
+                                const email =
+                                    student.user?.email || "No email";
+
+                                const mobile =
+                                    student.mobile || "No mobile";
+
+                                const studentId =
+                                    student.studentId || "Not Assigned";
+
+                                const department =
+                                    student.department || "Not Assigned";
+
+                                const program =
+                                    student.program || "Not Assigned";
+
+                                const semester =
+                                    student.semester || "-";
+
+                                const section =
+                                    student.section || "-";
+
+                                const batch =
+                                    student.batch || "-";
+                            %>
+
+
+                            <tr>
+
+
+                                <!-- STUDENT -->
+
+                                <td>
+
+                                    <div class="student-info">
+
+
+                                        <div class="student-avatar">
+                                            <%= firstLetter %>
+                                        </div>
+
+
+                                        <div>
+
+                                            <p class="student-name">
+                                                <%= studentName %>
+                                            </p>
+
+                                            <div class="student-email">
+                                                <i class="bi bi-envelope me-1"></i>
+                                                <%= email %>
+                                            </div>
+
+                                            <div class="student-mobile">
+
+                                                <i class="bi bi-phone me-1"></i>
+
+                                                <%= mobile %>
+
+                                            </div>
+
+                                        </div>
+
+
+                                    </div>
+
+                                </td>
+
+
+                                <!-- STUDENT ID -->
+
+                                <td>
+
+                                    <span class="student-id">
+
+                                        <i class="bi bi-person-vcard"></i>
+
+                                        <%= studentId %>
+
+                                    </span>
+
+                                </td>
+
+
+                                <!-- DEPARTMENT -->
+
+                                <td>
+
+                                    <div class="academic-main">
+
+                                        <%= department.toUpperCase() %>
+
+                                    </div>
+
+                                    <div class="academic-sub">
+
+                                        Department
+
+                                    </div>
+
+                                </td>
+
+
+                                <!-- PROGRAM -->
+
+                                <td>
+
+                                    <div class="academic-main">
+
+                                        <%= program.toUpperCase() %>
+
+                                    </div>
+
+                                    <div class="academic-sub">
+
+                                        Academic Program
+
+                                    </div>
+
+                                </td>
+
+
+                                <!-- SEMESTER -->
+
+                                <td>
+
+                                    <span class="semester-pill">
+
+                                        Sem <%= semester %>
+
+                                    </span>
+
+                                </td>
+
+
+                                <!-- SECTION -->
+
+                                <td>
+
+                                    <span class="section-pill">
+
+                                        <%= section %>
+
+                                    </span>
+
+                                </td>
+
+
+                                <!-- BATCH -->
+
+                                <td>
+
+                                    <span class="batch-text">
+
+                                        <i class="bi bi-calendar3 me-1"></i>
+
+                                        <%= batch %>
+
+                                    </span>
+
+                                </td>
+
+
+                                <!-- ACCOUNT -->
+
+                                <td>
+
+
+                                    <% if (student.user?.isActive) { %>
+
+
+                                        <span class="status-badge status-active">
+
+                                            <span class="status-dot"></span>
+
+                                            Active
+
+                                        </span>
+
+
+                                    <% } else { %>
+
+
+                                        <span class="status-badge status-inactive">
+
+                                            <span class="status-dot"></span>
+
+                                            Inactive
+
+                                        </span>
+
+
+                                    <% } %>
+
+
+                                </td>
+
+
+                                <!-- ACADEMIC APPROVAL -->
+
+                                <td>
+
+
+                                    <% if (student.academicApprovalStatus === "approved") { %>
+
+
+                                        <span class="status-badge status-approved">
+
+                                            <i class="bi bi-check-circle-fill"></i>
+
+                                            Approved
+
+                                        </span>
+
+
+                                    <% } else if (student.academicApprovalStatus === "rejected") { %>
+
+
+                                        <span class="status-badge status-rejected">
+
+                                            <i class="bi bi-x-circle-fill"></i>
+
+                                            Rejected
+
+                                        </span>
+
+
+                                    <% } else { %>
+
+
+                                        <span class="status-badge status-pending">
+
+                                            <i class="bi bi-clock-fill"></i>
+
+                                            Pending
+
+                                        </span>
+
+
+                                    <% } %>
+
+
+                                </td>
+
+
+                                <!-- PROFILE STATUS -->
+
+                                <td>
+
+
+                                    <% if (student.profileStatus === "complete") { %>
+
+
+                                        <span class="status-badge status-complete">
+
+                                            <i class="bi bi-check2-circle"></i>
+
+                                            Complete
+
+                                        </span>
+
+
+                                    <% } else { %>
+
+
+                                        <span class="status-badge status-incomplete">
+
+                                            <i class="bi bi-exclamation-circle"></i>
+
+                                            Incomplete
+
+                                        </span>
+
+
+                                    <% } %>
+
+
+                                </td>
+
+
+                                <!-- ACTIONS -->
+
+                                <td>
+
+
+                                    <div class="action-group">
+
+
+                                        <% if (student._id) { %>
+
+
+                                            <!-- VIEW -->
+
+                                            <a
+                                                href="/admin/students/<%= student._id %>"
+                                                class="action-btn action-view"
+                                                title="View Student"
+                                            >
+
+                                                <i class="bi bi-eye-fill"></i>
+
+                                            </a>
+
+
+                                            <!-- EDIT -->
+
+                                            <a
+                                                href="/admin/students/<%= student._id %>/edit"
+                                                class="action-btn action-edit"
+                                                title="Edit Student"
+                                            >
+
+                                                <i class="bi bi-pencil-fill"></i>
+
+                                            </a>
+
+
+                                        <% } else { %>
+
+
+                                            <span
+                                                class="text-muted"
+                                                title="Student profile not available"
+                                            >
+                                                <i class="bi bi-dash-circle"></i>
+                                            </span>
+
+
+                                        <% } %>
+
+
+                                    </div>
+
+
+                                </td>
+
+
+                            </tr>
+
+
+                        <% }) %>
+
+
+                    </tbody>
+
+
+                </table>
+
+            </div>
+
+
+            <!-- TABLE FOOTER -->
+
+            <div class="table-footer">
+
+                <i class="bi bi-info-circle me-1"></i>
+
+                Showing
+                <strong><%= students.length %></strong>
+                student record(s).
+
+            </div>
+
+
+        <% } else { %>
+
+
+            <!-- EMPTY STATE -->
+
+            <div class="empty-state">
+
+
+                <div class="empty-icon">
+
+                    <i class="bi bi-people"></i>
+
+                </div>
+
+
+                <h3 class="empty-title">
+
+                    No Students Found
+
+                </h3>
+
+
+                <p class="empty-text">
+
+                    No student records match your current
+                    search or filter criteria.
+
+                    Try changing the filters or resetting
+                    the search.
+
+                </p>
+
+
+                <a
+                    href="/admin/students"
+                    class="btn btn-filter mt-4"
+                >
+
+                    <i class="bi bi-arrow-counterclockwise me-1"></i>
+
+                    Clear Filters
+
+                </a>
+
+
+            </div>
+
+
+        <% } %>
+
+
+    </section>
+
+
+</div>
+
+
+<!-- Bootstrap JS -->
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+></script>
+
+
+</body>
+</html>

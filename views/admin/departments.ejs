@@ -1,0 +1,555 @@
+<% layout("layouts/boilerplate") -%>
+
+<style>
+    .department-page {
+        padding: 28px 0 50px;
+    }
+
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+
+    .page-title {
+        margin: 0;
+        font-weight: 700;
+        color: #1f2937;
+    }
+
+    .page-subtitle {
+        margin: 5px 0 0;
+        color: #6b7280;
+        font-size: 14px;
+    }
+
+    .summary-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 18px;
+        margin-bottom: 24px;
+    }
+
+    .summary-card {
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 14px;
+        padding: 20px;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+    }
+
+    .summary-label {
+        color: #6b7280;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .summary-value {
+        font-size: 27px;
+        font-weight: 700;
+        color: #111827;
+        margin-top: 6px;
+    }
+
+    .filter-card,
+    .table-card {
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 16px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+    }
+
+    .filter-card {
+        padding: 20px;
+        margin-bottom: 22px;
+    }
+
+    .table-card {
+        overflow: hidden;
+    }
+
+    .table-responsive {
+        margin: 0;
+    }
+
+    .department-table {
+        margin: 0;
+        min-width: 1050px;
+    }
+
+    .department-table th {
+        background: #f8fafc;
+        color: #475569;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: .3px;
+        white-space: nowrap;
+        padding: 15px;
+    }
+
+    .department-table td {
+        padding: 15px;
+        vertical-align: middle;
+        color: #374151;
+    }
+
+    .department-name {
+        font-weight: 700;
+        color: #111827;
+    }
+
+    .department-code {
+        display: inline-block;
+        padding: 5px 9px;
+        border-radius: 7px;
+        background: #eef2ff;
+        color: #4338ca;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 6px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .status-active {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .status-inactive {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .action-group {
+        display: flex;
+        gap: 7px;
+        flex-wrap: wrap;
+    }
+
+    .action-btn {
+        border-radius: 8px;
+        font-size: 12px;
+    }
+
+    .empty-state {
+        padding: 55px 20px;
+        text-align: center;
+        color: #6b7280;
+    }
+
+    .empty-state i {
+        font-size: 42px;
+        margin-bottom: 12px;
+        color: #94a3b8;
+    }
+
+    @media (max-width: 992px) {
+        .summary-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 576px) {
+        .page-header {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .summary-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="container-fluid department-page">
+
+    <div class="page-header">
+
+        <div>
+            <h1 class="page-title">
+                Department Management
+            </h1>
+
+            <p class="page-subtitle">
+                Manage university departments, HODs and department status.
+            </p>
+        </div>
+
+        <a
+            href="/admin/departments/new"
+            class="btn btn-primary"
+        >
+            <i class="bi bi-plus-lg"></i>
+            Add Department
+        </a>
+
+    </div>
+
+
+    <!-- SUMMARY -->
+
+    <div class="summary-grid">
+
+        <div class="summary-card">
+            <div class="summary-label">
+                Total Departments
+            </div>
+
+            <div class="summary-value">
+                <%= summary.total %>
+            </div>
+        </div>
+
+        <div class="summary-card">
+            <div class="summary-label">
+                Active Departments
+            </div>
+
+            <div class="summary-value">
+                <%= summary.active %>
+            </div>
+        </div>
+
+        <div class="summary-card">
+            <div class="summary-label">
+                Total Programs
+            </div>
+
+            <div class="summary-value">
+                <%= summary.programs %>
+            </div>
+        </div>
+
+        <div class="summary-card">
+            <div class="summary-label">
+                Total Students
+            </div>
+
+            <div class="summary-value">
+                <%= summary.students %>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- FILTERS -->
+
+    <div class="filter-card">
+
+        <form
+            action="/admin/departments"
+            method="GET"
+            class="row g-3"
+        >
+
+            <div class="col-lg-6">
+                <label class="form-label">
+                    Search
+                </label>
+
+                <input
+                    type="text"
+                    name="search"
+                    class="form-control"
+                    placeholder="Search department name or code..."
+                    value="<%= filters.search %>"
+                >
+            </div>
+
+            <div class="col-lg-3">
+
+                <label class="form-label">
+                    Status
+                </label>
+
+                <select
+                    name="status"
+                    class="form-select"
+                >
+                    <option value="">
+                        All Status
+                    </option>
+
+                    <option
+                        value="active"
+                        <%= filters.status === "active" ? "selected" : "" %>
+                    >
+                        Active
+                    </option>
+
+                    <option
+                        value="inactive"
+                        <%= filters.status === "inactive" ? "selected" : "" %>
+                    >
+                        Inactive
+                    </option>
+                </select>
+
+            </div>
+
+            <div class="col-lg-3 d-flex align-items-end gap-2">
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+                    <i class="bi bi-search"></i>
+                    Search
+                </button>
+
+                <a
+                    href="/admin/departments"
+                    class="btn btn-outline-secondary"
+                >
+                    Reset
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+
+    <!-- DEPARTMENT TABLE -->
+
+    <div class="table-card">
+
+        <div class="table-responsive">
+
+            <table class="table department-table">
+
+                <thead>
+
+                    <tr>
+                        <th>Department Name</th>
+                        <th>Department Code</th>
+                        <th>HOD</th>
+                        <th>Number of Programs</th>
+                        <th>Number of Students</th>
+                        <th>Number of Faculty</th>
+                        <th>Status</th>
+                        <th>Created Date</th>
+                        <th>Actions</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <% if (departments.length > 0) { %>
+
+                        <% departments.forEach(department => { %>
+
+                            <tr>
+
+                                <!-- 1. Department Name -->
+
+                                <td>
+                                    <div class="department-name">
+                                        <%= department.name %>
+                                    </div>
+                                </td>
+
+
+                                <!-- 2. Department Code -->
+
+                                <td>
+                                    <span class="department-code">
+                                        <%= department.code %>
+                                    </span>
+                                </td>
+
+
+                                <!-- 3. HOD -->
+
+                                <td>
+
+                                    <% if (department.hod) { %>
+
+                                        <div class="fw-semibold">
+                                            <%= department.hod.name %>
+                                        </div>
+
+                                        <div class="text-muted small">
+                                            <%= department.hod.email %>
+                                        </div>
+
+                                    <% } else { %>
+
+                                        <span class="text-muted">
+                                            Not Assigned
+                                        </span>
+
+                                    <% } %>
+
+                                </td>
+
+
+                                <!-- 4. Number of Programs -->
+
+                                <td>
+                                    <strong>
+                                        <%= department.programCount %>
+                                    </strong>
+                                </td>
+
+
+                                <!-- 5. Number of Students -->
+
+                                <td>
+                                    <strong>
+                                        <%= department.studentCount %>
+                                    </strong>
+                                </td>
+
+
+                                <!-- 6. Number of Faculty -->
+
+                                <td>
+                                    <strong>
+                                        <%= department.facultyCount %>
+                                    </strong>
+                                </td>
+
+
+                                <!-- 7. Status -->
+
+                                <td>
+
+                                    <% if (department.status === "active") { %>
+
+                                        <span class="status-badge status-active">
+                                            <i class="bi bi-check-circle-fill"></i>
+                                            Active
+                                        </span>
+
+                                    <% } else { %>
+
+                                        <span class="status-badge status-inactive">
+                                            <i class="bi bi-x-circle-fill"></i>
+                                            Inactive
+                                        </span>
+
+                                    <% } %>
+
+                                </td>
+
+
+                                <!-- 8. Created Date -->
+
+                                <td>
+                                    <%= new Date(
+                                        department.createdAt
+                                    ).toLocaleDateString("en-IN") %>
+                                </td>
+
+
+                                <!-- 9. Actions -->
+
+                                <td>
+
+                                    <div class="action-group">
+
+                                        <a
+                                            href="/admin/departments/<%= department._id %>"
+                                            class="btn btn-sm btn-outline-primary action-btn"
+                                            title="View"
+                                        >
+                                            <i class="bi bi-eye-fill"></i>
+                                            View
+                                        </a>
+
+                                        <a
+                                            href="/admin/departments/<%= department._id %>/edit"
+                                            class="btn btn-sm btn-outline-secondary action-btn"
+                                            title="Edit"
+                                        >
+                                            <i class="bi bi-pencil-fill"></i>
+                                            Edit
+                                        </a>
+
+                                        <form
+                                            action="/admin/departments/<%= department._id %>/toggle-status"
+                                            method="POST"
+                                            class="d-inline"
+                                        >
+
+                                            <% if (department.status === "active") { %>
+
+                                                <button
+                                                    type="submit"
+                                                    class="btn btn-sm btn-outline-danger action-btn"
+                                                    onclick="return confirm('Deactivate this department?')"
+                                                >
+                                                    <i class="bi bi-pause-circle-fill"></i>
+                                                    Deactivate
+                                                </button>
+
+                                            <% } else { %>
+
+                                                <button
+                                                    type="submit"
+                                                    class="btn btn-sm btn-outline-success action-btn"
+                                                >
+                                                    <i class="bi bi-play-circle-fill"></i>
+                                                    Activate
+                                                </button>
+
+                                            <% } %>
+
+                                        </form>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                        <% }) %>
+
+                    <% } else { %>
+
+                        <tr>
+                            <td colspan="9">
+
+                                <div class="empty-state">
+
+                                    <i class="bi bi-building"></i>
+
+                                    <h5>
+                                        No departments found
+                                    </h5>
+
+                                    <p class="mb-0">
+                                        Try changing your search/filter
+                                        or create a new department.
+                                    </p>
+
+                                </div>
+
+                            </td>
+                        </tr>
+
+                    <% } %>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>

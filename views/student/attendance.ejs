@@ -1,0 +1,613 @@
+<% layout("layouts/boilerplate") -%>
+<div class="container-fluid py-4">
+
+    <!-- ==========================================
+         PAGE HEADER
+    =========================================== -->
+
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+
+        <div>
+            <h2 class="fw-bold mb-1">
+                <i class="bi bi-calendar-check text-primary me-2"></i>
+                My Attendance
+            </h2>
+
+            <p class="text-muted mb-0">
+                View your monthly subject-wise attendance.
+            </p>
+        </div>
+
+        <a
+            href="/student/dashboard"
+            class="btn btn-outline-secondary"
+        >
+            <i class="bi bi-arrow-left me-1"></i>
+            Dashboard
+        </a>
+
+    </div>
+
+
+    <!-- ==========================================
+         STUDENT ACADEMIC INFO
+    =========================================== -->
+
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-body">
+
+            <div class="row g-3">
+
+                <div class="col-12 col-md-6 col-lg-3">
+
+                    <small class="text-muted">
+                        Student ID
+                    </small>
+
+                    <div class="fw-semibold">
+                        <%= studentProfile.studentId %>
+                    </div>
+
+                </div>
+
+
+                <div class="col-12 col-md-6 col-lg-3">
+
+                    <small class="text-muted">
+                        Department
+                    </small>
+
+                    <div class="fw-semibold text-capitalize">
+                        <%= studentProfile.department %>
+                    </div>
+
+                </div>
+
+
+                <div class="col-12 col-md-6 col-lg-3">
+
+                    <small class="text-muted">
+                        Program
+                    </small>
+
+                    <div class="fw-semibold text-uppercase">
+                        <%= studentProfile.program %>
+                    </div>
+
+                </div>
+
+
+                <div class="col-6 col-md-3 col-lg-1">
+
+                    <small class="text-muted">
+                        Semester
+                    </small>
+
+                    <div class="fw-semibold">
+                        <%= studentProfile.semester %>
+                    </div>
+
+                </div>
+
+
+                <div class="col-6 col-md-3 col-lg-2">
+
+                    <small class="text-muted">
+                        Section
+                    </small>
+
+                    <div class="fw-semibold">
+                        <%= studentProfile.section %>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         MONTH SELECTOR
+    =========================================== -->
+
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-body">
+
+            <form
+                action="/student/attendance"
+                method="GET"
+                class="row g-3 align-items-end"
+            >
+
+                <div class="col-12 col-md-5">
+
+                    <label
+                        for="month"
+                        class="form-label fw-semibold"
+                    >
+                        Select Month
+                    </label>
+
+                    <select
+                        id="month"
+                        name="month"
+                        class="form-select"
+                    >
+
+                        <option
+                            value="1"
+                            <%= month === 1 ? "selected" : "" %>
+                        >
+                            January
+                        </option>
+
+                        <option
+                            value="2"
+                            <%= month === 2 ? "selected" : "" %>
+                        >
+                            February
+                        </option>
+
+                        <option
+                            value="3"
+                            <%= month === 3 ? "selected" : "" %>
+                        >
+                            March
+                        </option>
+
+                        <option
+                            value="4"
+                            <%= month === 4 ? "selected" : "" %>
+                        >
+                            April
+                        </option>
+
+                        <option
+                            value="5"
+                            <%= month === 5 ? "selected" : "" %>
+                        >
+                            May
+                        </option>
+
+                        <option
+                            value="6"
+                            <%= month === 6 ? "selected" : "" %>
+                        >
+                            June
+                        </option>
+
+                        <option
+                            value="7"
+                            <%= month === 7 ? "selected" : "" %>
+                        >
+                            July
+                        </option>
+
+                        <option
+                            value="8"
+                            <%= month === 8 ? "selected" : "" %>
+                        >
+                            August
+                        </option>
+
+                        <option
+                            value="9"
+                            <%= month === 9 ? "selected" : "" %>
+                        >
+                            September
+                        </option>
+
+                        <option
+                            value="10"
+                            <%= month === 10 ? "selected" : "" %>
+                        >
+                            October
+                        </option>
+
+                        <option
+                            value="11"
+                            <%= month === 11 ? "selected" : "" %>
+                        >
+                            November
+                        </option>
+
+                        <option
+                            value="12"
+                            <%= month === 12 ? "selected" : "" %>
+                        >
+                            December
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="col-12 col-md-4">
+
+                    <label
+                        for="year"
+                        class="form-label fw-semibold"
+                    >
+                        Year
+                    </label>
+
+                    <input
+                        type="number"
+                        id="year"
+                        name="year"
+                        class="form-control"
+                        value="<%= year %>"
+                        min="2000"
+                        max="<%= new Date().getFullYear() + 1 %>"
+                    >
+
+                </div>
+
+
+                <div class="col-12 col-md-3">
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary w-100"
+                    >
+                        <i class="bi bi-search me-1"></i>
+                        View Attendance
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         SUMMARY CARDS
+    =========================================== -->
+
+    <div class="row g-4 mb-4">
+
+        <!-- Overall -->
+        <div class="col-12 col-md-6 col-xl-3">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between align-items-start">
+
+                        <div>
+
+                            <p class="text-muted mb-1">
+                                Overall Attendance
+                            </p>
+
+                            <h2 class="fw-bold mb-0">
+                                <%= overallPercentage %>%
+                            </h2>
+
+                        </div>
+
+                        <div class="bg-primary-subtle rounded-circle p-3">
+                            <i class="bi bi-percent fs-4 text-primary"></i>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Total Classes -->
+        <div class="col-12 col-md-6 col-xl-3">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between align-items-start">
+
+                        <div>
+
+                            <p class="text-muted mb-1">
+                                Total Classes
+                            </p>
+
+                            <h2 class="fw-bold mb-0">
+                                <%= totalClasses %>
+                            </h2>
+
+                        </div>
+
+                        <div class="bg-info-subtle rounded-circle p-3">
+                            <i class="bi bi-calendar2-week fs-4 text-info"></i>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Present -->
+        <div class="col-12 col-md-6 col-xl-3">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between align-items-start">
+
+                        <div>
+
+                            <p class="text-muted mb-1">
+                                Present
+                            </p>
+
+                            <h2 class="fw-bold text-success mb-0">
+                                <%= totalPresent %>
+                            </h2>
+
+                        </div>
+
+                        <div class="bg-success-subtle rounded-circle p-3">
+                            <i class="bi bi-check-circle fs-4 text-success"></i>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Absent -->
+        <div class="col-12 col-md-6 col-xl-3">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between align-items-start">
+
+                        <div>
+
+                            <p class="text-muted mb-1">
+                                Absent
+                            </p>
+
+                            <h2 class="fw-bold text-danger mb-0">
+                                <%= totalAbsent %>
+                            </h2>
+
+                        </div>
+
+                        <div class="bg-danger-subtle rounded-circle p-3">
+                            <i class="bi bi-x-circle fs-4 text-danger"></i>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         MONTH TITLE
+    =========================================== -->
+
+    <div class="mb-3">
+
+        <h4 class="fw-bold mb-1">
+
+            <%= new Date(
+                year,
+                month - 1,
+                1
+            ).toLocaleString("en-IN", {
+                month: "long"
+            }) %>
+
+            <%= year %>
+
+        </h4>
+
+        <p class="text-muted mb-0">
+            Subject-wise attendance
+        </p>
+
+    </div>
+
+
+    <!-- ==========================================
+         ATTENDANCE TABLE
+    =========================================== -->
+
+    <% if (!attendance || attendance.length === 0) { %>
+
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-body text-center py-5">
+
+                <div
+                    class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+                    style="width: 80px; height: 80px;"
+                >
+
+                    <i class="bi bi-calendar-x fs-1 text-muted"></i>
+
+                </div>
+
+                <h5 class="fw-bold">
+                    No Attendance Record
+                </h5>
+
+                <p class="text-muted mb-0">
+                    No attendance has been recorded for the selected month.
+                </p>
+
+            </div>
+
+        </div>
+
+    <% } else { %>
+
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-body p-0">
+
+                <div class="table-responsive">
+
+                    <table class="table table-hover align-middle mb-0">
+
+                        <thead class="table-light">
+
+                            <tr>
+
+                                <th class="px-4">
+                                    #
+                                </th>
+
+                                <th>
+                                    Course
+                                </th>
+
+                                <th>
+                                    Total Classes
+                                </th>
+
+                                <th>
+                                    Present
+                                </th>
+
+                                <th>
+                                    Absent
+                                </th>
+
+                                <th>
+                                    Attendance
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            <% attendance.forEach((record, index) => { %>
+
+                                <tr>
+
+                                    <td class="px-4">
+                                        <%= index + 1 %>
+                                    </td>
+
+                                    <td>
+
+                                        <div class="fw-semibold">
+                                            <%= record.courseName %>
+                                        </div>
+
+                                        <small class="text-muted">
+                                            <%= record.courseCode %>
+                                        </small>
+
+                                    </td>
+
+                                    <td>
+                                        <%= record.totalClasses %>
+                                    </td>
+
+                                    <td class="text-success fw-semibold">
+                                        <%= record.presentClasses %>
+                                    </td>
+
+                                    <td class="text-danger fw-semibold">
+                                        <%= record.absentClasses %>
+                                    </td>
+
+                                    <td style="min-width: 180px;">
+
+                                        <div class="d-flex justify-content-between mb-1">
+
+                                            <span class="fw-semibold">
+                                                <%= record.percentage %>%
+                                            </span>
+
+                                        </div>
+
+                                        <div
+                                            class="progress"
+                                            style="height: 8px;"
+                                        >
+
+                                            <div
+                                                class="progress-bar
+                                                <%= Number(record.percentage) >= 75
+                                                    ? 'bg-success'
+                                                    : 'bg-danger'
+                                                %>"
+                                                role="progressbar"
+                                                style="width:<%= record.percentage %>%"
+                                                aria-valuenow="<%= record.percentage %>"
+                                                aria-valuemin="0"
+                                                aria-valuemax="100"
+                                            ></div>
+
+                                        </div>
+
+                                    </td>
+
+                                </tr>
+
+                            <% }) %>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    <% } %>
+
+
+    <!-- ==========================================
+         INFORMATION
+    =========================================== -->
+
+    <div class="alert alert-info mt-4">
+
+        <i class="bi bi-info-circle me-2"></i>
+
+        Attendance is updated by the authorized
+        university administrator. Students can view
+        their attendance but cannot modify it.
+
+    </div>
+
+</div>

@@ -1,0 +1,564 @@
+<footer class="campus-footer mt-5">
+
+    <div class="container py-5">
+
+        <div class="row g-4">
+
+            <!-- BRAND -->
+            <div class="col-lg-5 footer-column">
+
+                <h5 class="footer-brand fw-bold">
+                    <span class="footer-brand-icon">
+                        <i class="bi bi-mortarboard-fill"></i>
+                    </span>
+
+                    CampusNexus AI
+                </h5>
+
+                <p class="footer-description mt-3 mb-0">
+                    A unified digital platform for students,
+                    faculty and university administration.
+                </p>
+
+            </div>
+
+
+            <!-- PLATFORM -->
+            <div class="col-lg-3 footer-column">
+
+                <h6 class="footer-heading fw-bold">
+                    Platform
+                </h6>
+
+                <ul class="list-unstyled mt-3">
+
+                    <li class="mb-2">
+                        <a
+                            href="/"
+                            class="footer-link"
+                        >
+                            <i class="bi bi-chevron-right"></i>
+                            Home
+                        </a>
+                    </li>
+
+                    <li class="mb-2">
+                        <a
+                            href="#features"
+                            class="footer-link"
+                        >
+                            <i class="bi bi-chevron-right"></i>
+                            Features
+                        </a>
+                    </li>
+
+                    <li>
+                        <a
+                            href="#about"
+                            class="footer-link"
+                        >
+                            <i class="bi bi-chevron-right"></i>
+                            About
+                        </a>
+                    </li>
+
+                </ul>
+
+            </div>
+
+
+            <!-- CAMPUS MANAGEMENT -->
+            <div class="col-lg-4 footer-column">
+
+                <h6 class="footer-heading fw-bold">
+                    Campus Management
+                </h6>
+
+                <p class="footer-description mt-3">
+                    One platform for academics,
+                    administration and student services.
+                </p>
+
+                <div class="footer-status mt-4">
+
+                    <span class="status-dot"></span>
+
+                    <span>
+                        Smart University Platform
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <hr class="footer-divider my-4">
+
+
+        <div
+            class="d-flex flex-column flex-md-row justify-content-between align-items-md-center"
+        >
+
+            <small class="footer-bottom-text">
+                © <%= currentYear %> CampusNexus AI.
+                All rights reserved.
+            </small>
+
+            <small class="footer-bottom-text mt-2 mt-md-0">
+                University Campus Management Platform
+            </small>
+
+        </div>
+
+    </div>
+
+</footer>
+
+
+<style>
+
+    /* =========================================
+       CAMPUS NEXUS FOOTER
+    ========================================= */
+
+    .campus-footer {
+        position: relative;
+
+        background:
+            radial-gradient(
+                circle at 15% 20%,
+                rgba(0, 255, 255, 0.08),
+                transparent 30%
+            ),
+            radial-gradient(
+                circle at 85% 80%,
+                rgba(0, 200, 255, 0.06),
+                transparent 30%
+            ),
+            #050708;
+
+        color: #ffffff;
+
+        border-top: 1px solid rgba(0, 255, 255, 0.18);
+
+        overflow: hidden;
+
+        box-shadow:
+            0 -10px 40px rgba(0, 0, 0, 0.35);
+
+        animation: footerReveal 0.8s ease both;
+    }
+
+
+    /* Cyan top glow */
+
+    .campus-footer::before {
+        content: "";
+
+        position: absolute;
+
+        top: 0;
+        left: 0;
+
+        width: 100%;
+        height: 2px;
+
+        background:
+            linear-gradient(
+                90deg,
+                transparent,
+                #00ffff,
+                #00bfff,
+                #00ffff,
+                transparent
+            );
+
+        opacity: 0.8;
+
+        animation: footerGlow 4s linear infinite;
+    }
+
+
+    /* Background glow */
+
+    .campus-footer::after {
+        content: "";
+
+        position: absolute;
+
+        width: 350px;
+        height: 350px;
+
+        left: -180px;
+        bottom: -220px;
+
+        background: rgba(0, 255, 255, 0.06);
+
+        border-radius: 50%;
+
+        filter: blur(70px);
+
+        pointer-events: none;
+    }
+
+
+    /* =========================================
+       BRAND
+    ========================================= */
+
+    .footer-brand {
+        display: flex;
+
+        align-items: center;
+
+        gap: 10px;
+
+        color: #ffffff;
+
+        letter-spacing: 0.3px;
+
+        transition:
+            color 0.3s ease,
+            transform 0.3s ease;
+    }
+
+
+    .footer-brand:hover {
+        color: #00ffff;
+
+        transform: translateX(5px);
+    }
+
+
+    .footer-brand-icon {
+        width: 38px;
+        height: 38px;
+
+        display: inline-flex;
+
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 10px;
+
+        background: rgba(0, 255, 255, 0.08);
+
+        border: 1px solid rgba(0, 255, 255, 0.35);
+
+        color: #00ffff;
+
+        box-shadow:
+            0 0 15px rgba(0, 255, 255, 0.12);
+
+        transition:
+            all 0.35s ease;
+    }
+
+
+    .footer-brand:hover .footer-brand-icon {
+        transform:
+            rotate(-6deg)
+            scale(1.08);
+
+        background: rgba(0, 255, 255, 0.15);
+
+        box-shadow:
+            0 0 25px rgba(0, 255, 255, 0.35);
+    }
+
+
+    /* =========================================
+       TEXT
+    ========================================= */
+
+    .footer-description {
+        color: #9aa7ad;
+
+        line-height: 1.8;
+
+        max-width: 520px;
+
+        transition:
+            color 0.3s ease;
+    }
+
+
+    .footer-column:hover .footer-description {
+        color: #c5d0d5;
+    }
+
+
+    /* =========================================
+       HEADINGS
+    ========================================= */
+
+    .footer-heading {
+        position: relative;
+
+        display: inline-block;
+
+        color: #ffffff;
+
+        padding-bottom: 8px;
+    }
+
+
+    .footer-heading::after {
+        content: "";
+
+        position: absolute;
+
+        left: 0;
+        bottom: 0;
+
+        width: 28px;
+        height: 2px;
+
+        background: #00ffff;
+
+        border-radius: 10px;
+
+        box-shadow:
+            0 0 10px rgba(0, 255, 255, 0.7);
+
+        transition:
+            width 0.35s ease;
+    }
+
+
+    .footer-column:hover .footer-heading::after {
+        width: 55px;
+    }
+
+
+    /* =========================================
+       LINKS
+    ========================================= */
+
+    .footer-link {
+        position: relative;
+
+        display: inline-flex;
+
+        align-items: center;
+
+        gap: 7px;
+
+        color: #9aa7ad;
+
+        text-decoration: none;
+
+        padding: 4px 0;
+
+        transition:
+            color 0.3s ease,
+            transform 0.3s ease;
+    }
+
+
+    .footer-link i {
+        color: #00ffff;
+
+        font-size: 11px;
+
+        opacity: 0;
+
+        transform: translateX(-7px);
+
+        transition:
+            all 0.3s ease;
+    }
+
+
+    .footer-link:hover {
+        color: #00ffff;
+
+        transform: translateX(7px);
+
+        text-shadow:
+            0 0 12px rgba(0, 255, 255, 0.35);
+    }
+
+
+    .footer-link:hover i {
+        opacity: 1;
+
+        transform: translateX(0);
+    }
+
+
+    /* =========================================
+       STATUS
+    ========================================= */
+
+    .footer-status {
+        display: inline-flex;
+
+        align-items: center;
+
+        gap: 9px;
+
+        padding: 8px 14px;
+
+        border-radius: 50px;
+
+        background: rgba(0, 255, 255, 0.04);
+
+        border: 1px solid rgba(0, 255, 255, 0.14);
+
+        color: #9aa7ad;
+
+        font-size: 13px;
+
+        transition:
+            all 0.35s ease;
+    }
+
+
+    .footer-status:hover {
+        color: #ffffff;
+
+        border-color: rgba(0, 255, 255, 0.45);
+
+        background: rgba(0, 255, 255, 0.08);
+
+        box-shadow:
+            0 0 20px rgba(0, 255, 255, 0.12);
+
+        transform: translateY(-2px);
+    }
+
+
+    .status-dot {
+        width: 8px;
+        height: 8px;
+
+        border-radius: 50%;
+
+        background: #00ffff;
+
+        box-shadow:
+            0 0 8px #00ffff,
+            0 0 16px rgba(0, 255, 255, 0.7);
+
+        animation: statusPulse 2s infinite;
+    }
+
+
+    /* =========================================
+       DIVIDER
+    ========================================= */
+
+    .footer-divider {
+        border: 0;
+
+        height: 1px;
+
+        background:
+            linear-gradient(
+                90deg,
+                transparent,
+                rgba(0, 255, 255, 0.35),
+                transparent
+            );
+
+        opacity: 0.8;
+    }
+
+
+    /* =========================================
+       BOTTOM TEXT
+    ========================================= */
+
+    .footer-bottom-text {
+        color: #69767c;
+
+        transition:
+            color 0.3s ease;
+    }
+
+
+    .footer-bottom-text:hover {
+        color: #00ffff;
+    }
+
+
+    /* =========================================
+       ANIMATIONS
+    ========================================= */
+
+    @keyframes footerReveal {
+
+        from {
+            opacity: 0;
+
+            transform: translateY(25px);
+        }
+
+        to {
+            opacity: 1;
+
+            transform: translateY(0);
+        }
+
+    }
+
+
+    @keyframes footerGlow {
+
+        0% {
+            transform: translateX(-100%);
+        }
+
+        100% {
+            transform: translateX(100%);
+        }
+
+    }
+
+
+    @keyframes statusPulse {
+
+        0%,
+        100% {
+            opacity: 1;
+
+            transform: scale(1);
+        }
+
+        50% {
+            opacity: 0.55;
+
+            transform: scale(0.8);
+        }
+
+    }
+
+
+    /* =========================================
+       MOBILE
+    ========================================= */
+
+    @media (max-width: 767px) {
+
+        .campus-footer {
+            text-align: left;
+        }
+
+        .footer-brand {
+            font-size: 1.1rem;
+        }
+
+        .footer-description {
+            font-size: 14px;
+        }
+
+        .footer-bottom-text {
+            font-size: 12px;
+        }
+
+    }
+
+</style>

@@ -1,0 +1,158 @@
+<% layout("layouts/boilerplate") -%>
+
+<div class="container-fluid py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-1">Add New Department</h2>
+            <p class="text-muted mb-0">
+                Create a new university department.
+            </p>
+        </div>
+
+        <a href="/admin/departments" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i>
+            Back
+        </a>
+    </div>
+
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-4">
+
+            <form
+                action="/admin/departments"
+                method="POST"
+            >
+
+                <div class="row g-4">
+
+                    <!-- Department Name -->
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">
+                            Department Name
+                            <span class="text-danger">*</span>
+                        </label>
+
+                        <input
+                            type="text"
+                            name="name"
+                            class="form-control"
+                            placeholder="e.g. Department of Computer Science"
+                            required
+                            maxlength="150"
+                        >
+                    </div>
+
+
+                    <!-- Department Code -->
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">
+                            Department Code
+                            <span class="text-danger">*</span>
+                        </label>
+
+                        <input
+                            type="text"
+                            name="code"
+                            class="form-control text-uppercase"
+                            placeholder="e.g. CSE"
+                            required
+                            maxlength="20"
+                        >
+
+                        <div class="form-text">
+                            Unique code for this department.
+                        </div>
+                    </div>
+
+
+                    <!-- HOD -->
+                    <div class="col-md-6">
+
+                        <label class="form-label fw-semibold">
+                            Head of Department
+                        </label>
+
+                        <select
+                            name="hod"
+                            class="form-select"
+                        >
+                            <option value="">
+                                Select HOD
+                            </option>
+
+                            <% faculty.forEach(item => { %>
+
+                                <% if (item.user) { %>
+
+                                    <option value="<%= item.user._id %>">
+                                        <%= item.user.name %>
+                                        —
+                                        <%= item.employeeId %>
+                                    </option>
+
+                                <% } %>
+
+                            <% }) %>
+
+                        </select>
+
+                        <div class="form-text">
+                            Only active faculty members are available.
+                        </div>
+
+                    </div>
+
+
+                    <!-- Status -->
+                    <div class="col-md-6">
+
+                        <label class="form-label fw-semibold">
+                            Status
+                        </label>
+
+                        <input
+                            type="text"
+                            class="form-control"
+                            value="Active"
+                            disabled
+                        >
+
+                        <div class="form-text">
+                            New departments are created as active.
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <hr class="my-4">
+
+
+                <div class="d-flex justify-content-end gap-2">
+
+                    <a
+                        href="/admin/departments"
+                        class="btn btn-light border"
+                    >
+                        Cancel
+                    </a>
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary px-4"
+                    >
+                        <i class="bi bi-plus-circle me-1"></i>
+                        Create Department
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+</div>

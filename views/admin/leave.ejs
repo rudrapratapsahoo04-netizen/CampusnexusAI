@@ -1,0 +1,582 @@
+<% layout("layouts/boilerplate") -%>
+
+<div class="container-fluid py-4">
+
+    <!-- PAGE HEADER -->
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+        <div class="card-body p-4 p-lg-5">
+
+            <div
+                class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3"
+            >
+                <div>
+                    <span class="badge bg-primary-subtle text-primary mb-2 px-3 py-2">
+                        Admin Panel
+                    </span>
+
+                    <h2 class="fw-bold mb-2">
+                        Leave Management
+                    </h2>
+
+                    <p class="text-muted mb-0">
+                        Manage student and faculty leave requests from one place.
+                    </p>
+                </div>
+
+                <div class="text-lg-end">
+                    <div class="small text-muted">
+                        Total Requests
+                    </div>
+
+                    <div class="fs-3 fw-bold">
+                        <%= leaves.length %>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- FILTERS -->
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+        <div class="card-header bg-white border-0 pt-4 px-4">
+            <h5 class="fw-bold mb-1">
+                Filter Leave Requests
+            </h5>
+
+            <p class="text-muted small mb-0">
+                Filter requests by applicant type, status, department and program.
+            </p>
+        </div>
+
+        <div class="card-body p-4">
+
+            <form
+                action="/admin/leave"
+                method="GET"
+            >
+                <div class="row g-3">
+
+                    <!-- TYPE -->
+                    <div class="col-md-6 col-lg-3">
+                        <label class="form-label fw-semibold">
+                            Applicant Type
+                        </label>
+
+                        <select
+                            name="type"
+                            class="form-select"
+                        >
+                            <option
+                                value="all"
+                                <%= filters.type === "all" ? "selected" : "" %>
+                            >
+                                All
+                            </option>
+
+                            <option
+                                value="student"
+                                <%= filters.type === "student" ? "selected" : "" %>
+                            >
+                                Student
+                            </option>
+
+                            <option
+                                value="faculty"
+                                <%= filters.type === "faculty" ? "selected" : "" %>
+                            >
+                                Faculty
+                            </option>
+                        </select>
+                    </div>
+
+
+                    <!-- STATUS -->
+                    <div class="col-md-6 col-lg-3">
+                        <label class="form-label fw-semibold">
+                            Status
+                        </label>
+
+                        <select
+                            name="status"
+                            class="form-select"
+                        >
+                            <option
+                                value="all"
+                                <%= filters.status === "all" ? "selected" : "" %>
+                            >
+                                All
+                            </option>
+
+                            <option
+                                value="pending_admin"
+                                <%= filters.status === "pending_admin" ? "selected" : "" %>
+                            >
+                                Pending
+                            </option>
+
+                            <option
+                                value="approved"
+                                <%= filters.status === "approved" ? "selected" : "" %>
+                            >
+                                Approved
+                            </option>
+
+                            <option
+                                value="rejected"
+                                <%= filters.status === "rejected" ? "selected" : "" %>
+                            >
+                                Rejected
+                            </option>
+
+                            <option
+                                value="cancelled"
+                                <%= filters.status === "cancelled" ? "selected" : "" %>
+                            >
+                                Cancelled
+                            </option>
+                        </select>
+                    </div>
+
+
+                    <!-- DEPARTMENT -->
+                    <div class="col-md-6 col-lg-3">
+                        <label class="form-label fw-semibold">
+                            Department
+                        </label>
+
+                        <select
+                            name="department"
+                            class="form-select"
+                        >
+                            <option value="">
+                                All Departments
+                            </option>
+
+                            <% departments.forEach(department => { %>
+
+                                <option
+                                    value="<%= department %>"
+                                    <%= filters.department === department ? "selected" : "" %>
+                                >
+                                    <%= department
+                                        .replace(/\b\w/g, c => c.toUpperCase()) %>
+                                </option>
+
+                            <% }) %>
+                        </select>
+                    </div>
+
+
+                    <!-- PROGRAM -->
+                    <div class="col-md-6 col-lg-3">
+                        <label class="form-label fw-semibold">
+                            Program
+                        </label>
+
+                        <select
+                            name="program"
+                            class="form-select"
+                        >
+                            <option value="">
+                                All Programs
+                            </option>
+
+                            <% programs.forEach(program => { %>
+
+                                <option
+                                    value="<%= program %>"
+                                    <%= filters.program === program ? "selected" : "" %>
+                                >
+                                    <%= program
+                                        .replace(/\b\w/g, c => c.toUpperCase()) %>
+                                </option>
+
+                            <% }) %>
+                        </select>
+                    </div>
+
+
+                    <!-- BUTTONS -->
+                    <div class="col-12 d-flex gap-2">
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary px-4"
+                        >
+                            <i class="bi bi-funnel me-2"></i>
+                            Apply Filters
+                        </button>
+
+                        <a
+                            href="/admin/leave"
+                            class="btn btn-outline-secondary px-4"
+                        >
+                            <i class="bi bi-arrow-counterclockwise me-2"></i>
+                            Reset
+                        </a>
+
+                    </div>
+
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+
+    <!-- LEAVE REQUESTS -->
+    <div class="card border-0 shadow-sm rounded-4">
+
+        <div class="card-header bg-white border-0 pt-4 px-4">
+
+            <div
+                class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2"
+            >
+                <div>
+                    <h5 class="fw-bold mb-1">
+                        Leave Requests
+                    </h5>
+
+                    <p class="text-muted small mb-0">
+                        Review and manage submitted leave applications.
+                    </p>
+                </div>
+
+                <span class="badge bg-primary-subtle text-primary px-3 py-2">
+                    <%= leaves.length %> Request(s)
+                </span>
+            </div>
+
+        </div>
+
+
+        <div class="card-body p-0">
+
+            <% if (!leaves.length) { %>
+
+                <!-- EMPTY STATE -->
+
+                <div class="text-center py-5">
+
+                    <i class="bi bi-calendar-x fs-1 text-muted"></i>
+
+                    <h5 class="mt-3 fw-semibold">
+                        No Leave Requests
+                    </h5>
+
+                    <p class="text-muted mb-0">
+                        No leave applications match the selected filters.
+                    </p>
+
+                </div>
+
+            <% } else { %>
+
+                <div class="table-responsive">
+
+                    <table class="table align-middle mb-0">
+
+                        <thead class="table-light">
+
+                            <tr>
+
+                                <th class="px-4">
+                                    Applicant
+                                </th>
+
+                                <th>
+                                    Type
+                                </th>
+
+                                <th>
+                                    Leave Type
+                                </th>
+
+                                <th>
+                                    Dates
+                                </th>
+
+                                <th>
+                                    Days
+                                </th>
+
+                                <th>
+                                    Reason
+                                </th>
+
+                                <th>
+                                    Status
+                                </th>
+
+                                <th class="text-end px-4">
+                                    Action
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            <% leaves.forEach(leave => { %>
+
+                                <tr>
+
+                                    <!-- APPLICANT -->
+                                    <td class="px-4">
+
+                                        <div class="fw-semibold">
+
+                                            <% if (leave.applicant) { %>
+
+                                                <%= leave.applicant.name %>
+
+                                            <% } else if (leave.studentProfile) { %>
+
+                                                <%= leave.studentProfile.studentId %>
+
+                                            <% } else { %>
+
+                                                Unknown
+
+                                            <% } %>
+
+                                        </div>
+
+
+                                        <div class="small text-muted">
+
+                                            <% if (leave.applicant) { %>
+
+                                                <%= leave.applicant.email %>
+
+                                            <% } else if (leave.employeeId) { %>
+
+                                                <%= leave.employeeId %>
+
+                                            <% } %>
+
+                                        </div>
+
+                                    </td>
+
+
+                                    <!-- APPLICANT TYPE -->
+                                    <td>
+
+                                        <% if (leave.applicantType === "faculty") { %>
+
+                                            <span class="badge bg-info-subtle text-info">
+                                                Faculty
+                                            </span>
+
+                                        <% } else { %>
+
+                                            <span class="badge bg-primary-subtle text-primary">
+                                                Student
+                                            </span>
+
+                                        <% } %>
+
+                                    </td>
+
+
+                                    <!-- LEAVE TYPE -->
+                                    <td>
+
+                                        <span class="fw-semibold">
+
+                                            <%= leave.leaveType
+                                                .replace("_", " ")
+                                                .replace(/\b\w/g, c => c.toUpperCase()) %>
+
+                                        </span>
+
+                                    </td>
+
+
+                                    <!-- DATES -->
+                                    <td>
+
+                                        <div>
+                                            <%= new Date(
+                                                leave.fromDate
+                                            ).toLocaleDateString() %>
+                                        </div>
+
+                                        <div class="text-muted small">
+                                            to
+                                            <%= new Date(
+                                                leave.toDate
+                                            ).toLocaleDateString() %>
+                                        </div>
+
+                                    </td>
+
+
+                                    <!-- DAYS -->
+                                    <td>
+
+                                        <span class="fw-semibold">
+                                            <%= leave.totalDays %>
+                                        </span>
+
+                                    </td>
+
+
+                                    <!-- REASON -->
+                                    <td>
+
+                                        <span
+                                            class="text-muted"
+                                            style="
+                                                max-width: 220px;
+                                                display: block;
+                                            "
+                                        >
+                                            <%= leave.reason %>
+                                        </span>
+
+                                    </td>
+
+
+                                    <!-- STATUS -->
+                                    <td>
+
+                                        <% if (
+                                            leave.status === "approved"
+                                        ) { %>
+
+                                            <span class="badge bg-success-subtle text-success">
+                                                <i class="bi bi-check-circle me-1"></i>
+                                                Approved
+                                            </span>
+
+                                        <% } else if (
+                                            leave.status === "rejected"
+                                        ) { %>
+
+                                            <span class="badge bg-danger-subtle text-danger">
+                                                <i class="bi bi-x-circle me-1"></i>
+                                                Rejected
+                                            </span>
+
+                                        <% } else if (
+                                            leave.status === "cancelled"
+                                        ) { %>
+
+                                            <span class="badge bg-secondary-subtle text-secondary">
+                                                <i class="bi bi-slash-circle me-1"></i>
+                                                Cancelled
+                                            </span>
+
+                                        <% } else { %>
+
+                                            <span class="badge bg-warning-subtle text-warning">
+                                                <i class="bi bi-clock me-1"></i>
+                                                Pending
+                                            </span>
+
+                                        <% } %>
+
+                                    </td>
+
+
+                                    <!-- ACTION -->
+                                    <td class="text-end px-4">
+
+                                        <% if (
+                                            leave.status === "pending_admin"
+                                        ) { %>
+
+                                            <div
+                                                class="d-flex justify-content-end gap-2"
+                                            >
+
+                                                <!-- APPROVE -->
+
+                                                <form
+                                                    action="/admin/leave/<%= leave._id %>/approve"
+                                                    method="POST"
+                                                >
+
+                                                    <button
+                                                        type="submit"
+                                                        class="btn btn-sm btn-success"
+                                                        onclick="return confirm('Approve this leave request?')"
+                                                    >
+                                                        <i class="bi bi-check-lg me-1"></i>
+                                                        Approve
+                                                    </button>
+
+                                                </form>
+
+
+                                                <!-- REJECT -->
+
+                                                <form
+                                                    action="/admin/leave/<%= leave._id %>/reject"
+                                                    method="POST"
+                                                >
+
+                                                    <button
+                                                        type="submit"
+                                                        class="btn btn-sm btn-outline-danger"
+                                                        onclick="return confirm('Reject this leave request?')"
+                                                    >
+                                                        <i class="bi bi-x-lg me-1"></i>
+                                                        Reject
+                                                    </button>
+
+                                                </form>
+
+                                            </div>
+
+                                        <% } else if (
+                                            leave.status === "approved"
+                                        ) { %>
+
+                                            <span class="text-success small">
+                                                <i class="bi bi-check-circle me-1"></i>
+                                                Completed
+                                            </span>
+
+                                        <% } else if (
+                                            leave.status === "rejected"
+                                        ) { %>
+
+                                            <span class="text-danger small">
+                                                <i class="bi bi-x-circle me-1"></i>
+                                                Completed
+                                            </span>
+
+                                        <% } else { %>
+
+                                            <span class="text-muted small">
+                                                —
+                                            </span>
+
+                                        <% } %>
+
+                                    </td>
+
+                                </tr>
+
+                            <% }) %>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            <% } %>
+
+        </div>
+
+    </div>
+
+</div>

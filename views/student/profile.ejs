@@ -1,0 +1,662 @@
+<% layout("layouts/boilerplate") -%>
+<div class="container-fluid py-4">
+
+    <!-- ==========================================
+         PAGE HEADER
+    =========================================== -->
+
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+
+        <div>
+            <h2 class="fw-bold mb-1">
+                My Profile
+            </h2>
+
+            <p class="text-muted mb-0">
+                View your personal, academic and campus information.
+            </p>
+        </div>
+
+        <a
+            href="/student/dashboard"
+            class="btn btn-outline-primary"
+        >
+            <i class="bi bi-arrow-left me-1"></i>
+            Back to Dashboard
+        </a>
+
+    </div>
+
+
+    <!-- ==========================================
+         PROFILE STATUS
+    =========================================== -->
+
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-body">
+
+            <div class="d-flex flex-wrap justify-content-between align-items-center">
+
+                <div>
+                    <h5 class="fw-bold mb-1">
+                        <%= user.name %>
+                    </h5>
+
+                    <p class="text-muted mb-0">
+                        Student ID:
+                        <strong>
+                            <%= studentProfile.studentId %>
+                        </strong>
+                    </p>
+                </div>
+
+                <div class="mt-3 mt-md-0">
+
+                    <% if (studentProfile.academicStatus === "approved") { %>
+
+                        <span class="badge bg-success-subtle text-success px-3 py-2">
+                            <i class="bi bi-check-circle me-1"></i>
+                            Academic Profile Approved
+                        </span>
+
+                    <% } else if (studentProfile.academicStatus === "rejected") { %>
+
+                        <span class="badge bg-danger-subtle text-danger px-3 py-2">
+                            <i class="bi bi-x-circle me-1"></i>
+                            Academic Profile Rejected
+                        </span>
+
+                    <% } else { %>
+
+                        <span class="badge bg-warning-subtle text-warning px-3 py-2">
+                            <i class="bi bi-clock me-1"></i>
+                            Awaiting Approval
+                        </span>
+
+                    <% } %>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         PERSONAL INFORMATION
+    =========================================== -->
+
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-header bg-white border-0 pt-4 px-4">
+
+            <h5 class="fw-bold mb-1">
+                <i class="bi bi-person me-2 text-primary"></i>
+                Personal Information
+            </h5>
+
+            <p class="text-muted small mb-0">
+                Basic information associated with your student account.
+            </p>
+
+        </div>
+
+        <div class="card-body px-4 pb-4">
+
+            <div class="row g-4">
+
+                <div class="col-md-6">
+                    <label class="form-label text-muted small">
+                        Full Name
+                    </label>
+
+                    <div class="profile-value">
+                        <%= user.name %>
+                    </div>
+                </div>
+
+
+                <div class="col-md-6">
+                    <label class="form-label text-muted small">
+                        Email Address
+                    </label>
+
+                    <div class="profile-value">
+                        <%= user.email %>
+                    </div>
+                </div>
+
+
+                <div class="col-md-4">
+                    <label class="form-label text-muted small">
+                        Date of Birth
+                    </label>
+
+                    <div class="profile-value">
+                        <%= studentProfile.dob
+                            ? new Date(studentProfile.dob).toLocaleDateString("en-IN")
+                            : "Not provided"
+                        %>
+                    </div>
+                </div>
+
+
+                <div class="col-md-4">
+                    <label class="form-label text-muted small">
+                        Gender
+                    </label>
+
+                    <div class="profile-value text-capitalize">
+                        <%= studentProfile.gender || "Not provided" %>
+                    </div>
+                </div>
+
+
+                <div class="col-md-4">
+                    <label class="form-label text-muted small">
+                        Mobile Number
+                    </label>
+
+                    <div class="profile-value">
+                        <%= studentProfile.mobile || "Not provided" %>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         ACADEMIC INFORMATION
+    =========================================== -->
+
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-header bg-white border-0 pt-4 px-4">
+
+            <h5 class="fw-bold mb-1">
+                <i class="bi bi-mortarboard me-2 text-primary"></i>
+                Academic Information
+            </h5>
+
+            <p class="text-muted small mb-0">
+                Your current academic identity.
+            </p>
+
+        </div>
+
+        <div class="card-body px-4 pb-4">
+
+            <div class="alert alert-light border d-flex align-items-start mb-4">
+
+                <i class="bi bi-info-circle text-primary fs-5 me-2"></i>
+
+                <div class="small">
+                    Academic information is managed by the university.
+                    Students cannot directly modify these details.
+                </div>
+
+            </div>
+
+
+            <div class="row g-4">
+
+                <div class="col-md-4">
+                    <label class="form-label text-muted small">
+                        Student ID
+                    </label>
+
+                    <div class="profile-value fw-semibold">
+                        <%= studentProfile.studentId %>
+                    </div>
+                </div>
+
+
+                <div class="col-md-4">
+                    <label class="form-label text-muted small">
+                        Department
+                    </label>
+
+                    <div class="profile-value">
+                        <%= studentProfile.department %>
+                    </div>
+                </div>
+
+
+                <div class="col-md-4">
+                    <label class="form-label text-muted small">
+                        Program
+                    </label>
+
+                    <div class="profile-value">
+                        <%= studentProfile.program %>
+                    </div>
+                </div>
+
+
+                <div class="col-md-4">
+                    <label class="form-label text-muted small">
+                        Semester
+                    </label>
+
+                    <div class="profile-value">
+                        Semester <%= studentProfile.semester %>
+                    </div>
+                </div>
+
+
+                <div class="col-md-4">
+                    <label class="form-label text-muted small">
+                        Section
+                    </label>
+
+                    <div class="profile-value">
+                        <%= studentProfile.section || "Not assigned" %>
+                    </div>
+                </div>
+
+
+                <div class="col-md-4">
+                    <label class="form-label text-muted small">
+                        Admission Batch
+                    </label>
+
+                    <div class="profile-value">
+                        <%= studentProfile.batch %>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         ADDRESS INFORMATION
+    =========================================== -->
+
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-header bg-white border-0 pt-4 px-4">
+
+            <h5 class="fw-bold mb-1">
+                <i class="bi bi-geo-alt me-2 text-primary"></i>
+                Address Information
+            </h5>
+
+        </div>
+
+        <div class="card-body px-4 pb-4">
+
+            <div class="row g-4">
+
+                <div class="col-12">
+
+                    <label class="form-label text-muted small">
+                        Permanent Address
+                    </label>
+
+                    <div class="profile-value">
+                        <%= studentProfile.permanentAddress %>
+                    </div>
+
+                </div>
+
+
+                <div class="col-12">
+
+                    <label class="form-label text-muted small">
+                        Current Address
+                    </label>
+
+                    <div class="profile-value">
+                        <%= studentProfile.currentAddress
+                            || studentProfile.permanentAddress
+                            || "Not provided"
+                        %>
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-4">
+
+                    <label class="form-label text-muted small">
+                        City
+                    </label>
+
+                    <div class="profile-value">
+                        <%= studentProfile.city %>
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-4">
+
+                    <label class="form-label text-muted small">
+                        State
+                    </label>
+
+                    <div class="profile-value">
+                        <%= studentProfile.state %>
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-4">
+
+                    <label class="form-label text-muted small">
+                        PIN Code
+                    </label>
+
+                    <div class="profile-value">
+                        <%= studentProfile.pin %>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         GUARDIAN INFORMATION
+    =========================================== -->
+
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-header bg-white border-0 pt-4 px-4">
+
+            <h5 class="fw-bold mb-1">
+                <i class="bi bi-people me-2 text-primary"></i>
+                Guardian & Emergency Information
+            </h5>
+
+        </div>
+
+        <div class="card-body px-4 pb-4">
+
+            <div class="row g-4">
+
+                <div class="col-md-4">
+
+                    <label class="form-label text-muted small">
+                        Guardian Name
+                    </label>
+
+                    <div class="profile-value">
+                        <%= studentProfile.guardianName %>
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-4">
+
+                    <label class="form-label text-muted small">
+                        Guardian Mobile
+                    </label>
+
+                    <div class="profile-value">
+                        <%= studentProfile.guardianMobile %>
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-4">
+
+                    <label class="form-label text-muted small">
+                        Emergency Contact
+                    </label>
+
+                    <div class="profile-value">
+                        <%= studentProfile.emergencyContact %>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         HOSTEL INFORMATION
+    =========================================== -->
+
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-header bg-white border-0 pt-4 px-4">
+
+            <h5 class="fw-bold mb-1">
+                <i class="bi bi-building me-2 text-primary"></i>
+                Campus & Hostel Information
+            </h5>
+
+        </div>
+
+        <div class="card-body px-4 pb-4">
+
+            <% if (studentProfile.hostelRequired) { %>
+
+                <div class="alert alert-success d-flex align-items-center mb-4">
+
+                    <i class="bi bi-house-check fs-4 me-3"></i>
+
+                    <div>
+                        <strong>Hostel Resident</strong>
+                        <div class="small">
+                            You are registered as a hostel resident.
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="row g-4">
+
+                    <div class="col-md-6">
+
+                        <label class="form-label text-muted small">
+                            Hostel Name
+                        </label>
+
+                        <div class="profile-value">
+                            <%= studentProfile.hostelName || "Not assigned" %>
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <label class="form-label text-muted small">
+                            Room Number
+                        </label>
+
+                        <div class="profile-value">
+                            <%= studentProfile.roomNumber || "Not assigned" %>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            <% } else { %>
+
+                <div class="alert alert-light border d-flex align-items-center mb-0">
+
+                    <i class="bi bi-house-door fs-4 me-3 text-secondary"></i>
+
+                    <div>
+                        <strong>Day Scholar</strong>
+                        <div class="small text-muted">
+                            You are registered as a non-hostel student.
+                        </div>
+                    </div>
+
+                </div>
+
+            <% } %>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         ACCOUNT INFORMATION
+    =========================================== -->
+
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-header bg-white border-0 pt-4 px-4">
+
+            <h5 class="fw-bold mb-1">
+                <i class="bi bi-shield-check me-2 text-primary"></i>
+                Account Information
+            </h5>
+
+        </div>
+
+        <div class="card-body px-4 pb-4">
+
+            <div class="row g-4">
+
+                <div class="col-md-4">
+
+                    <label class="form-label text-muted small">
+                        Account Status
+                    </label>
+
+                    <div>
+
+                        <% if (user.isActive) { %>
+
+                            <span class="badge bg-success-subtle text-success px-3 py-2">
+                                Active
+                            </span>
+
+                        <% } else { %>
+
+                            <span class="badge bg-danger-subtle text-danger px-3 py-2">
+                                Inactive
+                            </span>
+
+                        <% } %>
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-4">
+
+                    <label class="form-label text-muted small">
+                        Academic Status
+                    </label>
+
+                    <div class="text-capitalize">
+                        <%= studentProfile.academicStatus %>
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-4">
+
+                    <label class="form-label text-muted small">
+                        Registered On
+                    </label>
+
+                    <div class="profile-value">
+
+                        <%= user.createdAt
+                            ? new Date(user.createdAt).toLocaleDateString("en-IN")
+                            : "Not available"
+                        %>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         PROFILE NOTE
+    =========================================== -->
+
+    <div class="alert alert-warning border-0 shadow-sm">
+
+        <div class="d-flex align-items-start">
+
+            <i class="bi bi-lock-fill fs-5 me-3"></i>
+
+            <div>
+
+                <strong>Profile information is read-only.</strong>
+
+                <div class="small mt-1">
+                    For changes to your name, Student ID, department,
+                    program, semester, section or other official
+                    academic information, contact the university
+                    administration.
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<style>
+    .profile-value {
+        background: #f8f9fa;
+        border: 1px solid #e9ecef;
+        border-radius: 10px;
+        padding: 11px 14px;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        color: #212529;
+        word-break: break-word;
+    }
+
+    .card {
+        border-radius: 14px;
+    }
+
+    .card-header {
+        border-radius: 14px 14px 0 0 !important;
+    }
+
+    @media (max-width: 576px) {
+        .profile-value {
+            font-size: 14px;
+        }
+    }
+</style>

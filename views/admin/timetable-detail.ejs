@@ -1,0 +1,596 @@
+
+<% layout("layouts/boilerplate") -%>
+
+<div class="container-fluid py-4">
+
+    <!-- ========================================== -->
+    <!-- PAGE HEADER -->
+    <!-- ========================================== -->
+
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+
+        <div>
+            <h2 class="fw-bold mb-1">
+                <i class="bi bi-calendar-week me-2"></i>
+                Timetable Details
+            </h2>
+
+            <p class="text-muted mb-0">
+                View timetable information for the selected class.
+            </p>
+        </div>
+
+        <div class="d-flex gap-2">
+
+            <a
+                href="/admin/timetable"
+                class="btn btn-outline-secondary"
+            >
+                <i class="bi bi-arrow-left me-1"></i>
+                Back to Timetable
+            </a>
+
+            <% if (timetable && timetable._id) { %>
+
+                <a
+                    href="/admin/timetable/<%= timetable._id %>/edit"
+                    class="btn btn-primary"
+                >
+                    <i class="bi bi-pencil me-1"></i>
+                    Edit
+                </a>
+                          <form
+                                   method="POST"
+                                   action="/admin/timetable/<%= timetable._id %>/delete"
+                                   class="d-inline"
+                                    onsubmit="return confirm('Are you sure you want to permanently delete this timetable entry? This action cannot be undone.');"
+                             >
+
+                                 <button
+                                 type="submit"
+                                class="btn btn-danger"
+                                  >
+                              <i class="bi bi-trash me-1"></i>
+                                Delete
+                                   </button>
+
+                          </form>
+
+            <% } %>
+
+        </div>
+
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- FLASH MESSAGES -->
+    <!-- ========================================== -->
+
+    <% if (typeof messages !== "undefined" && messages.error && messages.error.length) { %>
+
+        <% messages.error.forEach(message => { %>
+
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+
+                <i class="bi bi-exclamation-triangle me-2"></i>
+
+                <%= message %>
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
+                ></button>
+
+            </div>
+
+        <% }) %>
+
+    <% } %>
+
+
+    <% if (typeof messages !== "undefined" && messages.success && messages.success.length) { %>
+
+        <% messages.success.forEach(message => { %>
+
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+
+                <i class="bi bi-check-circle me-2"></i>
+
+                <%= message %>
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
+                ></button>
+
+            </div>
+
+        <% }) %>
+
+    <% } %>
+
+
+    <!-- ========================================== -->
+    <!-- CHECK TIMETABLE DATA -->
+    <!-- ========================================== -->
+
+    <% if (!timetable) { %>
+
+        <div class="alert alert-warning border-0 shadow-sm">
+
+            <i class="bi bi-exclamation-triangle me-2"></i>
+
+            Timetable entry not found.
+
+        </div>
+
+    <% } else { %>
+
+
+        <!-- ========================================== -->
+        <!-- ACADEMIC INFORMATION -->
+        <!-- ========================================== -->
+
+        <div class="card border-0 shadow-sm mb-4">
+
+            <div class="card-header bg-white py-3">
+
+                <h5 class="fw-semibold mb-0">
+
+                    <i class="bi bi-mortarboard me-2"></i>
+
+                    Academic Information
+
+                </h5>
+
+            </div>
+
+
+            <div class="card-body">
+
+                <div class="row g-3">
+
+                    <!-- DEPARTMENT -->
+
+                    <div class="col-md-3">
+
+                        <div class="info-box">
+
+                            <div class="info-label">
+                                Department
+                            </div>
+
+                            <div class="info-value">
+                                <%= timetable.department || "N/A" %>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- PROGRAM -->
+
+                    <div class="col-md-3">
+
+                        <div class="info-box">
+
+                            <div class="info-label">
+                                Program / Branch
+                            </div>
+
+                            <div class="info-value">
+                                <%= timetable.program || "N/A" %>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- SEMESTER -->
+
+                    <div class="col-md-3">
+
+                        <div class="info-box">
+
+                            <div class="info-label">
+                                Semester
+                            </div>
+
+                            <div class="info-value">
+
+                                <% if (timetable.semester) { %>
+
+                                    Semester <%= timetable.semester %>
+
+                                <% } else { %>
+
+                                    N/A
+
+                                <% } %>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- SECTION -->
+
+                    <div class="col-md-3">
+
+                        <div class="info-box">
+
+                            <div class="info-label">
+                                Section
+                            </div>
+
+                            <div class="info-value">
+                                <%= timetable.section || "N/A" %>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ========================================== -->
+        <!-- SELECTED TIMETABLE ENTRY -->
+        <!-- ========================================== -->
+
+        <div class="card border-0 shadow-sm mb-4">
+
+            <div class="card-header bg-white py-3">
+
+                <h5 class="fw-semibold mb-0">
+
+                    <i class="bi bi-clock me-2"></i>
+
+                    Timetable Entry
+
+                </h5>
+
+            </div>
+
+
+            <div class="card-body">
+
+                <div class="row g-4">
+
+                    <!-- DAY -->
+
+                    <div class="col-md-2">
+
+                        <div class="detail-label">
+                            Day
+                        </div>
+
+                        <div class="detail-value text-capitalize">
+                            <%= timetable.day || "N/A" %>
+                        </div>
+
+                    </div>
+
+
+                    <!-- TIME -->
+
+                    <div class="col-md-2">
+
+                        <div class="detail-label">
+                            Time
+                        </div>
+
+                        <div class="detail-value">
+
+                            <%= timetable.startTime || "N/A" %>
+
+                            -
+
+                            <%= timetable.endTime || "N/A" %>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- SUBJECT -->
+
+                    <div class="col-md-3">
+
+                        <div class="detail-label">
+                            Subject
+                        </div>
+
+                        <div class="detail-value">
+
+                            <%= timetable.courseName || "N/A" %>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- TEACHER -->
+
+                    <div class="col-md-3">
+
+                        <div class="detail-label">
+                            Teacher
+                        </div>
+
+                        <div class="detail-value">
+
+                            <%= timetable.facultyName || "N/A" %>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ROOM -->
+
+                    <div class="col-md-2">
+
+                        <div class="detail-label">
+                            Room
+                        </div>
+
+                        <div class="detail-value">
+
+                            <%= timetable.room || "TBA" %>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- TYPE -->
+
+                    <div class="col-md-3">
+
+                        <div class="detail-label">
+                            Type
+                        </div>
+
+                        <div class="detail-value">
+
+                            <% if (timetable.type) { %>
+
+                                <span class="badge bg-primary">
+
+                                    <%= timetable.type.charAt(0).toUpperCase() + timetable.type.slice(1) %>
+
+                                </span>
+
+                            <% } else { %>
+
+                                <span class="text-muted">
+                                    None
+                                </span>
+
+                            <% } %>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- STATUS -->
+
+                    <div class="col-md-3">
+
+                        <div class="detail-label">
+                            Status
+                        </div>
+
+                        <div class="detail-value">
+
+                            <% if (timetable.isActive !== false) { %>
+
+                                <span class="badge bg-success">
+                                    Active
+                                </span>
+
+                            <% } else { %>
+
+                                <span class="badge bg-danger">
+                                    Inactive
+                                </span>
+
+                            <% } %>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- CREATED -->
+
+                    <div class="col-md-3">
+
+                        <div class="detail-label">
+                            Created
+                        </div>
+
+                        <div class="detail-value">
+
+                            <% if (timetable.createdAt) { %>
+
+                                <%= new Date(timetable.createdAt).toLocaleString("en-IN") %>
+
+                            <% } else { %>
+
+                                N/A
+
+                            <% } %>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- UPDATED -->
+
+                    <div class="col-md-3">
+
+                        <div class="detail-label">
+                            Last Updated
+                        </div>
+
+                        <div class="detail-value">
+
+                            <% if (timetable.updatedAt) { %>
+
+                                <%= new Date(timetable.updatedAt).toLocaleString("en-IN") %>
+
+                            <% } else { %>
+
+                                N/A
+
+                            <% } %>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ========================================== -->
+        <!-- NOTE -->
+        <!-- ========================================== -->
+
+        <div class="alert alert-info border-0 shadow-sm">
+
+            <div class="d-flex gap-2">
+
+                <i class="bi bi-info-circle fs-5"></i>
+
+                <div>
+
+                    <strong>Timetable Information</strong>
+
+                    <div class="small mt-1">
+
+                        This page displays the selected timetable entry.
+                        Use the Back button to return to the complete timetable list.
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    <% } %>
+
+</div>
+
+
+<!-- ========================================== -->
+<!-- STYLES -->
+<!-- ========================================== -->
+
+<style>
+
+    .info-box {
+
+        background: #f8f9fa;
+
+        border-radius: 10px;
+
+        padding: 15px;
+
+        height: 100%;
+
+    }
+
+
+    .info-label {
+
+        font-size: 12px;
+
+        color: #6c757d;
+
+        font-weight: 600;
+
+        margin-bottom: 5px;
+
+        text-transform: uppercase;
+
+        letter-spacing: 0.3px;
+
+    }
+
+
+    .info-value {
+
+        font-size: 16px;
+
+        font-weight: 600;
+
+        color: #212529;
+
+        word-break: break-word;
+
+    }
+
+
+    .detail-label {
+
+        font-size: 12px;
+
+        color: #6c757d;
+
+        font-weight: 600;
+
+        margin-bottom: 6px;
+
+        text-transform: uppercase;
+
+        letter-spacing: 0.3px;
+
+    }
+
+
+    .detail-value {
+
+        font-size: 15px;
+
+        font-weight: 600;
+
+        color: #212529;
+
+        word-break: break-word;
+
+    }
+
+
+    .badge {
+
+        font-size: 11px;
+
+        padding: 6px 9px;
+
+    }
+
+</style>
+
+
+

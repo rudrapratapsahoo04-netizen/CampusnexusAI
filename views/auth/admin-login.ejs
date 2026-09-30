@@ -1,0 +1,1428 @@
+<% layout("layouts/boilerplate") %>
+
+<style>
+    /* =========================================================
+       PAGE BACKGROUND
+    ========================================================= */
+
+    .admin-login-page {
+        position: relative;
+        min-height: calc(100vh - 120px);
+        padding: 45px 18px 65px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+
+        background:
+            radial-gradient(
+                circle at 12% 18%,
+                rgba(59, 130, 246, 0.28),
+                transparent 30%
+            ),
+            radial-gradient(
+                circle at 88% 78%,
+                rgba(124, 58, 237, 0.24),
+                transparent 32%
+            ),
+            linear-gradient(
+                180deg,
+                #eef5ff 0%,
+                #f8faff 45%,
+                #eef2ff 100%
+            );
+    }
+
+    /* Decorative lighting */
+    .admin-login-page::before {
+        content: "";
+        position: absolute;
+        width: 520px;
+        height: 520px;
+        top: -280px;
+        left: -180px;
+        border-radius: 50%;
+        background: rgba(37, 99, 235, 0.16);
+        filter: blur(80px);
+        pointer-events: none;
+        animation: floatingGlow 7s ease-in-out infinite;
+    }
+
+    .admin-login-page::after {
+        content: "";
+        position: absolute;
+        width: 480px;
+        height: 480px;
+        right: -180px;
+        bottom: -250px;
+        border-radius: 50%;
+        background: rgba(124, 58, 237, 0.14);
+        filter: blur(85px);
+        pointer-events: none;
+        animation: floatingGlowReverse 9s ease-in-out infinite;
+    }
+
+    @keyframes floatingGlow {
+        0%,
+        100% {
+            transform: translate(0, 0) scale(1);
+        }
+
+        50% {
+            transform: translate(35px, 25px) scale(1.08);
+        }
+    }
+
+    @keyframes floatingGlowReverse {
+        0%,
+        100% {
+            transform: translate(0, 0) scale(1);
+        }
+
+        50% {
+            transform: translate(-30px, -25px) scale(1.1);
+        }
+    }
+
+
+    /* =========================================================
+       MAIN WRAPPER
+    ========================================================= */
+
+    .admin-login-wrapper {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        max-width: 1080px;
+        margin: 0 auto;
+    }
+
+
+    /* =========================================================
+       MAIN CARD
+    ========================================================= */
+
+    .admin-card {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.72);
+        border-radius: 28px;
+        background: rgba(255, 255, 255, 0.86);
+
+        box-shadow:
+            0 40px 100px rgba(15, 23, 42, 0.16),
+            0 18px 45px rgba(37, 99, 235, 0.08),
+            inset 0 1px 0 rgba(255, 255, 255, 0.9);
+
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+
+        transition:
+            transform 0.35s ease,
+            box-shadow 0.35s ease;
+    }
+
+    .admin-card:hover {
+        transform: translateY(-5px);
+
+        box-shadow:
+            0 48px 110px rgba(15, 23, 42, 0.19),
+            0 20px 50px rgba(37, 99, 235, 0.11),
+            inset 0 1px 0 rgba(255, 255, 255, 0.95);
+    }
+
+
+    /* =========================================================
+       LEFT INFORMATION PANEL
+    ========================================================= */
+
+    .admin-info-panel {
+        position: relative;
+        min-height: 640px;
+        height: 100%;
+        overflow: hidden;
+        padding: 50px;
+
+        color: #ffffff;
+
+        background:
+            radial-gradient(
+                circle at 90% 10%,
+                rgba(96, 165, 250, 0.30),
+                transparent 30%
+            ),
+            radial-gradient(
+                circle at 10% 90%,
+                rgba(124, 58, 237, 0.20),
+                transparent 32%
+            ),
+            linear-gradient(
+                180deg,
+                #111827 0%,
+                #172554 48%,
+                #0f172a 100%
+            );
+    }
+
+    /* Large lighting ring */
+    .admin-info-panel::before {
+        content: "";
+        position: absolute;
+        width: 340px;
+        height: 340px;
+        top: -165px;
+        right: -130px;
+
+        border: 1px solid rgba(255, 255, 255, 0.10);
+        border-radius: 50%;
+
+        box-shadow:
+            0 0 60px rgba(96, 165, 250, 0.12),
+            inset 0 0 40px rgba(96, 165, 250, 0.06);
+    }
+
+    /* Bottom decorative ring */
+    .admin-info-panel::after {
+        content: "";
+        position: absolute;
+        width: 430px;
+        height: 430px;
+        bottom: -265px;
+        left: -215px;
+
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        border-radius: 50%;
+
+        box-shadow:
+            0 0 70px rgba(124, 58, 237, 0.08);
+    }
+
+    .admin-info-content {
+        position: relative;
+        z-index: 3;
+    }
+
+
+    /* =========================================================
+       LOGO
+    ========================================================= */
+
+    .admin-logo {
+        position: relative;
+        width: 70px;
+        height: 70px;
+        margin-bottom: 29px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 20px;
+
+        color: #ffffff;
+        font-size: 29px;
+
+        background:
+            linear-gradient(
+                135deg,
+                #2563eb,
+                #4f46e5
+            );
+
+        box-shadow:
+            0 18px 45px rgba(37, 99, 235, 0.38),
+            0 0 30px rgba(59, 130, 246, 0.20),
+            inset 0 1px 0 rgba(255, 255, 255, 0.30);
+
+        transition:
+            transform 0.3s ease,
+            box-shadow 0.3s ease;
+    }
+
+    .admin-logo::after {
+        content: "";
+        position: absolute;
+        inset: -7px;
+        border-radius: 24px;
+        border: 1px solid rgba(96, 165, 250, 0.16);
+        pointer-events: none;
+    }
+
+    .admin-logo:hover {
+        transform: translateY(-5px) rotate(-2deg);
+
+        box-shadow:
+            0 22px 50px rgba(37, 99, 235, 0.46),
+            0 0 45px rgba(59, 130, 246, 0.28),
+            inset 0 1px 0 rgba(255, 255, 255, 0.35);
+    }
+
+
+    /* =========================================================
+       LEFT TEXT
+    ========================================================= */
+
+    .admin-info-panel h1 {
+        margin-bottom: 15px;
+
+        color: #ffffff;
+        font-size: 31px;
+        font-weight: 750;
+        line-height: 1.25;
+
+        letter-spacing: -0.7px;
+
+        text-shadow:
+            0 3px 18px rgba(0, 0, 0, 0.25);
+    }
+
+    .admin-description {
+        max-width: 430px;
+        margin: 0;
+
+        color: #cbd5e1;
+        font-size: 14px;
+        line-height: 1.8;
+    }
+
+
+    /* =========================================================
+       SECURITY LIST
+    ========================================================= */
+
+    .security-list {
+        margin: 38px 0 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .security-list li {
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+
+        margin-bottom: 20px;
+
+        color: #e5e7eb;
+        font-size: 13px;
+        line-height: 1.6;
+
+        transition:
+            transform 0.25s ease,
+            color 0.25s ease;
+    }
+
+    .security-list li:hover {
+        transform: translateX(6px);
+        color: #ffffff;
+    }
+
+    .security-icon {
+        width: 32px;
+        height: 32px;
+        min-width: 32px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        margin-top: -2px;
+
+        border: 1px solid rgba(96, 165, 250, 0.18);
+        border-radius: 10px;
+
+        color: #60a5fa;
+
+        background:
+            linear-gradient(
+                135deg,
+                rgba(37, 99, 235, 0.25),
+                rgba(79, 70, 229, 0.14)
+            );
+
+        box-shadow:
+            0 7px 18px rgba(0, 0, 0, 0.14);
+
+        transition:
+            transform 0.25s ease,
+            box-shadow 0.25s ease;
+    }
+
+    .security-list li:hover .security-icon {
+        transform: scale(1.08);
+
+        box-shadow:
+            0 0 20px rgba(96, 165, 250, 0.22);
+    }
+
+
+    /* =========================================================
+       SECURITY NOTICE
+    ========================================================= */
+
+    .security-notice {
+        margin-top: 37px;
+        padding: 15px 17px;
+
+        border: 1px solid rgba(255, 255, 255, 0.10);
+        border-radius: 13px;
+
+        color: #cbd5e1;
+        font-size: 11.5px;
+        line-height: 1.65;
+
+        background:
+            linear-gradient(
+                135deg,
+                rgba(255, 255, 255, 0.08),
+                rgba(255, 255, 255, 0.035)
+            );
+
+        box-shadow:
+            0 15px 35px rgba(0, 0, 0, 0.12),
+            inset 0 1px 0 rgba(255, 255, 255, 0.08);
+
+        transition:
+            transform 0.25s ease,
+            background 0.25s ease;
+    }
+
+    .security-notice:hover {
+        transform: translateY(-3px);
+
+        background:
+            linear-gradient(
+                135deg,
+                rgba(255, 255, 255, 0.11),
+                rgba(255, 255, 255, 0.045)
+            );
+    }
+
+    .security-notice i {
+        color: #60a5fa;
+    }
+
+
+    /* =========================================================
+       RIGHT FORM PANEL
+    ========================================================= */
+
+    .admin-form-panel {
+        position: relative;
+        min-height: 640px;
+        padding: 50px;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        background:
+            radial-gradient(
+                circle at 100% 0%,
+                rgba(59, 130, 246, 0.055),
+                transparent 35%
+            ),
+            #ffffff;
+    }
+
+
+    /* =========================================================
+       HEADING
+    ========================================================= */
+
+    .login-heading {
+        margin-bottom: 29px;
+    }
+
+    .admin-badge {
+        display: inline-flex;
+        align-items: center;
+
+        margin-bottom: 16px;
+        padding: 8px 14px;
+
+        border: 1px solid #dbeafe;
+        border-radius: 30px;
+
+        color: #2563eb;
+
+        background:
+            linear-gradient(
+                135deg,
+                #eff6ff,
+                #f5f3ff
+            );
+
+        font-size: 10.5px;
+        font-weight: 750;
+        letter-spacing: 0.5px;
+
+        box-shadow:
+            0 7px 20px rgba(37, 99, 235, 0.08);
+
+        transition:
+            transform 0.25s ease,
+            box-shadow 0.25s ease;
+    }
+
+    .admin-badge:hover {
+        transform: translateY(-2px);
+
+        box-shadow:
+            0 10px 25px rgba(37, 99, 235, 0.13);
+    }
+
+    .login-heading h2 {
+        margin-bottom: 9px;
+
+        color: #172033;
+        font-size: 29px;
+        font-weight: 750;
+
+        letter-spacing: -0.5px;
+    }
+
+    .login-heading p {
+        max-width: 520px;
+        margin: 0;
+
+        color: #6b7280;
+        font-size: 13px;
+        line-height: 1.7;
+    }
+
+
+    /* =========================================================
+       ALERTS
+    ========================================================= */
+
+    .admin-alert {
+        margin-bottom: 20px;
+        padding: 13px 15px;
+
+        border-radius: 11px;
+        font-size: 13px;
+
+        box-shadow:
+            0 8px 20px rgba(15, 23, 42, 0.05);
+    }
+
+
+    /* =========================================================
+       FORM CONTROLS
+    ========================================================= */
+
+    .form-label {
+        margin-bottom: 8px;
+
+        color: #374151;
+        font-size: 13px;
+        font-weight: 650;
+    }
+
+    .required {
+        color: #dc3545;
+    }
+
+    .form-control {
+        min-height: 51px;
+        padding: 11px 14px;
+
+        border: 1px solid #dce2ea;
+        border-radius: 11px;
+
+        color: #1f2937;
+        background: #ffffff;
+
+        font-size: 14px;
+
+        box-shadow:
+            0 4px 12px rgba(15, 23, 42, 0.025);
+
+        transition:
+            border-color 0.25s ease,
+            box-shadow 0.25s ease,
+            transform 0.2s ease;
+    }
+
+    .form-control::placeholder {
+        color: #a1a9b6;
+    }
+
+    .form-control:hover {
+        border-color: #b9c4d3;
+
+        box-shadow:
+            0 7px 18px rgba(15, 23, 42, 0.045);
+    }
+
+    .form-control:focus {
+        border-color: #60a5fa;
+        outline: none;
+
+        transform: translateY(-1px);
+
+        box-shadow:
+            0 0 0 3px rgba(37, 99, 235, 0.09),
+            0 9px 25px rgba(37, 99, 235, 0.09);
+    }
+
+    .input-group .form-control {
+        border-radius: 11px 0 0 11px;
+    }
+
+
+    /* =========================================================
+       PASSWORD TOGGLE
+    ========================================================= */
+
+    .password-toggle {
+        min-width: 53px;
+
+        border-color: #dce2ea;
+        border-radius: 0 11px 11px 0;
+
+        color: #6b7280;
+        background: #ffffff;
+
+        transition:
+            color 0.2s ease,
+            background 0.2s ease,
+            box-shadow 0.2s ease;
+    }
+
+    .password-toggle:hover {
+        border-color: #b9c4d3;
+
+        color: #2563eb;
+        background: #f8fbff;
+
+        box-shadow:
+            inset 0 0 15px rgba(37, 99, 235, 0.05);
+    }
+
+    .password-toggle:active {
+        transform: scale(0.97);
+    }
+
+
+    .form-text {
+        margin-top: 7px;
+
+        color: #8a93a3;
+        font-size: 11px;
+        line-height: 1.5;
+    }
+
+
+    /* =========================================================
+       SECURITY BANNER
+    ========================================================= */
+
+    .security-banner {
+        position: relative;
+        overflow: hidden;
+
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+
+        margin: 23px 0;
+        padding: 15px 16px;
+
+        border: 1px solid #dce8f8;
+        border-radius: 12px;
+
+        background:
+            linear-gradient(
+                135deg,
+                #f7fbff 0%,
+                #f8f7ff 100%
+            );
+
+        box-shadow:
+            0 9px 24px rgba(37, 99, 235, 0.055);
+
+        transition:
+            transform 0.25s ease,
+            box-shadow 0.25s ease;
+    }
+
+    .security-banner::before {
+        content: "";
+        position: absolute;
+
+        width: 120px;
+        height: 120px;
+
+        top: -80px;
+        right: -30px;
+
+        border-radius: 50%;
+
+        background: rgba(59, 130, 246, 0.10);
+        filter: blur(15px);
+    }
+
+    .security-banner:hover {
+        transform: translateY(-2px);
+
+        box-shadow:
+            0 13px 30px rgba(37, 99, 235, 0.08);
+    }
+
+    .security-banner > i {
+        position: relative;
+        z-index: 2;
+
+        margin-top: 1px;
+
+        color: #2563eb;
+        font-size: 19px;
+
+        filter:
+            drop-shadow(
+                0 3px 7px rgba(37, 99, 235, 0.20)
+            );
+    }
+
+    .security-banner strong {
+        position: relative;
+        z-index: 2;
+
+        display: block;
+        margin-bottom: 4px;
+
+        color: #374151;
+        font-size: 12px;
+    }
+
+    .security-banner span {
+        position: relative;
+        z-index: 2;
+
+        display: block;
+
+        color: #6b7280;
+        font-size: 11px;
+        line-height: 1.55;
+    }
+
+
+    /* =========================================================
+       LOGIN BUTTON
+    ========================================================= */
+
+    .login-button {
+        position: relative;
+        overflow: hidden;
+
+        min-height: 52px;
+        margin-top: 4px;
+
+        border: none;
+        border-radius: 11px;
+
+        background:
+            linear-gradient(
+                135deg,
+                #2563eb 0%,
+                #4f46e5 50%,
+                #7c3aed 100%
+            );
+
+        box-shadow:
+            0 12px 28px rgba(37, 99, 235, 0.25),
+            0 4px 10px rgba(79, 70, 229, 0.12);
+
+        font-size: 14px;
+        font-weight: 650;
+
+        transition:
+            transform 0.25s ease,
+            box-shadow 0.25s ease,
+            filter 0.25s ease;
+    }
+
+    /* Shine animation */
+    .login-button::before {
+        content: "";
+        position: absolute;
+
+        top: 0;
+        left: -120%;
+
+        width: 70%;
+        height: 100%;
+
+        transform: skewX(-22deg);
+
+        background:
+            linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.24),
+                transparent
+            );
+
+        transition: left 0.65s ease;
+    }
+
+    .login-button:hover::before {
+        left: 145%;
+    }
+
+    .login-button:hover {
+        background:
+            linear-gradient(
+                135deg,
+                #1d4ed8 0%,
+                #4338ca 50%,
+                #6d28d9 100%
+            );
+
+        transform: translateY(-3px);
+
+        box-shadow:
+            0 17px 36px rgba(37, 99, 235, 0.31),
+            0 7px 17px rgba(79, 70, 229, 0.16);
+
+        filter: brightness(1.04);
+    }
+
+    .login-button:active {
+        transform: translateY(-1px) scale(0.99);
+    }
+
+    .login-button:disabled {
+        cursor: not-allowed;
+        opacity: 0.75;
+        transform: none;
+        filter: none;
+    }
+
+
+    /* =========================================================
+       LINKS
+    ========================================================= */
+
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+
+        color: #6b7280;
+        font-size: 12px;
+        text-decoration: none;
+
+        transition:
+            color 0.2s ease,
+            transform 0.2s ease;
+    }
+
+    .back-link:hover {
+        color: #2563eb;
+        transform: translateX(-3px);
+    }
+
+    .admin-note {
+        margin-top: 22px;
+
+        color: #9ca3af;
+        font-size: 10.5px;
+        line-height: 1.6;
+
+        text-align: center;
+    }
+
+
+    /* =========================================================
+       RESPONSIVE
+    ========================================================= */
+
+    @media (max-width: 991px) {
+        .admin-info-panel,
+        .admin-form-panel {
+            min-height: auto;
+        }
+
+        .admin-info-panel {
+            padding: 42px;
+        }
+
+        .admin-form-panel {
+            padding: 42px;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .admin-login-page {
+            padding: 22px 10px 40px;
+        }
+
+        .admin-card {
+            border-radius: 20px;
+        }
+
+        .admin-info-panel,
+        .admin-form-panel {
+            padding: 30px 21px;
+        }
+
+        .admin-info-panel h1 {
+            font-size: 25px;
+        }
+
+        .login-heading h2 {
+            font-size: 23px;
+        }
+
+        .admin-logo {
+            width: 62px;
+            height: 62px;
+            font-size: 27px;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .admin-login-page::before,
+        .admin-login-page::after {
+            animation: none;
+        }
+
+        *,
+        *::before,
+        *::after {
+            transition-duration: 0.01ms !important;
+        }
+    }
+</style>
+
+
+<div class="admin-login-page">
+
+    <div class="admin-login-wrapper">
+
+        <div class="admin-card">
+
+            <div class="row g-0">
+
+                <!-- =====================================================
+                     LEFT PANEL
+                ====================================================== -->
+
+                <div class="col-lg-5">
+
+                    <div class="admin-info-panel">
+
+                        <div class="admin-info-content">
+
+                            <div class="admin-logo">
+                                <i class="bi bi-shield-lock"></i>
+                            </div>
+
+                            <h1>
+                                CampusNexus AI
+                                <br>
+                                Administration
+                            </h1>
+
+                            <p class="admin-description">
+                                Secure administrative access to the
+                                university-wide CampusNexus AI campus
+                                management platform.
+                            </p>
+
+
+                            <ul class="security-list">
+
+                                <li>
+
+                                    <span class="security-icon">
+                                        <i class="bi bi-shield-check"></i>
+                                    </span>
+
+                                    <span>
+                                        Restricted access for authorized
+                                        university administrators only.
+                                    </span>
+
+                                </li>
+
+
+                                <li>
+
+                                    <span class="security-icon">
+                                        <i class="bi bi-key"></i>
+                                    </span>
+
+                                    <span>
+                                        Secure email and password
+                                        authentication protects
+                                        administrative access.
+                                    </span>
+
+                                </li>
+
+
+                                <li>
+
+                                    <span class="security-icon">
+                                        <i class="bi bi-database-lock"></i>
+                                    </span>
+
+                                    <span>
+                                        Administrative access is separated
+                                        from student and faculty accounts.
+                                    </span>
+
+                                </li>
+
+
+                                <li>
+
+                                    <span class="security-icon">
+                                        <i class="bi bi-clock-history"></i>
+                                    </span>
+
+                                    <span>
+                                        Administrative login activity can
+                                        be monitored by the system.
+                                    </span>
+
+                                </li>
+
+                            </ul>
+
+
+                            <div class="security-notice">
+
+                                <i class="bi bi-info-circle me-1"></i>
+
+                                This portal is intended only for the
+                                authorized CampusNexus administrator.
+                                Never share your administrator password.
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =====================================================
+                     RIGHT LOGIN PANEL
+                ====================================================== -->
+
+                <div class="col-lg-7">
+
+                    <div class="admin-form-panel">
+
+                        <div class="login-heading">
+
+                            <span class="admin-badge">
+
+                                <i class="bi bi-person-gear me-1"></i>
+
+                                ADMINISTRATOR ACCESS
+
+                            </span>
+
+
+                            <h2>
+                                Welcome, Administrator
+                            </h2>
+
+
+                            <p>
+                                Sign in with your authorized administrator
+                                email and password to access the
+                                CampusNexus AI administration panel.
+                            </p>
+
+                        </div>
+
+
+                        <!-- =================================================
+                             FLASH MESSAGES
+                        ================================================== -->
+
+                        <% if (typeof messages !== "undefined") { %>
+
+                            <% if (messages.error && messages.error.length) { %>
+
+                                <div class="alert alert-danger admin-alert">
+
+                                    <i class="bi bi-exclamation-triangle me-2"></i>
+
+                                    <%= messages.error[0] %>
+
+                                </div>
+
+                            <% } %>
+
+
+                            <% if (messages.success && messages.success.length) { %>
+
+                                <div class="alert alert-success admin-alert">
+
+                                    <i class="bi bi-check-circle me-2"></i>
+
+                                    <%= messages.success[0] %>
+
+                                </div>
+
+                            <% } %>
+
+                        <% } %>
+
+
+                        <!-- =================================================
+                             ADMIN LOGIN FORM
+                             LOGIC UNCHANGED
+                        ================================================== -->
+
+                        <form
+                            action="/auth/login/admin"
+                            method="POST"
+                            id="adminLoginForm"
+                            autocomplete="off"
+                            novalidate
+                        >
+
+                            <!-- EMAIL -->
+
+                            <div class="mb-4">
+
+                                <label
+                                    for="adminEmail"
+                                    class="form-label"
+                                >
+                                    Administrator Email
+                                    <span class="required">*</span>
+                                </label>
+
+
+                                <input
+                                    type="email"
+                                    id="adminEmail"
+                                    name="email"
+                                    class="form-control"
+                                    placeholder="Enter administrator email"
+                                    autocomplete="off"
+                                    autocapitalize="none"
+                                    autocorrect="off"
+                                    spellcheck="false"
+                                    maxlength="150"
+                                    required
+                                >
+
+
+                                <div class="form-text">
+
+                                    <i class="bi bi-lock me-1"></i>
+
+                                    Enter your authorized administrator
+                                    email.
+
+                                </div>
+
+
+                                <div class="invalid-feedback">
+                                    Please enter a valid administrator email.
+                                </div>
+
+                            </div>
+
+
+                            <!-- PASSWORD -->
+
+                            <div class="mb-4">
+
+                                <label
+                                    for="adminPassword"
+                                    class="form-label"
+                                >
+                                    Administrator Password
+                                    <span class="required">*</span>
+                                </label>
+
+
+                                <div class="input-group">
+
+                                    <input
+                                        type="password"
+                                        id="adminPassword"
+                                        name="password"
+                                        class="form-control"
+                                        placeholder="Enter administrator password"
+                                        autocomplete="new-password"
+                                        minlength="6"
+                                        maxlength="128"
+                                        required
+                                    >
+
+
+                                    <button
+                                        type="button"
+                                        class="btn password-toggle"
+                                        id="togglePassword"
+                                        aria-label="Show password"
+                                        title="Show password"
+                                    >
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+
+                                </div>
+
+
+                                <div class="invalid-feedback">
+                                    Please enter your administrator password.
+                                </div>
+
+                            </div>
+
+
+                            <!-- SECURITY MESSAGE -->
+
+                            <div class="security-banner">
+
+                                <i class="bi bi-shield-check"></i>
+
+                                <div>
+
+                                    <strong>
+                                        Secure administrator authentication
+                                    </strong>
+
+                                    <span>
+                                        Your credentials will be verified
+                                        before access is granted to the
+                                        administration panel.
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- SUBMIT BUTTON -->
+
+                            <div class="d-grid">
+
+                                <button
+                                    type="submit"
+                                    class="btn btn-primary login-button"
+                                    id="loginBtn"
+                                >
+
+                                    <i class="bi bi-box-arrow-in-right me-2"></i>
+
+                                    Sign In to Admin Panel
+
+                                </button>
+
+                            </div>
+
+
+                            <!-- BACK LINK -->
+
+                            <div class="text-center mt-4">
+
+                                <a
+                                    href="/auth/login"
+                                    class="back-link"
+                                >
+
+                                    <i class="bi bi-arrow-left"></i>
+
+                                    Back to Login Portal
+
+                                </a>
+
+                            </div>
+
+
+                            <!-- FOOTNOTE -->
+
+                            <div class="admin-note">
+
+                                <i class="bi bi-lock-fill me-1"></i>
+
+                                Administrator accounts do not have public
+                                registration. Access is controlled through
+                                university administration configuration.
+
+                            </div>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const form = document.getElementById("adminLoginForm");
+
+    const email = document.getElementById("adminEmail");
+
+    const password = document.getElementById("adminPassword");
+
+    const togglePassword =
+        document.getElementById("togglePassword");
+
+    const loginBtn =
+        document.getElementById("loginBtn");
+
+
+    if (
+        !form ||
+        !email ||
+        !password ||
+        !togglePassword ||
+        !loginBtn
+    ) {
+        console.error("Admin login form elements are missing.");
+        return;
+    }
+
+
+    /* =========================================================
+       SHOW / HIDE PASSWORD
+    ========================================================= */
+
+    togglePassword.addEventListener("click", function () {
+
+        const passwordIsHidden =
+            password.type === "password";
+
+        password.type =
+            passwordIsHidden
+                ? "text"
+                : "password";
+
+
+        togglePassword.innerHTML =
+            passwordIsHidden
+                ? '<i class="bi bi-eye-slash"></i>'
+                : '<i class="bi bi-eye"></i>';
+
+
+        togglePassword.setAttribute(
+            "aria-label",
+            passwordIsHidden
+                ? "Hide password"
+                : "Show password"
+        );
+
+
+        togglePassword.setAttribute(
+            "title",
+            passwordIsHidden
+                ? "Hide password"
+                : "Show password"
+        );
+
+    });
+
+
+    /* =========================================================
+       EMAIL CLEANUP
+    ========================================================= */
+
+    email.addEventListener("input", function () {
+
+        email.value =
+            email.value.replace(/\s/g, "");
+
+    });
+
+
+    email.addEventListener("blur", function () {
+
+        email.value =
+            email.value.trim().toLowerCase();
+
+    });
+
+
+    /* =========================================================
+       FORM SUBMIT
+    ========================================================= */
+
+    form.addEventListener("submit", function (event) {
+
+        email.value =
+            email.value.trim().toLowerCase();
+
+
+        if (!form.checkValidity()) {
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            form.classList.add("was-validated");
+
+
+            const firstInvalid =
+                form.querySelector(":invalid");
+
+
+            if (firstInvalid) {
+                firstInvalid.focus();
+            }
+
+            return;
+        }
+
+
+        /* Prevent accidental double submission */
+
+        loginBtn.disabled = true;
+
+        loginBtn.innerHTML = `
+            <span
+                class="spinner-border spinner-border-sm me-2"
+                role="status"
+                aria-hidden="true">
+            </span>
+            Verifying Credentials...
+        `;
+
+    });
+
+
+    /* =========================================================
+       CLEAR INVALID STATE
+    ========================================================= */
+
+    [email, password].forEach(function (field) {
+
+        field.addEventListener("input", function () {
+
+            if (field.value.trim() !== "") {
+
+                field.classList.remove("is-invalid");
+
+            }
+
+        });
+
+    });
+
+});
+</script>

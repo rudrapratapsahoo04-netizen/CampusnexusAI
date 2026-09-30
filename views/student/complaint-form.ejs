@@ -1,0 +1,361 @@
+<% layout("layouts/boilerplate") -%>
+<div class="container py-4">
+
+    <div class="row justify-content-center">
+
+        <div class="col-xl-9 col-lg-10">
+
+            <!-- Header -->
+            <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+
+                <div>
+                    <h2 class="fw-bold mb-1">
+                        <i class="bi bi-chat-left-text me-2"></i>
+                        Submit a Complaint
+                    </h2>
+
+                    <p class="text-muted mb-0">
+                        Tell us about an issue you are facing on campus.
+                    </p>
+                </div>
+
+                <a
+                    href="/student/complaints"
+                    class="btn btn-outline-primary mt-3 mt-md-0"
+                >
+                    <i class="bi bi-clock-history me-1"></i>
+                    My Complaints
+                </a>
+
+            </div>
+
+
+            <!-- Academic Information -->
+            <div class="card border-0 shadow-sm mb-4">
+
+                <div class="card-body p-4">
+
+                    <h5 class="fw-bold mb-3">
+                        <i class="bi bi-mortarboard me-2"></i>
+                        Student Information
+                    </h5>
+
+                    <div class="row g-3">
+
+                        <div class="col-md-6">
+
+                            <small class="text-muted d-block">
+                                Student ID
+                            </small>
+
+                            <strong>
+                                <%= studentProfile.studentId %>
+                            </strong>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <small class="text-muted d-block">
+                                Department
+                            </small>
+
+                            <strong>
+                                <%= studentProfile.department %>
+                            </strong>
+
+                        </div>
+
+
+                        <div class="col-md-4">
+
+                            <small class="text-muted d-block">
+                                Program
+                            </small>
+
+                            <strong>
+                                <%= studentProfile.program %>
+                            </strong>
+
+                        </div>
+
+
+                        <div class="col-md-4">
+
+                            <small class="text-muted d-block">
+                                Semester
+                            </small>
+
+                            <strong>
+                                Semester
+                                <%= studentProfile.semester %>
+                            </strong>
+
+                        </div>
+
+
+                        <div class="col-md-4">
+
+                            <small class="text-muted d-block">
+                                Section
+                            </small>
+
+                            <strong>
+                                <%= studentProfile.section || "N/A" %>
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Complaint Form -->
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-body p-4 p-md-5">
+
+                    <form
+                        action="/student/complaint/apply"
+                        method="POST"
+                        id="complaintForm"
+                    >
+
+                        <!-- Category -->
+                        <div class="mb-4">
+
+                            <label
+                                for="category"
+                                class="form-label fw-semibold"
+                            >
+                                Complaint Category
+                                <span class="text-danger">*</span>
+                            </label>
+
+                            <select
+                                class="form-select"
+                                id="category"
+                                name="category"
+                                required
+                            >
+
+                                <option value="">
+                                    Select category
+                                </option>
+
+                                <option value="academic">
+                                    Academic
+                                </option>
+
+                                <option value="faculty">
+                                    Faculty
+                                </option>
+
+                                <option value="hostel">
+                                    Hostel
+                                </option>
+
+                                <option value="mess">
+                                    Mess
+                                </option>
+
+                                <option value="library">
+                                    Library
+                                </option>
+
+                                <option value="transport">
+                                    Transport
+                                </option>
+
+                                <option value="infrastructure">
+                                    Infrastructure
+                                </option>
+
+                                <option value="internet">
+                                    Internet / Wi-Fi
+                                </option>
+
+                                <option value="fees">
+                                    Fees
+                                </option>
+
+                                <option value="examination">
+                                    Examination
+                                </option>
+
+                                <option value="administration">
+                                    Administration
+                                </option>
+
+                                <option value="other">
+                                    Other
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- Subject -->
+                        <div class="mb-4">
+
+                            <label
+                                for="subject"
+                                class="form-label fw-semibold"
+                            >
+                                Complaint Subject
+                                <span class="text-danger">*</span>
+                            </label>
+
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="subject"
+                                name="subject"
+                                minlength="5"
+                                maxlength="200"
+                                placeholder="Enter a short title for your complaint"
+                                required
+                            >
+
+                        </div>
+
+
+                        <!-- Priority -->
+                        <div class="mb-4">
+
+                            <label
+                                for="priority"
+                                class="form-label fw-semibold"
+                            >
+                                Priority
+                                <span class="text-danger">*</span>
+                            </label>
+
+                            <select
+                                class="form-select"
+                                id="priority"
+                                name="priority"
+                                required
+                            >
+
+                                <option value="">
+                                    Select priority
+                                </option>
+
+                                <option value="low">
+                                    Low
+                                </option>
+
+                                <option value="medium" selected>
+                                    Medium
+                                </option>
+
+                                <option value="high">
+                                    High
+                                </option>
+
+                                <option value="urgent">
+                                    Urgent
+                                </option>
+
+                            </select>
+
+                            <div class="form-text">
+                                Use urgent only for issues requiring immediate attention.
+                            </div>
+
+                        </div>
+
+
+                        <!-- Description -->
+                        <div class="mb-4">
+
+                            <label
+                                for="description"
+                                class="form-label fw-semibold"
+                            >
+                                Complaint Description
+                                <span class="text-danger">*</span>
+                            </label>
+
+                            <textarea
+                                class="form-control"
+                                id="description"
+                                name="description"
+                                rows="7"
+                                minlength="10"
+                                maxlength="2000"
+                                placeholder="Describe the issue in detail..."
+                                required
+                            ></textarea>
+
+                            <div class="form-text">
+                                Maximum 2000 characters.
+                            </div>
+
+                        </div>
+
+
+                        <!-- Information -->
+                        <div class="alert alert-info border-0">
+
+                            <div class="d-flex">
+
+                                <i class="bi bi-info-circle-fill fs-5 me-2"></i>
+
+                                <div>
+
+                                    <strong>
+                                        Complaint Process
+                                    </strong>
+
+                                    <p class="mb-0 mt-1">
+                                        Your complaint will be reviewed by
+                                        the administration and may be assigned
+                                        to the appropriate faculty or department.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Buttons -->
+                        <div class="d-flex flex-column flex-sm-row gap-2 mt-4">
+
+                            <button
+                                type="submit"
+                                class="btn btn-primary px-4"
+                            >
+                                <i class="bi bi-send me-1"></i>
+                                Submit Complaint
+                            </button>
+
+
+                            <a
+                                href="/student/dashboard"
+                                class="btn btn-outline-secondary px-4"
+                            >
+                                Cancel
+                            </a>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

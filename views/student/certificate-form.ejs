@@ -1,0 +1,410 @@
+
+<% layout("layouts/boilerplate") -%>
+<div class="container py-4">
+
+    <!-- PAGE HEADER -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h2 class="fw-bold mb-1">
+                <i class="bi bi-file-earmark-text me-2"></i>
+                Apply for Certificate
+            </h2>
+
+            <p class="text-muted mb-0">
+                Submit your certificate request online.
+            </p>
+        </div>
+
+        <a
+            href="/student/certificates"
+            class="btn btn-outline-primary"
+        >
+            <i class="bi bi-list-check me-1"></i>
+            My Certificates
+        </a>
+
+    </div>
+
+
+    <div class="row g-4">
+
+        <!-- APPLICATION FORM -->
+
+        <div class="col-lg-8">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-body p-4">
+
+                    <h5 class="fw-bold mb-4">
+                        Certificate Application
+                    </h5>
+
+                    <form
+                        action="/student/certificate/apply"
+                        method="POST"
+                    >
+
+                        <!-- CERTIFICATE TYPE -->
+
+                        <div class="mb-4">
+
+                            <label
+                                for="certificateType"
+                                class="form-label fw-semibold"
+                            >
+                                Certificate Type
+                                <span class="text-danger">*</span>
+                            </label>
+
+                            <select
+                                id="certificateType"
+                                name="certificateType"
+                                class="form-select"
+                                required
+                            >
+
+                                <option value="">
+                                    Select certificate
+                                </option>
+
+                                <option value="bonafide">
+                                    Bonafide Certificate
+                                </option>
+
+                                <option value="character">
+                                    Character Certificate
+                                </option>
+
+                                <option value="study">
+                                    Study Certificate
+                                </option>
+
+                                <option value="attendance">
+                                    Attendance Certificate
+                                </option>
+
+                                <option value="fee">
+                                    Fee / Expenditure Certificate
+                                </option>
+
+                                <option value="medium_of_instruction">
+                                    Medium of Instruction Certificate
+                                </option>
+
+                                <option value="course_completion">
+                                    Course Completion Certificate
+                                </option>
+
+                                <option value="migration">
+                                    Migration Certificate
+                                </option>
+
+                                <option value="transfer">
+                                    Transfer Certificate
+                                </option>
+
+                                <option value="provisional_degree">
+                                    Provisional Degree Certificate
+                                </option>
+
+                                <option value="transcript">
+                                    Academic Transcript
+                                </option>
+
+                                <option value="no_dues">
+                                    No Dues Certificate
+                                </option>
+
+                            </select>
+
+                            <div class="form-text">
+                                Select the certificate you need.
+                            </div>
+
+                        </div>
+
+
+                        <!-- PURPOSE -->
+
+                        <div class="mb-4">
+
+                            <label
+                                for="purpose"
+                                class="form-label fw-semibold"
+                            >
+                                Purpose
+                                <span class="text-danger">*</span>
+                            </label>
+
+                            <input
+                                type="text"
+                                id="purpose"
+                                name="purpose"
+                                class="form-control"
+                                placeholder="e.g. Scholarship, Higher Studies, Internship"
+                                minlength="5"
+                                maxlength="500"
+                                required
+                            >
+
+                            <div class="form-text">
+                                Mention why you require this certificate.
+                            </div>
+
+                        </div>
+
+
+                        <!-- ADDITIONAL DETAILS -->
+
+                        <div class="mb-4">
+
+                            <label
+                                for="additionalDetails"
+                                class="form-label fw-semibold"
+                            >
+                                Additional Details
+                            </label>
+
+                            <textarea
+                                id="additionalDetails"
+                                name="additionalDetails"
+                                class="form-control"
+                                rows="5"
+                                maxlength="1000"
+                                placeholder="Add any additional information if required..."
+                            ></textarea>
+
+                            <div class="form-text">
+                                This field is optional.
+                            </div>
+
+                        </div>
+
+
+                        <!-- IMPORTANT INFO -->
+
+                        <div class="alert alert-info border-0">
+
+                            <div class="d-flex">
+
+                                <i
+                                    class="bi bi-info-circle-fill fs-5 me-2"
+                                ></i>
+
+                                <div>
+
+                                    <strong>
+                                        Important
+                                    </strong>
+
+                                    <p class="mb-0 mt-1">
+                                        Your application will be reviewed
+                                        by the university administration.
+                                        Once approved, your certificate
+                                        will be generated and made available
+                                        for download.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- BUTTONS -->
+
+                        <div class="d-flex gap-2">
+
+                            <button
+                                type="submit"
+                                class="btn btn-primary"
+                            >
+                                <i class="bi bi-send me-1"></i>
+                                Submit Application
+                            </button>
+
+                            <a
+                                href="/student/dashboard"
+                                class="btn btn-outline-secondary"
+                            >
+                                Cancel
+                            </a>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- STUDENT INFORMATION -->
+
+        <div class="col-lg-4">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-body p-4">
+
+                    <h5 class="fw-bold mb-4">
+                        <i class="bi bi-person-vcard me-2"></i>
+                        Student Information
+                    </h5>
+
+
+                    <div class="mb-3">
+
+                        <small class="text-muted">
+                            Student ID
+                        </small>
+
+                        <div class="fw-semibold">
+                            <%= studentProfile.studentId %>
+                        </div>
+
+                    </div>
+
+
+                    <div class="mb-3">
+
+                        <small class="text-muted">
+                            Department
+                        </small>
+
+                        <div class="fw-semibold text-capitalize">
+                            <%= studentProfile.department.replace(
+                                /-/g,
+                                " "
+                            ) %>
+                        </div>
+
+                    </div>
+
+
+                    <div class="mb-3">
+
+                        <small class="text-muted">
+                            Program
+                        </small>
+
+                        <div class="fw-semibold text-uppercase">
+                            <%= studentProfile.program.replace(
+                                /-/g,
+                                " "
+                            ) %>
+                        </div>
+
+                    </div>
+
+
+                    <div class="mb-3">
+
+                        <small class="text-muted">
+                            Semester
+                        </small>
+
+                        <div class="fw-semibold">
+                            Semester <%= studentProfile.semester %>
+                        </div>
+
+                    </div>
+
+
+                    <div class="mb-0">
+
+                        <small class="text-muted">
+                            Section
+                        </small>
+
+                        <div class="fw-semibold">
+                            <%= studentProfile.section || "N/A" %>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- PROCESS CARD -->
+
+            <div class="card border-0 shadow-sm mt-4">
+
+                <div class="card-body p-4">
+
+                    <h6 class="fw-bold mb-3">
+                        Application Process
+                    </h6>
+
+                    <div class="small">
+
+                        <div class="d-flex mb-3">
+
+                            <span class="badge bg-primary rounded-circle me-2">
+                                1
+                            </span>
+
+                            <span>
+                                Submit application
+                            </span>
+
+                        </div>
+
+
+                        <div class="d-flex mb-3">
+
+                            <span class="badge bg-primary rounded-circle me-2">
+                                2
+                            </span>
+
+                            <span>
+                                Administration reviews request
+                            </span>
+
+                        </div>
+
+
+                        <div class="d-flex mb-3">
+
+                            <span class="badge bg-primary rounded-circle me-2">
+                                3
+                            </span>
+
+                            <span>
+                                Application gets approved
+                            </span>
+
+                        </div>
+
+
+                        <div class="d-flex">
+
+                            <span class="badge bg-success rounded-circle me-2">
+                                4
+                            </span>
+
+                            <span>
+                                Certificate becomes available
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

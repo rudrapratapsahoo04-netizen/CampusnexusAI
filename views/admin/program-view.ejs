@@ -1,0 +1,204 @@
+<% layout("layouts/boilerplate") -%>
+
+<div class="container-fluid py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h2 class="fw-bold mb-1">
+                <%= program.name %>
+            </h2>
+
+            <p class="text-muted mb-0">
+                Program Details
+            </p>
+        </div>
+
+        <a
+            href="/admin/programs"
+            class="btn btn-outline-secondary"
+        >
+            <i class="bi bi-arrow-left me-1"></i>
+            Back
+        </a>
+
+    </div>
+
+    <div class="row g-4">
+
+        <div class="col-lg-8">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-body p-4">
+
+                    <h5 class="fw-bold mb-4">
+                        Program Information
+                    </h5>
+
+                    <div class="row g-4">
+
+                        <div class="col-md-6">
+
+                            <div class="text-muted small">
+                                Program Name
+                            </div>
+
+                            <div class="fw-semibold">
+                                <%= program.name %>
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <div class="text-muted small">
+                                Program Code
+                            </div>
+
+                            <div class="fw-semibold">
+                                <%= program.code %>
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <div class="text-muted small">
+                                Department
+                            </div>
+
+                            <div class="fw-semibold">
+                                <% if (program.department) { %>
+                                    <%= program.department.name %>
+                                    (<%= program.department.code %>)
+                                <% } else { %>
+                                    Not Assigned
+                                <% } %>
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-3">
+
+                            <div class="text-muted small">
+                                Duration
+                            </div>
+
+                            <div class="fw-semibold">
+                                <%= program.durationYears %> Year<%= program.durationYears > 1 ? "s" : "" %>
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-3">
+
+                            <div class="text-muted small">
+                                Semesters
+                            </div>
+
+                            <div class="fw-semibold">
+                                <%= program.totalSemesters %>
+                            </div>
+
+                        </div>
+
+                        <div class="col-12">
+
+                            <div class="text-muted small">
+                                Description
+                            </div>
+
+                            <div>
+                                <%= program.description || "No description available." %>
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <div class="text-muted small">
+                                Status
+                            </div>
+
+                            <% if (program.status === "active") { %>
+
+                                <span class="badge bg-success-subtle text-success">
+                                    Active
+                                </span>
+
+                            <% } else { %>
+
+                                <span class="badge bg-danger-subtle text-danger">
+                                    Inactive
+                                </span>
+
+                            <% } %>
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <div class="text-muted small">
+                                Created Date
+                            </div>
+
+                            <div class="fw-semibold">
+                                <%= new Date(
+                                    program.createdAt
+                                ).toLocaleDateString("en-IN") %>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-4">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-body p-4">
+
+                    <h5 class="fw-bold mb-4">
+                        Statistics
+                    </h5>
+
+                    <div class="d-flex justify-content-between mb-3">
+
+                        <span class="text-muted">
+                            Students
+                        </span>
+
+                        <strong>
+                            <%= statistics.students %>
+                        </strong>
+
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+
+                        <span class="text-muted">
+                            Faculty
+                        </span>
+
+                        <strong>
+                            <%= statistics.faculty %>
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

@@ -1,0 +1,694 @@
+
+<% layout("layouts/boilerplate") -%>
+
+<div class="container-fluid py-4">
+
+    <!-- PAGE HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h2 class="fw-bold mb-1">
+                <i class="bi bi-gear me-2"></i>
+                Admin Settings
+            </h2>
+
+            <p class="text-muted mb-0">
+                Manage university-wide CampusNexus configuration and
+                administrative settings.
+            </p>
+        </div>
+
+        <div>
+            <span class="badge bg-primary px-3 py-2">
+                <i class="bi bi-shield-check me-1"></i>
+                Administrator
+            </span>
+        </div>
+
+    </div>
+
+
+    <!-- SETTINGS GRID -->
+    <div class="row g-4">
+
+
+        <!-- 1. UNIVERSITY / INSTITUTION -->
+        <div class="col-md-6 col-xl-4">
+
+            <a
+                href="#"
+                class="text-decoration-none"
+            >
+
+                <div class="card border-0 shadow-sm h-100 settings-card">
+
+                    <div class="card-body p-4">
+
+                        <div class="d-flex align-items-start">
+
+                            <div
+                                class="rounded-3 p-3 bg-primary bg-opacity-10 me-3"
+                            >
+                                <i
+                                    class="bi bi-building text-primary fs-3"
+                                ></i>
+                            </div>
+
+                            <div>
+
+                                <h5 class="fw-bold text-dark mb-1">
+                                    University / Institution
+                                </h5>
+
+                                <p class="text-muted small mb-0">
+                                    University name, logo, contact,
+                                    address and institutional information.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="card-footer bg-white border-0 px-4 pb-4">
+
+                        <span class="small text-primary fw-semibold">
+                            Manage Settings
+                            <i class="bi bi-arrow-right ms-1"></i>
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </a>
+
+        </div>
+
+
+        <!-- 2. ACADEMIC -->
+        <div class="col-md-6 col-xl-4">
+
+            <a
+                href="#"
+                class="text-decoration-none"
+            >
+
+                <div class="card border-0 shadow-sm h-100 settings-card">
+
+                    <div class="card-body p-4">
+
+                        <div class="d-flex align-items-start">
+
+                            <div
+                                class="rounded-3 p-3 bg-success bg-opacity-10 me-3"
+                            >
+                                <i
+                                    class="bi bi-mortarboard text-success fs-3"
+                                ></i>
+                            </div>
+
+                            <div>
+
+                                <h5 class="fw-bold text-dark mb-1">
+                                    Academic Settings
+                                </h5>
+
+                                <p class="text-muted small mb-0">
+                                    Academic session, semester,
+                                    sections and academic configuration.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="card-footer bg-white border-0 px-4 pb-4">
+
+                        <span class="small text-success fw-semibold">
+                            Manage Settings
+                            <i class="bi bi-arrow-right ms-1"></i>
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </a>
+
+        </div>
+
+
+        <!-- 3. DEPARTMENT & PROGRAM -->
+        <div class="col-md-6 col-xl-4">
+
+            <a
+                href="/admin/departments"
+                class="text-decoration-none"
+            >
+
+                <div class="card border-0 shadow-sm h-100 settings-card">
+
+                    <div class="card-body p-4">
+
+                        <div class="d-flex align-items-start">
+
+                            <div
+                                class="rounded-3 p-3 bg-info bg-opacity-10 me-3"
+                            >
+                                <i
+                                    class="bi bi-diagram-3 text-info fs-3"
+                                ></i>
+                            </div>
+
+                            <div>
+
+                                <h5 class="fw-bold text-dark mb-1">
+                                    Department & Program
+                                </h5>
+
+                                <p class="text-muted small mb-0">
+                                    Manage university departments and
+                                    their academic programs.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="card-footer bg-white border-0 px-4 pb-4">
+
+                        <span class="small text-info fw-semibold">
+                            Open Management
+                            <i class="bi bi-arrow-right ms-1"></i>
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </a>
+
+        </div>
+
+
+        <!-- 4. USER & ROLE -->
+        <div class="col-md-6 col-xl-4">
+
+            <a
+                href="/admin/users"
+                class="text-decoration-none"
+            >
+
+                <div class="card border-0 shadow-sm h-100 settings-card">
+
+                    <div class="card-body p-4">
+
+                        <div class="d-flex align-items-start">
+
+                            <div
+                                class="rounded-3 p-3 bg-warning bg-opacity-10 me-3"
+                            >
+                                <i
+                                    class="bi bi-people text-warning fs-3"
+                                ></i>
+                            </div>
+
+                            <div>
+
+                                <h5 class="fw-bold text-dark mb-1">
+                                    User & Role Settings
+                                </h5>
+
+                                <p class="text-muted small mb-0">
+                                    Manage administrators, faculty,
+                                    students and account status.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="card-footer bg-white border-0 px-4 pb-4">
+
+                        <span class="small text-warning fw-semibold">
+                            Open User Management
+                            <i class="bi bi-arrow-right ms-1"></i>
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </a>
+
+        </div>
+
+
+        <!-- 5. ATTENDANCE -->
+        <div class="col-md-6 col-xl-4">
+
+            <a
+                href="#"
+                class="text-decoration-none"
+            >
+
+                <div class="card border-0 shadow-sm h-100 settings-card">
+
+                    <div class="card-body p-4">
+
+                        <div class="d-flex align-items-start">
+
+                            <div
+                                class="rounded-3 p-3 bg-danger bg-opacity-10 me-3"
+                            >
+                                <i
+                                    class="bi bi-calendar-check text-danger fs-3"
+                                ></i>
+                            </div>
+
+                            <div>
+
+                                <h5 class="fw-bold text-dark mb-1">
+                                    Attendance Settings
+                                </h5>
+
+                                <p class="text-muted small mb-0">
+                                    Attendance threshold, calculation
+                                    rules and monthly attendance settings.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="card-footer bg-white border-0 px-4 pb-4">
+
+                        <span class="small text-danger fw-semibold">
+                            Manage Settings
+                            <i class="bi bi-arrow-right ms-1"></i>
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </a>
+
+        </div>
+
+
+        <!-- 6. NOTICE -->
+        <div class="col-md-6 col-xl-4">
+
+            <a
+                href="/admin/notices"
+                class="text-decoration-none"
+            >
+
+                <div class="card border-0 shadow-sm h-100 settings-card">
+
+                    <div class="card-body p-4">
+
+                        <div class="d-flex align-items-start">
+
+                            <div
+                                class="rounded-3 p-3 bg-secondary bg-opacity-10 me-3"
+                            >
+                                <i
+                                    class="bi bi-megaphone text-secondary fs-3"
+                                ></i>
+                            </div>
+
+                            <div>
+
+                                <h5 class="fw-bold text-dark mb-1">
+                                    Notice Settings
+                                </h5>
+
+                                <p class="text-muted small mb-0">
+                                    Manage notices, audiences, scopes
+                                    and publishing configuration.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="card-footer bg-white border-0 px-4 pb-4">
+
+                        <span class="small text-secondary fw-semibold">
+                            Open Notice Management
+                            <i class="bi bi-arrow-right ms-1"></i>
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </a>
+
+        </div>
+
+
+        <!-- 7. LEAVE -->
+        <div class="col-md-6 col-xl-4">
+
+            <a
+                href="/admin/leave"
+                class="text-decoration-none"
+            >
+
+                <div class="card border-0 shadow-sm h-100 settings-card">
+
+                    <div class="card-body p-4">
+
+                        <div class="d-flex align-items-start">
+
+                            <div
+                                class="rounded-3 p-3 bg-info bg-opacity-10 me-3"
+                            >
+                                <i
+                                    class="bi bi-calendar2-x text-info fs-3"
+                                ></i>
+                            </div>
+
+                            <div>
+
+                                <h5 class="fw-bold text-dark mb-1">
+                                    Leave Settings
+                                </h5>
+
+                                <p class="text-muted small mb-0">
+                                    Leave types, limits and student/faculty
+                                    leave configuration.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="card-footer bg-white border-0 px-4 pb-4">
+
+                        <span class="small text-info fw-semibold">
+                            Open Leave Management
+                            <i class="bi bi-arrow-right ms-1"></i>
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </a>
+
+        </div>
+
+
+        <!-- 8. CERTIFICATE -->
+        <div class="col-md-6 col-xl-4">
+
+            <a
+                href="/admin/certificates"
+                class="text-decoration-none"
+            >
+
+                <div class="card border-0 shadow-sm h-100 settings-card">
+
+                    <div class="card-body p-4">
+
+                        <div class="d-flex align-items-start">
+
+                            <div
+                                class="rounded-3 p-3 bg-primary bg-opacity-10 me-3"
+                            >
+                                <i
+                                    class="bi bi-file-earmark-medical text-primary fs-3"
+                                ></i>
+                            </div>
+
+                            <div>
+
+                                <h5 class="fw-bold text-dark mb-1">
+                                    Certificate Settings
+                                </h5>
+
+                                <p class="text-muted small mb-0">
+                                    Certificate types, numbering and
+                                    digital certificate configuration.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="card-footer bg-white border-0 px-4 pb-4">
+
+                        <span class="small text-primary fw-semibold">
+                            Open Certificate Management
+                            <i class="bi bi-arrow-right ms-1"></i>
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </a>
+
+        </div>
+
+
+        <!-- 9. GATE PASS -->
+        <div class="col-md-6 col-xl-4">
+
+            <a
+                href="/admin/gate-pass"
+                class="text-decoration-none"
+            >
+
+                <div class="card border-0 shadow-sm h-100 settings-card">
+
+                    <div class="card-body p-4">
+
+                        <div class="d-flex align-items-start">
+
+                            <div
+                                class="rounded-3 p-3 bg-dark bg-opacity-10 me-3"
+                            >
+                                <i
+                                    class="bi bi-qr-code text-dark fs-3"
+                                ></i>
+                            </div>
+
+                            <div>
+
+                                <h5 class="fw-bold text-dark mb-1">
+                                    Gate Pass Settings
+                                </h5>
+
+                                <p class="text-muted small mb-0">
+                                    Gate-pass types, QR verification
+                                    and pass configuration.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="card-footer bg-white border-0 px-4 pb-4">
+
+                        <span class="small text-dark fw-semibold">
+                            Open Gate Pass Management
+                            <i class="bi bi-arrow-right ms-1"></i>
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </a>
+
+        </div>
+
+
+        <!-- 10. COMPLAINT -->
+        <div class="col-md-6 col-xl-4">
+
+            <a
+                href="/admin/complaints"
+                class="text-decoration-none"
+            >
+
+                <div class="card border-0 shadow-sm h-100 settings-card">
+
+                    <div class="card-body p-4">
+
+                        <div class="d-flex align-items-start">
+
+                            <div
+                                class="rounded-3 p-3 bg-warning bg-opacity-10 me-3"
+                            >
+                                <i
+                                    class="bi bi-chat-left-text text-warning fs-3"
+                                ></i>
+                            </div>
+
+                            <div>
+
+                                <h5 class="fw-bold text-dark mb-1">
+                                    Complaint Settings
+                                </h5>
+
+                                <p class="text-muted small mb-0">
+                                    Complaint categories, priorities
+                                    and management workflow.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="card-footer bg-white border-0 px-4 pb-4">
+
+                        <span class="small text-warning fw-semibold">
+                            Open Complaint Management
+                            <i class="bi bi-arrow-right ms-1"></i>
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </a>
+
+        </div>
+
+
+        <!-- 11. SYSTEM -->
+        <div class="col-md-6 col-xl-4">
+
+            <a
+                href="#"
+                class="text-decoration-none"
+            >
+
+                <div class="card border-0 shadow-sm h-100 settings-card">
+
+                    <div class="card-body p-4">
+
+                        <div class="d-flex align-items-start">
+
+                            <div
+                                class="rounded-3 p-3 bg-secondary bg-opacity-10 me-3"
+                            >
+                                <i
+                                    class="bi bi-sliders text-secondary fs-3"
+                                ></i>
+                            </div>
+
+                            <div>
+
+                                <h5 class="fw-bold text-dark mb-1">
+                                    System Settings
+                                </h5>
+
+                                <p class="text-muted small mb-0">
+                                    Application-wide preferences,
+                                    file limits and system configuration.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="card-footer bg-white border-0 px-4 pb-4">
+
+                        <span class="small text-secondary fw-semibold">
+                            Manage Settings
+                            <i class="bi bi-arrow-right ms-1"></i>
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </a>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- INFORMATION -->
+    <div class="card border-0 shadow-sm mt-5">
+
+        <div class="card-body p-4">
+
+            <div class="d-flex align-items-start">
+
+                <div class="me-3">
+                    <i
+                        class="bi bi-info-circle text-primary fs-4"
+                    ></i>
+                </div>
+
+                <div>
+
+                    <h6 class="fw-bold mb-1">
+                        About Admin Settings
+                    </h6>
+
+                    <p class="text-muted small mb-0">
+                        These settings control university-wide
+                        CampusNexus configuration. Changes to academic
+                        structure, users and operational modules should
+                        be made through their respective management sections.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<style>
+
+    .settings-card {
+        transition:
+            transform 0.2s ease,
+            box-shadow 0.2s ease;
+    }
+
+    .settings-card:hover {
+        transform: translateY(-4px);
+        box-shadow:
+            0 0.75rem 1.5rem rgba(0, 0, 0, 0.10) !important;
+    }
+
+</style>

@@ -1,0 +1,1264 @@
+<% layout("layouts/boilerplate") -%>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            font-family:
+                Inter,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                Roboto,
+                Arial,
+                sans-serif;
+            background: #f4f7fb;
+            color: #172033;
+        }
+
+        body {
+            min-height: 100vh;
+        }
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        .top-header {
+            height: 110px;
+            background: #ffffff;
+            border-bottom: 1px solid #e5eaf1;
+            display: flex;
+            align-items: center;
+        }
+
+        .header-inner {
+            width: min(1100px, calc(100% - 40px));
+            margin: 0 auto;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 25px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: #172033;
+            white-space: nowrap;
+        }
+
+        .brand-logo {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid #dce3ec;
+        }
+
+        .brand-name {
+            font-size: 24px;
+            font-weight: 750;
+            letter-spacing: -0.4px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+
+            padding: 10px 14px;
+
+            border-radius: 10px;
+            text-decoration: none;
+
+            color: #344054;
+            font-size: 16px;
+            font-weight: 650;
+
+            transition: 0.2s ease;
+        }
+
+        .nav-link:hover {
+            background: #f3f6fa;
+            color: #1d4ed8;
+        }
+
+        .user-name {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+
+            padding: 10px 12px;
+
+            color: #344054;
+            font-weight: 650;
+        }
+
+        .user-icon {
+            width: 38px;
+            height: 38px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+            background: #eef5ff;
+            color: #2563eb;
+        }
+
+        .dashboard-btn {
+            border: 1px solid #b9d3ff;
+            color: #2563eb;
+            background: #ffffff;
+        }
+
+        .dashboard-btn:hover {
+            background: #eff6ff;
+        }
+
+        .logout-btn {
+            border: 1px solid #fecaca;
+            color: #dc2626;
+            background: #ffffff;
+        }
+
+        .logout-btn:hover {
+            background: #fef2f2;
+        }
+
+        /* =========================
+           MAIN
+        ========================= */
+
+        .page-wrapper {
+            width: min(1050px, calc(100% - 40px));
+            margin: 0 auto;
+            padding: 45px 0 70px;
+        }
+
+        .form-card {
+            background: #ffffff;
+            border: 1px solid #e1e7ef;
+            border-radius: 16px;
+
+            padding: 38px 38px 42px;
+
+            box-shadow:
+                0 8px 30px rgba(15, 23, 42, 0.05);
+        }
+
+        .page-heading {
+            margin-bottom: 32px;
+        }
+
+        .page-heading h1 {
+            margin: 0 0 10px;
+
+            font-size: 42px;
+            line-height: 1.15;
+            font-weight: 650;
+            letter-spacing: -1px;
+
+            color: #20252d;
+        }
+
+        .page-heading p {
+            margin: 0;
+
+            font-size: 18px;
+            line-height: 1.6;
+
+            color: #64748b;
+        }
+
+        /* =========================
+           ALERTS
+        ========================= */
+
+        .alert {
+            padding: 13px 16px;
+            border-radius: 10px;
+            margin-bottom: 22px;
+
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        .alert-success {
+            background: #ecfdf5;
+            border: 1px solid #a7f3d0;
+            color: #047857;
+        }
+
+        .alert-error {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #b91c1c;
+        }
+        /* =========================
+   MY REPORTS
+========================= */
+
+.my-reports {
+    margin-top: 35px;
+    padding-top: 32px;
+
+    border-top: 1px solid #e5e7eb;
+}
+
+.reports-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 20px;
+}
+
+.reports-heading h2 {
+    margin: 0 0 5px;
+
+    font-size: 25px;
+    color: #172033;
+}
+
+.reports-heading p {
+    margin: 0;
+
+    color: #64748b;
+    font-size: 14px;
+}
+
+.reports-heading > i {
+    font-size: 28px;
+    color: #2563eb;
+}
+
+.reports-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.report-card {
+    padding: 22px;
+
+    background: #ffffff;
+
+    border: 1px solid #e2e8f0;
+    border-radius: 13px;
+
+    box-shadow:
+        0 4px 15px rgba(15, 23, 42, 0.04);
+}
+
+.report-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin-bottom: 18px;
+}
+
+.report-top h3 {
+    margin: 0 0 6px;
+
+    font-size: 19px;
+    color: #172033;
+}
+
+.report-category {
+    display: inline-block;
+
+    padding: 4px 9px;
+
+    border-radius: 6px;
+
+    background: #f1f5f9;
+    color: #475569;
+
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+
+/* STATUS */
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+
+    padding: 7px 12px;
+
+    border-radius: 20px;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+.status-pending {
+    background: #fff7ed;
+    color: #c2410c;
+}
+
+.status-approved {
+    background: #ecfdf5;
+    color: #047857;
+}
+
+.status-rejected {
+    background: #fef2f2;
+    color: #b91c1c;
+}
+
+
+/* DETAILS */
+
+.report-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    gap: 15px;
+
+    margin-bottom: 18px;
+}
+
+.detail-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+
+    padding: 13px;
+
+    background: #f8fafc;
+    border-radius: 9px;
+}
+
+.detail-item > i {
+    color: #2563eb;
+    font-size: 17px;
+}
+
+.detail-item small {
+    display: block;
+
+    margin-bottom: 3px;
+
+    color: #64748b;
+    font-size: 12px;
+}
+
+.detail-item strong {
+    display: block;
+
+    color: #1e293b;
+    font-size: 14px;
+}
+
+
+/* DESCRIPTION */
+
+.report-description {
+    padding: 14px;
+
+    margin-bottom: 15px;
+
+    background: #f8fafc;
+    border-radius: 9px;
+}
+
+.report-description strong {
+    font-size: 13px;
+    color: #475569;
+}
+
+.report-description p {
+    margin: 7px 0 0;
+
+    color: #334155;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+
+/* ADMIN RESPONSE */
+
+.admin-response {
+    padding: 15px;
+
+    margin-bottom: 15px;
+
+    background: #eff6ff;
+
+    border-left: 4px solid #2563eb;
+    border-radius: 7px;
+}
+
+.response-title {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+
+    margin-bottom: 6px;
+
+    color: #1d4ed8;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.admin-response p {
+    margin: 0;
+
+    color: #334155;
+    font-size: 14px;
+    line-height: 1.55;
+}
+
+
+/* SUBMITTED DATE */
+
+.report-date {
+    padding-top: 12px;
+
+    border-top: 1px solid #eef2f7;
+
+    color: #94a3b8;
+    font-size: 12px;
+}
+
+
+/* NO REPORTS */
+
+.no-reports {
+    padding: 40px 20px;
+
+    text-align: center;
+
+    background: #f8fafc;
+
+    border: 1px dashed #cbd5e1;
+    border-radius: 12px;
+}
+
+.no-reports > i {
+    font-size: 35px;
+    color: #94a3b8;
+}
+
+.no-reports h3 {
+    margin: 12px 0 5px;
+
+    color: #334155;
+}
+
+.no-reports p {
+    margin: 0;
+
+    color: #64748b;
+    font-size: 14px;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 650px) {
+
+    .report-top {
+        flex-direction: column;
+    }
+
+    .report-details {
+        grid-template-columns: 1fr;
+    }
+
+    .status-badge {
+        align-self: flex-start;
+    }
+
+}
+        /* =========================
+           FORM
+        ========================= */
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 22px;
+        }
+
+        label {
+            display: block;
+
+            margin-bottom: 9px;
+
+            color: #172033;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .required {
+            color: #dc2626;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+
+            border: 1px solid #cfd7e3;
+            border-radius: 10px;
+
+            background: #ffffff;
+            color: #172033;
+
+            font-family: inherit;
+            font-size: 16px;
+
+            outline: none;
+
+            transition:
+                border-color 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+        input,
+        select {
+            height: 58px;
+            padding: 0 16px;
+        }
+
+        textarea {
+            min-height: 150px;
+            padding: 15px 16px;
+            resize: vertical;
+        }
+
+        input::placeholder,
+        textarea::placeholder {
+            color: #8a98aa;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #2563eb;
+
+            box-shadow:
+                0 0 0 3px rgba(37, 99, 235, 0.10);
+        }
+
+        .field-help {
+            display: block;
+
+            margin-top: 7px;
+
+            color: #64748b;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        /* =========================
+           FORM FOOTER
+        ========================= */
+
+        .form-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 18px;
+
+            margin-top: 34px;
+            padding-top: 26px;
+
+            border-top: 1px solid #e8edf3;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+
+            padding: 13px 18px;
+
+            border-radius: 10px;
+
+            color: #475569;
+            background: #f8fafc;
+
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 650;
+
+            transition: 0.2s ease;
+        }
+
+        .back-link:hover {
+            background: #eef2f7;
+            color: #1e293b;
+        }
+
+        .submit-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+
+            min-width: 190px;
+
+            padding: 14px 22px;
+
+            border: none;
+            border-radius: 10px;
+
+            background: #2563eb;
+            color: #ffffff;
+
+            font-family: inherit;
+            font-size: 16px;
+            font-weight: 700;
+
+            cursor: pointer;
+
+            transition:
+                background 0.2s ease,
+                transform 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+        .submit-btn:hover {
+            background: #1d4ed8;
+
+            box-shadow:
+                0 7px 18px rgba(37, 99, 235, 0.20);
+
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        /* =========================
+           INFO BOX
+        ========================= */
+
+        .info-box {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+
+            margin-top: 26px;
+            padding: 16px;
+
+            border: 1px solid #dbeafe;
+            border-radius: 10px;
+
+            background: #eff6ff;
+            color: #1e40af;
+        }
+
+        .info-box i {
+            font-size: 19px;
+            margin-top: 1px;
+        }
+
+        .info-box p {
+            margin: 0;
+
+            font-size: 14px;
+            line-height: 1.55;
+        }
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 900px) {
+
+            .top-header {
+                height: auto;
+                padding: 18px 0;
+            }
+
+            .header-inner {
+                flex-wrap: wrap;
+            }
+
+            .nav-links {
+                width: 100%;
+                justify-content: flex-start;
+                flex-wrap: wrap;
+            }
+
+            .page-wrapper {
+                padding-top: 25px;
+            }
+
+            .page-heading h1 {
+                font-size: 34px;
+            }
+        }
+
+        @media (max-width: 650px) {
+
+            .header-inner,
+            .page-wrapper {
+                width: min(100% - 24px, 1050px);
+            }
+
+            .brand-name {
+                font-size: 20px;
+            }
+
+            .nav-links {
+                gap: 5px;
+            }
+
+            .nav-link,
+            .user-name {
+                font-size: 14px;
+                padding: 8px 10px;
+            }
+
+            .form-card {
+                padding: 25px 18px 30px;
+                border-radius: 12px;
+            }
+
+            .page-heading {
+                margin-bottom: 25px;
+            }
+
+            .page-heading h1 {
+                font-size: 30px;
+            }
+
+            .page-heading p {
+                font-size: 16px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            .form-footer {
+                flex-direction: column-reverse;
+                align-items: stretch;
+            }
+
+            .back-link,
+            .submit-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+
+
+
+    <!-- =========================
+         MAIN CONTENT
+    ========================= -->
+
+    <main class="page-wrapper">
+
+        <section class="form-card">
+
+            <div class="page-heading">
+
+                <h1>
+                    Report Lost Item
+                </h1>
+
+                <p>
+                    Submit the details of the item you lost on campus.
+                    Your report will be sent to the admin for verification.
+                </p>
+
+            </div>
+
+
+            <!-- FLASH SUCCESS -->
+
+            <% if (typeof success !== "undefined" && success) { %>
+
+                <div class="alert alert-success">
+                    <i class="bi bi-check-circle"></i>
+                    <%= success %>
+                </div>
+
+            <% } %>
+
+
+            <!-- FLASH ERROR -->
+
+            <% if (typeof error !== "undefined" && error) { %>
+
+                <div class="alert alert-error">
+                    <i class="bi bi-exclamation-circle"></i>
+                    <%= error %>
+                </div>
+
+            <% } %>
+
+
+            <!-- =========================
+                 LOST ITEM FORM
+            ========================= -->
+
+            <form
+                action="/student/lost-found"
+                method="POST"
+                novalidate
+            >
+
+                <!-- ITEM NAME -->
+
+                <div class="form-group">
+
+                    <label for="itemName">
+                        Item Name
+                        <span class="required">*</span>
+                    </label>
+
+                    <input
+                        type="text"
+                        id="itemName"
+                        name="itemName"
+                        placeholder="Example: Black Wallet"
+                        maxlength="150"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- CATEGORY -->
+
+                <div class="form-group">
+
+                    <label for="category">
+                        Category
+                    </label>
+
+                    <select
+                        id="category"
+                        name="category"
+                    >
+
+                        <option value="other">
+                            Other
+                        </option>
+
+                        <option value="wallet">
+                            Wallet
+                        </option>
+
+                        <option value="mobile">
+                            Mobile
+                        </option>
+
+                        <option value="laptop">
+                            Laptop
+                        </option>
+
+                        <option value="documents">
+                            Documents
+                        </option>
+
+                        <option value="id-card">
+                            ID Card
+                        </option>
+
+                        <option value="keys">
+                            Keys
+                        </option>
+
+                        <option value="bag">
+                            Bag
+                        </option>
+
+                        <option value="books">
+                            Books
+                        </option>
+
+                        <option value="clothing">
+                            Clothing
+                        </option>
+
+                        <option value="electronics">
+                            Electronics
+                        </option>
+
+                        <option value="jewellery">
+                            Jewellery
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- DESCRIPTION -->
+
+                <div class="form-group">
+
+                    <label for="description">
+                        Description
+                        <span class="required">*</span>
+                    </label>
+
+                    <textarea
+                        id="description"
+                        name="description"
+                        placeholder="Describe the item, colour, identifying marks, etc."
+                        maxlength="2000"
+                        required
+                    ></textarea>
+
+                    <span class="field-help">
+                        Provide enough information to help identify the item.
+                    </span>
+
+                </div>
+
+
+                <!-- LOCATION + DATE -->
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label for="lostLocation">
+                            Lost Location
+                            <span class="required">*</span>
+                        </label>
+
+                        <input
+                            type="text"
+                            id="lostLocation"
+                            name="lostLocation"
+                            placeholder="Example: Library, Block A"
+                            maxlength="300"
+                            required
+                        >
+
+                        <span class="field-help">
+                            Where on campus did you lose the item?
+                        </span>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="lostDate">
+                            Lost Date
+                            <span class="required">*</span>
+                        </label>
+
+                        <input
+                            type="date"
+                            id="lostDate"
+                            name="lostDate"
+                            required
+                        >
+
+                        <span class="field-help">
+                            Select the date when you lost the item.
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- CONTACT -->
+
+                <div class="form-group">
+
+                    <label for="contactInfo">
+                        Contact Information
+                    </label>
+
+                    <input
+                        type="text"
+                        id="contactInfo"
+                        name="contactInfo"
+                        placeholder="Phone number or other contact information"
+                        maxlength="300"
+                    >
+
+                    <span class="field-help">
+                        Optional. This can help someone contact you if your item is found.
+                    </span>
+
+                </div>
+
+
+                <!-- INFO -->
+
+                <div class="info-box">
+
+                    <i class="bi bi-info-circle-fill"></i>
+
+                    <p>
+                        Your report will first be reviewed by the admin.
+                        Once approved, the lost-item information can be
+                        shared with other students through notifications.
+                    </p>
+
+                </div>
+
+
+                <!-- BUTTONS -->
+
+                <div class="form-footer">
+
+                    <a
+                        href="/student/dashboard"
+                        class="back-link"
+                    >
+                        <i class="bi bi-arrow-left"></i>
+                        Back to Dashboard
+                    </a>
+
+
+                    <button
+                        type="submit"
+                        class="submit-btn"
+                    >
+                        <i class="bi bi-send-fill"></i>
+                        Submit Lost Item
+                    </button>
+
+                </div>
+
+            </form>
+            <!-- =========================
+     MY LOST ITEM REPORTS
+========================= -->
+
+<div class="my-reports">
+
+    <div class="reports-heading">
+
+        <div>
+            <h2>
+                My Lost Item Reports
+            </h2>
+
+            <p>
+                Track the verification status of your submitted reports.
+            </p>
+        </div>
+
+        <i class="bi bi-clock-history"></i>
+
+    </div>
+
+
+    <% if (reports && reports.length > 0) { %>
+
+        <div class="reports-list">
+
+            <% reports.forEach(report => { %>
+
+                <div class="report-card">
+
+                    <div class="report-top">
+
+                        <div>
+                            <h3>
+                                <%= report.itemName %>
+                            </h3>
+
+                            <span class="report-category">
+                                <%= report.category %>
+                            </span>
+                        </div>
+
+
+                        <% if (report.status === "pending") { %>
+
+                            <span class="status-badge status-pending">
+                                <i class="bi bi-hourglass-split"></i>
+                                Pending
+                            </span>
+
+                        <% } else if (report.status === "approved") { %>
+
+                            <span class="status-badge status-approved">
+                                <i class="bi bi-check-circle-fill"></i>
+                                Approved
+                            </span>
+
+                        <% } else if (report.status === "rejected") { %>
+
+                            <span class="status-badge status-rejected">
+                                <i class="bi bi-x-circle-fill"></i>
+                                Rejected
+                            </span>
+
+                        <% } %>
+
+                    </div>
+
+
+                    <div class="report-details">
+
+                        <div class="detail-item">
+
+                            <i class="bi bi-geo-alt"></i>
+
+                            <div>
+                                <small>Lost Location</small>
+                                <strong>
+                                    <%= report.lostLocation %>
+                                </strong>
+                            </div>
+
+                        </div>
+
+
+                        <div class="detail-item">
+
+                            <i class="bi bi-calendar3"></i>
+
+                            <div>
+                                <small>Lost Date</small>
+                                <strong>
+                                    <%= new Date(report.lostDate).toLocaleDateString() %>
+                                </strong>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <% if (report.description) { %>
+
+                        <div class="report-description">
+
+                            <strong>Description</strong>
+
+                            <p>
+                                <%= report.description %>
+                            </p>
+
+                        </div>
+
+                    <% } %>
+
+
+                    <% if (report.adminResponse) { %>
+
+                        <div class="admin-response">
+
+                            <div class="response-title">
+                                <i class="bi bi-chat-left-text-fill"></i>
+                                Admin Response
+                            </div>
+
+                            <p>
+                                <%= report.adminResponse %>
+                            </p>
+
+                        </div>
+
+                    <% } %>
+
+
+                    <div class="report-date">
+
+                        Submitted:
+                        <%= new Date(report.createdAt).toLocaleString() %>
+
+                    </div>
+
+                </div>
+
+            <% }); %>
+
+        </div>
+
+    <% } else { %>
+
+        <div class="no-reports">
+
+            <i class="bi bi-search"></i>
+
+            <h3>
+                No Lost Item Reports
+            </h3>
+
+            <p>
+                You haven't submitted any lost item reports yet.
+            </p>
+
+        </div>
+
+    <% } %>
+
+</div>
+
+
+
+
+
+
+
+        </section>
+
+    </main>
+
+
+    <!-- Prevent selecting a future date -->
+
+    <script>
+        const lostDateInput =
+            document.getElementById("lostDate");
+
+        if (lostDateInput) {
+
+            const today =
+                new Date().toISOString().split("T")[0];
+
+            lostDateInput.max = today;
+
+        }
+    </script>
+
+</body>

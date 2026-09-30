@@ -1,0 +1,198 @@
+<% layout("layouts/boilerplate") %>
+<%
+    const maskedEmail = email
+        ? email.replace(
+            /^(.{2})(.*)(@.*)$/,
+            (_, start, middle, domain) =>
+                start + "*".repeat(Math.min(middle.length, 6)) + domain
+        )
+        : "your registered email";
+%>
+
+<div class="container py-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-12 col-md-7 col-lg-5">
+
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+
+                <div
+                    class="p-4 p-md-5 text-center text-white"
+                    style="
+                        background:
+                        linear-gradient(
+                            135deg,
+                            #312e81,
+                            #4f46e5
+                        );
+                    "
+                >
+
+                    <div
+                        class="mx-auto mb-3 rounded-circle d-flex align-items-center justify-content-center"
+                        style="
+                            width: 68px;
+                            height: 68px;
+                            background: rgba(255,255,255,.15);
+                        "
+                    >
+                        <i
+                            class="bi bi-shield-lock"
+                            style="font-size: 30px;"
+                        ></i>
+                    </div>
+
+                    <h3 class="fw-bold mb-2">
+                        Verify Your Login
+                    </h3>
+
+                    <p class="mb-0 opacity-75 small">
+                        Enter the 6-digit OTP sent to
+                        <strong><%= maskedEmail %></strong>
+                    </p>
+
+                </div>
+
+
+                <div class="card-body p-4 p-md-5">
+
+                    <form
+                        action="/auth/verify-login-otp"
+                        method="POST"
+                        id="loginOtpForm"
+                    >
+
+                        <div class="mb-4">
+
+                            <label
+                                for="otp"
+                                class="form-label fw-semibold"
+                            >
+                                Verification Code
+                            </label>
+
+                            <input
+                                type="text"
+                                class="form-control form-control-lg text-center fw-bold"
+                                id="otp"
+                                name="otp"
+                                inputmode="numeric"
+                                autocomplete="one-time-code"
+                                maxlength="6"
+                                pattern="[0-9]{6}"
+                                placeholder="••••••"
+                                required
+                                style="
+                                    letter-spacing: 10px;
+                                    font-size: 24px;
+                                "
+                            >
+
+                            <div class="form-text text-center mt-2">
+                                OTP is valid for
+                                <%= process.env.LOGIN_OTP_EXPIRES_MINUTES || 5 %>
+                                minutes.
+                            </div>
+
+                        </div>
+
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary btn-lg w-100 rounded-3"
+                        >
+                            <i class="bi bi-shield-check me-2"></i>
+                            Verify & Continue
+                        </button>
+
+                    </form>
+
+
+                    <form
+                        action="/auth/resend-login-otp"
+                        method="POST"
+                        class="mt-3"
+                    >
+
+                        <button
+                            type="submit"
+                            class="btn btn-outline-secondary w-100 rounded-3"
+                        >
+                            <i class="bi bi-arrow-clockwise me-2"></i>
+                            Resend OTP
+                        </button>
+
+                    </form>
+
+
+                    <div class="text-center mt-4">
+
+                        <a
+                            href="/auth/login"
+                            class="text-decoration-none small"
+                        >
+                            <i class="bi bi-arrow-left me-1"></i>
+                            Back to Login
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="text-center text-muted mt-3">
+
+                <small>
+                    <i class="bi bi-shield-check me-1"></i>
+                    Your verification code is protected and expires automatically.
+                </small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+
+        const form =
+            document.getElementById("loginOtpForm");
+
+        const otp =
+            document.getElementById("otp");
+
+
+        otp.addEventListener("input", () => {
+
+            otp.value =
+                otp.value
+                    .replace(/\D/g, "")
+                    .slice(0, 6);
+
+        });
+
+
+        form.addEventListener("submit", (event) => {
+
+            if (!/^\d{6}$/.test(otp.value)) {
+
+                event.preventDefault();
+
+                otp.focus();
+
+                alert(
+                    "Please enter the 6-digit OTP."
+                );
+            }
+
+        });
+
+    });
+</script>

@@ -1,0 +1,694 @@
+<% layout("layouts/boilerplate") -%>
+
+<div class="container-fluid py-4">
+
+    <!-- PAGE HEADER -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+        <div>
+            <h2 class="fw-bold mb-1">
+                <i class="bi bi-person-vcard me-2"></i>
+                User Details
+            </h2>
+            <p class="text-muted mb-0">
+                View complete account and profile information.
+            </p>
+        </div>
+
+        <a
+            href="/admin/users"
+            class="btn btn-outline-secondary"
+        >
+            <i class="bi bi-arrow-left me-2"></i>
+            Back to Users
+        </a>
+    </div>
+
+
+    <!-- ACCOUNT INFORMATION -->
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white py-3">
+            <h5 class="mb-0 fw-bold">
+                <i class="bi bi-person-circle me-2"></i>
+                Account Information
+            </h5>
+        </div>
+
+        <div class="card-body">
+            <div class="row g-4">
+
+                <div class="col-md-6">
+                    <small class="text-muted d-block">
+                        Full Name
+                    </small>
+                    <strong>
+                        <%= user.name || "N/A" %>
+                    </strong>
+                </div>
+
+                <div class="col-md-6">
+                    <small class="text-muted d-block">
+                        Email
+                    </small>
+                    <strong>
+                        <%= user.email || "N/A" %>
+                    </strong>
+                </div>
+
+                <div class="col-md-4">
+                    <small class="text-muted d-block">
+                        Role
+                    </small>
+
+                    <% if (user.role === "student") { %>
+                        <span class="badge bg-primary">
+                            Student
+                        </span>
+                    <% } else if (user.role === "faculty") { %>
+                        <span class="badge bg-success">
+                            Faculty
+                        </span>
+                    <% } else { %>
+                        <span class="badge bg-dark">
+                            Admin
+                        </span>
+                    <% } %>
+                </div>
+
+                <div class="col-md-4">
+                    <small class="text-muted d-block">
+                        Account Status
+                    </small>
+
+                    <% if (user.isActive) { %>
+                        <span class="badge bg-success">
+                            Active
+                        </span>
+                    <% } else { %>
+                        <span class="badge bg-danger">
+                            Inactive
+                        </span>
+                    <% } %>
+                </div>
+
+                <div class="col-md-4">
+                    <small class="text-muted d-block">
+                        Last Login
+                    </small>
+
+                    <strong>
+                        <% if (user.lastLogin) { %>
+                            <%= new Date(user.lastLogin).toLocaleString() %>
+                        <% } else { %>
+                            Never
+                        <% } %>
+                    </strong>
+                </div>
+
+                <div class="col-md-6">
+                    <small class="text-muted d-block">
+                        Account Created
+                    </small>
+
+                    <strong>
+                        <%= user.createdAt
+                            ? new Date(user.createdAt).toLocaleString()
+                            : "N/A"
+                        %>
+                    </strong>
+                </div>
+
+                <div class="col-md-6">
+                    <small class="text-muted d-block">
+                        Last Updated
+                    </small>
+
+                    <strong>
+                        <%= user.updatedAt
+                            ? new Date(user.updatedAt).toLocaleString()
+                            : "N/A"
+                        %>
+                    </strong>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <!-- STUDENT PROFILE -->
+    <% if (user.role === "student" && profile) { %>
+
+        <div class="card shadow-sm border-0 mb-4">
+
+            <div class="card-header bg-white py-3">
+                <h5 class="mb-0 fw-bold">
+                    <i class="bi bi-mortarboard me-2"></i>
+                    Student Profile
+                </h5>
+            </div>
+
+            <div class="card-body">
+
+                <!-- PERSONAL INFORMATION -->
+                <h6 class="fw-bold text-primary mb-3">
+                    Personal Information
+                </h6>
+
+                <div class="row g-4 mb-4">
+
+                    <div class="col-md-4">
+                        <small class="text-muted d-block">
+                            Student Name
+                        </small>
+                        <strong>
+                            <%= user.name || "N/A" %>
+                        </strong>
+                    </div>
+
+                    <div class="col-md-4">
+                        <small class="text-muted d-block">
+                            Student ID
+                        </small>
+                        <strong>
+                            <%= profile.studentId || "N/A" %>
+                        </strong>
+                    </div>
+
+                    <div class="col-md-4">
+                        <small class="text-muted d-block">
+                            Date of Birth
+                        </small>
+                        <strong>
+                            <%= profile.dob
+                                ? new Date(profile.dob).toLocaleDateString()
+                                : "N/A"
+                            %>
+                        </strong>
+                    </div>
+
+                    <div class="col-md-4">
+                        <small class="text-muted d-block">
+                            Gender
+                        </small>
+                        <strong>
+                            <%= profile.gender
+                                ? profile.gender.charAt(0).toUpperCase() +
+                                  profile.gender.slice(1)
+                                : "N/A"
+                            %>
+                        </strong>
+                    </div>
+
+                    <div class="col-md-4">
+                        <small class="text-muted d-block">
+                            Mobile
+                        </small>
+                        <strong>
+                            <%= profile.mobile || "N/A" %>
+                        </strong>
+                    </div>
+
+                    <div class="col-md-4">
+                        <small class="text-muted d-block">
+                            Profile Status
+                        </small>
+
+                        <% if (profile.profileStatus === "complete") { %>
+                            <span class="badge bg-success">
+                                Complete
+                            </span>
+                        <% } else { %>
+                            <span class="badge bg-warning text-dark">
+                                Incomplete
+                            </span>
+                        <% } %>
+                    </div>
+
+                </div>
+
+
+                <!-- ACADEMIC INFORMATION -->
+                <h6 class="fw-bold text-primary mb-3">
+                    Academic Information
+                </h6>
+
+                <div class="row g-4 mb-4">
+
+                    <div class="col-md-4">
+                        <small class="text-muted d-block">
+                            Department
+                        </small>
+                        <strong>
+                            <%= profile.department || "N/A" %>
+                        </strong>
+                    </div>
+
+                    <div class="col-md-4">
+                        <small class="text-muted d-block">
+                            Program
+                        </small>
+                        <strong>
+                            <%= profile.program || "N/A" %>
+                        </strong>
+                    </div>
+
+                    <div class="col-md-4">
+                        <small class="text-muted d-block">
+                            Semester
+                        </small>
+                        <strong>
+                            <%= profile.semester || "N/A" %>
+                        </strong>
+                    </div>
+
+                    <div class="col-md-4">
+                        <small class="text-muted d-block">
+                            Section
+                        </small>
+                        <strong>
+                            <%= profile.section || "N/A" %>
+                        </strong>
+                    </div>
+
+                    <div class="col-md-4">
+                        <small class="text-muted d-block">
+                            Batch
+                        </small>
+                        <strong>
+                            <%= profile.batch || "N/A" %>
+                        </strong>
+                    </div>
+
+                    <div class="col-md-4">
+                        <small class="text-muted d-block">
+                            Academic Approval
+                        </small>
+
+                        <% if (profile.academicApprovalStatus === "approved") { %>
+                            <span class="badge bg-success">
+                                Approved
+                            </span>
+                        <% } else if (profile.academicApprovalStatus === "rejected") { %>
+                            <span class="badge bg-danger">
+                                Rejected
+                            </span>
+                        <% } else { %>
+                            <span class="badge bg-warning text-dark">
+                                Pending
+                            </span>
+                        <% } %>
+                    </div>
+
+                </div>
+
+
+                <!-- ADDRESS INFORMATION -->
+                <h6 class="fw-bold text-primary mb-3">
+                    Address Information
+                </h6>
+
+                <div class="row g-4 mb-4">
+
+                    <div class="col-md-6">
+                        <small class="text-muted d-block">
+                            Permanent Address
+                        </small>
+                        <strong>
+                            <%= profile.permanentAddress || "N/A" %>
+                        </strong>
+                    </div>
+
+                    <div class="col-md-6">
+                        <small class="text-muted d-block">
+                            Current Address
+                        </small>
+                        <strong>
+                            <%= profile.currentAddress || "N/A" %>
+                        </strong>
+                    </div>
+
+                    <div class="col-md-4">
+                        <small class="text-muted d-block">
+                            City
+                        </small>
+                        <strong>
+                            <%= profile.city || "N/A" %>
+                        </strong>
+                    </div>
+
+                    <div class="col-md-4">
+                        <small class="text-muted d-block">
+                            State
+                        </small>
+                        <strong>
+                            <%= profile.state || "N/A" %>
+                        </strong>
+                    </div>
+
+                    <div class="col-md-4">
+                        <small class="text-muted d-block">
+                            PIN Code
+                        </small>
+                        <strong>
+                            <%= profile.pin || "N/A" %>
+                        </strong>
+                    </div>
+
+                </div>
+
+
+                <!-- GUARDIAN INFORMATION -->
+                <h6 class="fw-bold text-primary mb-3">
+                    Guardian & Emergency Information
+                </h6>
+
+                <div class="row g-4 mb-4">
+
+                    <div class="col-md-4">
+                        <small class="text-muted d-block">
+                            Guardian Name
+                        </small>
+                        <strong>
+                            <%= profile.guardianName || "N/A" %>
+                        </strong>
+                    </div>
+
+                    <div class="col-md-4">
+                        <small class="text-muted d-block">
+                            Guardian Mobile
+                        </small>
+                        <strong>
+                            <%= profile.guardianMobile || "N/A" %>
+                        </strong>
+                    </div>
+
+                    <div class="col-md-4">
+                        <small class="text-muted d-block">
+                            Emergency Contact
+                        </small>
+                        <strong>
+                            <%= profile.emergencyContact || "N/A" %>
+                        </strong>
+                    </div>
+
+                </div>
+
+
+                <!-- HOSTEL INFORMATION -->
+                <h6 class="fw-bold text-primary mb-3">
+                    Hostel Information
+                </h6>
+
+                <div class="row g-4">
+
+                    <div class="col-md-4">
+                        <small class="text-muted d-block">
+                            Hostel Required
+                        </small>
+
+                        <% if (profile.hostelRequired) { %>
+                            <span class="badge bg-success">
+                                Yes
+                            </span>
+                        <% } else { %>
+                            <span class="badge bg-secondary">
+                                No
+                            </span>
+                        <% } %>
+                    </div>
+
+                    <div class="col-md-4">
+                        <small class="text-muted d-block">
+                            Hostel Name
+                        </small>
+                        <strong>
+                            <%= profile.hostelName || "N/A" %>
+                        </strong>
+                    </div>
+
+                    <div class="col-md-4">
+                        <small class="text-muted d-block">
+                            Room Number
+                        </small>
+                        <strong>
+                            <%= profile.roomNumber || "N/A" %>
+                        </strong>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+    <% } %>
+
+
+    <!-- FACULTY PROFILE -->
+    <% if (user.role === "faculty" && profile) { %>
+
+        <div class="card shadow-sm border-0 mb-4">
+
+            <div class="card-header bg-white py-3">
+                <h5 class="mb-0 fw-bold">
+                    <i class="bi bi-person-workspace me-2"></i>
+                    Faculty Profile
+                </h5>
+            </div>
+
+            <div class="card-body">
+
+                <div class="row g-4">
+
+                    <div class="col-md-4">
+                        <small class="text-muted d-block">
+                            Employee ID
+                        </small>
+                        <strong>
+                            <%= profile.employeeId || "N/A" %>
+                        </strong>
+                    </div>
+
+                    <div class="col-md-4">
+                        <small class="text-muted d-block">
+                            Department
+                        </small>
+                        <strong>
+                            <%= profile.department || "N/A" %>
+                        </strong>
+                    </div>
+
+                    <div class="col-md-4">
+                        <small class="text-muted d-block">
+                            Program
+                        </small>
+                        <strong>
+                            <%= profile.program || "N/A" %>
+                        </strong>
+                    </div>
+
+                    <div class="col-md-4">
+                        <small class="text-muted d-block">
+                            Designation
+                        </small>
+                        <strong>
+                            <%= profile.designation || "N/A" %>
+                        </strong>
+                    </div>
+
+                    <div class="col-md-4">
+                        <small class="text-muted d-block">
+                            Employment Type
+                        </small>
+                        <strong>
+                            <%= profile.employmentType || "N/A" %>
+                        </strong>
+                    </div>
+
+                    <div class="col-md-4">
+                        <small class="text-muted d-block">
+                            Mobile
+                        </small>
+                        <strong>
+                            <%= profile.mobile || "N/A" %>
+                        </strong>
+                    </div>
+
+                    <div class="col-md-4">
+                        <small class="text-muted d-block">
+                            Specialization
+                        </small>
+                        <strong>
+                            <%= profile.specialization || "N/A" %>
+                        </strong>
+                    </div>
+
+                    <div class="col-md-4">
+                        <small class="text-muted d-block">
+                            Highest Qualification
+                        </small>
+                        <strong>
+                            <%= profile.highestQualification || "N/A" %>
+                        </strong>
+                    </div>
+
+                    <div class="col-md-4">
+                        <small class="text-muted d-block">
+                            Experience
+                        </small>
+                        <strong>
+                            <%= profile.experience || "N/A" %>
+                        </strong>
+                    </div>
+
+                    <div class="col-md-6">
+                        <small class="text-muted d-block">
+                            Qualification Field
+                        </small>
+                        <strong>
+                            <%= profile.qualificationField || "N/A" %>
+                        </strong>
+                    </div>
+
+                    <div class="col-md-6">
+                        <small class="text-muted d-block">
+                            Qualification University
+                        </small>
+                        <strong>
+                            <%= profile.qualificationUniversity || "N/A" %>
+                        </strong>
+                    </div>
+
+                    <div class="col-md-6">
+                        <small class="text-muted d-block">
+                            Address
+                        </small>
+                        <strong>
+                            <%= profile.address || "N/A" %>
+                        </strong>
+                    </div>
+
+                    <div class="col-md-2">
+                        <small class="text-muted d-block">
+                            City
+                        </small>
+                        <strong>
+                            <%= profile.city || "N/A" %>
+                        </strong>
+                    </div>
+
+                    <div class="col-md-2">
+                        <small class="text-muted d-block">
+                            State
+                        </small>
+                        <strong>
+                            <%= profile.state || "N/A" %>
+                        </strong>
+                    </div>
+
+                    <div class="col-md-2">
+                        <small class="text-muted d-block">
+                            PIN
+                        </small>
+                        <strong>
+                            <%= profile.pin || "N/A" %>
+                        </strong>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+    <% } %>
+
+
+    <!-- NO PROFILE -->
+    <% if (
+        (user.role === "student" || user.role === "faculty") &&
+        !profile
+    ) { %>
+
+        <div class="alert alert-warning shadow-sm">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            No profile information is available for this user.
+        </div>
+
+    <% } %>
+
+
+    <!-- ACTIONS -->
+    <div class="card shadow-sm border-0">
+
+        <div class="card-header bg-white py-3">
+            <h5 class="mb-0 fw-bold">
+                <i class="bi bi-gear me-2"></i>
+                Account Actions
+            </h5>
+        </div>
+
+        <div class="card-body d-flex flex-wrap gap-2">
+
+            <% if (user.role !== "admin") { %>
+
+                <form
+                    method="POST"
+                    action="/admin/users/<%= user._id %>/toggle-status"
+                    onsubmit="return confirm('Change this user account status?');"
+                >
+                    <button
+                        type="submit"
+                        class="btn <%= user.isActive ? 'btn-warning' : 'btn-success' %>"
+                    >
+                        <i class="bi <%= user.isActive ? 'bi-person-x' : 'bi-person-check' %> me-2"></i>
+
+                        <%= user.isActive
+                            ? "Deactivate User"
+                            : "Activate User"
+                        %>
+                    </button>
+                </form>
+
+
+                <form
+                    method="POST"
+                    action="/admin/users/<%= user._id %>/reset-password"
+                    onsubmit="return confirm('Generate a temporary password for this user?');"
+                >
+                    <button
+                        type="submit"
+                        class="btn btn-outline-primary"
+                    >
+                        <i class="bi bi-key me-2"></i>
+                        Reset Password
+                    </button>
+                </form>
+
+
+                <form
+                    method="POST"
+                    action="/admin/users/<%= user._id %>/delete"
+                    onsubmit="return confirm('Delete this user account? The academic/profile records will be preserved.');"
+                >
+                    <button
+                        type="submit"
+                        class="btn btn-outline-danger"
+                    >
+                        <i class="bi bi-trash3 me-2"></i>
+                        Delete User
+                    </button>
+                </form>
+
+            <% } else { %>
+
+                <span class="text-muted">
+                    <i class="bi bi-shield-lock me-2"></i>
+                    Admin account actions are restricted.
+                </span>
+
+            <% } %>
+
+        </div>
+    </div>
+
+</div>
+

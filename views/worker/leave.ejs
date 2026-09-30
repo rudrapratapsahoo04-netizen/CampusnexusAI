@@ -1,0 +1,2117 @@
+<% layout("layouts/boilerplate") -%>
+
+
+    <style>
+
+        :root {
+            --cn-primary: #4f46e5;
+            --cn-primary-dark: #3730a3;
+            --cn-text: #172033;
+            --cn-muted: #667085;
+            --cn-border: rgba(15, 23, 42, 0.08);
+            --cn-card: rgba(255, 255, 255, 0.88);
+            --cn-bg: #f5f7fb;
+        }
+
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+
+            margin: 0;
+
+            min-height: 100vh;
+
+            font-family:
+                Inter,
+                system-ui,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                sans-serif;
+
+            color: var(--cn-text);
+
+            background:
+                radial-gradient(
+                    circle at 10% 10%,
+                    rgba(79, 70, 229, 0.10),
+                    transparent 30%
+                ),
+                radial-gradient(
+                    circle at 90% 15%,
+                    rgba(14, 165, 233, 0.10),
+                    transparent 28%
+                ),
+                linear-gradient(
+                    135deg,
+                    #f8fafc,
+                    #eef2ff
+                );
+        }
+
+
+        /* =====================================================
+           NAVBAR
+        ===================================================== */
+
+        .worker-navbar {
+
+            position: sticky;
+
+            top: 0;
+
+            z-index: 1000;
+
+            backdrop-filter: blur(18px);
+
+            background:
+                rgba(255, 255, 255, 0.78);
+
+            border-bottom:
+                1px solid
+                rgba(15, 23, 42, 0.07);
+        }
+
+
+        .brand {
+
+            font-size: 1.15rem;
+
+            font-weight: 800;
+
+            color: var(--cn-text);
+
+            text-decoration: none;
+
+            letter-spacing: -0.3px;
+        }
+
+
+        .brand span {
+            color: var(--cn-primary);
+        }
+
+
+        .worker-nav-link {
+
+            color: #475467;
+
+            text-decoration: none;
+
+            font-size: 0.9rem;
+
+            font-weight: 600;
+
+            transition: 0.2s ease;
+        }
+
+
+        .worker-nav-link:hover {
+
+            color:
+                var(--cn-primary);
+        }
+
+
+        .worker-avatar {
+
+            width: 38px;
+
+            height: 38px;
+
+            border-radius: 12px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            color: white;
+
+            font-weight: 800;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #4f46e5,
+                    #7c3aed
+                );
+        }
+
+
+        /* =====================================================
+           PAGE
+        ===================================================== */
+
+        .page-wrapper {
+
+            width: min(
+                1200px,
+                calc(100% - 32px)
+            );
+
+            margin: 0 auto;
+
+            padding:
+                42px 0 70px;
+        }
+
+
+        .page-heading {
+
+            margin-bottom: 28px;
+        }
+
+
+        .page-heading .eyebrow {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            padding:
+                7px 12px;
+
+            border-radius: 999px;
+
+            background:
+                rgba(79, 70, 229, 0.08);
+
+            color:
+                var(--cn-primary);
+
+            font-size: 0.76rem;
+
+            font-weight: 800;
+
+            letter-spacing: 0.5px;
+
+            text-transform: uppercase;
+        }
+
+
+        .page-heading h1 {
+
+            margin-top: 14px;
+
+            margin-bottom: 8px;
+
+            font-size:
+                clamp(1.8rem, 4vw, 2.6rem);
+
+            font-weight: 850;
+
+            letter-spacing: -1px;
+        }
+
+
+        .page-heading p {
+
+            margin: 0;
+
+            color: var(--cn-muted);
+
+            max-width: 700px;
+
+            line-height: 1.7;
+        }
+
+
+        /* =====================================================
+           FLASH
+        ===================================================== */
+
+        .alert {
+
+            border: 0;
+
+            border-radius: 16px;
+
+            box-shadow:
+                0 8px 25px
+                rgba(15, 23, 42, 0.05);
+        }
+
+
+        /* =====================================================
+           CARDS
+        ===================================================== */
+
+        .glass-card {
+
+            background:
+                var(--cn-card);
+
+            border:
+                1px solid
+                var(--cn-border);
+
+            border-radius: 24px;
+
+            box-shadow:
+                0 18px 55px
+                rgba(15, 23, 42, 0.07);
+
+            backdrop-filter:
+                blur(18px);
+        }
+
+
+        .card-header-custom {
+
+            padding: 24px 26px 10px;
+        }
+
+
+        .card-title {
+
+            margin: 0;
+
+            font-size: 1.15rem;
+
+            font-weight: 800;
+        }
+
+
+        .card-subtitle {
+
+            margin-top: 6px;
+
+            color: var(--cn-muted);
+
+            font-size: 0.88rem;
+        }
+
+
+        .card-body-custom {
+
+            padding:
+                22px 26px 28px;
+        }
+
+
+        /* =====================================================
+           FORM
+        ===================================================== */
+
+        .form-label {
+
+            font-size: 0.85rem;
+
+            font-weight: 700;
+
+            color: #344054;
+
+            margin-bottom: 8px;
+        }
+
+
+        .form-control,
+        .form-select {
+
+            min-height: 48px;
+
+            border-radius: 13px;
+
+            border:
+                1px solid
+                rgba(15, 23, 42, 0.10);
+
+            background:
+                rgba(255, 255, 255, 0.85);
+
+            padding:
+                10px 14px;
+
+            font-size: 0.92rem;
+
+            box-shadow: none;
+
+            transition:
+                border-color 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+
+        .form-control:focus,
+        .form-select:focus {
+
+            border-color:
+                rgba(79, 70, 229, 0.55);
+
+            box-shadow:
+                0 0 0 4px
+                rgba(79, 70, 229, 0.09);
+
+            background: white;
+        }
+
+
+        textarea.form-control {
+
+            min-height: 125px;
+
+            resize: vertical;
+        }
+
+
+        .date-info {
+
+            color: #98a2b3;
+
+            font-size: 0.76rem;
+
+            margin-top: 6px;
+        }
+
+
+        .submit-btn {
+
+            min-height: 48px;
+
+            border: 0;
+
+            border-radius: 13px;
+
+            padding:
+                10px 20px;
+
+            font-weight: 750;
+
+            color: white;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #4f46e5,
+                    #7c3aed
+                );
+
+            box-shadow:
+                0 10px 25px
+                rgba(79, 70, 229, 0.22);
+
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+
+        .submit-btn:hover {
+
+            color: white;
+
+            transform:
+                translateY(-1px);
+
+            box-shadow:
+                0 14px 30px
+                rgba(79, 70, 229, 0.28);
+        }
+
+
+        /* =====================================================
+           INFO BOX
+        ===================================================== */
+
+        .leave-info {
+
+            display: flex;
+
+            gap: 13px;
+
+            padding: 16px;
+
+            margin-bottom: 20px;
+
+            border-radius: 16px;
+
+            background:
+                rgba(79, 70, 229, 0.06);
+
+            border:
+                1px solid
+                rgba(79, 70, 229, 0.08);
+        }
+
+
+        .leave-info-icon {
+
+            width: 40px;
+
+            height: 40px;
+
+            flex-shrink: 0;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            border-radius: 12px;
+
+            color:
+                var(--cn-primary);
+
+            background:
+                rgba(79, 70, 229, 0.10);
+        }
+
+
+        .leave-info strong {
+
+            display: block;
+
+            font-size: 0.88rem;
+
+            margin-bottom: 3px;
+        }
+
+
+        .leave-info span {
+
+            color: var(--cn-muted);
+
+            font-size: 0.8rem;
+
+            line-height: 1.5;
+        }
+
+
+        /* =====================================================
+           SUMMARY
+        ===================================================== */
+
+        .summary-card {
+
+            height: 100%;
+
+            padding: 20px;
+
+            border-radius: 20px;
+
+            background:
+                rgba(255, 255, 255, 0.78);
+
+            border:
+                1px solid
+                var(--cn-border);
+        }
+
+
+        .summary-icon {
+
+            width: 42px;
+
+            height: 42px;
+
+            border-radius: 13px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            margin-bottom: 15px;
+
+            font-size: 1.05rem;
+        }
+
+
+        .summary-label {
+
+            color: var(--cn-muted);
+
+            font-size: 0.78rem;
+
+            font-weight: 700;
+
+            margin-bottom: 5px;
+        }
+
+
+        .summary-value {
+
+            font-size: 1.55rem;
+
+            font-weight: 850;
+        }
+
+
+        .summary-total .summary-icon {
+
+            color: #4f46e5;
+
+            background:
+                rgba(79, 70, 229, 0.10);
+        }
+
+
+        .summary-pending .summary-icon {
+
+            color: #b54708;
+
+            background:
+                rgba(245, 158, 11, 0.12);
+        }
+
+
+        .summary-approved .summary-icon {
+
+            color: #027a48;
+
+            background:
+                rgba(18, 183, 106, 0.12);
+        }
+
+
+        .summary-rejected .summary-icon {
+
+            color: #b42318;
+
+            background:
+                rgba(240, 68, 56, 0.10);
+        }
+
+
+        /* =====================================================
+           LEAVE HISTORY
+        ===================================================== */
+
+        .leave-list {
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 16px;
+        }
+
+
+        .leave-item {
+
+            padding: 20px;
+
+            border-radius: 20px;
+
+            background:
+                rgba(255, 255, 255, 0.72);
+
+            border:
+                1px solid
+                rgba(15, 23, 42, 0.07);
+
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+
+        .leave-item:hover {
+
+            transform:
+                translateY(-2px);
+
+            box-shadow:
+                0 14px 35px
+                rgba(15, 23, 42, 0.07);
+        }
+
+
+        .leave-item-top {
+
+            display: flex;
+
+            align-items: flex-start;
+
+            justify-content: space-between;
+
+            gap: 15px;
+
+            margin-bottom: 15px;
+        }
+
+
+        .leave-type {
+
+            font-size: 1rem;
+
+            font-weight: 800;
+
+            text-transform: capitalize;
+        }
+
+
+        .leave-created {
+
+            color: #98a2b3;
+
+            font-size: 0.75rem;
+
+            margin-top: 4px;
+        }
+
+
+        .status-badge {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 6px;
+
+            padding:
+                7px 11px;
+
+            border-radius: 999px;
+
+            font-size: 0.72rem;
+
+            font-weight: 800;
+
+            white-space: nowrap;
+        }
+
+
+        .status-pending {
+
+            color: #92400e;
+
+            background:
+                #fef3c7;
+        }
+
+
+        .status-approved {
+
+            color: #065f46;
+
+            background:
+                #d1fae5;
+        }
+
+
+        .status-rejected {
+
+            color: #991b1b;
+
+            background:
+                #fee2e2;
+        }
+
+
+        .leave-details {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, minmax(0, 1fr));
+
+            gap: 12px;
+
+            margin-bottom: 16px;
+        }
+
+
+        .detail-box {
+
+            padding: 12px 14px;
+
+            border-radius: 14px;
+
+            background:
+                rgba(248, 250, 252, 0.9);
+
+            border:
+                1px solid
+                rgba(15, 23, 42, 0.05);
+        }
+
+
+        .detail-label {
+
+            display: block;
+
+            color: #98a2b3;
+
+            font-size: 0.7rem;
+
+            font-weight: 700;
+
+            margin-bottom: 4px;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.3px;
+        }
+
+
+        .detail-value {
+
+            color: #344054;
+
+            font-size: 0.83rem;
+
+            font-weight: 700;
+        }
+
+
+        .reason-box {
+
+            padding: 14px 16px;
+
+            border-radius: 14px;
+
+            background:
+                rgba(249, 250, 251, 0.9);
+        }
+
+
+        .reason-box .reason-title {
+
+            color: #667085;
+
+            font-size: 0.72rem;
+
+            font-weight: 800;
+
+            text-transform: uppercase;
+
+            margin-bottom: 6px;
+        }
+
+
+        .reason-box p {
+
+            margin: 0;
+
+            color: #475467;
+
+            font-size: 0.84rem;
+
+            line-height: 1.6;
+
+            white-space: pre-line;
+        }
+
+
+        .admin-response {
+
+            margin-top: 14px;
+
+            padding: 14px 16px;
+
+            border-radius: 14px;
+
+            background:
+                rgba(79, 70, 229, 0.06);
+
+            border-left:
+                3px solid
+                var(--cn-primary);
+        }
+
+
+        .admin-response-title {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 7px;
+
+            color: var(--cn-primary);
+
+            font-size: 0.76rem;
+
+            font-weight: 800;
+
+            margin-bottom: 5px;
+        }
+
+
+        .admin-response p {
+
+            margin: 0;
+
+            color: #475467;
+
+            font-size: 0.83rem;
+
+            line-height: 1.6;
+
+            white-space: pre-line;
+        }
+
+
+        .reviewed-info {
+
+            margin-top: 10px;
+
+            color: #98a2b3;
+
+            font-size: 0.72rem;
+        }
+
+
+        /* =====================================================
+           EMPTY
+        ===================================================== */
+
+        .empty-state {
+
+            text-align: center;
+
+            padding:
+                55px 25px;
+        }
+
+
+        .empty-icon {
+
+            width: 68px;
+
+            height: 68px;
+
+            margin:
+                0 auto 16px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            border-radius: 20px;
+
+            color:
+                var(--cn-primary);
+
+            background:
+                rgba(79, 70, 229, 0.08);
+
+            font-size: 1.65rem;
+        }
+
+
+        .empty-state h4 {
+
+            font-weight: 800;
+
+            margin-bottom: 7px;
+        }
+
+
+        .empty-state p {
+
+            margin: 0;
+
+            color: var(--cn-muted);
+
+            font-size: 0.88rem;
+        }
+
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+        @media (max-width: 767px) {
+
+            .page-wrapper {
+
+                width:
+                    min(
+                        100% - 20px,
+                        1200px
+                    );
+
+                padding-top: 28px;
+            }
+
+
+            .worker-nav-link.desktop-link {
+
+                display: none;
+            }
+
+
+            .card-header-custom,
+            .card-body-custom {
+
+                padding-left: 18px;
+
+                padding-right: 18px;
+            }
+
+
+            .leave-details {
+
+                grid-template-columns:
+                    1fr;
+            }
+
+
+            .leave-item-top {
+
+                flex-direction: column;
+            }
+
+
+            .status-badge {
+
+                align-self: flex-start;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     NAVBAR
+========================================================= -->
+
+<nav class="worker-navbar">
+
+    <div class="container-fluid px-3 px-md-4">
+
+        <div
+            class="d-flex align-items-center justify-content-between"
+            style="min-height: 68px;"
+        >
+
+            <a
+                href="/worker/dashboard"
+                class="brand"
+            >
+                Campus<span>Nexus</span>
+            </a>
+
+
+            <div class="d-flex align-items-center gap-3">
+
+                <a
+                    href="/worker/dashboard"
+                    class="worker-nav-link desktop-link"
+                >
+                    <i class="bi bi-grid-1x2 me-1"></i>
+                    Dashboard
+                </a>
+
+                <a
+                    href="/worker/tasks"
+                    class="worker-nav-link desktop-link"
+                >
+                    <i class="bi bi-tools me-1"></i>
+                    My Work
+                </a>
+
+
+                <div class="worker-avatar">
+
+                    <%= user?.name
+                        ? user.name
+                            .charAt(0)
+                            .toUpperCase()
+                        : "W"
+                    %>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</nav>
+
+
+
+<!-- =========================================================
+     MAIN
+========================================================= -->
+
+<main class="page-wrapper">
+
+
+    <!-- PAGE HEADING -->
+
+    <section class="page-heading">
+
+        <span class="eyebrow">
+
+            <i class="bi bi-calendar2-check"></i>
+
+            Worker Leave
+
+        </span>
+
+
+        <h1>
+            My Leave
+        </h1>
+
+
+        <p>
+            Apply for leave and track the status of your
+            leave applications. Your leave will be reviewed
+            by the university administrator.
+        </p>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         FLASH MESSAGES
+    ====================================================== -->
+
+    <% if (typeof success !== "undefined" && success) { %>
+
+        <div
+            class="alert alert-success d-flex align-items-center gap-2 mb-4"
+            role="alert"
+        >
+
+            <i class="bi bi-check-circle-fill"></i>
+
+            <div>
+                <%= success %>
+            </div>
+
+        </div>
+
+    <% } %>
+
+
+    <% if (typeof error !== "undefined" && error) { %>
+
+        <div
+            class="alert alert-danger d-flex align-items-center gap-2 mb-4"
+            role="alert"
+        >
+
+            <i class="bi bi-exclamation-triangle-fill"></i>
+
+            <div>
+                <%= error %>
+            </div>
+
+        </div>
+
+    <% } %>
+
+
+
+    <!-- =====================================================
+         SUMMARY
+    ====================================================== -->
+
+    <%
+        const leaveList =
+            Array.isArray(leaves)
+                ? leaves
+                : [];
+
+        const totalLeaves =
+            leaveList.length;
+
+        const pendingLeaves =
+            leaveList.filter(
+                leave =>
+                    leave.status === "pending"
+            ).length;
+
+        const approvedLeaves =
+            leaveList.filter(
+                leave =>
+                    leave.status === "approved"
+            ).length;
+
+        const rejectedLeaves =
+            leaveList.filter(
+                leave =>
+                    leave.status === "rejected"
+            ).length;
+    %>
+
+
+    <div class="row g-3 mb-4">
+
+        <div class="col-6 col-lg-3">
+
+            <div
+                class="summary-card summary-total"
+            >
+
+                <div class="summary-icon">
+                    <i class="bi bi-calendar2-week"></i>
+                </div>
+
+                <div class="summary-label">
+                    Total Applications
+                </div>
+
+                <div class="summary-value">
+                    <%= totalLeaves %>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-6 col-lg-3">
+
+            <div
+                class="summary-card summary-pending"
+            >
+
+                <div class="summary-icon">
+                    <i class="bi bi-hourglass-split"></i>
+                </div>
+
+                <div class="summary-label">
+                    Pending
+                </div>
+
+                <div class="summary-value">
+                    <%= pendingLeaves %>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-6 col-lg-3">
+
+            <div
+                class="summary-card summary-approved"
+            >
+
+                <div class="summary-icon">
+                    <i class="bi bi-check2-circle"></i>
+                </div>
+
+                <div class="summary-label">
+                    Approved
+                </div>
+
+                <div class="summary-value">
+                    <%= approvedLeaves %>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-6 col-lg-3">
+
+            <div
+                class="summary-card summary-rejected"
+            >
+
+                <div class="summary-icon">
+                    <i class="bi bi-x-circle"></i>
+                </div>
+
+                <div class="summary-label">
+                    Rejected
+                </div>
+
+                <div class="summary-value">
+                    <%= rejectedLeaves %>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         CONTENT
+    ====================================================== -->
+
+    <div class="row g-4">
+
+
+        <!-- =================================================
+             APPLY LEAVE
+        ================================================== -->
+
+        <div class="col-lg-5">
+
+            <div class="glass-card">
+
+                <div class="card-header-custom">
+
+                    <h2 class="card-title">
+
+                        <i
+                            class="bi bi-calendar-plus me-2 text-primary"
+                        ></i>
+
+                        Apply for Leave
+
+                    </h2>
+
+                    <div class="card-subtitle">
+                        Submit a new leave application
+                    </div>
+
+                </div>
+
+
+                <div class="card-body-custom">
+
+
+                    <div class="leave-info">
+
+                        <div class="leave-info-icon">
+
+                            <i class="bi bi-info-circle"></i>
+
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Administrator approval required
+                            </strong>
+
+                            <span>
+                                Your application will remain
+                                <strong>Pending</strong> until
+                                an administrator reviews it.
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <form
+                        action="/worker/leave/apply"
+                        method="POST"
+                        id="leaveForm"
+                    >
+
+
+                        <!-- LEAVE TYPE -->
+
+                        <div class="mb-3">
+
+                            <label
+                                for="leaveType"
+                                class="form-label"
+                            >
+                                Leave Type
+                            </label>
+
+                            <select
+                                id="leaveType"
+                                name="leaveType"
+                                class="form-select"
+                                required
+                            >
+
+                                <option
+                                    value=""
+                                    selected
+                                    disabled
+                                >
+                                    Select leave type
+                                </option>
+
+                                <option value="casual">
+                                    Casual Leave
+                                </option>
+
+                                <option value="sick">
+                                    Sick Leave
+                                </option>
+
+                                <option value="earned">
+                                    Earned Leave
+                                </option>
+
+                                <option value="emergency">
+                                    Emergency Leave
+                                </option>
+
+                                <option value="personal">
+                                    Personal Leave
+                                </option>
+
+                                <option value="other">
+                                    Other
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+
+                        <!-- DATES -->
+
+                        <div class="row g-3">
+
+                            <div class="col-sm-6">
+
+                                <label
+                                    for="fromDate"
+                                    class="form-label"
+                                >
+                                    From Date
+                                </label>
+
+                                <input
+                                    type="date"
+                                    id="fromDate"
+                                    name="fromDate"
+                                    class="form-control"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <div class="col-sm-6">
+
+                                <label
+                                    for="toDate"
+                                    class="form-label"
+                                >
+                                    To Date
+                                </label>
+
+                                <input
+                                    type="date"
+                                    id="toDate"
+                                    name="toDate"
+                                    class="form-control"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="date-info mb-3">
+
+                            <i class="bi bi-info-circle me-1"></i>
+
+                            Select the complete period for which
+                            you need leave.
+
+                        </div>
+
+
+
+                        <!-- REASON -->
+
+                        <div class="mb-4">
+
+                            <label
+                                for="reason"
+                                class="form-label"
+                            >
+                                Reason
+                            </label>
+
+                            <textarea
+                                id="reason"
+                                name="reason"
+                                class="form-control"
+                                maxlength="1500"
+                                placeholder="Explain why you need leave..."
+                                required
+                            ></textarea>
+
+                            <div
+                                class="date-info text-end"
+                                id="reasonCounter"
+                            >
+                                0 / 1500
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- SUBMIT -->
+
+                        <button
+                            type="submit"
+                            class="submit-btn w-100"
+                        >
+
+                            <i
+                                class="bi bi-send me-2"
+                            ></i>
+
+                            Submit Leave Application
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             LEAVE HISTORY
+        ================================================== -->
+
+        <div class="col-lg-7">
+
+            <div class="glass-card">
+
+                <div class="card-header-custom">
+
+                    <h2 class="card-title">
+
+                        <i
+                            class="bi bi-clock-history me-2 text-primary"
+                        ></i>
+
+                        Leave History
+
+                    </h2>
+
+                    <div class="card-subtitle">
+                        Track all your submitted leave applications
+                    </div>
+
+                </div>
+
+
+                <div class="card-body-custom">
+
+
+                    <% if (leaveList.length === 0) { %>
+
+
+                        <div class="empty-state">
+
+                            <div class="empty-icon">
+
+                                <i
+                                    class="bi bi-calendar-x"
+                                ></i>
+
+                            </div>
+
+                            <h4>
+                                No Leave Applications
+                            </h4>
+
+                            <p>
+                                You have not submitted any
+                                leave application yet.
+                            </p>
+
+                        </div>
+
+
+                    <% } else { %>
+
+
+                        <div class="leave-list">
+
+
+                            <% leaveList.forEach(leave => { %>
+
+
+                                <%
+                                    let statusClass =
+                                        "status-pending";
+
+                                    let statusIcon =
+                                        "bi-hourglass-split";
+
+                                    let statusText =
+                                        "Pending";
+
+                                    if (
+                                        leave.status ===
+                                        "approved"
+                                    ) {
+
+                                        statusClass =
+                                            "status-approved";
+
+                                        statusIcon =
+                                            "bi-check-circle-fill";
+
+                                        statusText =
+                                            "Approved";
+
+                                    } else if (
+                                        leave.status ===
+                                        "rejected"
+                                    ) {
+
+                                        statusClass =
+                                            "status-rejected";
+
+                                        statusIcon =
+                                            "bi-x-circle-fill";
+
+                                        statusText =
+                                            "Rejected";
+                                    }
+
+
+                                    const fromDate =
+                                        leave.fromDate
+                                            ? new Date(
+                                                leave.fromDate
+                                            )
+                                            : null;
+
+                                    const toDate =
+                                        leave.toDate
+                                            ? new Date(
+                                                leave.toDate
+                                            )
+                                            : null;
+
+
+                                    let totalDays = 0;
+
+                                    if (
+                                        fromDate &&
+                                        toDate
+                                    ) {
+
+                                        const start =
+                                            new Date(
+                                                fromDate
+                                            );
+
+                                        const end =
+                                            new Date(
+                                                toDate
+                                            );
+
+                                        start.setHours(
+                                            0,
+                                            0,
+                                            0,
+                                            0
+                                        );
+
+                                        end.setHours(
+                                            0,
+                                            0,
+                                            0,
+                                            0
+                                        );
+
+                                        totalDays =
+                                            Math.floor(
+                                                (
+                                                    end -
+                                                    start
+                                                ) /
+                                                86400000
+                                            ) + 1;
+                                    }
+                                %>
+
+
+                                <div
+                                    class="leave-item"
+                                >
+
+
+                                    <!-- TOP -->
+
+                                    <div
+                                        class="leave-item-top"
+                                    >
+
+                                        <div>
+
+                                            <div
+                                                class="leave-type"
+                                            >
+
+                                                <%= leave.leaveType
+                                                    ? leave.leaveType
+                                                        .replace(
+                                                            /-/g,
+                                                            " "
+                                                        )
+                                                        .replace(
+                                                            /\b\w/g,
+                                                            letter =>
+                                                                letter.toUpperCase()
+                                                        )
+                                                    : "Leave"
+                                                %>
+
+                                            </div>
+
+                                            <div
+                                                class="leave-created"
+                                            >
+
+                                                Applied on
+
+                                                <%= leave.createdAt
+                                                    ? new Date(
+                                                        leave.createdAt
+                                                    ).toLocaleDateString(
+                                                        "en-IN",
+                                                        {
+                                                            day: "2-digit",
+                                                            month: "short",
+                                                            year: "numeric"
+                                                        }
+                                                    )
+                                                    : "-"
+                                                %>
+
+                                            </div>
+
+                                        </div>
+
+
+                                        <span
+                                            class="status-badge <%= statusClass %>"
+                                        >
+
+                                            <i
+                                                class="bi <%= statusIcon %>"
+                                            ></i>
+
+                                            <%= statusText %>
+
+                                        </span>
+
+                                    </div>
+
+
+
+                                    <!-- DETAILS -->
+
+                                    <div
+                                        class="leave-details"
+                                    >
+
+                                        <div
+                                            class="detail-box"
+                                        >
+
+                                            <span
+                                                class="detail-label"
+                                            >
+                                                From
+                                            </span>
+
+                                            <span
+                                                class="detail-value"
+                                            >
+
+                                                <%= fromDate
+                                                    ? fromDate.toLocaleDateString(
+                                                        "en-IN",
+                                                        {
+                                                            day: "2-digit",
+                                                            month: "short",
+                                                            year: "numeric"
+                                                        }
+                                                    )
+                                                    : "-"
+                                                %>
+
+                                            </span>
+
+                                        </div>
+
+
+                                        <div
+                                            class="detail-box"
+                                        >
+
+                                            <span
+                                                class="detail-label"
+                                            >
+                                                To
+                                            </span>
+
+                                            <span
+                                                class="detail-value"
+                                            >
+
+                                                <%= toDate
+                                                    ? toDate.toLocaleDateString(
+                                                        "en-IN",
+                                                        {
+                                                            day: "2-digit",
+                                                            month: "short",
+                                                            year: "numeric"
+                                                        }
+                                                    )
+                                                    : "-"
+                                                %>
+
+                                            </span>
+
+                                        </div>
+
+
+                                        <div
+                                            class="detail-box"
+                                        >
+
+                                            <span
+                                                class="detail-label"
+                                            >
+                                                Duration
+                                            </span>
+
+                                            <span
+                                                class="detail-value"
+                                            >
+
+                                                <%= totalDays %>
+
+                                                <%= totalDays === 1
+                                                    ? "Day"
+                                                    : "Days"
+                                                %>
+
+                                            </span>
+
+                                        </div>
+
+                                    </div>
+
+
+
+                                    <!-- REASON -->
+
+                                    <div
+                                        class="reason-box"
+                                    >
+
+                                        <div
+                                            class="reason-title"
+                                        >
+
+                                            <i
+                                                class="bi bi-chat-left-text me-1"
+                                            ></i>
+
+                                            Reason
+
+                                        </div>
+
+                                        <p>
+                                            <%= leave.reason || "-" %>
+                                        </p>
+
+                                    </div>
+
+
+
+                                    <!-- ADMIN RESPONSE -->
+
+                                    <% if (
+                                        leave.adminResponse &&
+                                        String(
+                                            leave.adminResponse
+                                        ).trim()
+                                    ) { %>
+
+
+                                        <div
+                                            class="admin-response"
+                                        >
+
+                                            <div
+                                                class="admin-response-title"
+                                            >
+
+                                                <i
+                                                    class="bi bi-shield-check"
+                                                ></i>
+
+                                                Administrator Response
+
+                                            </div>
+
+
+                                            <p>
+                                                <%= leave.adminResponse %>
+                                            </p>
+
+
+                                            <% if (
+                                                leave.reviewedAt
+                                            ) { %>
+
+                                                <div
+                                                    class="reviewed-info"
+                                                >
+
+                                                    Reviewed on
+
+                                                    <%= new Date(
+                                                        leave.reviewedAt
+                                                    ).toLocaleDateString(
+                                                        "en-IN",
+                                                        {
+                                                            day: "2-digit",
+                                                            month: "short",
+                                                            year: "numeric"
+                                                        }
+                                                    ) %>
+
+                                                    <% if (
+                                                        leave.reviewedBy?.name
+                                                    ) { %>
+
+                                                        by
+                                                        <%= leave.reviewedBy.name %>
+
+                                                    <% } %>
+
+                                                </div>
+
+                                            <% } %>
+
+                                        </div>
+
+
+                                    <% } else if (
+                                        leave.status ===
+                                        "pending"
+                                    ) { %>
+
+
+                                        <div
+                                            class="admin-response"
+                                            style="
+                                                border-left-color:
+                                                #f59e0b;
+                                                background:
+                                                rgba(245,158,11,0.06);
+                                            "
+                                        >
+
+                                            <div
+                                                class="admin-response-title"
+                                                style="color:#b45309;"
+                                            >
+
+                                                <i
+                                                    class="bi bi-hourglass-split"
+                                                ></i>
+
+                                                Awaiting Administrator Review
+
+                                            </div>
+
+                                            <p>
+                                                Your leave application
+                                                is currently pending.
+                                                The administrator will
+                                                review it shortly.
+                                            </p>
+
+                                        </div>
+
+
+                                    <% } %>
+
+
+                                </div>
+
+
+                            <% }); %>
+
+
+                        </div>
+
+
+                    <% } %>
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</main>
+
+
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
+
+<script>
+
+    /*
+     * Prevent To Date from being earlier
+     * than From Date.
+     */
+
+    const fromDate =
+        document.getElementById(
+            "fromDate"
+        );
+
+    const toDate =
+        document.getElementById(
+            "toDate"
+        );
+
+
+    if (
+        fromDate &&
+        toDate
+    ) {
+
+        fromDate.addEventListener(
+            "change",
+            function () {
+
+                toDate.min =
+                    this.value;
+
+                if (
+                    toDate.value &&
+                    toDate.value <
+                    this.value
+                ) {
+
+                    toDate.value = "";
+                }
+
+            }
+        );
+
+    }
+
+
+
+    /*
+     * Reason character counter
+     */
+
+    const reason =
+        document.getElementById(
+            "reason"
+        );
+
+    const reasonCounter =
+        document.getElementById(
+            "reasonCounter"
+        );
+
+
+    if (
+        reason &&
+        reasonCounter
+    ) {
+
+        const updateCounter =
+            () => {
+
+                reasonCounter.textContent =
+                    `${reason.value.length} / 1500`;
+            };
+
+
+        reason.addEventListener(
+            "input",
+            updateCounter
+        );
+
+
+        updateCounter();
+    }
+
+
+
+    /*
+     * Prevent accidental duplicate
+     * submission.
+     */
+
+    const leaveForm =
+        document.getElementById(
+            "leaveForm"
+        );
+
+
+    if (leaveForm) {
+
+        leaveForm.addEventListener(
+            "submit",
+            function () {
+
+                const button =
+                    this.querySelector(
+                        "button[type='submit']"
+                    );
+
+                if (button) {
+
+                    button.disabled =
+                        true;
+
+                    button.innerHTML =
+                        `
+                            <span
+                                class="spinner-border spinner-border-sm me-2"
+                            ></span>
+                            Submitting...
+                        `;
+                }
+
+            }
+        );
+
+    }
+
+</script>
+
+
+</body>
+

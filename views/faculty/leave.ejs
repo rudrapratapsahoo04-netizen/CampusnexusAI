@@ -1,0 +1,449 @@
+<% layout("layouts/boilerplate") -%>
+<div class="container-fluid py-4">
+
+    <!-- ==========================================
+         HERO
+    =========================================== -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4 overflow-hidden">
+        <div class="card-body p-4 p-lg-5">
+
+            <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3">
+
+                <div>
+                    <span class="badge bg-primary-subtle text-primary mb-2 px-3 py-2">
+                        Faculty Services
+                    </span>
+
+                    <h2 class="fw-bold mb-2">
+                        Faculty Leave
+                    </h2>
+
+                    <p class="text-muted mb-0">
+                        Apply for leave and track your annual
+                        <strong>20-day</strong> leave balance.
+                    </p>
+                </div>
+
+                <div class="text-lg-end">
+                    <div class="small text-muted">
+                        Academic Year
+                    </div>
+
+                    <div class="fs-4 fw-bold">
+                        <%= currentYear %>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- ==========================================
+         LEAVE BALANCE
+    =========================================== -->
+
+    <div class="row g-4 mb-4">
+
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+                <div class="card-body p-4">
+
+                    <div class="text-muted small">
+                        Annual Entitlement
+                    </div>
+
+                    <div class="display-6 fw-bold mt-2">
+                        <%= leaveBalance.annualLimit %>
+                    </div>
+
+                    <div class="text-muted">
+                        days per year
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+                <div class="card-body p-4">
+
+                    <div class="text-muted small">
+                        Used Leave
+                    </div>
+
+                    <div class="display-6 fw-bold mt-2">
+                        <%= leaveBalance.usedDays %>
+                    </div>
+
+                    <div class="text-muted">
+                        approved days
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+                <div class="card-body p-4">
+
+                    <div class="text-muted small">
+                        Remaining
+                    </div>
+
+                    <div class="display-6 fw-bold mt-2 text-success">
+                        <%= leaveBalance.remainingDays %>
+                    </div>
+
+                    <div class="text-muted">
+                        days available
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         APPLY LEAVE
+    =========================================== -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-header bg-white border-0 pt-4 px-4">
+            <h5 class="fw-bold mb-1">
+                Apply for Leave
+            </h5>
+
+            <p class="text-muted small mb-0">
+                Submit a new faculty leave request.
+            </p>
+        </div>
+
+        <div class="card-body p-4">
+
+            <form
+                action="/faculty/leave/apply"
+                method="POST"
+            >
+
+                <div class="row g-3">
+
+                    <div class="col-md-6">
+
+                        <label class="form-label fw-semibold">
+                            Leave Type
+                        </label>
+
+                        <select
+                            name="leaveType"
+                            class="form-select"
+                            required
+                        >
+                            <option value="">
+                                Select leave type
+                            </option>
+
+                            <option value="casual">
+                                Casual Leave
+                            </option>
+
+                            <option value="medical">
+                                Medical Leave
+                            </option>
+
+                            <option value="earned">
+                                Earned Leave
+                            </option>
+
+                            <option value="emergency">
+                                Emergency Leave
+                            </option>
+
+                            <option value="other">
+                                Other
+                            </option>
+                        </select>
+
+                    </div>
+
+
+                    <div class="col-md-3">
+
+                        <label class="form-label fw-semibold">
+                            Start Date
+                        </label>
+
+                        <input
+                            type="date"
+                            name="startDate"
+                            class="form-control"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="col-md-3">
+
+                        <label class="form-label fw-semibold">
+                            End Date
+                        </label>
+
+                        <input
+                            type="date"
+                            name="endDate"
+                            class="form-control"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="col-12">
+
+                        <label class="form-label fw-semibold">
+                            Reason
+                        </label>
+
+                        <textarea
+                            name="reason"
+                            class="form-control"
+                            rows="4"
+                            maxlength="1000"
+                            placeholder="Enter reason for leave..."
+                            required
+                        ></textarea>
+
+                    </div>
+
+
+                    <div class="col-12">
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary px-4"
+                        >
+                            <i class="bi bi-send me-2"></i>
+                            Submit Leave Request
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+
+    <!-- ==========================================
+         LEAVE HISTORY
+    =========================================== -->
+
+    <div class="card border-0 shadow-sm rounded-4">
+
+        <div class="card-header bg-white border-0 pt-4 px-4">
+
+            <h5 class="fw-bold mb-1">
+                Leave History
+            </h5>
+
+            <p class="text-muted small mb-0">
+                Track your submitted leave applications.
+            </p>
+
+        </div>
+
+        <div class="card-body p-0">
+
+            <% if (!leaves.length) { %>
+
+                <div class="text-center py-5">
+
+                    <i class="bi bi-calendar-x fs-1 text-muted"></i>
+
+                    <h6 class="mt-3">
+                        No leave applications
+                    </h6>
+
+                    <p class="text-muted mb-0">
+                        Your leave history will appear here.
+                    </p>
+
+                </div>
+
+            <% } else { %>
+
+                <div class="table-responsive">
+
+                    <table class="table align-middle mb-0">
+
+                        <thead class="table-light">
+
+                            <tr>
+                                <th class="px-4">
+                                    Type
+                                </th>
+
+                                <th>
+                                    Dates
+                                </th>
+
+                                <th>
+                                    Days
+                                </th>
+
+                                <th>
+                                    Reason
+                                </th>
+
+                                <th>
+                                    Status
+                                </th>
+
+                                <th class="text-end px-4">
+                                    Action
+                                </th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            <% leaves.forEach(leave => { %>
+
+                                <tr>
+
+                                    <td class="px-4">
+
+                                        <span class="fw-semibold">
+                                            <%= leave.leaveType
+                                                .replace("_", " ")
+                                                .replace(/\b\w/g, c => c.toUpperCase()) %>
+                                        </span>
+
+                                    </td>
+
+
+                                    <td>
+
+                                        <div>
+                                            <%= new Date(
+                                                leave.startDate
+                                            ).toLocaleDateString() %>
+                                        </div>
+
+                                        <div class="text-muted small">
+                                            to
+                                            <%= new Date(
+                                                leave.endDate
+                                            ).toLocaleDateString() %>
+                                        </div>
+
+                                    </td>
+
+
+                                    <td>
+                                        <span class="fw-semibold">
+                                            <%= leave.totalDays %>
+                                        </span>
+                                    </td>
+
+
+                                    <td>
+                                        <span
+                                            class="text-muted"
+                                            style="max-width:250px;display:block;"
+                                        >
+                                            <%= leave.reason %>
+                                        </span>
+                                    </td>
+
+
+                                    <td>
+
+                                        <% if (leave.status === "approved") { %>
+
+                                            <span class="badge bg-success-subtle text-success">
+                                                Approved
+                                            </span>
+
+                                        <% } else if (leave.status === "rejected") { %>
+
+                                            <span class="badge bg-danger-subtle text-danger">
+                                                Rejected
+                                            </span>
+
+                                        <% } else if (leave.status === "cancelled") { %>
+
+                                            <span class="badge bg-secondary-subtle text-secondary">
+                                                Cancelled
+                                            </span>
+
+                                        <% } else { %>
+
+                                            <span class="badge bg-warning-subtle text-warning">
+                                                Pending
+                                            </span>
+
+                                        <% } %>
+
+                                    </td>
+
+
+                                    <td class="text-end px-4">
+
+                                        <% if (leave.status === "pending") { %>
+
+                                            <form
+                                                action="/faculty/leave/cancel/<%= leave._id %>"
+                                                method="POST"
+                                                class="d-inline"
+                                            >
+
+                                                <button
+                                                    type="submit"
+                                                    class="btn btn-sm btn-outline-danger"
+                                                    onclick="return confirm('Cancel this leave request?')"
+                                                >
+                                                    Cancel
+                                                </button>
+
+                                            </form>
+
+                                        <% } else { %>
+
+                                            <span class="text-muted small">
+                                                —
+                                            </span>
+
+                                        <% } %>
+
+                                    </td>
+
+                                </tr>
+
+                            <% }) %>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            <% } %>
+
+        </div>
+    </div>
+
+</div>

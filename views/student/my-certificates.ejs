@@ -1,0 +1,498 @@
+
+<% layout("layouts/boilerplate") -%>
+
+<div class="container py-4">
+
+    <!-- HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h2 class="fw-bold mb-1">
+                <i class="bi bi-files me-2"></i>
+                My Certificates
+            </h2>
+
+            <p class="text-muted mb-0">
+                Track your certificate applications and download
+                approved certificates.
+            </p>
+        </div>
+
+        <a
+            href="/student/certificate/apply"
+            class="btn btn-primary"
+        >
+            <i class="bi bi-plus-circle me-1"></i>
+            Apply Certificate
+        </a>
+    </div>
+
+
+    <% if (!certificates || certificates.length === 0) { %>
+
+        <!-- EMPTY STATE -->
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-body text-center py-5">
+
+                <div class="mb-3">
+                    <i
+                        class="bi bi-file-earmark-text text-muted"
+                        style="font-size: 4rem;"
+                    ></i>
+                </div>
+
+                <h4 class="fw-bold">
+                    No Certificate Applications
+                </h4>
+
+                <p class="text-muted mb-4">
+                    You have not applied for any certificate yet.
+                </p>
+
+                <a
+                    href="/student/certificate/apply"
+                    class="btn btn-primary"
+                >
+                    <i class="bi bi-plus-circle me-1"></i>
+                    Apply for Certificate
+                </a>
+
+            </div>
+
+        </div>
+
+    <% } else { %>
+
+
+        <!-- APPLICATION LIST -->
+        <div class="row g-4">
+
+            <% certificates.forEach(certificate => { %>
+
+                <div class="col-12">
+
+                    <div class="card border-0 shadow-sm">
+
+                        <div class="card-body p-4">
+
+                            <div class="row align-items-center">
+
+                                <!-- CERTIFICATE INFO -->
+                                <div class="col-lg-5">
+
+                                    <div class="d-flex align-items-start">
+
+                                        <div
+                                            class="bg-primary bg-opacity-10
+                                                   rounded-3 p-3 me-3"
+                                        >
+                                            <i
+                                                class="bi bi-file-earmark-text
+                                                       text-primary fs-3"
+                                            ></i>
+                                        </div>
+
+                                        <div>
+
+                                            <h5 class="fw-bold mb-1">
+
+                                                <% if (
+                                                    certificate.certificateType === "bonafide"
+                                                ) { %>
+
+                                                    Bonafide Certificate
+
+                                                <% } else if (
+                                                    certificate.certificateType === "character"
+                                                ) { %>
+
+                                                    Character Certificate
+
+                                                <% } else if (
+                                                    certificate.certificateType === "study"
+                                                ) { %>
+
+                                                    Study Certificate
+
+                                                <% } else if (
+                                                    certificate.certificateType === "attendance"
+                                                ) { %>
+
+                                                    Attendance Certificate
+
+                                                <% } else if (
+                                                    certificate.certificateType === "fee"
+                                                ) { %>
+
+                                                    Fee / Expenditure Certificate
+
+                                                <% } else if (
+                                                    certificate.certificateType === "medium_of_instruction"
+                                                ) { %>
+
+                                                    Medium of Instruction Certificate
+
+                                                <% } else if (
+                                                    certificate.certificateType === "course_completion"
+                                                ) { %>
+
+                                                    Course Completion Certificate
+
+                                                <% } else if (
+                                                    certificate.certificateType === "migration"
+                                                ) { %>
+
+                                                    Migration Certificate
+
+                                                <% } else if (
+                                                    certificate.certificateType === "transfer"
+                                                ) { %>
+
+                                                    Transfer Certificate
+
+                                                <% } else if (
+                                                    certificate.certificateType === "provisional_degree"
+                                                ) { %>
+
+                                                    Provisional Degree Certificate
+
+                                                <% } else if (
+                                                    certificate.certificateType === "transcript"
+                                                ) { %>
+
+                                                    Academic Transcript
+
+                                                <% } else if (
+                                                    certificate.certificateType === "no_dues"
+                                                ) { %>
+
+                                                    No Dues Certificate
+
+                                                <% } else { %>
+
+                                                    Certificate
+
+                                                <% } %>
+
+                                            </h5>
+
+
+                                            <div class="small text-muted">
+
+                                                Application No:
+
+                                                <strong>
+                                                    <%= certificate.applicationNumber %>
+                                                </strong>
+
+                                            </div>
+
+
+                                            <% if (
+                                                certificate.certificateNumber
+                                            ) { %>
+
+                                                <div class="small text-muted mt-1">
+
+                                                    Certificate No:
+
+                                                    <strong>
+                                                        <%= certificate.certificateNumber %>
+                                                    </strong>
+
+                                                </div>
+
+                                            <% } %>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                                <!-- STATUS -->
+                                <div class="col-lg-3 mt-3 mt-lg-0">
+
+                                    <small class="text-muted d-block mb-1">
+                                        Application Status
+                                    </small>
+
+
+                                    <% if (
+                                        certificate.status === "pending"
+                                    ) { %>
+
+                                        <span
+                                            class="badge bg-warning text-dark px-3 py-2"
+                                        >
+                                            <i class="bi bi-clock me-1"></i>
+                                            Pending
+                                        </span>
+
+
+                                    <% } else if (
+                                        certificate.status === "under_review"
+                                    ) { %>
+
+                                        <span
+                                            class="badge bg-info text-dark px-3 py-2"
+                                        >
+                                            <i class="bi bi-search me-1"></i>
+                                            Under Review
+                                        </span>
+
+
+                                    <% } else if (
+                                        certificate.status === "approved"
+                                    ) { %>
+
+                                        <span
+                                            class="badge bg-success px-3 py-2"
+                                        >
+                                            <i class="bi bi-check-circle me-1"></i>
+                                            Approved
+                                        </span>
+
+
+                                    <% } else if (
+                                        certificate.status === "ready"
+                                    ) { %>
+
+                                        <span
+                                            class="badge bg-success px-3 py-2"
+                                        >
+                                            <i class="bi bi-file-earmark-check me-1"></i>
+                                            Ready for Download
+                                        </span>
+
+
+                                    <% } else if (
+                                        certificate.status === "rejected"
+                                    ) { %>
+
+                                        <span
+                                            class="badge bg-danger px-3 py-2"
+                                        >
+                                            <i class="bi bi-x-circle me-1"></i>
+                                            Rejected
+                                        </span>
+
+
+                                    <% } else { %>
+
+                                        <span
+                                            class="badge bg-secondary px-3 py-2"
+                                        >
+                                            <%= certificate.status %>
+                                        </span>
+
+                                    <% } %>
+
+                                </div>
+
+
+                                <!-- DATE -->
+                                <div class="col-lg-2 mt-3 mt-lg-0">
+
+                                    <small class="text-muted d-block mb-1">
+                                        Applied On
+                                    </small>
+
+                                    <div class="fw-semibold">
+
+                                        <%= new Date(
+                                            certificate.createdAt
+                                        ).toLocaleDateString(
+                                            "en-IN",
+                                            {
+                                                day: "2-digit",
+                                                month: "short",
+                                                year: "numeric"
+                                            }
+                                        ) %>
+
+                                    </div>
+
+                                </div>
+
+
+                                <!-- ACTION -->
+                                <div class="col-lg-2 mt-3 mt-lg-0 text-lg-end">
+
+                                    <% if (
+                                        certificate.status === "ready" &&
+                                        certificate.certificateFile
+                                    ) { %>
+
+                                        <a
+                                            href="/student/certificate/<%= certificate._id %>/pdf"
+                                            class="btn btn-success btn-sm"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            <i
+                                                class="bi bi-download me-1"
+                                            ></i>
+                                            Download
+                                        </a>
+
+                                    <% } else { %>
+
+                                        <button
+                                            type="button"
+                                            class="btn btn-outline-secondary btn-sm"
+                                            disabled
+                                        >
+                                            <i
+                                                class="bi bi-hourglass-split me-1"
+                                            ></i>
+                                            Processing
+                                        </button>
+
+                                    <% } %>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- PURPOSE -->
+                            <hr class="my-4">
+
+                            <div class="row">
+
+                                <div class="col-md-8">
+
+                                    <small class="text-muted d-block mb-1">
+                                        Purpose
+                                    </small>
+
+                                    <p class="mb-0">
+                                        <%= certificate.purpose %>
+                                    </p>
+
+                                </div>
+
+
+                                <div class="col-md-4 mt-3 mt-md-0">
+
+                                    <small class="text-muted d-block mb-1">
+                                        Academic Details
+                                    </small>
+
+                                    <div class="small">
+
+                                        <strong>
+                                            <%= certificate.program.replace(
+                                                /-/g,
+                                                " "
+                                            ).toUpperCase() %>
+                                        </strong>
+
+                                        · Semester
+                                        <%= certificate.semester %>
+
+                                        · Section
+                                        <%= certificate.section %>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- ADMIN REMARKS -->
+                            <% if (
+                                certificate.adminRemarks
+                            ) { %>
+
+                                <div
+                                    class="alert alert-light border mt-4 mb-0"
+                                >
+
+                                    <div class="d-flex">
+
+                                        <i
+                                            class="bi bi-chat-left-text
+                                                   text-primary me-2"
+                                        ></i>
+
+                                        <div>
+
+                                            <strong>
+                                                Administration Remarks
+                                            </strong>
+
+                                            <div class="small mt-1">
+                                                <%= certificate.adminRemarks %>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            <% } %>
+
+
+                            <!-- REJECTED MESSAGE -->
+                            <% if (
+                                certificate.status === "rejected"
+                            ) { %>
+
+                                <div
+                                    class="alert alert-danger mt-4 mb-0"
+                                >
+
+                                    <i
+                                        class="bi bi-exclamation-circle me-1"
+                                    ></i>
+
+                                    Your certificate application has been
+                                    rejected. Please check the administration
+                                    remarks above or contact the university
+                                    administration.
+
+                                </div>
+
+                            <% } %>
+
+
+                            <!-- APPROVED MESSAGE -->
+                            <% if (
+                                certificate.status === "approved"
+                            ) { %>
+
+                                <div
+                                    class="alert alert-success mt-4 mb-0"
+                                >
+
+                                    <i
+                                        class="bi bi-check-circle me-1"
+                                    ></i>
+
+                                    Your certificate has been approved.
+                                    The certificate document will become
+                                    available once generation is completed.
+
+                                </div>
+
+                            <% } %>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            <% }); %>
+
+        </div>
+
+    <% } %>
+
+</div>

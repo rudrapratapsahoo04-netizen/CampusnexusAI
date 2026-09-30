@@ -1,0 +1,955 @@
+<% layout("layouts/boilerplate") -%>
+
+<style>
+
+    /* =========================================
+       LOGIN PAGE
+    ========================================= */
+
+    .campus-login-page {
+        position: relative;
+        min-height: calc(100vh - 70px);
+
+        padding: 70px 0;
+
+        overflow: hidden;
+
+        background:
+            radial-gradient(
+                circle at 10% 15%,
+                rgba(0, 255, 255, 0.16),
+                transparent 28%
+            ),
+            radial-gradient(
+                circle at 90% 20%,
+                rgba(0, 150, 255, 0.15),
+                transparent 30%
+            ),
+            radial-gradient(
+                circle at 50% 100%,
+                rgba(0, 255, 200, 0.08),
+                transparent 35%
+            ),
+            linear-gradient(
+                135deg,
+                #020617 0%,
+                #07111f 45%,
+                #020b14 100%
+            );
+
+        color: #ffffff;
+    }
+
+
+    /* =========================================
+       ANIMATED BACKGROUND ORBS
+    ========================================= */
+
+    .login-orb {
+        position: absolute;
+
+        border-radius: 50%;
+
+        pointer-events: none;
+
+        filter: blur(2px);
+
+        opacity: 0.5;
+
+        z-index: 0;
+    }
+
+
+    .login-orb-one {
+        width: 260px;
+        height: 260px;
+
+        top: -90px;
+        left: -80px;
+
+        background: rgba(0, 255, 255, 0.12);
+
+        box-shadow:
+            0 0 100px rgba(0, 255, 255, 0.15);
+
+        animation:
+            loginFloatOne 8s ease-in-out infinite;
+    }
+
+
+    .login-orb-two {
+        width: 330px;
+        height: 330px;
+
+        right: -120px;
+        top: 35%;
+
+        background: rgba(0, 140, 255, 0.10);
+
+        box-shadow:
+            0 0 120px rgba(0, 180, 255, 0.12);
+
+        animation:
+            loginFloatTwo 10s ease-in-out infinite;
+    }
+
+
+    .login-orb-three {
+        width: 180px;
+        height: 180px;
+
+        bottom: -70px;
+        left: 38%;
+
+        background: rgba(0, 255, 200, 0.08);
+
+        animation:
+            loginFloatThree 7s ease-in-out infinite;
+    }
+
+
+    /* =========================================
+       MAIN CONTENT
+    ========================================= */
+
+    .login-content {
+        position: relative;
+
+        z-index: 2;
+    }
+
+
+    /* =========================================
+       HEADER
+    ========================================= */
+
+    .login-header {
+        animation:
+            loginFadeUp 0.8s ease both;
+    }
+
+
+    .login-main-icon {
+        width: 82px;
+        height: 82px;
+
+        display: inline-flex;
+
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 24px;
+
+        color: #00ffff;
+
+        background:
+            rgba(0, 255, 255, 0.07);
+
+        border:
+            1px solid rgba(0, 255, 255, 0.25);
+
+        box-shadow:
+            0 0 35px rgba(0, 255, 255, 0.15),
+            inset 0 0 25px rgba(0, 255, 255, 0.04);
+
+        animation:
+            iconFloat 3.5s ease-in-out infinite;
+
+        transition:
+            all 0.4s ease;
+    }
+
+
+    .login-main-icon:hover {
+        transform:
+            scale(1.08)
+            rotate(-4deg);
+
+        color: #ffffff;
+
+        background:
+            rgba(0, 255, 255, 0.13);
+
+        border-color:
+            rgba(0, 255, 255, 0.65);
+
+        box-shadow:
+            0 0 45px rgba(0, 255, 255, 0.3);
+    }
+
+
+    .login-title {
+        color: #ffffff;
+
+        letter-spacing: -0.5px;
+    }
+
+
+    .login-subtitle {
+        color: #9eabb5;
+    }
+
+
+    .login-description {
+        color: #71808b;
+    }
+
+
+    /* =========================================
+       ROLE CARDS
+    ========================================= */
+
+    .login-role-card {
+        position: relative;
+
+        overflow: hidden;
+
+        background:
+            rgba(9, 18, 30, 0.78);
+
+        border:
+            1px solid rgba(255, 255, 255, 0.08) !important;
+
+        backdrop-filter:
+            blur(18px);
+
+        -webkit-backdrop-filter:
+            blur(18px);
+
+        box-shadow:
+            0 15px 45px rgba(0, 0, 0, 0.25);
+
+        transition:
+            transform 0.4s ease,
+            box-shadow 0.4s ease,
+            border-color 0.4s ease;
+
+        animation:
+            loginFadeUp 0.8s ease both;
+    }
+
+
+    .login-role-card:nth-child(1) {
+        animation-delay: 0.15s;
+    }
+
+
+    .login-role-card:nth-child(2) {
+        animation-delay: 0.3s;
+    }
+
+
+    .login-role-card:nth-child(3) {
+        animation-delay: 0.45s;
+    }
+
+
+    /* top light */
+
+    .login-role-card::before {
+        content: "";
+
+        position: absolute;
+
+        top: 0;
+        left: -100%;
+
+        width: 100%;
+        height: 2px;
+
+        background:
+            linear-gradient(
+                90deg,
+                transparent,
+                #00ffff,
+                transparent
+            );
+
+        transition:
+            left 0.6s ease;
+    }
+
+
+    .login-role-card:hover::before {
+        left: 100%;
+    }
+
+
+    .login-role-card::after {
+        content: "";
+
+        position: absolute;
+
+        width: 150px;
+        height: 150px;
+
+        right: -80px;
+        bottom: -80px;
+
+        border-radius: 50%;
+
+        background:
+            rgba(0, 255, 255, 0.04);
+
+        filter: blur(15px);
+
+        transition:
+            transform 0.5s ease,
+            opacity 0.5s ease;
+    }
+
+
+    .login-role-card:hover::after {
+        transform: scale(1.7);
+
+        opacity: 1;
+    }
+
+
+    .login-role-card:hover {
+        transform:
+            translateY(-12px);
+
+        border-color:
+            rgba(0, 255, 255, 0.3) !important;
+
+        box-shadow:
+            0 25px 65px rgba(0, 0, 0, 0.4),
+            0 0 35px rgba(0, 255, 255, 0.08);
+    }
+
+
+    /* =========================================
+       ROLE ICON
+    ========================================= */
+
+    .login-icon {
+        width: 76px;
+        height: 76px;
+
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 22px;
+
+        font-size: 30px;
+
+        border:
+            1px solid rgba(255, 255, 255, 0.08);
+
+        transition:
+            transform 0.4s ease,
+            box-shadow 0.4s ease,
+            background 0.4s ease;
+    }
+
+
+    .login-role-card:hover .login-icon {
+        transform:
+            translateY(-5px)
+            scale(1.08);
+
+        box-shadow:
+            0 10px 25px rgba(0, 0, 0, 0.25);
+    }
+
+
+    /* Student */
+
+    .student-icon {
+        color: #00cfff;
+    }
+
+
+    /* Teacher */
+
+    .teacher-icon {
+        color: #00ffb3;
+    }
+
+
+    /* Admin */
+
+    .admin-icon {
+        color: #d8e3eb;
+    }
+
+
+    /* =========================================
+       CARD TEXT
+    ========================================= */
+
+    .login-role-title {
+        color: #ffffff;
+    }
+
+
+    .login-role-description {
+        color: #8997a2;
+
+        line-height: 1.7;
+
+        min-height: 82px;
+    }
+
+
+    /* =========================================
+       LOGIN BUTTON
+    ========================================= */
+
+    .login-button {
+        position: relative;
+
+        overflow: hidden;
+
+        border: none;
+
+        border-radius: 12px;
+
+        font-weight: 600;
+
+        letter-spacing: 0.2px;
+
+        transition:
+            transform 0.3s ease,
+            box-shadow 0.3s ease,
+            background 0.3s ease;
+    }
+
+
+    .login-button::before {
+        content: "";
+
+        position: absolute;
+
+        top: 0;
+        left: -120%;
+
+        width: 80%;
+        height: 100%;
+
+        background:
+            linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.25),
+                transparent
+            );
+
+        transform: skewX(-20deg);
+
+        transition:
+            left 0.6s ease;
+    }
+
+
+    .login-button:hover::before {
+        left: 140%;
+    }
+
+
+    .login-button:hover {
+        transform:
+            translateY(-3px);
+
+        box-shadow:
+            0 12px 28px rgba(0, 0, 0, 0.3);
+    }
+
+
+    .login-button i {
+        transition:
+            transform 0.3s ease;
+    }
+
+
+    .login-button:hover i {
+        transform:
+            translateX(4px);
+    }
+
+
+    /* =========================================
+       REGISTER SECTION
+    ========================================= */
+
+    .login-register {
+        margin-top: 55px;
+
+        padding: 25px;
+
+        border-radius: 18px;
+
+        background:
+            rgba(255, 255, 255, 0.025);
+
+        border:
+            1px solid rgba(0, 255, 255, 0.10);
+
+        animation:
+            loginFadeUp 1s ease both;
+
+        animation-delay: 0.6s;
+    }
+
+
+    .login-register-text {
+        color: #7f8c96;
+    }
+
+    .admin-icon {
+    color: #d8e3eb;
+}
+
+/* Worker */
+.worker-icon {
+    color: #ffc107;
+}
+
+    .register-button {
+        color: #00ffff;
+
+        border-color:
+            rgba(0, 255, 255, 0.45);
+
+        border-radius: 11px;
+
+        transition:
+            all 0.3s ease;
+    }
+
+
+    .register-button:hover {
+        color: #001214;
+
+        background:
+            #00ffff;
+
+        border-color:
+            #00ffff;
+
+        transform:
+            translateY(-3px);
+
+        box-shadow:
+            0 10px 28px rgba(0, 255, 255, 0.2);
+    }
+
+
+    /* =========================================
+       ANIMATIONS
+    ========================================= */
+
+    @keyframes loginFadeUp {
+
+        from {
+            opacity: 0;
+
+            transform:
+                translateY(30px);
+        }
+
+        to {
+            opacity: 1;
+
+            transform:
+                translateY(0);
+        }
+
+    }
+
+
+    @keyframes iconFloat {
+
+        0%,
+        100% {
+            transform:
+                translateY(0);
+        }
+
+        50% {
+            transform:
+                translateY(-7px);
+        }
+
+    }
+
+
+    @keyframes loginFloatOne {
+
+        0%,
+        100% {
+            transform:
+                translate(0, 0);
+        }
+
+        50% {
+            transform:
+                translate(40px, 30px);
+        }
+
+    }
+
+
+    @keyframes loginFloatTwo {
+
+        0%,
+        100% {
+            transform:
+                translate(0, 0);
+        }
+
+        50% {
+            transform:
+                translate(-35px, -30px);
+        }
+
+    }
+
+
+    @keyframes loginFloatThree {
+
+        0%,
+        100% {
+            transform:
+                translateX(0);
+        }
+
+        50% {
+            transform:
+                translateX(45px);
+        }
+
+    }
+
+
+    /* =========================================
+       MOBILE
+    ========================================= */
+
+    @media (max-width: 767px) {
+
+        .campus-login-page {
+            padding:
+                45px 15px;
+        }
+
+        .login-title {
+            font-size: 2rem;
+        }
+
+        .login-main-icon {
+            width: 70px;
+            height: 70px;
+
+            border-radius: 20px;
+        }
+
+        .login-role-description {
+            min-height: auto;
+        }
+
+        .login-role-card:hover {
+            transform:
+                translateY(-6px);
+        }
+
+    }
+
+</style>
+
+
+<div class="campus-login-page">
+
+    <!-- Animated Background -->
+
+    <div class="login-orb login-orb-one"></div>
+
+    <div class="login-orb login-orb-two"></div>
+
+    <div class="login-orb login-orb-three"></div>
+
+
+    <div class="container login-content">
+
+        <!-- =========================================
+             HEADER
+        ========================================== -->
+
+        <div class="text-center mb-5 login-header">
+
+            <div class="mb-4">
+
+                <div class="login-main-icon mx-auto">
+
+                    <img
+                 src="/images/logo3.png"
+                  alt="CampusNexus AI Logo"
+                class="campus-logo"
+            >
+
+                </div>
+
+            </div>
+
+
+            <h1 class="fw-bold mb-2 login-title">
+
+                CampusNexus AI
+
+            </h1>
+
+
+            <p class="mb-0 login-subtitle">
+
+                University Campus Management System
+
+            </p>
+
+
+            <p class="mt-2 mb-0 login-description">
+
+                Select your portal to continue
+
+            </p>
+
+        </div>
+
+
+        <!-- =========================================
+             LOGIN CARDS
+        ========================================== -->
+
+        <div class="row g-4 justify-content-center">
+
+
+            <!-- ================= WORKER ================= -->
+<div class="col-md-6 col-lg-4">
+    <div class="card h-100 border-0 shadow-sm rounded-4 login-role-card">
+        <div class="card-body p-4 text-center">
+
+            <div
+                class="login-icon worker-icon mx-auto mb-4"
+                style="
+                    background: rgba(255, 193, 7, 0.08);
+                "
+            >
+                <i class="bi bi-tools"></i>
+            </div>
+
+            <h3 class="fw-bold mb-2 login-role-title">
+                Worker
+            </h3>
+
+            <p class="mb-4 login-role-description">
+                Access your worker profile, assigned tasks,
+                work updates and university service activities.
+            </p>
+
+            <a
+                href="/auth/login/worker"
+                class="btn btn-warning login-button w-100 py-2"
+            >
+                <i class="bi bi-box-arrow-in-right me-2"></i>
+                Worker Login
+            </a>
+
+        </div>
+    </div>
+</div>
+
+
+            <!-- ================= STUDENT ================= -->
+
+            <div class="col-md-6 col-lg-4">
+
+                <div class="card h-100 border-0 shadow-sm rounded-4 login-role-card">
+
+                    <div class="card-body p-4 text-center">
+
+                        <div
+                            class="login-icon student-icon mx-auto mb-4"
+                            style="
+                                background: rgba(0, 207, 255, 0.08);
+                            "
+                        >
+
+                            <i class="bi bi-person-fill"></i>
+
+                        </div>
+
+
+                        <h3 class="fw-bold mb-2 login-role-title">
+
+                            Student
+
+                        </h3>
+
+
+                        <p class="mb-4 login-role-description">
+
+                            Access your academic profile, timetable,
+                            attendance, notices and campus services.
+
+                        </p>
+
+
+                        <a
+                            href="/auth/login/student"
+                            class="btn btn-primary login-button w-100 py-2"
+                        >
+
+                            <i class="bi bi-box-arrow-in-right me-2"></i>
+
+                            Student Login
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ================= TEACHER ================= -->
+
+            <div class="col-md-6 col-lg-4">
+
+                <div class="card h-100 border-0 shadow-sm rounded-4 login-role-card">
+
+                    <div class="card-body p-4 text-center">
+
+                        <div
+                            class="login-icon teacher-icon mx-auto mb-4"
+                            style="
+                                background: rgba(0, 255, 179, 0.08);
+                            "
+                        >
+
+                            <i class="bi bi-person-workspace"></i>
+
+                        </div>
+
+
+                        <h3 class="fw-bold mb-2 login-role-title">
+
+                            Faculty
+
+                        </h3>
+
+
+                        <p class="mb-4 login-role-description">
+
+                            Manage courses, attendance, students,
+                            timetable and academic activities.
+
+                        </p>
+
+
+                        <a
+                            href="/auth/login/faculty"
+                            class="btn btn-success login-button w-100 py-2"
+                        >
+
+                            <i class="bi bi-box-arrow-in-right me-2"></i>
+
+                            Faculty Login
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ================= ADMIN ================= -->
+
+            <div class="col-md-6 col-lg-4">
+
+                <div class="card h-100 border-0 shadow-sm rounded-4 login-role-card">
+
+                    <div class="card-body p-4 text-center">
+
+                        <div
+                            class="login-icon admin-icon mx-auto mb-4"
+                            style="
+                                background: rgba(216, 227, 235, 0.08);
+                            "
+                        >
+
+                            <i class="bi bi-shield-lock-fill"></i>
+
+                        </div>
+
+
+                        <h3 class="fw-bold mb-2 login-role-title">
+
+                            Administrator
+
+                        </h3>
+
+
+                        <p class="mb-4 login-role-description">
+
+                            Manage university departments, programs,
+                            users, courses and campus operations.
+
+                        </p>
+
+
+                        <a
+                            href="/auth/login/admin"
+                            class="btn btn-dark login-button w-100 py-2"
+                        >
+
+                            <i class="bi bi-shield-lock me-2"></i>
+
+                            Admin Login
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================================
+             REGISTRATION
+        ========================================== -->
+
+        <div class="text-center login-register">
+
+            <p class="login-register-text mb-2">
+
+                New student?
+
+            </p>
+
+
+            <a
+                href="/auth/register/student"
+                class="btn btn-outline-primary register-button"
+            >
+
+                <i class="bi bi-person-plus me-2"></i>
+
+                Student Registration
+
+            </a>
+
+        </div>
+
+    </div>
+
+</div>

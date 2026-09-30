@@ -1,0 +1,3423 @@
+<% layout("layouts/boilerplate") %>
+
+<%
+    const dashboardStats = stats || {};
+
+    const totalUsers = dashboardStats.totalUsers || 0;
+    const totalStudents = dashboardStats.totalStudents || 0;
+    const totalFaculty = dashboardStats.totalFaculty || 0;
+    const activeStudents = dashboardStats.activeStudents || 0;
+    const activeFaculty = dashboardStats.activeFaculty || 0;
+    const inactiveUsers = dashboardStats.inactiveUsers || 0;
+    const totalWorkers = dashboardStats.totalWorkers || 0;
+    const activeWorkers = dashboardStats.activeWorkers || 0;
+
+
+    const recentStudents = dashboardStats.recentStudents || [];
+    const recentFaculty = dashboardStats.recentFaculty || [];
+    const recentUsers = dashboardStats.recentUsers || [];
+
+    const roleDistribution = dashboardStats.roleDistribution || {
+        students: totalStudents,
+        faculty: totalFaculty,
+        workers: totalWorkers
+    };
+
+    const formatDate = (date) => {
+        if (!date) return "—";
+
+        return new Date(date).toLocaleDateString("en-IN", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric"
+        });
+    };
+
+    const formatDateTime = (date) => {
+        if (!date) return "Never";
+
+        return new Date(date).toLocaleString("en-IN", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit"
+        });
+    };
+
+    const getInitials = (name) => {
+        if (!name) return "U";
+
+        return name
+            .split(" ")
+            .map(word => word.charAt(0))
+            .join("")
+            .substring(0, 2)
+            .toUpperCase();
+    };
+
+    const roleBadge = (role) => {
+        if (role === "admin") return "Administrator";
+        if (role === "faculty") return "Faculty";
+        return "Student";
+    };
+%>
+
+<style>
+
+/* =========================================================
+   CAMPUSNEXUS — FUTURISTIC ADMIN DASHBOARD
+   LOGIC UNTOUCHED — DESIGN ONLY
+========================================================= */
+
+:root {
+    --admin-bg: #07111f;
+    --admin-bg-soft: #0a1628;
+
+    --glass: rgba(255, 255, 255, 0.045);
+    --glass-strong: rgba(255, 255, 255, 0.075);
+    --glass-hover: rgba(255, 255, 255, 0.105);
+
+    --border: rgba(255, 255, 255, 0.09);
+    --border-hover: rgba(56, 189, 248, 0.65);
+
+    --text: #f8fafc;
+    --muted: #94a3b8;
+    --muted-light: #cbd5e1;
+
+    --blue: #38bdf8;
+    --blue-strong: #2563eb;
+
+    --violet: #8b5cf6;
+    --purple: #a855f7;
+
+    --cyan: #22d3ee;
+    --green: #34d399;
+    --orange: #fbbf24;
+    --red: #fb7185;
+
+    --shadow:
+        0 20px 60px rgba(0, 0, 0, .22);
+
+    --glow-blue:
+        0 0 0 1px rgba(56, 189, 248, .25),
+        0 0 30px rgba(56, 189, 248, .13);
+
+    --transition: .28s cubic-bezier(.2, .8, .2, 1);
+}
+
+
+/* =========================================================
+   PAGE BACKGROUND
+========================================================= */
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    color: var(--text);
+    background:
+        radial-gradient(
+            circle at 8% 12%,
+            rgba(37, 99, 235, .18),
+            transparent 25%
+        ),
+        radial-gradient(
+            circle at 88% 18%,
+            rgba(139, 92, 246, .16),
+            transparent 25%
+        ),
+        radial-gradient(
+            circle at 55% 90%,
+            rgba(34, 211, 238, .08),
+            transparent 28%
+        ),
+        linear-gradient(
+            135deg,
+            #050b14 0%,
+            #07111f 45%,
+            #0a1322 100%
+        );
+
+    min-height: 100vh;
+}
+
+
+/* =========================================================
+   AMBIENT LIGHT
+========================================================= */
+
+.admin-wrapper {
+    min-height: calc(100vh - 70px);
+    position: relative;
+    overflow: hidden;
+}
+
+.admin-wrapper::before,
+.admin-wrapper::after {
+    content: "";
+    position: fixed;
+    width: 380px;
+    height: 380px;
+    border-radius: 50%;
+    pointer-events: none;
+    filter: blur(90px);
+    opacity: .12;
+    z-index: -1;
+}
+
+.admin-wrapper::before {
+    background: #2563eb;
+    left: -180px;
+    top: 15%;
+    animation: ambientMove 12s ease-in-out infinite alternate;
+}
+
+.admin-wrapper::after {
+    background: #8b5cf6;
+    right: -180px;
+    bottom: 5%;
+    animation: ambientMoveReverse 15s ease-in-out infinite alternate;
+}
+
+@keyframes ambientMove {
+    from {
+        transform: translate(0, 0) scale(1);
+    }
+
+    to {
+        transform: translate(80px, 40px) scale(1.15);
+    }
+}
+
+@keyframes ambientMoveReverse {
+    from {
+        transform: translate(0, 0) scale(1);
+    }
+
+    to {
+        transform: translate(-70px, -40px) scale(1.18);
+    }
+}
+
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+.admin-sidebar {
+    width: 270px;
+    min-height: calc(100vh - 70px);
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(7, 17, 31, .88),
+            rgba(5, 12, 23, .82)
+        );
+
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+
+    color: #fff;
+
+    position: sticky;
+    top: 0;
+
+    z-index: 100;
+
+    overflow-y: auto;
+
+    border-right: 1px solid rgba(255, 255, 255, .08);
+
+    box-shadow:
+        20px 0 60px rgba(0, 0, 0, .12);
+}
+
+.admin-sidebar::-webkit-scrollbar {
+    width: 4px;
+}
+
+.admin-sidebar::-webkit-scrollbar-thumb {
+    background: rgba(56, 189, 248, .25);
+    border-radius: 20px;
+}
+
+.admin-sidebar-header {
+    padding: 24px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, .07);
+}
+
+.brand-box {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.brand-icon {
+    width: 43px;
+    height: 43px;
+
+    border-radius: 13px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #7c3aed,
+            #06b6d4
+        );
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 20px;
+
+    box-shadow:
+        0 0 25px rgba(37, 99, 235, .35);
+
+    animation: brandPulse 4s ease-in-out infinite;
+}
+
+@keyframes brandPulse {
+    0%,
+    100% {
+        box-shadow:
+            0 0 20px rgba(37, 99, 235, .25);
+    }
+
+    50% {
+        box-shadow:
+            0 0 32px rgba(56, 189, 248, .42);
+    }
+}
+
+.brand-title {
+    font-size: 16px;
+    font-weight: 750;
+    letter-spacing: -.02em;
+}
+
+.brand-subtitle {
+    color: #7f8ea3;
+    font-size: 10px;
+    margin-top: 3px;
+}
+
+
+/* =========================================================
+   SIDEBAR NAVIGATION
+========================================================= */
+
+.sidebar-section {
+    padding: 20px 14px 5px;
+}
+
+.sidebar-label {
+    color: #64748b;
+    font-size: 9px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .12em;
+    padding: 0 10px 9px;
+}
+
+.sidebar-link {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 10px 12px;
+    margin-bottom: 4px;
+
+    border-radius: 10px;
+
+    color: #aebccc;
+    text-decoration: none;
+
+    font-size: 12px;
+    font-weight: 550;
+
+    border: 1px solid transparent;
+
+    transition:
+        color var(--transition),
+        background var(--transition),
+        border-color var(--transition),
+        transform var(--transition),
+        box-shadow var(--transition);
+}
+
+.sidebar-link i {
+    width: 20px;
+    font-size: 15px;
+    text-align: center;
+    transition: transform var(--transition);
+}
+
+.sidebar-link:hover {
+    color: #ffffff;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(56, 189, 248, .10),
+            rgba(139, 92, 246, .07)
+        );
+
+    border-color: rgba(56, 189, 248, .25);
+
+    box-shadow:
+        inset 0 0 20px rgba(56, 189, 248, .04),
+        0 0 18px rgba(56, 189, 248, .06);
+
+    transform: translateX(3px);
+}
+
+.sidebar-link:hover i {
+    transform: scale(1.1);
+    color: var(--blue);
+}
+
+.sidebar-link.active {
+    color: #ffffff;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(37, 99, 235, .32),
+            rgba(124, 58, 237, .18)
+        );
+
+    border-color:
+        rgba(56, 189, 248, .34);
+
+    box-shadow:
+        inset 0 0 25px rgba(56, 189, 248, .06),
+        0 0 25px rgba(37, 99, 235, .10);
+}
+
+.sidebar-link.active::before {
+    content: "";
+
+    position: absolute;
+
+    left: -1px;
+    top: 8px;
+    bottom: 8px;
+
+    width: 3px;
+
+    border-radius: 10px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #38bdf8,
+            #8b5cf6
+        );
+
+    box-shadow:
+        0 0 12px rgba(56, 189, 248, .7);
+}
+
+.sidebar-badge {
+    margin-left: auto;
+
+    background: rgba(255, 255, 255, .06);
+
+    border: 1px solid rgba(255, 255, 255, .08);
+
+    padding: 3px 7px;
+
+    border-radius: 20px;
+
+    font-size: 9px;
+    color: #aebccc;
+
+    transition: var(--transition);
+}
+
+.sidebar-link:hover .sidebar-badge,
+.sidebar-link.active .sidebar-badge {
+    background: rgba(56, 189, 248, .12);
+    border-color: rgba(56, 189, 248, .25);
+    color: #7dd3fc;
+}
+
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.admin-main {
+    flex: 1;
+    min-width: 0;
+    position: relative;
+}
+
+
+/* =========================================================
+   TOPBAR
+========================================================= */
+
+.admin-topbar {
+    background:
+        rgba(7, 17, 31, .70);
+
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
+
+    border-bottom: 1px solid rgba(255, 255, 255, .07);
+
+    padding: 14px 24px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    position: sticky;
+    top: 0;
+
+    z-index: 90;
+}
+
+.top-search {
+    width: 380px;
+    max-width: 100%;
+    position: relative;
+}
+
+.top-search i {
+    position: absolute;
+
+    left: 14px;
+    top: 11px;
+
+    color: #64748b;
+
+    transition: var(--transition);
+}
+
+.top-search input {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    border: 1px solid rgba(255, 255, 255, .08);
+
+    border-radius: 10px;
+
+    padding: 9px 14px 9px 40px;
+
+    outline: none;
+
+    font-size: 12px;
+
+    color: #e2e8f0;
+
+    background:
+        rgba(255, 255, 255, .035);
+
+    backdrop-filter: blur(12px);
+
+    transition:
+        border-color var(--transition),
+        box-shadow var(--transition),
+        background var(--transition);
+}
+
+.top-search input::placeholder {
+    color: #64748b;
+}
+
+.top-search input:focus {
+    border-color: rgba(56, 189, 248, .55);
+
+    background:
+        rgba(56, 189, 248, .045);
+
+    box-shadow:
+        0 0 0 3px rgba(56, 189, 248, .07),
+        0 0 25px rgba(56, 189, 248, .08);
+}
+
+.top-search:focus-within i {
+    color: var(--blue);
+}
+
+.admin-profile {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+}
+
+.admin-profile .btn {
+    background: rgba(255, 255, 255, .045);
+    color: #cbd5e1;
+    border-color: rgba(255, 255, 255, .08) !important;
+
+    transition: var(--transition);
+}
+
+.admin-profile .btn:hover {
+    background: rgba(56, 189, 248, .10);
+    color: #ffffff;
+
+    border-color: rgba(56, 189, 248, .35) !important;
+
+    box-shadow:
+        0 0 20px rgba(56, 189, 248, .12);
+}
+
+.profile-avatar {
+    width: 39px;
+    height: 39px;
+
+    border-radius: 50%;
+
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #7c3aed,
+            #06b6d4
+        );
+
+    color: #fff;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-weight: 750;
+    font-size: 12px;
+
+    box-shadow:
+        0 0 20px rgba(56, 189, 248, .20);
+
+    border: 1px solid rgba(255, 255, 255, .14);
+}
+
+.profile-name {
+    font-size: 12px;
+    font-weight: 700;
+    color: #f8fafc;
+}
+
+.profile-role {
+    font-size: 10px;
+    color: #64748b;
+    margin-top: 2px;
+}
+
+
+/* =========================================================
+   DASHBOARD CONTENT
+========================================================= */
+
+.dashboard-content {
+    padding: 28px;
+}
+
+
+/* =========================================================
+   WELCOME CARD
+========================================================= */
+
+.welcome-card {
+    position: relative;
+
+    background:
+        radial-gradient(
+            circle at 80% 20%,
+            rgba(34, 211, 238, .20),
+            transparent 28%
+        ),
+        radial-gradient(
+            circle at 20% 100%,
+            rgba(139, 92, 246, .18),
+            transparent 30%
+        ),
+        linear-gradient(
+            135deg,
+            rgba(37, 99, 235, .30),
+            rgba(124, 58, 237, .25),
+            rgba(8, 47, 73, .28)
+        );
+
+    border:
+        1px solid rgba(96, 165, 250, .24);
+
+    color: #ffffff;
+
+    border-radius: 18px;
+
+    padding: 28px;
+
+    overflow: hidden;
+
+    margin-bottom: 24px;
+
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, .18);
+
+    animation: dashboardReveal .65s ease both;
+}
+
+.welcome-card::before {
+    content: "";
+
+    position: absolute;
+
+    width: 260px;
+    height: 260px;
+
+    right: -100px;
+    top: -120px;
+
+    border-radius: 50%;
+
+    border:
+        45px solid rgba(255, 255, 255, .045);
+
+    animation:
+        welcomeRotate 16s linear infinite;
+}
+
+.welcome-card::after {
+    content: "";
+
+    position: absolute;
+
+    width: 140px;
+    height: 140px;
+
+    right: 80px;
+    bottom: -90px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(34, 211, 238, .08);
+
+    filter: blur(8px);
+}
+
+@keyframes welcomeRotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.welcome-title {
+    font-size: 24px;
+    font-weight: 750;
+
+    margin-bottom: 7px;
+
+    position: relative;
+    z-index: 2;
+
+    letter-spacing: -.03em;
+}
+
+.welcome-text {
+    margin: 0;
+
+    color: rgba(255, 255, 255, .70);
+
+    font-size: 12px;
+
+    position: relative;
+    z-index: 2;
+}
+
+.welcome-actions {
+    margin-top: 19px;
+
+    position: relative;
+    z-index: 2;
+}
+
+.welcome-actions .btn {
+    border-radius: 9px;
+
+    font-size: 11px;
+    font-weight: 650;
+
+    padding: 9px 14px;
+
+    transition: var(--transition);
+}
+
+.welcome-actions .btn-light {
+    background: rgba(255, 255, 255, .92);
+    color: #172033;
+    border: none;
+}
+
+.welcome-actions .btn-light:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 8px 25px rgba(0, 0, 0, .20);
+}
+
+.welcome-actions .btn-outline-light {
+    background: rgba(255, 255, 255, .04);
+
+    border-color: rgba(255, 255, 255, .30);
+
+    color: #ffffff;
+}
+
+.welcome-actions .btn-outline-light:hover {
+    background: rgba(255, 255, 255, .10);
+
+    border-color: rgba(255, 255, 255, .60);
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 0 22px rgba(255, 255, 255, .10);
+}
+
+
+/* =========================================================
+   STAT CARDS
+========================================================= */
+
+.stat-card {
+    position: relative;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255, 255, 255, .055),
+            rgba(255, 255, 255, .018)
+        );
+
+    border:
+        1px solid rgba(255, 255, 255, .08);
+
+    border-radius: 15px;
+
+    padding: 19px;
+
+    height: 100%;
+
+    overflow: hidden;
+
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+
+    transition:
+        transform var(--transition),
+        border-color var(--transition),
+        box-shadow var(--transition),
+        background var(--transition);
+
+    animation: cardReveal .65s ease both;
+}
+
+.stat-card::before {
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        linear-gradient(
+            120deg,
+            transparent 30%,
+            rgba(255, 255, 255, .06),
+            transparent 70%
+        );
+
+    transform: translateX(-120%);
+
+    transition: transform .7s ease;
+}
+
+.stat-card:hover::before {
+    transform: translateX(120%);
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(56, 189, 248, .08),
+            rgba(139, 92, 246, .05)
+        );
+
+    border-color:
+        rgba(56, 189, 248, .40);
+
+    box-shadow:
+        0 15px 45px rgba(0, 0, 0, .20),
+        0 0 25px rgba(56, 189, 248, .09);
+}
+
+.stat-icon {
+    width: 42px;
+    height: 42px;
+
+    border-radius: 11px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 17px;
+
+    margin-bottom: 15px;
+
+    transition:
+        transform var(--transition),
+        box-shadow var(--transition);
+}
+
+.stat-card:hover .stat-icon {
+    transform: scale(1.08) rotate(-3deg);
+}
+
+.stat-blue {
+    background: rgba(56, 189, 248, .10);
+    color: #38bdf8;
+    border: 1px solid rgba(56, 189, 248, .15);
+}
+
+.stat-green {
+    background: rgba(52, 211, 153, .10);
+    color: #34d399;
+    border: 1px solid rgba(52, 211, 153, .15);
+}
+
+.stat-purple {
+    background: rgba(168, 85, 247, .10);
+    color: #c084fc;
+    border: 1px solid rgba(168, 85, 247, .15);
+}
+
+.stat-orange {
+    background: rgba(251, 191, 36, .10);
+    color: #fbbf24;
+    border: 1px solid rgba(251, 191, 36, .15);
+}
+
+.stat-value {
+    font-size: 26px;
+
+    font-weight: 750;
+
+    line-height: 1;
+
+    margin-bottom: 7px;
+
+    color: #f8fafc;
+}
+
+.stat-label {
+    color: #94a3b8;
+
+    font-size: 11px;
+
+    font-weight: 500;
+}
+
+.stat-bottom {
+    margin-top: 13px;
+
+    font-size: 10px;
+
+    color: #64748b;
+}
+
+
+/* =========================================================
+   SECTIONS
+========================================================= */
+
+.dashboard-section {
+    margin-top: 27px;
+
+    animation: dashboardReveal .7s ease both;
+}
+
+.section-header {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-bottom: 14px;
+}
+
+.section-title {
+    font-size: 15px;
+
+    font-weight: 700;
+
+    margin: 0;
+
+    color: #f1f5f9;
+}
+
+.section-subtitle {
+    font-size: 10px;
+
+    color: #64748b;
+
+    margin-top: 4px;
+}
+
+.section-link {
+    font-size: 11px;
+
+    text-decoration: none;
+
+    color: #38bdf8;
+
+    font-weight: 650;
+
+    transition: var(--transition);
+}
+
+.section-link:hover {
+    color: #7dd3fc;
+
+    text-shadow:
+        0 0 12px rgba(56, 189, 248, .45);
+}
+
+
+/* =========================================================
+   QUICK ACTIONS
+========================================================= */
+
+.quick-action {
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 15px;
+
+    min-height: 70px;
+
+    box-sizing: border-box;
+
+    background:
+        rgba(255, 255, 255, .035);
+
+    border:
+        1px solid rgba(255, 255, 255, .075);
+
+    border-radius: 13px;
+
+    text-decoration: none;
+
+    color: #e2e8f0;
+
+    backdrop-filter: blur(12px);
+
+    overflow: hidden;
+
+    transition:
+        transform var(--transition),
+        border-color var(--transition),
+        box-shadow var(--transition),
+        background var(--transition);
+}
+
+.quick-action::after {
+    content: "";
+
+    position: absolute;
+
+    width: 70px;
+    height: 70px;
+
+    right: -35px;
+    bottom: -35px;
+
+    border-radius: 50%;
+
+    background: rgba(56, 189, 248, .08);
+
+    transition: var(--transition);
+}
+
+.quick-action:hover {
+    color: #ffffff;
+
+    transform: translateY(-5px);
+
+    background:
+        rgba(56, 189, 248, .065);
+
+    border-color:
+        rgba(56, 189, 248, .42);
+
+    box-shadow:
+        0 12px 35px rgba(0, 0, 0, .18),
+        0 0 25px rgba(56, 189, 248, .08);
+}
+
+.quick-action:hover::after {
+    width: 120px;
+    height: 120px;
+}
+
+.quick-icon {
+    width: 40px;
+    height: 40px;
+
+    border-radius: 11px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background:
+        rgba(56, 189, 248, .07);
+
+    color: #38bdf8;
+
+    border:
+        1px solid rgba(56, 189, 248, .10);
+
+    font-size: 16px;
+
+    flex-shrink: 0;
+
+    transition: var(--transition);
+}
+
+.quick-action:hover .quick-icon {
+    background:
+        rgba(56, 189, 248, .14);
+
+    border-color:
+        rgba(56, 189, 248, .32);
+
+    box-shadow:
+        0 0 20px rgba(56, 189, 248, .14);
+
+    transform: scale(1.08);
+}
+
+.quick-title {
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.quick-description {
+    color: #64748b;
+    font-size: 9px;
+    margin-top: 3px;
+}
+
+
+/* =========================================================
+   BRANCH / ACCESS CARDS
+========================================================= */
+
+.branch-card {
+    position: relative;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255, 255, 255, .045),
+            rgba(255, 255, 255, .015)
+        );
+
+    border:
+        1px solid rgba(255, 255, 255, .08);
+
+    border-radius: 14px;
+
+    padding: 18px;
+
+    height: 100%;
+
+    overflow: hidden;
+
+    backdrop-filter: blur(14px);
+
+    transition:
+        transform var(--transition),
+        border-color var(--transition),
+        box-shadow var(--transition),
+        background var(--transition);
+}
+
+.branch-card::before {
+    content: "";
+
+    position: absolute;
+
+    width: 100px;
+    height: 100px;
+
+    right: -50px;
+    top: -50px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(56, 189, 248, .055);
+
+    transition: var(--transition);
+}
+
+.branch-card:hover {
+    transform: translateY(-5px);
+
+    background:
+        rgba(56, 189, 248, .055);
+
+    border-color:
+        rgba(56, 189, 248, .38);
+
+    box-shadow:
+        0 14px 40px rgba(0, 0, 0, .20),
+        0 0 28px rgba(56, 189, 248, .07);
+}
+
+.branch-card:hover::before {
+    width: 150px;
+    height: 150px;
+}
+
+.branch-icon {
+    width: 40px;
+    height: 40px;
+
+    border-radius: 11px;
+
+    background:
+        rgba(56, 189, 248, .08);
+
+    color: #38bdf8;
+
+    border:
+        1px solid rgba(56, 189, 248, .13);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 16px;
+
+    transition: var(--transition);
+}
+
+.branch-card:hover .branch-icon {
+    transform: scale(1.08);
+
+    box-shadow:
+        0 0 22px rgba(56, 189, 248, .13);
+}
+
+.branch-name {
+    font-size: 13px;
+
+    font-weight: 700;
+
+    margin-top: 13px;
+
+    color: #e2e8f0;
+}
+
+.branch-status {
+    font-size: 10px;
+
+    color: #64748b;
+
+    margin-top: 2px;
+}
+
+.branch-stat-row {
+    display: flex;
+
+    justify-content: space-between;
+
+    border-top:
+        1px solid rgba(255, 255, 255, .065);
+
+    margin-top: 14px;
+
+    padding-top: 12px;
+}
+
+.branch-stat-value {
+    font-weight: 700;
+
+    font-size: 13px;
+
+    color: #e2e8f0;
+}
+
+.branch-stat-label {
+    font-size: 9px;
+
+    color: #64748b;
+}
+
+
+/* =========================================================
+   DASHBOARD CARDS
+========================================================= */
+
+.dashboard-card {
+    position: relative;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255, 255, 255, .045),
+            rgba(255, 255, 255, .018)
+        );
+
+    border:
+        1px solid rgba(255, 255, 255, .08);
+
+    border-radius: 15px;
+
+    overflow: hidden;
+
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+
+    box-shadow:
+        0 10px 40px rgba(0, 0, 0, .10);
+
+    transition:
+        border-color var(--transition),
+        box-shadow var(--transition);
+}
+
+.dashboard-card:hover {
+    border-color:
+        rgba(56, 189, 248, .22);
+
+    box-shadow:
+        0 15px 50px rgba(0, 0, 0, .15),
+        0 0 25px rgba(56, 189, 248, .045);
+}
+
+.dashboard-card-header {
+    padding: 16px 18px;
+
+    border-bottom:
+        1px solid rgba(255, 255, 255, .07);
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    background:
+        rgba(255, 255, 255, .018);
+}
+
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.table {
+    margin: 0;
+
+    color: #cbd5e1;
+}
+
+.table th {
+    background:
+        rgba(255, 255, 255, .025);
+
+    color: #64748b;
+
+    font-size: 9px;
+
+    text-transform: uppercase;
+
+    letter-spacing: .07em;
+
+    font-weight: 750;
+
+    border-bottom:
+        1px solid rgba(255, 255, 255, .07);
+
+    padding: 12px 15px;
+
+    white-space: nowrap;
+}
+
+.table td {
+    padding: 13px 15px;
+
+    vertical-align: middle;
+
+    font-size: 11px;
+
+    color: #cbd5e1;
+
+    border-color:
+        rgba(255, 255, 255, .055);
+
+    background: transparent;
+
+    transition:
+        background var(--transition),
+        color var(--transition);
+}
+
+.table tbody tr {
+    transition: var(--transition);
+}
+
+.table tbody tr:hover td {
+    background:
+        rgba(56, 189, 248, .045);
+
+    color: #f1f5f9;
+}
+
+.user-cell {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+.user-avatar {
+    width: 32px;
+    height: 32px;
+
+    border-radius: 9px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(37, 99, 235, .20),
+            rgba(139, 92, 246, .15)
+        );
+
+    color: #7dd3fc;
+
+    border:
+        1px solid rgba(56, 189, 248, .15);
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    font-size: 9px;
+
+    font-weight: 750;
+
+    flex-shrink: 0;
+
+    transition: var(--transition);
+}
+
+tr:hover .user-avatar {
+    border-color:
+        rgba(56, 189, 248, .40);
+
+    box-shadow:
+        0 0 18px rgba(56, 189, 248, .10);
+}
+
+.user-name {
+    font-size: 11px;
+
+    font-weight: 700;
+
+    color: #e2e8f0;
+}
+
+.user-email {
+    color: #64748b;
+
+    font-size: 9px;
+
+    margin-top: 2px;
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.status-badge {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+    padding: 4px 8px;
+
+    border-radius: 20px;
+
+    font-size: 9px;
+
+    font-weight: 650;
+
+    border: 1px solid transparent;
+}
+
+.status-active {
+    background:
+        rgba(52, 211, 153, .08);
+
+    color: #6ee7b7;
+
+    border-color:
+        rgba(52, 211, 153, .15);
+}
+
+.status-inactive {
+    background:
+        rgba(251, 113, 133, .08);
+
+    color: #fda4af;
+
+    border-color:
+        rgba(251, 113, 133, .15);
+}
+
+.status-dot {
+    width: 5px;
+    height: 5px;
+
+    border-radius: 50%;
+
+    background: currentColor;
+
+    box-shadow:
+        0 0 8px currentColor;
+}
+
+
+/* =========================================================
+   TABLE BUTTONS
+========================================================= */
+
+.dashboard-card .btn-light {
+    background:
+        rgba(255, 255, 255, .035);
+
+    color: #94a3b8;
+
+    border-color:
+        rgba(255, 255, 255, .09) !important;
+
+    transition: var(--transition);
+}
+
+.dashboard-card .btn-light:hover {
+    background:
+        rgba(56, 189, 248, .10);
+
+    color: #7dd3fc;
+
+    border-color:
+        rgba(56, 189, 248, .35) !important;
+
+    box-shadow:
+        0 0 18px rgba(56, 189, 248, .08);
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   ACTIVITY
+========================================================= */
+
+.activity-item {
+    display: flex;
+
+    gap: 12px;
+
+    padding: 14px 18px;
+
+    border-bottom:
+        1px solid rgba(255, 255, 255, .055);
+
+    transition:
+        background var(--transition),
+        padding-left var(--transition);
+}
+
+.activity-item:last-child {
+    border-bottom: 0;
+}
+
+.activity-item:hover {
+    background:
+        rgba(56, 189, 248, .035);
+
+    padding-left: 22px;
+}
+
+.activity-icon {
+    width: 34px;
+    height: 34px;
+
+    border-radius: 9px;
+
+    background:
+        rgba(56, 189, 248, .07);
+
+    color: #38bdf8;
+
+    border:
+        1px solid rgba(56, 189, 248, .10);
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    transition: var(--transition);
+}
+
+.activity-item:hover .activity-icon {
+    background:
+        rgba(56, 189, 248, .13);
+
+    border-color:
+        rgba(56, 189, 248, .30);
+
+    box-shadow:
+        0 0 18px rgba(56, 189, 248, .10);
+
+    transform: scale(1.06);
+}
+
+.activity-title {
+    font-size: 10px;
+
+    font-weight: 650;
+
+    color: #cbd5e1;
+}
+
+.activity-time {
+    color: #64748b;
+
+    font-size: 9px;
+
+    margin-top: 3px;
+}
+
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+.empty-state {
+    text-align: center;
+
+    padding: 40px 20px;
+
+    color: #64748b;
+}
+
+.empty-state i {
+    font-size: 30px;
+
+    color: #475569;
+
+    margin-bottom: 10px;
+
+    transition: var(--transition);
+}
+
+.dashboard-card:hover .empty-state i {
+    color: #38bdf8;
+
+    filter:
+        drop-shadow(
+            0 0 10px rgba(56, 189, 248, .30)
+        );
+}
+
+.empty-state-title {
+    font-size: 12px;
+
+    font-weight: 700;
+
+    color: #94a3b8;
+}
+
+.empty-state-text {
+    font-size: 10px;
+
+    margin-top: 4px;
+
+    color: #64748b;
+}
+
+
+/* =========================================================
+   BOOTSTRAP TEXT COLOR OVERRIDES
+========================================================= */
+
+.text-primary {
+    color: #38bdf8 !important;
+}
+
+.text-success {
+    color: #34d399 !important;
+}
+
+.text-danger {
+    color: #fb7185 !important;
+}
+
+
+/* =========================================================
+   ENTRY ANIMATIONS
+========================================================= */
+
+@keyframes dashboardReveal {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes cardReveal {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* =========================================================
+   SECTION STAGGER
+========================================================= */
+
+.dashboard-section:nth-of-type(1) {
+    animation-delay: .05s;
+}
+
+.dashboard-section:nth-of-type(2) {
+    animation-delay: .10s;
+}
+
+.dashboard-section:nth-of-type(3) {
+    animation-delay: .15s;
+}
+
+.dashboard-section:nth-of-type(4) {
+    animation-delay: .20s;
+}
+
+.dashboard-section:nth-of-type(5) {
+    animation-delay: .25s;
+}
+
+
+.adminlogo{
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+}
+
+/* =========================================================
+   SCROLLBAR
+========================================================= */
+
+::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+}
+
+::-webkit-scrollbar-track {
+    background: #07111f;
+}
+
+::-webkit-scrollbar-thumb {
+    background:
+        linear-gradient(
+            180deg,
+            #2563eb,
+            #7c3aed
+        );
+
+    border-radius: 20px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background:
+        linear-gradient(
+            180deg,
+            #38bdf8,
+            #a855f7
+        );
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1199px) {
+
+    .admin-sidebar {
+        width: 235px;
+    }
+
+    .top-search {
+        width: 300px;
+    }
+
+    .dashboard-content {
+        padding: 23px;
+    }
+}
+
+
+@media (max-width: 991px) {
+
+    .admin-sidebar {
+        display: none;
+    }
+
+    .dashboard-content {
+        padding: 18px;
+    }
+
+    .admin-topbar {
+        padding: 12px 18px;
+    }
+}
+
+
+@media (max-width: 767px) {
+
+    .admin-topbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .top-search {
+        width: 100%;
+    }
+
+    .admin-profile {
+        justify-content: flex-end;
+    }
+
+    .dashboard-content {
+        padding: 14px;
+    }
+
+    .welcome-card {
+        padding: 21px;
+        border-radius: 15px;
+    }
+
+    .welcome-title {
+        font-size: 19px;
+    }
+
+    .welcome-text {
+        font-size: 11px;
+        line-height: 1.6;
+    }
+
+    .welcome-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .welcome-actions .btn {
+        margin-right: 0 !important;
+    }
+
+    .section-header {
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .dashboard-card {
+        overflow-x: auto;
+    }
+
+    .dashboard-card .table {
+        min-width: 650px;
+    }
+
+    .stat-value {
+        font-size: 22px;
+    }
+}
+
+
+@media (max-width: 480px) {
+
+    .dashboard-content {
+        padding: 10px;
+    }
+
+    .admin-profile {
+        gap: 8px;
+    }
+
+    .profile-role {
+        display: none;
+    }
+
+    .welcome-card {
+        padding: 18px;
+    }
+
+    .welcome-title {
+        font-size: 17px;
+    }
+
+    .welcome-actions .btn {
+        width: 100%;
+    }
+
+    .stat-card {
+        padding: 15px;
+    }
+
+    .stat-icon {
+        width: 38px;
+        height: 38px;
+    }
+
+    .stat-value {
+        font-size: 20px;
+    }
+
+    .stat-label {
+        font-size: 10px;
+    }
+}
+
+
+/* =========================================================
+   REDUCED MOTION ACCESSIBILITY
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+</style>
+
+
+<div class="admin-wrapper d-flex">
+
+    <!-- ==========================================
+         SIDEBAR
+    =========================================== -->
+
+    <aside class="admin-sidebar">
+
+        <div class="admin-sidebar-header">
+
+            <div class="brand-box">
+
+                <div class="brand-icon">
+                    <img src="/images/logo3.png" alt="" class="adminlogo">
+                </div>
+
+                <div>
+
+                    <div class="brand-title">
+                        CampusNexus 
+                    </div>
+
+                    <div class="brand-subtitle">
+                        University Administration
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- OVERVIEW -->
+
+        <div class="sidebar-section">
+
+            <div class="sidebar-label">
+                Overview
+            </div>
+
+            <a
+                href="/admin/dashboard"
+                class="sidebar-link active"
+            >
+                <i class="bi bi-grid-1x2-fill"></i>
+                Dashboard
+            </a>
+
+        </div>
+
+
+        <!-- ACADEMICS -->
+
+        <div class="sidebar-section">
+
+            <div class="sidebar-label">
+                Academics
+            </div>
+
+            <a
+                href="/admin/departments"
+                class="sidebar-link"
+            >
+                <i class="bi bi-diagram-3"></i>
+                Departments
+            </a>
+
+            <a
+                href="/admin/programs"
+                class="sidebar-link"
+            >
+                <i class="bi bi-mortarboard"></i>
+                Programs
+            </a>
+
+            <a
+                href="/admin/courses"
+                class="sidebar-link"
+            >
+                <i class="bi bi-book"></i>
+                Courses
+            </a>
+
+            <a
+                href="/admin/timetable"
+                class="sidebar-link"
+            >
+                <i class="bi bi-calendar3"></i>
+                Timetable
+            </a>
+
+        </div>
+
+
+        <!-- PEOPLE -->
+
+        <div class="sidebar-section">
+
+            <div class="sidebar-label">
+                People
+            </div>
+
+            <a
+                href="/admin/students"
+                class="sidebar-link"
+            >
+                <i class="bi bi-people"></i>
+                Students
+
+                <span class="sidebar-badge">
+                    <%= totalStudents %>
+                </span>
+            </a>
+            <a
+              href="/admin/workers"
+                   class="sidebar-link"
+             >
+                <i class="bi bi-tools"></i>
+                   Workers
+
+                <span class="sidebar-badge">
+                <%= totalWorkers %>
+               </span>
+            </a>
+
+            <a
+                href="/admin/faculty"
+                class="sidebar-link"
+            >
+                <i class="bi bi-person-workspace"></i>
+                Faculty
+
+                <span class="sidebar-badge">
+                    <%= totalFaculty %>
+                </span>
+            </a>
+
+            <a
+                href="/admin/users"
+                class="sidebar-link"
+            >
+                <i class="bi bi-person-gear"></i>
+                User Accounts
+
+                <span class="sidebar-badge">
+                    <%= totalUsers %>
+                </span>
+            </a>
+
+        </div>
+
+
+        <!-- CAMPUS -->
+
+        <div class="sidebar-section">
+
+            <div class="sidebar-label">
+                Campus
+            </div>
+
+            <a
+                href="/admin/attendance"
+                class="sidebar-link"
+            >
+                <i class="bi bi-check2-square"></i>
+                Attendance
+            </a>
+
+            <a
+                href="/admin/leave"
+                class="sidebar-link"
+            >
+                <i class="bi bi-calendar-check"></i>
+                Leave
+            </a>
+
+            <a
+                href="/admin/gate-pass"
+                class="sidebar-link"
+            >
+                <i class="bi bi-qr-code"></i>
+                Gate Pass
+            </a>
+
+            <a
+                href="/admin/fee"
+                class="sidebar-link"
+            >
+                <i class="bi bi-cash-coin text-primary"></i>
+                Fee
+            </a>
+
+            <a
+                href="/admin/grouplink"
+                class="sidebar-link"
+            >
+                <i class="bi bi-link-45deg text-primary"></i>
+                Event & Club
+            </a>
+
+        </div>
+
+
+        <!-- SERVICES -->
+
+        <div class="sidebar-section">
+
+            <div class="sidebar-label">
+                Services
+            </div>
+
+            <a
+                href="/admin/notices"
+                class="sidebar-link"
+            >
+                <i class="bi bi-megaphone"></i>
+                Notices
+            </a>
+
+            <a
+               href="/admin/lost-found"
+              class="sidebar-link"
+             >
+              <i class="bi bi-search-heart"></i>
+                   Lost & Found
+            </a>
+
+            <a
+                href="/admin/complaints"
+                class="sidebar-link"
+            >
+                <i class="bi bi-chat-left-text"></i>
+                Complaints
+            </a>
+
+            <a
+                href="/admin/certificates"
+                class="sidebar-link"
+            >
+                <i class="bi bi-file-earmark-check"></i>
+                Certificates
+            </a>
+
+        </div>
+
+
+
+        <!-- MANAGEMENT -->
+
+        <div class="sidebar-section">
+
+            <div class="sidebar-label">
+                Management
+            </div>
+
+            <a
+                href="/admin/settings"
+                class="sidebar-link"
+            >
+                <i class="bi bi-gear"></i>
+                Settings
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- ==========================================
+         MAIN CONTENT
+    =========================================== -->
+
+    <main class="admin-main">
+
+
+        <!-- TOPBAR -->
+
+        <div class="admin-topbar">
+
+            <div class="top-search">
+
+                <i class="bi bi-search"></i>
+
+                <input
+                    type="search"
+                    placeholder="Search students, faculty, courses..."
+                >
+
+            </div>
+
+
+            <div class="admin-profile">
+
+                <button
+                    type="button"
+                    class="btn btn-light border position-relative"
+                    title="Notifications"
+                >
+
+                    <i class="bi bi-bell"></i>
+
+                    <span
+                        class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle"
+                    ></span>
+
+                </button>
+
+
+                <div class="profile-avatar">
+
+                    <%= getInitials(
+                        currentUser?.name || "Administrator"
+                    ) %>
+
+                </div>
+
+
+                <div>
+
+                    <div class="profile-name">
+                        <%= currentUser?.name || "Administrator" %>
+                    </div>
+
+                    <div class="profile-role">
+                        System Administrator
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- DASHBOARD -->
+
+        <div class="dashboard-content">
+
+
+            <!-- WELCOME -->
+
+            <div class="welcome-card">
+
+                <div class="welcome-title">
+
+                    HII
+                    <%= currentUser?.name || "Administrator" %>
+                    👋
+
+                </div>
+
+                <p class="welcome-text">
+
+                    Manage your entire university ecosystem from one centralized administration panel.
+
+                </p>
+
+                <div class="welcome-actions">
+
+                    <a
+                        href="/admin/students"
+                        class="btn btn-light me-2"
+                    >
+
+                        <i class="bi bi-people me-1"></i>
+
+                        Manage Students
+
+                    </a>
+
+                    <a
+                        href="/admin/faculty"
+                        class="btn btn-outline-light"
+                    >
+
+                        <i class="bi bi-person-workspace me-1"></i>
+
+                        Manage Faculty
+
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- STATISTICS -->
+
+            <div class="row g-3">
+
+                <div class="col-6 col-xl-3">
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon stat-blue">
+                            <i class="bi bi-people-fill"></i>
+                        </div>
+
+                        <div class="stat-value">
+                            <%= totalStudents %>
+                        </div>
+
+                        <div class="stat-label">
+                            Total Students
+                        </div>
+
+                        <div class="stat-bottom">
+
+                            <i class="bi bi-check-circle text-success"></i>
+
+                            <%= activeStudents %> active
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-6 col-xl-3">
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon stat-purple">
+                            <i class="bi bi-person-workspace"></i>
+                        </div>
+
+                        <div class="stat-value">
+                            <%= totalFaculty %>
+                        </div>
+
+                        <div class="stat-label">
+                            Total Faculty
+                        </div>
+
+                        <div class="stat-bottom">
+
+                            <i class="bi bi-check-circle text-success"></i>
+
+                            <%= activeFaculty %> active
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-6 col-xl-3">
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon stat-green">
+                            <i class="bi bi-person-check"></i>
+                        </div>
+
+                        <div class="stat-value">
+                            <%= totalUsers %>
+                        </div>
+
+                        <div class="stat-label">
+                            Total User Accounts
+                        </div>
+
+                        <div class="stat-bottom">
+
+                            <i class="bi bi-shield-check text-success"></i>
+
+                            Role-based access
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-6 col-xl-3">
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon stat-orange">
+                            <i class="bi bi-person-x"></i>
+                        </div>
+
+                        <div class="stat-value">
+                            <%= inactiveUsers %>
+                        </div>
+
+                        <div class="stat-label">
+                            Inactive Accounts
+                        </div>
+
+                        <div class="stat-bottom">
+                            Requires review
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- QUICK ACTIONS -->
+
+            <div class="dashboard-section">
+
+                <div class="section-header">
+
+                    <div>
+
+                        <h2 class="section-title">
+                            Quick Actions
+                        </h2>
+
+                        <div class="section-subtitle">
+                            Frequently used administration tools
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="row g-3">
+
+
+                    <div class="col-6 col-md-4 col-xl-2">
+
+                        <a
+                            href="/admin/students"
+                            class="quick-action"
+                        >
+
+                            <div class="quick-icon">
+                                <i class="bi bi-person-plus"></i>
+                            </div>
+
+                            <div>
+
+                                <div class="quick-title">
+                                    Students
+                                </div>
+
+                                <div class="quick-description">
+                                    Manage students
+                                </div>
+
+                            </div>
+
+                        </a>
+
+                    </div>
+
+
+                    <div class="col-6 col-md-4 col-xl-2">
+
+                        <a
+                            href="/admin/faculty"
+                            class="quick-action"
+                        >
+
+                            <div class="quick-icon">
+                                <i class="bi bi-person-workspace"></i>
+                            </div>
+
+                            <div>
+
+                                <div class="quick-title">
+                                    Faculty
+                                </div>
+
+                                <div class="quick-description">
+                                    Manage teachers
+                                </div>
+
+                            </div>
+
+                        </a>
+
+                    </div>
+
+
+                    <div class="col-6 col-md-4 col-xl-2">
+
+                        <a
+                            href="/admin/departments"
+                            class="quick-action"
+                        >
+
+                            <div class="quick-icon">
+                                <i class="bi bi-diagram-3"></i>
+                            </div>
+
+                            <div>
+
+                                <div class="quick-title">
+                                    Departments
+                                </div>
+
+                                <div class="quick-description">
+                                    Branch management
+                                </div>
+
+                            </div>
+
+                        </a>
+
+                    </div>
+
+
+                    <div class="col-6 col-md-4 col-xl-2">
+
+                        <a
+                            href="/admin/courses"
+                            class="quick-action"
+                        >
+
+                            <div class="quick-icon">
+                                <i class="bi bi-book"></i>
+                            </div>
+
+                            <div>
+
+                                <div class="quick-title">
+                                    Courses
+                                </div>
+
+                                <div class="quick-description">
+                                    Course management
+                                </div>
+
+                            </div>
+
+                        </a>
+
+                    </div>
+
+
+                    <div class="col-6 col-md-4 col-xl-2">
+
+                        <a
+                            href="/admin/notices"
+                            class="quick-action"
+                        >
+
+                            <div class="quick-icon">
+                                <i class="bi bi-megaphone"></i>
+                            </div>
+
+                            <div>
+
+                                <div class="quick-title">
+                                    Notices
+                                </div>
+
+                                <div class="quick-description">
+                                    Publish notice
+                                </div>
+
+                            </div>
+
+                        </a>
+
+                    </div>
+
+
+                    <div class="col-6 col-md-4 col-xl-2">
+
+    <a
+        href="/admin/workers"
+        class="quick-action"
+    >
+
+        <div class="quick-icon">
+            <i class="bi bi-tools"></i>
+        </div>
+
+        <div>
+
+            <div class="quick-title">
+                Workers
+            </div>
+
+            <div class="quick-description">
+                Manage workers
+            </div>
+
+        </div>
+
+    </a>
+
+  </div>
+
+
+
+            </div>
+
+
+            <!-- BRANCH OVERVIEW -->
+
+            <div class="dashboard-section">
+
+                <div class="section-header">
+
+                    <div>
+
+                        <h2 class="section-title">
+                            Academic Structure
+                        </h2>
+
+                        <div class="section-subtitle">
+                            Department and program management
+                        </div>
+
+                    </div>
+
+                    <a
+                        href="/admin/departments"
+                        class="section-link"
+                    >
+                        Manage structure
+                        <i class="bi bi-arrow-right"></i>
+                    </a>
+
+                </div>
+
+
+                <div class="row g-3">
+
+                    <div class="col-12">
+
+                        <div class="dashboard-card">
+
+                            <div class="empty-state">
+
+                                <i class="bi bi-diagram-3"></i>
+
+                                <div class="empty-state-title">
+                                    Department-wise overview
+                                </div>
+
+                                <div class="empty-state-text">
+
+                                    Department, program, semester and section statistics will appear here after the academic structure module is connected.
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- STUDENTS + ACTIVITY -->
+
+            <div class="dashboard-section">
+
+                <div class="row g-4">
+
+
+                    <!-- RECENT STUDENTS -->
+
+                    <div class="col-xl-8">
+
+                        <div class="dashboard-card">
+
+                            <div class="dashboard-card-header">
+
+                                <div>
+
+                                    <div class="section-title">
+                                        Recent Students
+                                    </div>
+
+                                    <div class="section-subtitle">
+                                        Recently registered student accounts
+                                    </div>
+
+                                </div>
+
+                                <a
+                                    href="/admin/students"
+                                    class="section-link"
+                                >
+                                    View all
+                                </a>
+
+                            </div>
+
+
+                            <% if (recentStudents.length > 0) { %>
+
+                                <div class="table-responsive">
+
+                                    <table class="table">
+
+                                        <thead>
+
+                                            <tr>
+
+                                                <th>
+                                                    Student
+                                                </th>
+
+                                                <th>
+                                                    Status
+                                                </th>
+
+                                                <th>
+                                                    Registered
+                                                </th>
+
+                                                <th>
+                                                    Action
+                                                </th>
+
+                                            </tr>
+
+                                        </thead>
+
+
+                                        <tbody>
+
+                                            <% recentStudents.forEach(student => { %>
+
+                                                <tr>
+
+                                                    <td>
+
+                                                        <div class="user-cell">
+
+                                                            <div class="user-avatar">
+                                                                <%= getInitials(student.name) %>
+                                                            </div>
+
+                                                            <div>
+
+                                                                <div class="user-name">
+                                                                    <%= student.name %>
+                                                                </div>
+
+                                                                <div class="user-email">
+                                                                    <%= student.email %>
+                                                                </div>
+
+                                                            </div>
+
+                                                        </div>
+
+                                                    </td>
+
+
+                                                    <td>
+
+                                                        <% if (student.isActive) { %>
+
+                                                            <span class="status-badge status-active">
+
+                                                                <span class="status-dot"></span>
+
+                                                                Active
+
+                                                            </span>
+
+                                                        <% } else { %>
+
+                                                            <span class="status-badge status-inactive">
+
+                                                                <span class="status-dot"></span>
+
+                                                                Inactive
+
+                                                            </span>
+
+                                                        <% } %>
+
+                                                    </td>
+
+
+                                                    <td>
+
+                                                        <%= formatDate(student.createdAt) %>
+
+                                                    </td>
+
+
+                                                    <td>
+
+                                                        <a
+                                                            href="/admin/students"
+                                                            class="btn btn-sm btn-light border"
+                                                        >
+
+                                                            <i class="bi bi-eye"></i>
+
+                                                        </a>
+
+                                                    </td>
+
+                                                </tr>
+
+                                            <% }) %>
+
+                                        </tbody>
+
+                                    </table>
+
+                                </div>
+
+                            <% } else { %>
+
+                                <div class="empty-state">
+
+                                    <i class="bi bi-people"></i>
+
+                                    <div class="empty-state-title">
+                                        No students found
+                                    </div>
+
+                                    <div class="empty-state-text">
+                                        Student registrations will appear here.
+                                    </div>
+
+                                </div>
+
+                            <% } %>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- RECENT ACTIVITY -->
+
+                    <div class="col-xl-4">
+
+                        <div class="dashboard-card">
+
+                            <div class="dashboard-card-header">
+
+                                <div>
+
+                                    <div class="section-title">
+                                        Recent Activity
+                                    </div>
+
+                                    <div class="section-subtitle">
+                                        Latest account activity
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <% if (recentUsers.length > 0) { %>
+
+                                <% recentUsers.slice(0, 6).forEach(user => { %>
+
+                                    <div class="activity-item">
+
+                                        <div class="activity-icon">
+
+                                            <% if (user.role === "student") { %>
+
+                                                <i class="bi bi-person"></i>
+
+                                            <% } else if (user.role === "faculty") { %>
+
+                                                <i class="bi bi-person-workspace"></i>
+
+                                            <% } else { %>
+
+                                                <i class="bi bi-shield-check"></i>
+
+                                            <% } %>
+
+                                        </div>
+
+
+                                        <div>
+
+                                            <div class="activity-title">
+
+                                                <%= user.name %>
+
+                                                joined as
+
+                                                <%= roleBadge(user.role) %>
+
+                                            </div>
+
+                                            <div class="activity-time">
+
+                                                <%= formatDateTime(user.createdAt) %>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                <% }) %>
+
+                            <% } else { %>
+
+                                <div class="empty-state">
+
+                                    <i class="bi bi-activity"></i>
+
+                                    <div class="empty-state-title">
+                                        No recent activity
+                                    </div>
+
+                                </div>
+
+                            <% } %>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- FACULTY -->
+
+            <div class="dashboard-section">
+
+                <div class="dashboard-card">
+
+                    <div class="dashboard-card-header">
+
+                        <div>
+
+                            <div class="section-title">
+                                Recent Faculty
+                            </div>
+
+                            <div class="section-subtitle">
+                                Recently registered faculty members
+                            </div>
+
+                        </div>
+
+                        <a
+                            href="/admin/faculty"
+                            class="section-link"
+                        >
+                            View all
+                        </a>
+
+                    </div>
+
+
+                    <% if (recentFaculty.length > 0) { %>
+
+                        <div class="table-responsive">
+
+                            <table class="table">
+
+                                <thead>
+
+                                    <tr>
+
+                                        <th>
+                                            Faculty
+                                        </th>
+
+                                        <th>
+                                            Status
+                                        </th>
+
+                                        <th>
+                                            Joined
+                                        </th>
+
+                                        <th>
+                                            Action
+                                        </th>
+
+                                    </tr>
+
+                                </thead>
+
+
+                                <tbody>
+
+                                    <% recentFaculty.forEach(faculty => { %>
+
+                                        <tr>
+
+                                            <td>
+
+                                                <div class="user-cell">
+
+                                                    <div class="user-avatar">
+                                                        <%= getInitials(faculty.name) %>
+                                                    </div>
+
+                                                    <div>
+
+                                                        <div class="user-name">
+                                                            <%= faculty.name %>
+                                                        </div>
+
+                                                        <div class="user-email">
+                                                            <%= faculty.email %>
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
+
+                                            </td>
+
+
+                                            <td>
+
+                                                <% if (faculty.isActive) { %>
+
+                                                    <span class="status-badge status-active">
+
+                                                        <span class="status-dot"></span>
+
+                                                        Active
+
+                                                    </span>
+
+                                                <% } else { %>
+
+                                                    <span class="status-badge status-inactive">
+
+                                                        <span class="status-dot"></span>
+
+                                                        Inactive
+
+                                                    </span>
+
+                                                <% } %>
+
+                                            </td>
+
+
+                                            <td>
+
+                                                <%= formatDate(faculty.createdAt) %>
+
+                                            </td>
+
+
+                                            <td>
+
+                                                <a
+                                                    href="/admin/faculty"
+                                                    class="btn btn-sm btn-light border"
+                                                >
+
+                                                    <i class="bi bi-eye"></i>
+
+                                                </a>
+
+                                            </td>
+
+                                        </tr>
+
+                                    <% }) %>
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    <% } else { %>
+
+                        <div class="empty-state">
+
+                            <i class="bi bi-person-workspace"></i>
+
+                            <div class="empty-state-title">
+                                No faculty found
+                            </div>
+
+                            <div class="empty-state-text">
+                                Faculty registrations will appear here.
+                            </div>
+
+                        </div>
+
+                    <% } %>
+
+                </div>
+
+            </div>
+
+
+            <!-- SYSTEM ACCESS -->
+
+            <div class="dashboard-section">
+
+                <div class="section-header">
+
+                    <div>
+
+                        <h2 class="section-title">
+                            System Access
+                        </h2>
+
+                        <div class="section-subtitle">
+                            Role-based university access management
+                        </div>
+
+                    </div>
+
+                    <a
+                        href="/admin/access-control"
+                        class="section-link"
+                    >
+
+                        Manage access
+
+                        <i class="bi bi-arrow-right"></i>
+
+                    </a>
+
+                </div>
+                <div class="col-md-4">
+
+    <a
+        href="/admin/workers"
+        class="branch-card d-block text-decoration-none"
+    >
+
+        <div class="branch-icon">
+
+            <i class="bi bi-tools"></i>
+
+        </div>
+
+        <div class="branch-name">
+            Workers
+        </div>
+
+        <div class="branch-status">
+            University service and maintenance access
+        </div>
+
+        <div class="branch-stat-row">
+
+            <div>
+
+                <div class="branch-stat-value">
+                    <%= activeWorkers %>
+                </div>
+
+                <div class="branch-stat-label">
+                    Active
+                </div>
+
+            </div>
+
+            <div>
+
+                <div class="branch-stat-value">
+                    Task Based
+                </div>
+
+                <div class="branch-stat-label">
+                    Access
+                </div>
+
+            </div>
+
+        </div>
+
+    </a>
+
+</div>
+
+
+                <div class="row g-3">
+
+
+                    <div class="col-md-4">
+
+                        <div class="branch-card">
+
+                            <div class="branch-icon">
+
+                                <i class="bi bi-shield-lock"></i>
+
+                            </div>
+
+                            <div class="branch-name">
+                                Administrator
+                            </div>
+
+                            <div class="branch-status">
+                                Full university access
+                            </div>
+
+                            <div class="branch-stat-row">
+
+                                <div>
+
+                                    <div class="branch-stat-value">
+                                        Full
+                                    </div>
+
+                                    <div class="branch-stat-label">
+                                        Access
+                                    </div>
+
+                                </div>
+
+                                <div>
+
+                                    <div class="branch-stat-value">
+                                        All
+                                    </div>
+
+                                    <div class="branch-stat-label">
+                                        Modules
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-4">
+
+                        <div class="branch-card">
+
+                            <div class="branch-icon">
+
+                                <i class="bi bi-person-workspace"></i>
+
+                            </div>
+
+                            <div class="branch-name">
+                                Faculty
+                            </div>
+
+                            <div class="branch-status">
+                                Department and course based
+                            </div>
+
+                            <div class="branch-stat-row">
+
+                                <div>
+
+                                    <div class="branch-stat-value">
+                                        <%= activeFaculty %>
+                                    </div>
+
+                                    <div class="branch-stat-label">
+                                        Active
+                                    </div>
+
+                                </div>
+
+                                <div>
+
+                                    <div class="branch-stat-value">
+                                        Limited
+                                    </div>
+
+                                    <div class="branch-stat-label">
+                                        Access
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-4">
+
+                        <div class="branch-card">
+
+                            <div class="branch-icon">
+
+                                <i class="bi bi-person"></i>
+
+                            </div>
+
+                            <div class="branch-name">
+                                Students
+                            </div>
+
+                            <div class="branch-status">
+                                Personal academic access
+                            </div>
+
+                            <div class="branch-stat-row">
+
+                                <div>
+
+                                    <div class="branch-stat-value">
+                                        <%= activeStudents %>
+                                    </div>
+
+                                    <div class="branch-stat-label">
+                                        Active
+                                    </div>
+
+                                </div>
+
+                                <div>
+
+                                    <div class="branch-stat-value">
+                                        Personal
+                                    </div>
+
+                                    <div class="branch-stat-label">
+                                        Access
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </main>
+
+</div>

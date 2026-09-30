@@ -1,0 +1,108 @@
+
+<% layout("layouts/boilerplate") -%>
+
+<div class="container py-4">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-5 col-md-7">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-header bg-success text-white text-center py-3">
+                    <h4 class="mb-0">
+                        <i class="bi bi-qr-code me-2"></i>
+                        Gate Pass QR
+                    </h4>
+                </div>
+
+                <div class="card-body text-center p-4">
+
+                    <div class="mb-3">
+                        <span class="badge bg-success">
+                            <i class="bi bi-check-circle me-1"></i>
+                            Approved
+                        </span>
+                    </div>
+
+                    <div class="mb-4">
+                        <img
+                            src="<%= qrImage %>"
+                            alt="Gate Pass QR Code"
+                            class="img-fluid border rounded p-2"
+                            style="max-width: 320px;"
+                        >
+                    </div>
+
+                    <div class="text-start">
+
+                        <div class="mb-2">
+                            <strong>Application Number:</strong>
+                            <span>
+                                <%= gatePass.applicationNumber || "N/A" %>
+                            </span>
+                        </div>
+
+                        <div class="mb-2">
+                            <strong>Pass Type:</strong>
+                            <span class="text-capitalize">
+                                <%= gatePass.passType %>
+                            </span>
+                        </div>
+
+                        <div class="mb-2">
+                            <strong>Exit Date:</strong>
+                            <span>
+                                <%= new Date(gatePass.exitDate).toLocaleDateString() %>
+                            </span>
+                        </div>
+
+                        <div class="mb-2">
+                            <strong>Expected Exit:</strong>
+                            <span>
+                                <%= gatePass.expectedExitTime %>
+                            </span>
+                        </div>
+
+                        <div class="mb-2">
+                            <strong>Expected Return:</strong>
+                            <span>
+                                <%= gatePass.expectedReturnTime %>
+                            </span>
+                        </div>
+
+                        <div class="mb-2">
+                            <strong>Destination:</strong>
+                            <span>
+                                <%= gatePass.destination %>
+                            </span>
+                        </div>
+
+                    </div>
+
+                    <div class="alert alert-info mt-4 mb-0">
+                        <i class="bi bi-info-circle me-1"></i>
+                        Show this QR code at the campus gate for verification.
+                    </div>
+
+                </div>
+
+                <div class="card-footer bg-white text-center">
+
+                    <a
+                        href="/student/gate-passes"
+                        class="btn btn-outline-secondary"
+                    >
+                        <i class="bi bi-arrow-left me-1"></i>
+                        Back to Gate Passes
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

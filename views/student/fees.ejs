@@ -1,0 +1,414 @@
+
+<% layout("layouts/boilerplate") -%>
+
+<div class="container py-4">
+
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-1">
+                <i class="bi bi-cash-stack me-2"></i>
+                My Fees
+            </h2>
+
+            <p class="text-muted mb-0">
+                View your academic fee details and payment status.
+            </p>
+        </div>
+
+        <a
+            href="/student/dashboard"
+            class="btn btn-outline-secondary"
+        >
+            <i class="bi bi-arrow-left me-1"></i>
+            Dashboard
+        </a>
+    </div>
+
+    <!-- Student Information -->
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">
+                <i class="bi bi-person-vcard me-2"></i>
+                Student Information
+            </h5>
+        </div>
+
+        <div class="card-body">
+
+            <div class="row g-3">
+
+                <div class="col-md-3">
+                    <small class="text-muted">
+                        Student ID
+                    </small>
+
+                    <div class="fw-semibold">
+                        <%= studentProfile.studentId || "N/A" %>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <small class="text-muted">
+                        Department
+                    </small>
+
+                    <div class="fw-semibold text-capitalize">
+                        <%= studentProfile.department || "N/A" %>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <small class="text-muted">
+                        Program
+                    </small>
+
+                    <div class="fw-semibold text-capitalize">
+                        <%= studentProfile.program || "N/A" %>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <small class="text-muted">
+                        Semester
+                    </small>
+
+                    <div class="fw-semibold">
+                        <%= studentProfile.semester || "N/A" %>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <% if (!fees || fees.length === 0) { %>
+
+        <!-- No Fee Record -->
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-body text-center py-5">
+
+                <div class="mb-3">
+                    <i
+                        class="bi bi-receipt"
+                        style="font-size: 3rem;"
+                    ></i>
+                </div>
+
+                <h5>
+                    No Fee Record Available
+                </h5>
+
+                <p class="text-muted mb-0">
+                    Your fee details have not been added by the administration yet.
+                </p>
+
+            </div>
+
+        </div>
+
+    <% } else { %>
+
+        <% fees.forEach(function(fee) { %>
+
+            <!-- Fee Record -->
+            <div class="card border-0 shadow-sm mb-4">
+
+                <div class="card-header bg-white border-bottom">
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <div>
+                            <h5 class="mb-1">
+                                Academic Session:
+                                <%= fee.academicSession %>
+                            </h5>
+
+                            <small class="text-muted">
+                                Semester <%= fee.semester %>
+                                <% if (fee.section) { %>
+                                    · Section <%= fee.section %>
+                                <% } %>
+                            </small>
+                        </div>
+
+                        <div>
+
+                            <% if (fee.paymentStatus === "paid") { %>
+
+                                <span class="badge bg-success">
+                                    <i class="bi bi-check-circle me-1"></i>
+                                    Paid
+                                </span>
+
+                            <% } else if (fee.paymentStatus === "partially_paid") { %>
+
+                                <span class="badge bg-warning text-dark">
+                                    <i class="bi bi-hourglass-split me-1"></i>
+                                    Partially Paid
+                                </span>
+
+                            <% } else if (fee.paymentStatus === "overdue") { %>
+
+                                <span class="badge bg-danger">
+                                    <i class="bi bi-exclamation-circle me-1"></i>
+                                    Overdue
+                                </span>
+
+                            <% } else { %>
+
+                                <span class="badge bg-secondary">
+                                    <i class="bi bi-clock me-1"></i>
+                                    Pending
+                                </span>
+
+                            <% } %>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="card-body">
+
+                    <!-- Fee Summary -->
+                    <div class="row g-3 mb-4">
+
+                        <div class="col-md-4">
+
+                            <div class="border rounded p-3 h-100">
+
+                                <small class="text-muted">
+                                    Total Fee
+                                </small>
+
+                                <h4 class="mb-0 mt-1">
+                                    ₹<%= Number(fee.totalFee || 0).toLocaleString("en-IN") %>
+                                </h4>
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-4">
+
+                            <div class="border rounded p-3 h-100">
+
+                                <small class="text-muted">
+                                    Paid Amount
+                                </small>
+
+                                <h4 class="mb-0 mt-1 text-success">
+                                    ₹<%= Number(fee.paidAmount || 0).toLocaleString("en-IN") %>
+                                </h4>
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-4">
+
+                            <div class="border rounded p-3 h-100">
+
+                                <small class="text-muted">
+                                    Due Amount
+                                </small>
+
+                                <h4 class="mb-0 mt-1 text-danger">
+                                    ₹<%= Number(fee.dueAmount || 0).toLocaleString("en-IN") %>
+                                </h4>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Fee Breakdown -->
+                    <h6 class="border-bottom pb-2 mb-3">
+                        Fee Breakdown
+                    </h6>
+
+                    <div class="table-responsive">
+
+                        <table class="table table-sm align-middle">
+
+                            <tbody>
+
+                                <tr>
+                                    <td>
+                                        Tuition Fee
+                                    </td>
+
+                                    <td class="text-end">
+                                        ₹<%= Number(fee.tuitionFee || 0).toLocaleString("en-IN") %>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        Examination Fee
+                                    </td>
+
+                                    <td class="text-end">
+                                        ₹<%= Number(fee.examinationFee || 0).toLocaleString("en-IN") %>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        Hostel Fee
+                                    </td>
+
+                                    <td class="text-end">
+                                        ₹<%= Number(fee.hostelFee || 0).toLocaleString("en-IN") %>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        Library Fee
+                                    </td>
+
+                                    <td class="text-end">
+                                        ₹<%= Number(fee.libraryFee || 0).toLocaleString("en-IN") %>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        Transport Fee
+                                    </td>
+
+                                    <td class="text-end">
+                                        ₹<%= Number(fee.transportFee || 0).toLocaleString("en-IN") %>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        Other Fee
+                                    </td>
+
+                                    <td class="text-end">
+                                        ₹<%= Number(fee.otherFee || 0).toLocaleString("en-IN") %>
+                                    </td>
+                                </tr>
+
+                                <tr class="table-light fw-bold">
+
+                                    <td>
+                                        Total
+                                    </td>
+
+                                    <td class="text-end">
+                                        ₹<%= Number(fee.totalFee || 0).toLocaleString("en-IN") %>
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                    <!-- Due Date -->
+                    <div class="row g-3 mt-2">
+
+                        <div class="col-md-6">
+
+                            <div class="border rounded p-3">
+
+                                <small class="text-muted">
+                                    Due Date
+                                </small>
+
+                                <div class="fw-semibold mt-1">
+
+                                    <% if (fee.dueDate) { %>
+
+                                        <%= new Date(fee.dueDate).toLocaleDateString("en-IN", {
+                                            day: "2-digit",
+                                            month: "short",
+                                            year: "numeric"
+                                        }) %>
+
+                                    <% } else { %>
+
+                                        Not specified
+
+                                    <% } %>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <div class="border rounded p-3">
+
+                                <small class="text-muted">
+                                    Last Updated
+                                </small>
+
+                                <div class="fw-semibold mt-1">
+
+                                    <% if (fee.lastUpdatedAt || fee.updatedAt) { %>
+
+                                        <%= new Date(
+                                            fee.lastUpdatedAt || fee.updatedAt
+                                        ).toLocaleDateString("en-IN", {
+                                            day: "2-digit",
+                                            month: "short",
+                                            year: "numeric"
+                                        }) %>
+
+                                    <% } else { %>
+
+                                        Not available
+
+                                    <% } %>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Admin Remarks -->
+                    <% if (fee.remarks) { %>
+
+                        <div class="alert alert-info mt-4 mb-0">
+
+                            <div class="fw-semibold mb-1">
+                                <i class="bi bi-info-circle me-1"></i>
+                                Administration Remarks
+                            </div>
+
+                            <div>
+                                <%= fee.remarks %>
+                            </div>
+
+                        </div>
+
+                    <% } %>
+
+                </div>
+
+            </div>
+
+        <% }); %>
+
+    <% } %>
+
+</div>

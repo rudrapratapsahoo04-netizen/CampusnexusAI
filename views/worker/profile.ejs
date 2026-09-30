@@ -1,0 +1,2105 @@
+<% layout("layouts/boilerplate") -%>
+    <style>
+
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #3730a3;
+            --text: #172033;
+            --muted: #667085;
+            --border: rgba(15, 23, 42, 0.08);
+            --card: rgba(255, 255, 255, 0.88);
+        }
+
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+
+            margin: 0;
+
+            min-height: 100vh;
+
+            font-family:
+                Inter,
+                system-ui,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                sans-serif;
+
+            color: var(--text);
+
+            background:
+                radial-gradient(
+                    circle at 8% 8%,
+                    rgba(79, 70, 229, 0.11),
+                    transparent 30%
+                ),
+                radial-gradient(
+                    circle at 92% 12%,
+                    rgba(14, 165, 233, 0.10),
+                    transparent 28%
+                ),
+                linear-gradient(
+                    135deg,
+                    #f8fafc,
+                    #eef2ff
+                );
+        }
+
+
+        /* =====================================================
+           NAVBAR
+        ===================================================== */
+
+        .worker-navbar {
+
+            position: sticky;
+
+            top: 0;
+
+            z-index: 1000;
+
+            background:
+                rgba(255, 255, 255, 0.80);
+
+            backdrop-filter:
+                blur(18px);
+
+            border-bottom:
+                1px solid
+                rgba(15, 23, 42, 0.07);
+        }
+
+
+        .brand {
+
+            color: var(--text);
+
+            text-decoration: none;
+
+            font-size: 1.15rem;
+
+            font-weight: 850;
+
+            letter-spacing: -0.3px;
+        }
+
+
+        .brand span {
+            color: var(--primary);
+        }
+
+
+        .nav-link-custom {
+
+            color: #475467;
+
+            text-decoration: none;
+
+            font-size: 0.88rem;
+
+            font-weight: 650;
+
+            transition: 0.2s ease;
+        }
+
+
+        .nav-link-custom:hover {
+            color: var(--primary);
+        }
+
+
+        .nav-avatar {
+
+            width: 40px;
+
+            height: 40px;
+
+            border-radius: 13px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            color: white;
+
+            font-weight: 800;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #4f46e5,
+                    #7c3aed
+                );
+
+            box-shadow:
+                0 7px 18px
+                rgba(79, 70, 229, 0.22);
+        }
+
+
+        /* =====================================================
+           PAGE
+        ===================================================== */
+
+        .page-wrapper {
+
+            width:
+                min(
+                    1180px,
+                    calc(100% - 32px)
+                );
+
+            margin: 0 auto;
+
+            padding:
+                42px 0 70px;
+        }
+
+
+        .page-heading {
+            margin-bottom: 28px;
+        }
+
+
+        .eyebrow {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            padding:
+                7px 12px;
+
+            border-radius: 999px;
+
+            color: var(--primary);
+
+            background:
+                rgba(79, 70, 229, 0.08);
+
+            font-size: 0.75rem;
+
+            font-weight: 800;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.5px;
+        }
+
+
+        .page-heading h1 {
+
+            margin:
+                14px 0 8px;
+
+            font-size:
+                clamp(
+                    1.8rem,
+                    4vw,
+                    2.65rem
+                );
+
+            font-weight: 850;
+
+            letter-spacing: -1px;
+        }
+
+
+        .page-heading p {
+
+            margin: 0;
+
+            color: var(--muted);
+
+            line-height: 1.7;
+
+            max-width: 700px;
+        }
+
+
+        /* =====================================================
+           PROFILE HERO
+        ===================================================== */
+
+        .profile-hero {
+
+            position: relative;
+
+            overflow: hidden;
+
+            padding: 30px;
+
+            border-radius: 28px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #312e81,
+                    #4f46e5 48%,
+                    #7c3aed
+                );
+
+            color: white;
+
+            box-shadow:
+                0 22px 55px
+                rgba(79, 70, 229, 0.23);
+
+            margin-bottom: 24px;
+        }
+
+
+        .profile-hero::before {
+
+            content: "";
+
+            position: absolute;
+
+            width: 240px;
+
+            height: 240px;
+
+            border-radius: 50%;
+
+            right: -70px;
+
+            top: -110px;
+
+            background:
+                rgba(255, 255, 255, 0.10);
+        }
+
+
+        .profile-hero::after {
+
+            content: "";
+
+            position: absolute;
+
+            width: 180px;
+
+            height: 180px;
+
+            border-radius: 50%;
+
+            right: 90px;
+
+            bottom: -120px;
+
+            background:
+                rgba(255, 255, 255, 0.07);
+        }
+
+
+        .profile-hero-content {
+
+            position: relative;
+
+            z-index: 2;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 22px;
+        }
+
+
+        .profile-avatar {
+
+            width: 88px;
+
+            height: 88px;
+
+            flex-shrink: 0;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            border-radius: 25px;
+
+            color: #3730a3;
+
+            background:
+                rgba(255, 255, 255, 0.95);
+
+            font-size: 2rem;
+
+            font-weight: 850;
+
+            box-shadow:
+                0 12px 30px
+                rgba(0, 0, 0, 0.14);
+        }
+
+
+        .profile-hero h2 {
+
+            margin: 0 0 5px;
+
+            font-size:
+                clamp(
+                    1.35rem,
+                    3vw,
+                    1.8rem
+                );
+
+            font-weight: 850;
+        }
+
+
+        .profile-hero-email {
+
+            opacity: 0.82;
+
+            font-size: 0.88rem;
+
+            margin-bottom: 13px;
+        }
+
+
+        .hero-badges {
+
+            display: flex;
+
+            flex-wrap: wrap;
+
+            gap: 8px;
+        }
+
+
+        .hero-badge {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 6px;
+
+            padding:
+                6px 10px;
+
+            border-radius: 999px;
+
+            background:
+                rgba(255, 255, 255, 0.14);
+
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.16);
+
+            font-size: 0.72rem;
+
+            font-weight: 700;
+        }
+
+
+        /* =====================================================
+           CARDS
+        ===================================================== */
+
+        .glass-card {
+
+            background:
+                var(--card);
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 24px;
+
+            box-shadow:
+                0 18px 55px
+                rgba(15, 23, 42, 0.07);
+
+            backdrop-filter:
+                blur(18px);
+
+            overflow: hidden;
+        }
+
+
+        .card-heading {
+
+            padding:
+                24px 26px 8px;
+        }
+
+
+        .card-heading h3 {
+
+            margin: 0;
+
+            font-size: 1.05rem;
+
+            font-weight: 800;
+        }
+
+
+        .card-heading p {
+
+            margin:
+                6px 0 0;
+
+            color: var(--muted);
+
+            font-size: 0.82rem;
+        }
+
+
+        .card-content {
+
+            padding:
+                20px 26px 28px;
+        }
+
+
+        /* =====================================================
+           INFORMATION ROW
+        ===================================================== */
+
+        .info-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+
+            gap: 14px;
+        }
+
+
+        .info-item {
+
+            padding:
+                15px 16px;
+
+            border-radius: 16px;
+
+            background:
+                rgba(248, 250, 252, 0.88);
+
+            border:
+                1px solid
+                rgba(15, 23, 42, 0.055);
+
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+
+        .info-item:hover {
+
+            transform:
+                translateY(-2px);
+
+            box-shadow:
+                0 9px 22px
+                rgba(15, 23, 42, 0.05);
+        }
+
+
+        .info-label {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 7px;
+
+            color: #98a2b3;
+
+            font-size: 0.70rem;
+
+            font-weight: 800;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.35px;
+
+            margin-bottom: 7px;
+        }
+
+
+        .info-label i {
+
+            color: var(--primary);
+
+            font-size: 0.82rem;
+        }
+
+
+        .info-value {
+
+            color: #344054;
+
+            font-size: 0.88rem;
+
+            font-weight: 750;
+
+            word-break: break-word;
+        }
+
+
+        .info-value.muted {
+
+            color: #98a2b3;
+
+            font-weight: 600;
+        }
+
+
+        /* =====================================================
+           WORKER ID CARD
+        ===================================================== */
+
+        .worker-id-card {
+
+            padding: 22px;
+
+            border-radius: 20px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(79, 70, 229, 0.08),
+                    rgba(124, 58, 237, 0.05)
+                );
+
+            border:
+                1px solid
+                rgba(79, 70, 229, 0.10);
+
+            margin-bottom: 18px;
+        }
+
+
+        .worker-id-label {
+
+            color: var(--primary);
+
+            font-size: 0.72rem;
+
+            font-weight: 800;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.5px;
+
+            margin-bottom: 5px;
+        }
+
+
+        .worker-id-value {
+
+            font-size: 1.45rem;
+
+            font-weight: 900;
+
+            letter-spacing: 1px;
+
+            color: #312e81;
+        }
+
+
+        .worker-id-help {
+
+            color: var(--muted);
+
+            font-size: 0.76rem;
+
+            margin-top: 5px;
+        }
+
+
+        /* =====================================================
+           SALARY CARD
+        ===================================================== */
+
+        .salary-card {
+
+            padding: 22px;
+
+            border-radius: 20px;
+
+            color: white;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #047857,
+                    #059669
+                );
+
+            box-shadow:
+                0 14px 32px
+                rgba(5, 150, 105, 0.18);
+
+            margin-bottom: 18px;
+        }
+
+
+        .salary-label {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 7px;
+
+            font-size: 0.74rem;
+
+            font-weight: 750;
+
+            opacity: 0.82;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.4px;
+        }
+
+
+        .salary-value {
+
+            margin-top: 7px;
+
+            font-size: 1.65rem;
+
+            font-weight: 900;
+        }
+
+
+        .salary-note {
+
+            margin-top: 5px;
+
+            font-size: 0.72rem;
+
+            opacity: 0.72;
+        }
+
+
+        /* =====================================================
+           QUICK ACTIONS
+        ===================================================== */
+
+        .quick-actions {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+
+            gap: 12px;
+        }
+
+
+        .quick-action {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 11px;
+
+            padding: 13px;
+
+            color: #344054;
+
+            text-decoration: none;
+
+            border-radius: 15px;
+
+            background:
+                rgba(248, 250, 252, 0.9);
+
+            border:
+                1px solid
+                rgba(15, 23, 42, 0.06);
+
+            transition:
+                transform 0.2s ease,
+                border-color 0.2s ease,
+                background 0.2s ease;
+        }
+
+
+        .quick-action:hover {
+
+            color: var(--primary);
+
+            transform:
+                translateY(-2px);
+
+            border-color:
+                rgba(79, 70, 229, 0.18);
+
+            background:
+                rgba(79, 70, 229, 0.045);
+        }
+
+
+        .quick-action-icon {
+
+            width: 36px;
+
+            height: 36px;
+
+            flex-shrink: 0;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            border-radius: 11px;
+
+            color: var(--primary);
+
+            background:
+                rgba(79, 70, 229, 0.09);
+        }
+
+
+        .quick-action-text {
+
+            font-size: 0.79rem;
+
+            font-weight: 750;
+        }
+
+
+        /* =====================================================
+           ADDRESS
+        ===================================================== */
+
+        .address-box {
+
+            display: flex;
+
+            gap: 14px;
+
+            padding: 17px;
+
+            border-radius: 17px;
+
+            background:
+                rgba(248, 250, 252, 0.9);
+
+            border:
+                1px solid
+                rgba(15, 23, 42, 0.055);
+        }
+
+
+        .address-icon {
+
+            width: 42px;
+
+            height: 42px;
+
+            flex-shrink: 0;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            border-radius: 13px;
+
+            color: var(--primary);
+
+            background:
+                rgba(79, 70, 229, 0.09);
+        }
+
+
+        .address-label {
+
+            color: #98a2b3;
+
+            font-size: 0.70rem;
+
+            font-weight: 800;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.35px;
+
+            margin-bottom: 5px;
+        }
+
+
+        .address-text {
+
+            color: #344054;
+
+            font-size: 0.87rem;
+
+            font-weight: 650;
+
+            line-height: 1.6;
+        }
+
+
+        /* =====================================================
+           EMERGENCY
+        ===================================================== */
+
+        .emergency-box {
+
+            padding: 18px;
+
+            border-radius: 18px;
+
+            background:
+                rgba(254, 242, 242, 0.75);
+
+            border:
+                1px solid
+                rgba(239, 68, 68, 0.10);
+        }
+
+
+        .emergency-title {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            color: #b42318;
+
+            font-size: 0.82rem;
+
+            font-weight: 800;
+
+            margin-bottom: 14px;
+        }
+
+
+        .emergency-title i {
+            font-size: 1rem;
+        }
+
+
+        .emergency-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+
+            gap: 12px;
+        }
+
+
+        /* =====================================================
+           STATUS
+        ===================================================== */
+
+        .active-status {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 7px;
+
+            padding:
+                7px 11px;
+
+            border-radius: 999px;
+
+            color: #065f46;
+
+            background:
+                #d1fae5;
+
+            font-size: 0.72rem;
+
+            font-weight: 800;
+        }
+
+
+        .status-dot {
+
+            width: 7px;
+
+            height: 7px;
+
+            border-radius: 50%;
+
+            background: #10b981;
+
+            box-shadow:
+                0 0 0 4px
+                rgba(16, 185, 129, 0.12);
+        }
+
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+        @media (max-width: 991px) {
+
+            .profile-hero-content {
+
+                align-items: flex-start;
+            }
+
+        }
+
+
+        @media (max-width: 767px) {
+
+            .page-wrapper {
+
+                width:
+                    calc(100% - 20px);
+
+                padding-top: 28px;
+            }
+
+
+            .desktop-link {
+                display: none;
+            }
+
+
+            .profile-hero {
+
+                padding: 22px;
+
+                border-radius: 22px;
+            }
+
+
+            .profile-hero-content {
+
+                flex-direction: column;
+
+                align-items: flex-start;
+            }
+
+
+            .profile-avatar {
+
+                width: 72px;
+
+                height: 72px;
+
+                border-radius: 20px;
+
+                font-size: 1.6rem;
+            }
+
+
+            .card-heading,
+            .card-content {
+
+                padding-left: 18px;
+
+                padding-right: 18px;
+            }
+
+
+            .info-grid {
+
+                grid-template-columns: 1fr;
+            }
+
+
+            .emergency-grid {
+
+                grid-template-columns: 1fr;
+            }
+
+
+            .quick-actions {
+
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+
+        @media (max-width: 430px) {
+
+            .profile-hero h2 {
+
+                font-size: 1.3rem;
+            }
+
+
+            .worker-id-value {
+
+                font-size: 1.25rem;
+            }
+
+
+            .salary-value {
+
+                font-size: 1.4rem;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     NAVBAR
+========================================================= -->
+
+<nav class="worker-navbar">
+
+    <div class="container-fluid px-3 px-md-4">
+
+        <div
+            class="d-flex align-items-center justify-content-between"
+            style="min-height: 68px;"
+        >
+
+            <a
+                href="/worker/dashboard"
+                class="brand"
+            >
+                Campus<span>Nexus</span>
+            </a>
+
+
+            <div class="d-flex align-items-center gap-3">
+
+                <a
+                    href="/worker/dashboard"
+                    class="nav-link-custom desktop-link"
+                >
+                    <i class="bi bi-grid-1x2 me-1"></i>
+                    Dashboard
+                </a>
+
+
+                <a
+                    href="/worker/tasks"
+                    class="nav-link-custom desktop-link"
+                >
+                    <i class="bi bi-tools me-1"></i>
+                    My Work
+                </a>
+
+
+                <a
+                    href="/worker/leave"
+                    class="nav-link-custom desktop-link"
+                >
+                    <i class="bi bi-calendar2-check me-1"></i>
+                    My Leave
+                </a>
+
+
+                <div class="nav-avatar">
+
+                    <%= user?.name
+                        ? user.name
+                            .charAt(0)
+                            .toUpperCase()
+                        : "W"
+                    %>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</nav>
+
+
+
+<!-- =========================================================
+     MAIN
+========================================================= -->
+
+<main class="page-wrapper">
+
+
+    <!-- PAGE HEADING -->
+
+    <section class="page-heading">
+
+        <span class="eyebrow">
+
+            <i class="bi bi-person-badge"></i>
+
+            Worker Profile
+
+        </span>
+
+
+        <h1>
+            My Profile
+        </h1>
+
+
+        <p>
+            View your personal, employment and emergency
+            contact information registered with CampusNexus.
+        </p>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         PROFILE HERO
+    ====================================================== -->
+
+    <section class="profile-hero">
+
+        <div class="profile-hero-content">
+
+
+            <div class="profile-avatar">
+
+                <%= user?.name
+                    ? user.name
+                        .charAt(0)
+                        .toUpperCase()
+                    : "W"
+                %>
+
+            </div>
+
+
+            <div>
+
+                <h2>
+                    <%= user?.name || "Worker" %>
+                </h2>
+
+
+                <div class="profile-hero-email">
+
+                    <i class="bi bi-envelope me-1"></i>
+
+                    <%= user?.email || "Email not available" %>
+
+                </div>
+
+
+                <div class="hero-badges">
+
+                    <span class="hero-badge">
+
+                        <i class="bi bi-person-workspace"></i>
+
+                        Worker
+
+                    </span>
+
+
+                    <% if (workerProfile?.workerType) { %>
+
+                        <span class="hero-badge">
+
+                            <i class="bi bi-tools"></i>
+
+                            <%= workerProfile.workerType
+                                .replace(/-/g, " ")
+                                .replace(
+                                    /\b\w/g,
+                                    letter =>
+                                        letter.toUpperCase()
+                                )
+                            %>
+
+                        </span>
+
+                    <% } %>
+
+
+                    <% if (user?.isActive) { %>
+
+                        <span class="hero-badge">
+
+                            <i class="bi bi-check-circle"></i>
+
+                            Active Account
+
+                        </span>
+
+                    <% } %>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         MAIN CONTENT
+    ====================================================== -->
+
+    <div class="row g-4">
+
+
+        <!-- =================================================
+             LEFT COLUMN
+        ================================================== -->
+
+        <div class="col-lg-8">
+
+
+            <!-- =============================================
+                 BASIC INFORMATION
+            ============================================== -->
+
+            <section class="glass-card mb-4">
+
+                <div class="card-heading">
+
+                    <h3>
+
+                        <i
+                            class="bi bi-person-vcard me-2 text-primary"
+                        ></i>
+
+                        Personal Information
+
+                    </h3>
+
+                    <p>
+                        Your basic registered information
+                    </p>
+
+                </div>
+
+
+                <div class="card-content">
+
+                    <div class="info-grid">
+
+
+                        <!-- NAME -->
+
+                        <div class="info-item">
+
+                            <div class="info-label">
+
+                                <i class="bi bi-person"></i>
+
+                                Full Name
+
+                            </div>
+
+                            <div class="info-value">
+
+                                <%= user?.name || "-" %>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- EMAIL -->
+
+                        <div class="info-item">
+
+                            <div class="info-label">
+
+                                <i class="bi bi-envelope"></i>
+
+                                Email
+
+                            </div>
+
+                            <div class="info-value">
+
+                                <%= user?.email || "-" %>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- MOBILE -->
+
+                        <div class="info-item">
+
+                            <div class="info-label">
+
+                                <i class="bi bi-phone"></i>
+
+                                Mobile
+
+                            </div>
+
+                            <div class="info-value">
+
+                                <%= workerProfile?.mobile || "-" %>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- DOB -->
+
+                        <div class="info-item">
+
+                            <div class="info-label">
+
+                                <i class="bi bi-calendar3"></i>
+
+                                Date of Birth
+
+                            </div>
+
+                            <div class="info-value">
+
+                                <%= workerProfile?.dob
+                                    ? new Date(
+                                        workerProfile.dob
+                                    ).toLocaleDateString(
+                                        "en-IN",
+                                        {
+                                            day: "2-digit",
+                                            month: "short",
+                                            year: "numeric"
+                                        }
+                                    )
+                                    : "-"
+                                %>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- GENDER -->
+
+                        <div class="info-item">
+
+                            <div class="info-label">
+
+                                <i class="bi bi-gender-ambiguous"></i>
+
+                                Gender
+
+                            </div>
+
+                            <div class="info-value">
+
+                                <%= workerProfile?.gender
+                                    ? workerProfile.gender
+                                        .replace(
+                                            /\b\w/g,
+                                            letter =>
+                                                letter.toUpperCase()
+                                        )
+                                    : "-"
+                                %>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- ACCOUNT STATUS -->
+
+                        <div class="info-item">
+
+                            <div class="info-label">
+
+                                <i class="bi bi-shield-check"></i>
+
+                                Account Status
+
+                            </div>
+
+
+                            <div>
+
+                                <% if (user?.isActive) { %>
+
+                                    <span class="active-status">
+
+                                        <span
+                                            class="status-dot"
+                                        ></span>
+
+                                        Active
+
+                                    </span>
+
+                                <% } else { %>
+
+                                    <span
+                                        class="active-status"
+                                        style="
+                                            color:#991b1b;
+                                            background:#fee2e2;
+                                        "
+                                    >
+
+                                        <span
+                                            class="status-dot"
+                                            style="
+                                                background:#ef4444;
+                                                box-shadow:
+                                                0 0 0 4px
+                                                rgba(239,68,68,0.12);
+                                            "
+                                        ></span>
+
+                                        Inactive
+
+                                    </span>
+
+                                <% } %>
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =============================================
+                 EMPLOYMENT INFORMATION
+            ============================================== -->
+
+            <section class="glass-card mb-4">
+
+                <div class="card-heading">
+
+                    <h3>
+
+                        <i
+                            class="bi bi-briefcase me-2 text-primary"
+                        ></i>
+
+                        Employment Information
+
+                    </h3>
+
+                    <p>
+                        Your university employment details
+                    </p>
+
+                </div>
+
+
+                <div class="card-content">
+
+                    <div class="info-grid">
+
+
+                        <!-- WORKER ID -->
+
+                        <div class="info-item">
+
+                            <div class="info-label">
+
+                                <i class="bi bi-fingerprint"></i>
+
+                                Worker ID
+
+                            </div>
+
+                            <div class="info-value">
+
+                                <%= workerProfile?.workerId || "-" %>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- WORKER TYPE -->
+
+                        <div class="info-item">
+
+                            <div class="info-label">
+
+                                <i class="bi bi-tools"></i>
+
+                                Worker Type
+
+                            </div>
+
+                            <div class="info-value">
+
+                                <%= workerProfile?.workerType
+                                    ? workerProfile.workerType
+                                        .replace(/-/g, " ")
+                                        .replace(
+                                            /\b\w/g,
+                                            letter =>
+                                                letter.toUpperCase()
+                                        )
+                                    : "-"
+                                %>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- EMPLOYMENT -->
+
+                        <div class="info-item">
+
+                            <div class="info-label">
+
+                                <i class="bi bi-person-workspace"></i>
+
+                                Employment Type
+
+                            </div>
+
+                            <div class="info-value">
+
+                                <%= workerProfile?.employmentType
+                                    ? workerProfile.employmentType
+                                        .replace(/-/g, " ")
+                                        .replace(
+                                            /\b\w/g,
+                                            letter =>
+                                                letter.toUpperCase()
+                                        )
+                                    : "-"
+                                %>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- JOINING DATE -->
+
+                        <div class="info-item">
+
+                            <div class="info-label">
+
+                                <i class="bi bi-calendar-check"></i>
+
+                                Joining Date
+
+                            </div>
+
+                            <div class="info-value">
+
+                                <%= workerProfile?.joiningDate
+                                    ? new Date(
+                                        workerProfile.joiningDate
+                                    ).toLocaleDateString(
+                                        "en-IN",
+                                        {
+                                            day: "2-digit",
+                                            month: "short",
+                                            year: "numeric"
+                                        }
+                                    )
+                                    : "-"
+                                %>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- SALARY -->
+
+                        <div class="info-item">
+
+                            <div class="info-label">
+
+                                <i class="bi bi-cash-stack"></i>
+
+                                Monthly Salary
+
+                            </div>
+
+                            <div
+                                class="info-value"
+                                style="color:#047857;"
+                            >
+
+                                <%= workerProfile?.salary !== undefined &&
+                                    workerProfile?.salary !== null
+                                    ? "₹" +
+                                        Number(
+                                            workerProfile.salary
+                                        ).toLocaleString(
+                                            "en-IN"
+                                        )
+                                    : "-"
+                                %>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- ROLE -->
+
+                        <div class="info-item">
+
+                            <div class="info-label">
+
+                                <i class="bi bi-shield-person"></i>
+
+                                Portal Role
+
+                            </div>
+
+                            <div class="info-value">
+
+                                Worker
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =============================================
+                 ADDRESS
+            ============================================== -->
+
+            <section class="glass-card">
+
+                <div class="card-heading">
+
+                    <h3>
+
+                        <i
+                            class="bi bi-geo-alt me-2 text-primary"
+                        ></i>
+
+                        Address
+
+                    </h3>
+
+                    <p>
+                        Your registered residential address
+                    </p>
+
+                </div>
+
+
+                <div class="card-content">
+
+                    <div class="address-box">
+
+                        <div class="address-icon">
+
+                            <i
+                                class="bi bi-house-door"
+                            ></i>
+
+                        </div>
+
+
+                        <div>
+
+                            <div class="address-label">
+                                Complete Address
+                            </div>
+
+
+                            <div class="address-text">
+
+                                <%= workerProfile?.address || "-" %>
+
+                                <% if (
+                                    workerProfile?.city
+                                ) { %>
+
+                                    <br>
+
+                                    <%= workerProfile.city %>
+
+                                <% } %>
+
+
+                                <% if (
+                                    workerProfile?.state
+                                ) { %>
+
+                                    , <%= workerProfile.state %>
+
+                                <% } %>
+
+
+                                <% if (
+                                    workerProfile?.pin
+                                ) { %>
+
+                                    -
+                                    <%= workerProfile.pin %>
+
+                                <% } %>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+
+
+
+        <!-- =================================================
+             RIGHT COLUMN
+        ================================================== -->
+
+        <div class="col-lg-4">
+
+
+            <!-- =============================================
+                 WORKER ID
+            ============================================== -->
+
+            <div class="worker-id-card">
+
+                <div class="worker-id-label">
+
+                    <i class="bi bi-fingerprint me-1"></i>
+
+                    Worker Identification
+
+                </div>
+
+
+                <div class="worker-id-value">
+
+                    <%= workerProfile?.workerId || "-" %>
+
+                </div>
+
+
+                <div class="worker-id-help">
+
+                    Use this Worker ID when communicating
+                    with the university administration.
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =============================================
+                 SALARY
+            ============================================== -->
+
+            <div class="salary-card">
+
+                <div class="salary-label">
+
+                    <i class="bi bi-wallet2"></i>
+
+                    Monthly Salary
+
+                </div>
+
+
+                <div class="salary-value">
+
+                    <%= workerProfile?.salary !== undefined &&
+                        workerProfile?.salary !== null
+                        ? "₹" +
+                            Number(
+                                workerProfile.salary
+                            ).toLocaleString(
+                                "en-IN"
+                            )
+                        : "₹0"
+                    %>
+
+                </div>
+
+
+                <div class="salary-note">
+
+                    Current salary registered in your
+                    worker profile.
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =============================================
+                 QUICK ACTIONS
+            ============================================== -->
+
+            <section class="glass-card mb-4">
+
+                <div class="card-heading">
+
+                    <h3>
+
+                        <i
+                            class="bi bi-lightning-charge me-2 text-primary"
+                        ></i>
+
+                        Quick Access
+
+                    </h3>
+
+                    <p>
+                        Worker portal shortcuts
+                    </p>
+
+                </div>
+
+
+                <div class="card-content">
+
+                    <div class="quick-actions">
+
+
+                        <a
+                            href="/worker/dashboard"
+                            class="quick-action"
+                        >
+
+                            <div class="quick-action-icon">
+
+                                <i
+                                    class="bi bi-grid-1x2"
+                                ></i>
+
+                            </div>
+
+                            <span class="quick-action-text">
+                                Dashboard
+                            </span>
+
+                        </a>
+
+
+                        <a
+                            href="/worker/tasks"
+                            class="quick-action"
+                        >
+
+                            <div class="quick-action-icon">
+
+                                <i
+                                    class="bi bi-tools"
+                                ></i>
+
+                            </div>
+
+                            <span class="quick-action-text">
+                                My Work
+                            </span>
+
+                        </a>
+
+
+                        <a
+                            href="/worker/leave"
+                            class="quick-action"
+                        >
+
+                            <div class="quick-action-icon">
+
+                                <i
+                                    class="bi bi-calendar2-check"
+                                ></i>
+
+                            </div>
+
+                            <span class="quick-action-text">
+                                My Leave
+                            </span>
+
+                        </a>
+
+
+                        <a
+                            href="/auth/logout"
+                            class="quick-action"
+                        >
+
+                            <div
+                                class="quick-action-icon"
+                                style="
+                                    color:#dc2626;
+                                    background:
+                                    rgba(220,38,38,0.08);
+                                "
+                            >
+
+                                <i
+                                    class="bi bi-box-arrow-right"
+                                ></i>
+
+                            </div>
+
+                            <span class="quick-action-text">
+                                Logout
+                            </span>
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =============================================
+                 EMERGENCY CONTACT
+            ============================================== -->
+
+            <section class="glass-card">
+
+                <div class="card-heading">
+
+                    <h3>
+
+                        <i
+                            class="bi bi-exclamation-triangle me-2"
+                            style="color:#dc2626;"
+                        ></i>
+
+                        Emergency Contact
+
+                    </h3>
+
+                    <p>
+                        Contact information registered for
+                        emergency situations
+                    </p>
+
+                </div>
+
+
+                <div class="card-content">
+
+                    <div class="emergency-box">
+
+                        <div class="emergency-title">
+
+                            <i class="bi bi-shield-exclamation"></i>
+
+                            Emergency Information
+
+                        </div>
+
+
+                        <div class="emergency-grid">
+
+
+                            <div class="info-item">
+
+                                <div class="info-label">
+
+                                    <i class="bi bi-telephone"></i>
+
+                                    Contact Number
+
+                                </div>
+
+                                <div class="info-value">
+
+                                    <%= workerProfile?.emergencyContact || "-" %>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="info-item">
+
+                                <div class="info-label">
+
+                                    <i class="bi bi-people"></i>
+
+                                    Relation
+
+                                </div>
+
+                                <div class="info-value">
+
+                                    <%= workerProfile?.emergencyRelation || "-" %>
+
+                                </div>
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </div>
+
+</main>
+
+
+</body>
+

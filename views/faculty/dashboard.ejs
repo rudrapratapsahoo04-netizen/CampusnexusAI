@@ -1,0 +1,2882 @@
+<% layout("layouts/boilerplate") -%>
+
+<style>
+/* =========================================================
+   FACULTY DASHBOARD
+========================================================= */
+
+.faculty-page {
+    position: relative;
+    min-height: calc(100vh - 70px);
+    padding: 35px 20px 100px;
+    overflow: hidden;
+
+    background:
+        radial-gradient(circle at 5% 10%,
+            rgba(79, 70, 229, 0.16),
+            transparent 30%),
+        radial-gradient(circle at 95% 10%,
+            rgba(236, 72, 153, 0.14),
+            transparent 28%),
+        radial-gradient(circle at 85% 90%,
+            rgba(6, 182, 212, 0.13),
+            transparent 30%),
+        linear-gradient(
+            135deg,
+            #f8fafc 0%,
+            #eef2ff 45%,
+            #fdf2f8 100%
+        );
+}
+
+.faculty-container {
+    position: relative;
+    z-index: 2;
+    max-width: 1250px;
+    margin: 0 auto;
+}
+
+/* =========================================================
+   BACKGROUND DECORATION
+========================================================= */
+
+.faculty-page::before,
+.faculty-page::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.faculty-page::before {
+    width: 300px;
+    height: 300px;
+    top: -120px;
+    left: -120px;
+    background: rgba(99, 102, 241, 0.08);
+    animation: floatingCircle 8s ease-in-out infinite;
+}
+
+.faculty-page::after {
+    width: 360px;
+    height: 360px;
+    right: -150px;
+    bottom: -120px;
+    background: rgba(236, 72, 153, 0.07);
+    animation: floatingCircle 9s ease-in-out infinite reverse;
+}
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.faculty-hero {
+    position: relative;
+    overflow: hidden;
+
+    padding: 36px;
+
+    border-radius: 28px;
+
+    color: white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #312e81 0%,
+            #4f46e5 38%,
+            #7c3aed 70%,
+            #db2777 100%
+        );
+
+    box-shadow:
+        0 25px 60px rgba(79, 70, 229, 0.28);
+
+    animation: heroEnter 0.7s ease both;
+}
+
+.faculty-hero::before {
+    content: "";
+    position: absolute;
+
+    width: 250px;
+    height: 250px;
+
+    right: -70px;
+    top: -120px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(255, 255, 255, 0.10);
+}
+
+.faculty-hero::after {
+    content: "";
+    position: absolute;
+
+    width: 170px;
+    height: 170px;
+
+    left: 45%;
+    bottom: -110px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(255, 255, 255, 0.07);
+}
+
+.faculty-hero-content {
+    position: relative;
+    z-index: 2;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 30px;
+}
+
+.hero-left {
+    flex: 1;
+}
+
+.hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    padding: 8px 14px;
+    margin-bottom: 15px;
+
+    border-radius: 999px;
+
+    background:
+        rgba(255, 255, 255, 0.14);
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.22);
+
+    font-size: 12px;
+    font-weight: 800;
+
+    backdrop-filter: blur(10px);
+}
+
+.hero-badge i {
+    font-size: 15px;
+}
+
+.faculty-hero h1 {
+    margin: 0 0 12px;
+
+    font-size: clamp(28px, 4vw, 44px);
+    line-height: 1.1;
+
+    font-weight: 800;
+    letter-spacing: -1px;
+}
+
+.faculty-hero p {
+    margin: 0;
+
+    max-width: 720px;
+
+    color:
+        rgba(255, 255, 255, 0.84);
+
+    font-size: 15px;
+    line-height: 1.7;
+}
+
+/* Hero AI Icon */
+
+.hero-ai-badge {
+    position: relative;
+
+    width: 115px;
+    height: 115px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background:
+        rgba(255, 255, 255, 0.14);
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.28);
+
+    box-shadow:
+        inset 0 0 25px rgba(255,255,255,0.08),
+        0 15px 35px rgba(0,0,0,0.15);
+
+    backdrop-filter: blur(12px);
+
+    animation: aiPulse 3s ease-in-out infinite;
+}
+
+.hero-ai-badge i {
+    font-size: 38px;
+    margin-bottom: 5px;
+}
+
+.hero-ai-badge span {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+/* =========================================================
+   PROFILE
+========================================================= */
+
+.faculty-profile {
+    margin-top: 25px;
+    animation: slideUp 0.7s 0.1s ease both;
+}
+
+.profile-card {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    padding: 24px;
+
+    background:
+        rgba(255, 255, 255, 0.90);
+
+    border:
+        1px solid
+        rgba(148, 163, 184, 0.18);
+
+    border-radius: 22px;
+
+    box-shadow:
+        0 15px 40px
+        rgba(15, 23, 42, 0.08);
+
+    overflow: hidden;
+
+    backdrop-filter: blur(12px);
+
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+.profile-card:hover {
+    transform: translateY(-4px);
+
+    box-shadow:
+        0 22px 45px
+        rgba(15, 23, 42, 0.13);
+}
+
+.profile-card::before {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    top: 0;
+    bottom: 0;
+
+    width: 5px;
+
+    background:
+        linear-gradient(
+            to bottom,
+            #4f46e5,
+            #7c3aed,
+            #ec4899
+        );
+}
+
+.profile-main {
+    display: flex;
+    align-items: center;
+
+    gap: 18px;
+}
+
+.faculty-avatar {
+    width: 68px;
+    height: 68px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 20px;
+
+    color: white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #4f46e5,
+            #7c3aed
+        );
+
+    font-size: 24px;
+    font-weight: 800;
+
+    box-shadow:
+        0 10px 25px
+        rgba(79, 70, 229, 0.25);
+}
+
+.profile-info h3 {
+    margin: 0 0 5px;
+
+    color: #0f172a;
+
+    font-size: 20px;
+    font-weight: 800;
+}
+
+.profile-info p {
+    margin: 0 0 8px;
+
+    color: #64748b;
+
+    font-size: 14px;
+}
+
+.profile-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+
+    color: #15803d;
+
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+
+    border-radius: 50%;
+
+    background: #22c55e;
+
+    box-shadow:
+        0 0 0 4px
+        rgba(34, 197, 94, 0.12);
+}
+
+.profile-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    padding: 11px 17px;
+
+    border-radius: 12px;
+
+    text-decoration: none;
+
+    color: #4338ca;
+
+    background:
+        #eef2ff;
+
+    font-size: 13px;
+    font-weight: 800;
+
+    transition:
+        transform 0.25s ease,
+        background 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+.profile-button:hover {
+    transform: translateY(-3px);
+
+    color: #3730a3;
+
+    background:
+        #e0e7ff;
+
+    box-shadow:
+        0 10px 20px
+        rgba(79, 70, 229, 0.14);
+}
+
+/* =========================================================
+   SECTION TITLE
+========================================================= */
+
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    margin: 38px 0 18px;
+
+    animation:
+        slideUp 0.7s 0.15s ease both;
+}
+
+.section-title-icon {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 13px;
+
+    color: #4f46e5;
+
+    background:
+        linear-gradient(
+            135deg,
+            #eef2ff,
+            #f5f3ff
+        );
+
+    box-shadow:
+        0 8px 20px
+        rgba(79, 70, 229, 0.10);
+}
+
+.section-title-icon i {
+    font-size: 20px;
+}
+
+.section-title h2 {
+    margin: 0;
+
+    color: #0f172a;
+
+    font-size: 21px;
+    font-weight: 800;
+}
+
+/* =========================================================
+   ACTION GRID
+========================================================= */
+
+.faculty-actions {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 18px;
+}
+
+.faculty-action-card {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+
+    gap: 16px;
+
+    min-height: 110px;
+
+    padding: 20px;
+
+    text-decoration: none;
+
+    background:
+        rgba(255, 255, 255, 0.91);
+
+    border:
+        1px solid
+        rgba(148, 163, 184, 0.17);
+
+    border-radius: 20px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 10px 30px
+        rgba(15, 23, 42, 0.07);
+
+    transition:
+        transform 0.28s ease,
+        box-shadow 0.28s ease,
+        border-color 0.28s ease;
+
+    animation:
+        cardEnter 0.65s ease both;
+}
+
+/* Top color line */
+
+.faculty-action-card::before {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    top: 0;
+
+    width: 100%;
+    height: 4px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #4f46e5,
+            #7c3aed,
+            #ec4899
+        );
+
+    transform:
+        scaleX(0);
+
+    transform-origin: left;
+
+    transition:
+        transform 0.3s ease;
+}
+
+/* Corner color */
+
+.faculty-action-card::after {
+    content: "";
+
+    position: absolute;
+
+    width: 100px;
+    height: 100px;
+
+    right: -50px;
+    bottom: -50px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(99, 102, 241, 0.06);
+
+    transition:
+        transform 0.35s ease;
+}
+
+.faculty-action-card:hover {
+    transform: translateY(-7px);
+
+    border-color:
+        rgba(99, 102, 241, 0.20);
+
+    box-shadow:
+        0 20px 42px
+        rgba(15, 23, 42, 0.13);
+}
+
+.faculty-action-card:hover::before {
+    transform:
+        scaleX(1);
+}
+
+.faculty-action-card:hover::after {
+    transform:
+        scale(2.2);
+}
+
+.action-icon {
+    position: relative;
+    z-index: 2;
+
+    width: 54px;
+    height: 54px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 16px;
+
+    color: #4f46e5;
+
+    background:
+        linear-gradient(
+            135deg,
+            #eef2ff,
+            #f5f3ff
+        );
+
+    font-size: 22px;
+
+    transition:
+        transform 0.3s ease,
+        border-radius 0.3s ease;
+}
+
+.faculty-action-card:hover .action-icon {
+    transform:
+        rotate(-5deg)
+        scale(1.08);
+
+    border-radius: 18px;
+}
+
+.action-content {
+    position: relative;
+    z-index: 2;
+}
+
+.action-content h3 {
+    margin: 0 0 5px;
+
+    color: #0f172a;
+
+    font-size: 16px;
+    font-weight: 800;
+}
+
+.action-content p {
+    margin: 0;
+
+    color: #64748b;
+
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+/* Different icon colors */
+
+.faculty-action-card:nth-child(1) .action-icon {
+    color: #4f46e5;
+    background: #eef2ff;
+}
+
+.faculty-action-card:nth-child(2) .action-icon {
+    color: #0891b2;
+    background: #ecfeff;
+}
+
+.faculty-action-card:nth-child(3) .action-icon {
+    color: #059669;
+    background: #ecfdf5;
+}
+
+.faculty-action-card:nth-child(4) .action-icon {
+    color: #ea580c;
+    background: #fff7ed;
+}
+
+.faculty-action-card:nth-child(5) .action-icon {
+    color: #7c3aed;
+    background: #f5f3ff;
+}
+
+.faculty-action-card:nth-child(6) .action-icon {
+    color: #db2777;
+    background: #fdf2f8;
+}
+
+.faculty-action-card:nth-child(7) .action-icon {
+    color: #2563eb;
+    background: #eff6ff;
+}
+
+.faculty-action-card:nth-child(8) .action-icon {
+    color: #ca8a04;
+    background: #fefce8;
+}
+
+.faculty-action-card:nth-child(9) .action-icon {
+    color: #dc2626;
+    background: #fef2f2;
+}
+
+/* Stagger */
+
+.faculty-action-card:nth-child(1) {
+    animation-delay: 0.08s;
+}
+
+.faculty-action-card:nth-child(2) {
+    animation-delay: 0.14s;
+}
+
+.faculty-action-card:nth-child(3) {
+    animation-delay: 0.20s;
+}
+
+.faculty-action-card:nth-child(4) {
+    animation-delay: 0.26s;
+}
+
+.faculty-action-card:nth-child(5) {
+    animation-delay: 0.32s;
+}
+
+.faculty-action-card:nth-child(6) {
+    animation-delay: 0.38s;
+}
+
+.faculty-action-card:nth-child(7) {
+    animation-delay: 0.44s;
+}
+
+.faculty-action-card:nth-child(8) {
+    animation-delay: 0.50s;
+}
+
+.faculty-action-card:nth-child(9) {
+    animation-delay: 0.56s;
+}
+
+/* =========================================================
+   ACCESS CARD
+========================================================= */
+
+.access-card {
+    position: relative;
+
+    margin-top: 35px;
+
+    padding: 25px;
+
+    border-radius: 22px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(79, 70, 229, 0.08),
+            rgba(236, 72, 153, 0.07)
+        );
+
+    border:
+        1px solid
+        rgba(99, 102, 241, 0.12);
+
+    box-shadow:
+        0 12px 30px
+        rgba(79, 70, 229, 0.07);
+
+    animation:
+        slideUp 0.8s 0.4s ease both;
+}
+
+.access-card-inner {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 15px;
+}
+
+.access-icon {
+    width: 46px;
+    height: 46px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 14px;
+
+    color: #4f46e5;
+
+    background: white;
+
+    box-shadow:
+        0 8px 18px
+        rgba(15, 23, 42, 0.07);
+
+    font-size: 20px;
+}
+
+.access-card h3 {
+    margin: 0 0 6px;
+
+    color: #312e81;
+
+    font-size: 17px;
+    font-weight: 800;
+}
+
+.access-card p {
+    margin: 0;
+
+    color: #64748b;
+
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+/* =========================================================
+   FLOATING AI BUTTON
+========================================================= */
+
+.faculty-ai-button {
+    position: fixed;
+
+    right: 28px;
+    bottom: 28px;
+
+    width: 70px;
+    height: 70px;
+
+    padding: 0;
+
+    border: 0;
+    border-radius: 50%;
+
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background:
+        linear-gradient(
+            135deg,
+            #312e81,
+            #4f46e5,
+            #7c3aed,
+            #db2777
+        );
+
+    box-shadow:
+        0 15px 40px
+        rgba(79, 70, 229, 0.42);
+
+    z-index: 9998;
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+.faculty-ai-button:hover {
+    transform:
+        scale(1.10)
+        rotate(-4deg);
+
+    box-shadow:
+        0 20px 50px
+        rgba(79, 70, 229, 0.52);
+}
+
+.faculty-ai-button::before {
+    content: "";
+
+    position: absolute;
+
+    inset: -6px;
+
+    border-radius: 50%;
+
+    border:
+        2px solid
+        rgba(99, 102, 241, 0.25);
+
+    animation:
+        aiRing 2.2s ease-out infinite;
+}
+
+/* AI logo */
+
+.ai-logo-wrap {
+    position: relative;
+    z-index: 2;
+
+    width: 58px;
+    height: 58px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    overflow: hidden;
+
+    background:
+        rgba(255,255,255,0.16);
+
+    border:
+        2px solid
+        rgba(255,255,255,0.28);
+}
+
+.ai-logo-wrap img {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    object-fit: cover;
+
+    border-radius: 50%;
+}
+
+/* If logo3.png is unavailable */
+
+.ai-logo-fallback {
+    display: none;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    height: 100%;
+
+    color: white;
+
+    font-size: 28px;
+}
+
+.ai-logo-wrap.image-error img {
+    display: none;
+}
+
+.ai-logo-wrap.image-error .ai-logo-fallback {
+    display: flex;
+}
+
+/* Label */
+
+.ai-button-label {
+    position: absolute;
+
+    right: 80px;
+    top: 50%;
+
+    transform:
+        translateY(-50%);
+
+    padding: 8px 12px;
+
+    border-radius: 10px;
+
+    white-space: nowrap;
+
+    color: white;
+
+    background:
+        #0f172a;
+
+    font-size: 12px;
+    font-weight: 800;
+
+    opacity: 0;
+    pointer-events: none;
+
+    transition:
+        opacity 0.25s ease,
+        transform 0.25s ease;
+}
+
+.faculty-ai-button:hover .ai-button-label {
+    opacity: 1;
+
+    transform:
+        translateY(-50%)
+        translateX(-3px);
+}
+
+/* =========================================================
+   AI CHAT
+========================================================= */
+
+.faculty-ai-chat {
+    position: fixed;
+
+    right: 28px;
+    bottom: 112px;
+
+    width: min(400px, calc(100vw - 30px));
+    height: 580px;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+
+    border-radius: 24px;
+
+    background:
+        rgba(255,255,255,0.98);
+
+    border:
+        1px solid
+        rgba(148,163,184,0.18);
+
+    box-shadow:
+        0 30px 80px
+        rgba(15,23,42,0.24);
+
+    backdrop-filter: blur(20px);
+
+    z-index: 9999;
+
+    opacity: 0;
+    visibility: hidden;
+
+    transform:
+        translateY(20px)
+        scale(0.96);
+
+    transform-origin:
+        bottom right;
+
+    transition:
+        opacity 0.25s ease,
+        visibility 0.25s ease,
+        transform 0.25s ease;
+}
+
+.faculty-ai-chat.active {
+    opacity: 1;
+    visibility: visible;
+
+    transform:
+        translateY(0)
+        scale(1);
+}
+
+/* =========================================================
+   AI HEADER
+========================================================= */
+
+.ai-chat-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 16px 18px;
+
+    color: white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #312e81,
+            #4f46e5,
+            #7c3aed
+        );
+}
+
+.ai-chat-title {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+}
+
+.ai-chat-avatar {
+    width: 42px;
+    height: 42px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+
+    border-radius: 12px;
+
+    background:
+        rgba(255,255,255,0.16);
+}
+
+.ai-chat-avatar img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+}
+
+.ai-chat-title strong {
+    display: block;
+
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.ai-online {
+    display: flex;
+    align-items: center;
+
+    gap: 5px;
+
+    margin-top: 3px;
+
+    color:
+        rgba(255,255,255,0.75);
+
+    font-size: 10px;
+}
+
+.ai-online-dot {
+    width: 6px;
+    height: 6px;
+
+    border-radius: 50%;
+
+    background: #4ade80;
+}
+
+.ai-close {
+    width: 35px;
+    height: 35px;
+
+    border: 0;
+    border-radius: 10px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+
+    color: white;
+
+    background:
+        rgba(255,255,255,0.10);
+
+    font-size: 18px;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+.ai-close:hover {
+    background:
+        rgba(255,255,255,0.20);
+
+    transform:
+        rotate(90deg);
+}
+
+/* =========================================================
+   MESSAGES
+========================================================= */
+
+.ai-chat-messages {
+    flex: 1;
+
+    padding: 18px;
+
+    overflow-y: auto;
+
+    background:
+        linear-gradient(
+            180deg,
+            #f8fafc,
+            #ffffff
+        );
+}
+
+.ai-message {
+    display: flex;
+
+    margin-bottom: 14px;
+
+    animation:
+        messageEnter 0.25s ease both;
+}
+
+.ai-message.bot {
+    justify-content: flex-start;
+}
+
+.ai-message.user {
+    justify-content: flex-end;
+}
+
+.ai-bubble {
+    max-width: 84%;
+
+    padding: 11px 13px;
+
+    border-radius: 15px;
+
+    font-size: 13px;
+    line-height: 1.55;
+
+    white-space: pre-line;
+    word-break: break-word;
+}
+
+.ai-message.bot .ai-bubble {
+    color: #334155;
+
+    background: white;
+
+    border:
+        1px solid
+        rgba(148,163,184,0.18);
+
+    border-bottom-left-radius: 5px;
+
+    box-shadow:
+        0 5px 15px
+        rgba(15,23,42,0.05);
+}
+
+.ai-message.user .ai-bubble {
+    color: white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #4f46e5,
+            #7c3aed
+        );
+
+    border-bottom-right-radius: 5px;
+}
+
+/* =========================================================
+   TYPING
+========================================================= */
+
+.ai-typing {
+    display: none;
+
+    align-items: center;
+
+    gap: 4px;
+
+    width: fit-content;
+
+    margin-bottom: 12px;
+
+    padding: 10px 13px;
+
+    border-radius: 14px;
+
+    background: white;
+
+    border:
+        1px solid
+        rgba(148,163,184,0.18);
+}
+
+.ai-typing.active {
+    display: flex;
+}
+
+.ai-typing span {
+    width: 6px;
+    height: 6px;
+
+    border-radius: 50%;
+
+    background: #6366f1;
+
+    animation:
+        typingDot 1s infinite ease-in-out;
+}
+
+.ai-typing span:nth-child(2) {
+    animation-delay: 0.15s;
+}
+
+.ai-typing span:nth-child(3) {
+    animation-delay: 0.30s;
+}
+
+/* =========================================================
+   QUICK QUESTIONS
+========================================================= */
+
+.ai-quick {
+    padding: 11px 14px;
+
+    border-top:
+        1px solid
+        rgba(148,163,184,0.12);
+
+    background: white;
+}
+
+.ai-quick-title {
+    margin-bottom: 8px;
+
+    color: #64748b;
+
+    font-size: 10px;
+    font-weight: 800;
+
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+}
+
+.ai-quick-list {
+    display: flex;
+
+    gap: 7px;
+
+    overflow-x: auto;
+
+    padding-bottom: 2px;
+}
+
+.ai-quick-list button {
+    flex-shrink: 0;
+
+    padding: 7px 10px;
+
+    border:
+        1px solid
+        #e2e8f0;
+
+    border-radius: 999px;
+
+    cursor: pointer;
+
+    color: #475569;
+
+    background:
+        #f8fafc;
+
+    font-size: 11px;
+    font-weight: 700;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.ai-quick-list button:hover {
+    color: #4338ca;
+
+    background:
+        #eef2ff;
+
+    transform:
+        translateY(-2px);
+}
+
+/* =========================================================
+   INPUT
+========================================================= */
+
+.ai-chat-input {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    padding: 12px;
+
+    border-top:
+        1px solid
+        rgba(148,163,184,0.14);
+
+    background: white;
+}
+
+.ai-chat-input input {
+    flex: 1;
+
+    min-width: 0;
+
+    padding: 12px 13px;
+
+    outline: none;
+
+    border:
+        1px solid
+        #e2e8f0;
+
+    border-radius: 13px;
+
+    color: #0f172a;
+
+    background:
+        #f8fafc;
+
+    font-size: 13px;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.ai-chat-input input:focus {
+    border-color: #818cf8;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(99,102,241,0.10);
+}
+
+.ai-send {
+    width: 44px;
+    height: 44px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 0;
+    border-radius: 13px;
+
+    cursor: pointer;
+
+    color: white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #4f46e5,
+            #7c3aed
+        );
+
+    font-size: 16px;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.ai-send:hover {
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 8px 18px
+        rgba(79,70,229,0.25);
+}
+
+.ai-send:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+/* =========================================================
+   ANIMATIONS
+========================================================= */
+
+@keyframes heroEnter {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes cardEnter {
+    from {
+        opacity: 0;
+        transform: translateY(18px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes floatingCircle {
+    0%,
+    100% {
+        transform:
+            translateY(0)
+            translateX(0);
+    }
+
+    50% {
+        transform:
+            translateY(-20px)
+            translateX(12px);
+    }
+}
+
+@keyframes aiPulse {
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+@keyframes aiRing {
+    0% {
+        opacity: 0.8;
+        transform: scale(0.9);
+    }
+
+    100% {
+        opacity: 0;
+        transform: scale(1.35);
+    }
+}
+
+@keyframes messageEnter {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes typingDot {
+    0%,
+    60%,
+    100% {
+        transform: translateY(0);
+        opacity: 0.5;
+    }
+
+    30% {
+        transform: translateY(-4px);
+        opacity: 1;
+    }
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 950px) {
+
+    .faculty-actions {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 700px) {
+
+    .faculty-page {
+        padding:
+            20px
+            14px
+            100px;
+    }
+
+    .faculty-hero {
+        padding: 26px 20px;
+        border-radius: 22px;
+    }
+
+    .faculty-hero-content {
+        align-items: flex-start;
+    }
+
+    .hero-ai-badge {
+        width: 82px;
+        height: 82px;
+    }
+
+    .hero-ai-badge i {
+        font-size: 26px;
+    }
+
+    .hero-ai-badge span {
+        font-size: 8px;
+    }
+
+    .profile-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .profile-button {
+        width: 100%;
+    }
+
+    .faculty-actions {
+        grid-template-columns: 1fr;
+    }
+
+    .faculty-ai-button {
+        right: 18px;
+        bottom: 18px;
+
+        width: 62px;
+        height: 62px;
+    }
+
+    .ai-logo-wrap {
+        width: 52px;
+        height: 52px;
+    }
+
+    .faculty-ai-chat {
+        right: 15px;
+        bottom: 92px;
+
+        width:
+            calc(100vw - 30px);
+
+        height:
+            min(
+                580px,
+                calc(100vh - 115px)
+            );
+    }
+
+    .ai-button-label {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .faculty-hero-content {
+        flex-direction: column;
+    }
+
+    .hero-ai-badge {
+        align-self: flex-end;
+        margin-top: -8px;
+    }
+
+    .profile-main {
+        align-items: flex-start;
+    }
+
+    .faculty-avatar {
+        width: 58px;
+        height: 58px;
+
+        border-radius: 17px;
+
+        font-size: 21px;
+    }
+
+    .profile-info h3 {
+        font-size: 17px;
+    }
+
+    .profile-info p {
+        font-size: 12px;
+        word-break: break-word;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+</style>
+
+
+<!-- =========================================================
+     FACULTY DASHBOARD
+========================================================= -->
+
+<div class="faculty-page">
+
+    <div class="faculty-container">
+
+        <!-- =====================================================
+             HERO
+        ====================================================== -->
+
+        <section class="faculty-hero">
+
+            <div class="faculty-hero-content">
+
+                <div class="hero-left">
+
+                    <div class="hero-badge">
+                        <i class="bi bi-mortarboard-fill"></i>
+
+                        Faculty Account
+                    </div>
+
+                    <h1>
+                        CampusNexus AI Faculty Portal
+                    </h1>
+
+                    <p>
+                        Welcome back,
+                        <strong>
+                            <%= faculty.name %>
+                        </strong>
+                        👋
+                        <br>
+
+                        Manage your timetable, students,
+                        attendance, leave and academic
+                        services from one place.
+                    </p>
+
+                </div>
+
+
+                <!-- Faculty AI Icon -->
+
+                <div class="hero-ai-badge">
+
+                    <i class="bi bi-robot"></i>
+
+                    <span>
+                        AI ASSIST
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             PROFILE
+        ====================================================== -->
+
+        <section class="faculty-profile">
+
+            <div class="profile-card">
+
+                <div class="profile-main">
+
+                    <div class="faculty-avatar">
+
+                        <%= faculty.name
+                            ? faculty.name
+                                .split(" ")
+                                .map(n => n[0])
+                                .slice(0, 2)
+                                .join("")
+                                .toUpperCase()
+                            : "F"
+                        %>
+
+                    </div>
+
+
+                    <div class="profile-info">
+
+                        <h3>
+                            <%= faculty.name %>
+                        </h3>
+
+                        <p>
+                            <%= faculty.email %>
+                        </p>
+
+                        <div
+                            class="profile-status"
+                            style="<%= faculty.isActive
+                                ? ''
+                                : 'color:#b91c1c;'
+                            %>"
+                        >
+
+                            <span
+                                class="status-dot"
+                                style="<%= faculty.isActive
+                                    ? ''
+                                    : 'background:#ef4444; box-shadow:0 0 0 4px rgba(239,68,68,.12);'
+                                %>"
+                            ></span>
+
+                            <%= faculty.isActive
+                                ? "Active Faculty"
+                                : "Inactive Faculty"
+                            %>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <a
+                    href="/faculty/profile"
+                    class="profile-button"
+                >
+
+                    <i class="bi bi-person-badge-fill"></i>
+
+                    My Profile
+
+                </a>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             SERVICES TITLE
+        ====================================================== -->
+
+        <div class="section-title">
+
+            <div class="section-title-icon">
+
+                <i class="bi bi-grid-1x2-fill"></i>
+
+            </div>
+
+            <h2>
+                Faculty Services
+            </h2>
+
+        </div>
+
+
+        <!-- =====================================================
+             SERVICES
+        ====================================================== -->
+
+        <section class="faculty-actions">
+
+            <!-- 1 -->
+
+            <a
+                href="/faculty/timetable"
+                class="faculty-action-card"
+            >
+
+                <div class="action-icon">
+                    <i class="bi bi-calendar3"></i>
+                </div>
+
+                <div class="action-content">
+
+                    <h3>
+                        My Timetable
+                    </h3>
+
+                    <p>
+                        View your assigned classes,
+                        days and lecture timings.
+                    </p>
+
+                </div>
+
+            </a>
+
+
+            <!-- 2 -->
+
+            <a
+                href="/faculty/attendance"
+                class="faculty-action-card"
+            >
+
+                <div class="action-icon">
+                    <i class="bi bi-person-check-fill"></i>
+                </div>
+
+                <div class="action-content">
+
+                    <h3>
+                        Student Attendance
+                    </h3>
+
+                    <p>
+                        Manage attendance for students
+                        assigned to your courses.
+                    </p>
+
+                </div>
+
+            </a>
+
+
+            <!-- 3 -->
+
+            <a
+                href="/faculty/my-attendance"
+                class="faculty-action-card"
+            >
+
+                <div class="action-icon">
+                    <i class="bi bi-bar-chart-fill"></i>
+                </div>
+
+                <div class="action-content">
+
+                    <h3>
+                        My Attendance
+                    </h3>
+
+                    <p>
+                        View your personal faculty
+                        attendance records.
+                    </p>
+
+                </div>
+
+            </a>
+
+
+            <!-- 4 -->
+
+            <a
+                href="/faculty/campus-presence"
+                class="faculty-action-card"
+            >
+
+                <div class="action-icon">
+                    <i class="bi bi-geo-alt-fill"></i>
+                </div>
+
+                <div class="action-content">
+
+                    <h3>
+                        Campus Presence
+                    </h3>
+
+                    <p>
+                        Check campus presence information
+                        for assigned students.
+                    </p>
+
+                </div>
+
+            </a>
+
+
+            <!-- 5 -->
+
+            <a
+                href="/faculty/students"
+                class="faculty-action-card"
+            >
+
+                <div class="action-icon">
+                    <i class="bi bi-people-fill"></i>
+                </div>
+
+                <div class="action-content">
+
+                    <h3>
+                        My Students
+                    </h3>
+
+                    <p>
+                        View students belonging to your
+                        assigned academic areas.
+                    </p>
+
+                </div>
+
+            </a>
+
+
+            <!-- 6 -->
+
+            <a
+                href="/faculty/leave"
+                class="faculty-action-card"
+            >
+
+                <div class="action-icon">
+                    <i class="bi bi-calendar2-check-fill"></i>
+                </div>
+
+                <div class="action-content">
+
+                    <h3>
+                        Faculty Leave
+                    </h3>
+
+                    <p>
+                        Apply for leave and check your
+                        annual leave balance.
+                    </p>
+
+                </div>
+
+            </a>
+
+
+            <!-- 7 -->
+
+            <a
+                href="/faculty/requests"
+                class="faculty-action-card"
+            >
+
+                <div class="action-icon">
+                    <i class="bi bi-inbox-fill"></i>
+                </div>
+
+                <div class="action-content">
+
+                    <h3>
+                        Student Requests
+                    </h3>
+
+                    <p>
+                        Review requests submitted by
+                        your assigned students.
+                    </p>
+
+                </div>
+
+            </a>
+
+
+            <!-- 8 -->
+
+            <a
+                href="/faculty/notices"
+                class="faculty-action-card"
+            >
+
+                <div class="action-icon">
+                    <i class="bi bi-megaphone-fill"></i>
+                </div>
+
+                <div class="action-content">
+
+                    <h3>
+                        Notices
+                    </h3>
+
+                    <p>
+                        View university and faculty
+                        related notices.
+                    </p>
+
+                </div>
+
+            </a>
+
+
+            <!-- 9 -->
+
+            <a
+                href="/faculty/profile"
+                class="faculty-action-card"
+            >
+
+                <div class="action-icon">
+                    <i class="bi bi-person-vcard-fill"></i>
+                </div>
+
+                <div class="action-content">
+
+                    <h3>
+                        My Profile
+                    </h3>
+
+                    <p>
+                        View and manage your faculty
+                        account information.
+                    </p>
+
+                </div>
+
+            </a>
+
+        </section>
+
+
+        <!-- =====================================================
+             PRIVACY
+        ====================================================== -->
+
+        <section class="access-card">
+
+            <div class="access-card-inner">
+
+                <div class="access-icon">
+
+                    <i class="bi bi-shield-lock-fill"></i>
+
+                </div>
+
+                <div>
+
+                    <h3>
+                        Faculty Access & Privacy
+                    </h3>
+
+                    <p>
+                        Your faculty account is limited to
+                        academic information assigned to you,
+                        including your courses, students,
+                        sections, timetable and related
+                        academic services. Faculty AI uses
+                        the authenticated faculty session
+                        when answering personal account
+                        questions.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     FLOATING FACULTY AI BUTTON
+========================================================= -->
+
+<button
+    type="button"
+    class="faculty-ai-button"
+    id="facultyAiButton"
+    aria-label="Open CampusNexus Faculty AI"
+>
+
+    <span class="ai-button-label">
+        Ask Faculty AI
+    </span>
+
+
+    <span
+        class="ai-logo-wrap"
+        id="facultyAiLogo"
+    >
+
+        <img
+            src="/images/logo3.png"
+            alt="CampusNexus AI"
+            onerror="
+                document
+                    .getElementById('facultyAiLogo')
+                    .classList.add('image-error');
+            "
+        >
+
+        <span class="ai-logo-fallback">
+            <i class="bi bi-robot"></i>
+        </span>
+
+    </span>
+
+</button>
+
+
+<!-- =========================================================
+     FACULTY AI CHAT
+========================================================= -->
+
+<div
+    class="faculty-ai-chat"
+    id="facultyAiChat"
+    aria-hidden="true"
+>
+
+    <!-- HEADER -->
+
+    <div class="ai-chat-header">
+
+        <div class="ai-chat-title">
+
+            <div class="ai-chat-avatar">
+
+                <img
+                    src="/images/logo3.png"
+                    alt="CampusNexus AI"
+                    onerror="
+                        this.style.display='none';
+                        this.parentElement.innerHTML='<i class=&quot;bi bi-robot&quot; style=&quot;font-size:22px;&quot;></i>';
+                    "
+                >
+
+            </div>
+
+
+            <div>
+
+                <strong>
+                    CampusNexus Faculty AI
+                </strong>
+
+                <div class="ai-online">
+
+                    <span class="ai-online-dot"></span>
+
+                    Faculty dashboard assistant
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <button
+            type="button"
+            class="ai-close"
+            id="facultyAiClose"
+            aria-label="Close AI"
+        >
+
+            <i class="bi bi-x-lg"></i>
+
+        </button>
+
+    </div>
+
+
+    <!-- MESSAGES -->
+
+    <div
+        class="ai-chat-messages"
+        id="facultyAiMessages"
+    >
+
+        <div class="ai-message bot">
+
+            <div class="ai-bubble">
+
+                Hello
+                <strong>
+                    <%= faculty.name %>
+                </strong>
+                👋
+
+                <br><br>
+
+                Main aapke faculty dashboard ki
+                information mein help kar sakta hoon.
+
+                <br><br>
+
+                Aap mujhse apni attendance,
+                leave balance, timetable,
+                students aur profile ke baare mein
+                pooch sakte hain.
+
+            </div>
+
+        </div>
+
+
+        <div
+            class="ai-typing"
+            id="facultyAiTyping"
+        >
+
+            <span></span>
+            <span></span>
+            <span></span>
+
+        </div>
+
+    </div>
+
+
+    <!-- QUICK QUESTIONS -->
+
+    <div class="ai-quick">
+
+        <div class="ai-quick-title">
+            Quick Questions
+        </div>
+
+
+        <div class="ai-quick-list">
+
+            <button
+                type="button"
+                data-question="Meri attendance kitni hai?"
+            >
+                <i class="bi bi-bar-chart-fill"></i>
+                Attendance
+            </button>
+
+
+            <button
+                type="button"
+                data-question="Meri leave balance kitni hai?"
+            >
+                <i class="bi bi-calendar-check"></i>
+                Leave
+            </button>
+
+
+            <button
+                type="button"
+                data-question="Meri timetable dikhao"
+            >
+                <i class="bi bi-calendar3"></i>
+                Timetable
+            </button>
+
+
+            <button
+                type="button"
+                data-question="Meri 10 AM wali class kaunsi hai?"
+            >
+                <i class="bi bi-clock-fill"></i>
+                10 AM
+            </button>
+
+
+            <button
+                type="button"
+                data-question="Mere students kaun hain?"
+            >
+                <i class="bi bi-people-fill"></i>
+                Students
+            </button>
+
+
+            <button
+                type="button"
+                data-question="Mera email kya hai?"
+            >
+                <i class="bi bi-envelope-fill"></i>
+                Email
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- INPUT -->
+
+    <form
+        class="ai-chat-input"
+        id="facultyAiForm"
+    >
+
+        <input
+            type="text"
+            id="facultyAiInput"
+            name="message"
+            placeholder="Ask about your faculty dashboard..."
+            autocomplete="off"
+            maxlength="500"
+        >
+
+
+        <button
+            type="submit"
+            class="ai-send"
+            id="facultyAiSend"
+            aria-label="Send message"
+        >
+
+            <i class="bi bi-send-fill"></i>
+
+        </button>
+
+    </form>
+
+</div>
+
+
+<!-- =========================================================
+     AI JAVASCRIPT
+========================================================= -->
+
+<script>
+(() => {
+
+    "use strict";
+
+
+    /* =====================================================
+       ELEMENTS
+    ====================================================== */
+
+    const aiButton =
+        document.getElementById(
+            "facultyAiButton"
+        );
+
+    const aiChat =
+        document.getElementById(
+            "facultyAiChat"
+        );
+
+    const aiClose =
+        document.getElementById(
+            "facultyAiClose"
+        );
+
+    const aiForm =
+        document.getElementById(
+            "facultyAiForm"
+        );
+
+    const aiInput =
+        document.getElementById(
+            "facultyAiInput"
+        );
+
+    const aiMessages =
+        document.getElementById(
+            "facultyAiMessages"
+        );
+
+    const aiTyping =
+        document.getElementById(
+            "facultyAiTyping"
+        );
+
+    const aiSend =
+        document.getElementById(
+            "facultyAiSend"
+        );
+
+
+    /* =====================================================
+       SAFETY CHECK
+    ====================================================== */
+
+    if (
+        !aiButton ||
+        !aiChat ||
+        !aiClose ||
+        !aiForm ||
+        !aiInput ||
+        !aiMessages ||
+        !aiTyping ||
+        !aiSend
+    ) {
+
+        console.error(
+            "Faculty AI: required elements not found."
+        );
+
+        return;
+
+    }
+
+
+    /* =====================================================
+       OPEN
+    ====================================================== */
+
+    function openAI() {
+
+        aiChat.classList.add(
+            "active"
+        );
+
+        aiChat.setAttribute(
+            "aria-hidden",
+            "false"
+        );
+
+        setTimeout(() => {
+
+            aiInput.focus();
+
+        }, 250);
+
+    }
+
+
+    /* =====================================================
+       CLOSE
+    ====================================================== */
+
+    function closeAI() {
+
+        aiChat.classList.remove(
+            "active"
+        );
+
+        aiChat.setAttribute(
+            "aria-hidden",
+            "true"
+        );
+
+    }
+
+
+    aiButton.addEventListener(
+        "click",
+        () => {
+
+            if (
+                aiChat.classList.contains(
+                    "active"
+                )
+            ) {
+
+                closeAI();
+
+            } else {
+
+                openAI();
+
+            }
+
+        }
+    );
+
+
+    aiClose.addEventListener(
+        "click",
+        closeAI
+    );
+
+
+    /* =====================================================
+       ESC
+    ====================================================== */
+
+    document.addEventListener(
+        "keydown",
+        (event) => {
+
+            if (
+                event.key === "Escape" &&
+                aiChat.classList.contains(
+                    "active"
+                )
+            ) {
+
+                closeAI();
+
+            }
+
+        }
+    );
+
+
+    /* =====================================================
+       ADD MESSAGE
+    ====================================================== */
+
+    function addMessage(
+        message,
+        type
+    ) {
+
+        const wrapper =
+            document.createElement(
+                "div"
+            );
+
+        wrapper.className =
+            "ai-message " +
+            type;
+
+
+        const bubble =
+            document.createElement(
+                "div"
+            );
+
+        bubble.className =
+            "ai-bubble";
+
+
+        bubble.textContent =
+            String(
+                message || ""
+            );
+
+
+        wrapper.appendChild(
+            bubble
+        );
+
+
+        aiMessages.insertBefore(
+            wrapper,
+            aiTyping
+        );
+
+
+        aiMessages.scrollTop =
+            aiMessages.scrollHeight;
+
+    }
+
+
+    /* =====================================================
+       TYPING
+    ====================================================== */
+
+    function setTyping(
+        visible
+    ) {
+
+        if (visible) {
+
+            aiTyping.classList.add(
+                "active"
+            );
+
+        } else {
+
+            aiTyping.classList.remove(
+                "active"
+            );
+
+        }
+
+
+        aiMessages.scrollTop =
+            aiMessages.scrollHeight;
+
+    }
+
+
+    /* =====================================================
+       SEND MESSAGE
+    ====================================================== */
+
+    async function sendMessage(
+        message
+    ) {
+
+        const cleanMessage =
+            String(
+                message || ""
+            ).trim();
+
+
+        if (!cleanMessage) {
+            return;
+        }
+
+
+        addMessage(
+            cleanMessage,
+            "user"
+        );
+
+
+        aiInput.value = "";
+
+        aiInput.disabled = true;
+        aiSend.disabled = true;
+
+
+        setTyping(true);
+
+
+        try {
+
+            const response =
+                await fetch(
+                    "/faculty/ai/chat",
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json",
+
+                            "Accept":
+                                "application/json"
+                        },
+
+                        credentials:
+                            "same-origin",
+
+                        body:
+                            JSON.stringify({
+                                message:
+                                    cleanMessage
+                            })
+                    }
+                );
+
+
+            let data = null;
+
+
+            try {
+
+                data =
+                    await response.json();
+
+            } catch (
+                jsonError
+            ) {
+
+                data = null;
+
+            }
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    data?.reply ||
+                    data?.message ||
+                    "Faculty AI service is unavailable."
+                );
+
+            }
+
+
+            setTyping(false);
+
+
+            addMessage(
+                data?.reply ||
+                data?.answer ||
+                "Sorry, I can only answer questions from my available knowledge.",
+                "bot"
+            );
+
+
+        } catch (error) {
+
+            console.error(
+                "Faculty AI error:",
+                error
+            );
+
+
+            setTyping(false);
+
+
+            addMessage(
+                "Sorry, I can only answer questions from my available knowledge.",
+                "bot"
+            );
+
+
+        } finally {
+
+            aiInput.disabled = false;
+            aiSend.disabled = false;
+
+            aiInput.focus();
+
+        }
+
+    }
+
+
+    /* =====================================================
+       FORM
+    ====================================================== */
+
+    aiForm.addEventListener(
+        "submit",
+        (event) => {
+
+            event.preventDefault();
+
+            sendMessage(
+                aiInput.value
+            );
+
+        }
+    );
+
+
+    /* =====================================================
+       QUICK QUESTIONS
+    ====================================================== */
+
+    document
+        .querySelectorAll(
+            ".ai-quick-list button"
+        )
+        .forEach(
+            (button) => {
+
+                button.addEventListener(
+                    "click",
+                    () => {
+
+                        const question =
+                            button.dataset.question;
+
+                        sendMessage(
+                            question
+                        );
+
+                    }
+                );
+
+            }
+        );
+
+
+    /* =====================================================
+       ENTER
+    ====================================================== */
+
+    aiInput.addEventListener(
+        "keydown",
+        (event) => {
+
+            if (
+                event.key === "Enter" &&
+                !event.shiftKey
+            ) {
+
+                event.preventDefault();
+
+                aiForm.requestSubmit();
+
+            }
+
+        }
+    );
+
+
+    /* =====================================================
+       INITIAL SCROLL
+    ====================================================== */
+
+    aiMessages.scrollTop =
+        aiMessages.scrollHeight;
+
+})();
+</script>

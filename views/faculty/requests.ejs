@@ -1,0 +1,732 @@
+<% layout("layouts/boilerplate") -%>
+<div class="container-fluid py-4">
+
+    <!-- ==========================================
+         HERO
+    =========================================== -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-body p-4 p-lg-5">
+
+            <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3">
+
+                <div>
+
+                    <span class="badge bg-primary-subtle text-primary px-3 py-2 mb-2">
+                        Faculty Services
+                    </span>
+
+                    <h2 class="fw-bold mb-2">
+                        Assigned Requests
+                    </h2>
+
+                    <p class="text-muted mb-0">
+                        Review gate passes and other requests assigned by administration.
+                    </p>
+
+                </div>
+
+                <div class="text-lg-end">
+
+                    <div class="small text-muted">
+                        Total Requests
+                    </div>
+
+                    <div class="display-6 fw-bold">
+                        <%= summary.total %>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         SUMMARY
+    =========================================== -->
+
+    <div class="row g-4 mb-4">
+
+        <div class="col-md-3">
+
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+
+                <div class="card-body p-4">
+
+                    <div class="text-muted small">
+                        Pending
+                    </div>
+
+                    <div class="display-6 fw-bold text-warning mt-2">
+                        <%= summary.pending %>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-md-3">
+
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+
+                <div class="card-body p-4">
+
+                    <div class="text-muted small">
+                        In Progress
+                    </div>
+
+                    <div class="display-6 fw-bold text-primary mt-2">
+                        <%= summary.inProgress %>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-md-3">
+
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+
+                <div class="card-body p-4">
+
+                    <div class="text-muted small">
+                        Resolved
+                    </div>
+
+                    <div class="display-6 fw-bold text-success mt-2">
+                        <%= summary.resolved %>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-md-3">
+
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+
+                <div class="card-body p-4">
+
+                    <div class="text-muted small">
+                        Rejected
+                    </div>
+
+                    <div class="display-6 fw-bold text-danger mt-2">
+                        <%= summary.rejected %>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         FILTER
+    =========================================== -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+        <div class="card-body p-4">
+
+            <form
+                action="/faculty/requests"
+                method="GET"
+                class="row g-3 align-items-end"
+            >
+
+                <div class="col-md-4">
+
+                    <label class="form-label fw-semibold">
+                        Request Type
+                    </label>
+
+                    <select
+                        name="requestType"
+                        class="form-select"
+                    >
+
+                        <option value="">
+                            All Request Types
+                        </option>
+
+                        <option
+                            value="gate_pass"
+                            <%= filters.requestType === "gate_pass" ? "selected" : "" %>
+                        >
+                            Gate Pass
+                        </option>
+
+                        <option
+                            value="student_complaint"
+                            <%= filters.requestType === "student_complaint" ? "selected" : "" %>
+                        >
+                            Student Complaint
+                        </option>
+
+                        <option
+                            value="leave_review"
+                            <%= filters.requestType === "leave_review" ? "selected" : "" %>
+                        >
+                            Leave Review
+                        </option>
+
+                        <option
+                            value="academic_request"
+                            <%= filters.requestType === "academic_request" ? "selected" : "" %>
+                        >
+                            Academic Request
+                        </option>
+
+                        <option
+                            value="other"
+                            <%= filters.requestType === "other" ? "selected" : "" %>
+                        >
+                            Other
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="col-md-4">
+
+                    <label class="form-label fw-semibold">
+                        Status
+                    </label>
+
+                    <select
+                        name="status"
+                        class="form-select"
+                    >
+
+                        <option value="">
+                            All Statuses
+                        </option>
+
+                        <option
+                            value="pending"
+                            <%= filters.status === "pending" ? "selected" : "" %>
+                        >
+                            Pending
+                        </option>
+
+                        <option
+                            value="in_progress"
+                            <%= filters.status === "in_progress" ? "selected" : "" %>
+                        >
+                            In Progress
+                        </option>
+
+                        <option
+                            value="resolved"
+                            <%= filters.status === "resolved" ? "selected" : "" %>
+                        >
+                            Resolved
+                        </option>
+
+                        <option
+                            value="rejected"
+                            <%= filters.status === "rejected" ? "selected" : "" %>
+                        >
+                            Rejected
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="col-md-auto">
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                    >
+                        <i class="bi bi-filter me-2"></i>
+                        Filter
+                    </button>
+
+                </div>
+
+
+                <div class="col-md-auto">
+
+                    <a
+                        href="/faculty/requests"
+                        class="btn btn-outline-secondary"
+                    >
+                        Reset
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         REQUEST LIST
+    =========================================== -->
+
+    <div class="card border-0 shadow-sm rounded-4">
+
+        <div class="card-header bg-white border-0 pt-4 px-4">
+
+            <h5 class="fw-bold mb-1">
+                Requests
+            </h5>
+
+            <p class="text-muted small mb-0">
+                Only requests assigned to your faculty account are displayed.
+            </p>
+
+        </div>
+
+
+        <div class="card-body p-0">
+
+            <% if (!requests.length) { %>
+
+                <div class="text-center py-5">
+
+                    <i class="bi bi-inbox fs-1 text-muted"></i>
+
+                    <h6 class="mt-3">
+                        No requests found
+                    </h6>
+
+                    <p class="text-muted mb-0">
+                        Assigned requests will appear here.
+                    </p>
+
+                </div>
+
+            <% } else { %>
+
+                <div class="table-responsive">
+
+                    <table class="table align-middle mb-0">
+
+                        <thead class="table-light">
+
+                            <tr>
+
+                                <th class="px-4">
+                                    Request
+                                </th>
+
+                                <th>
+                                    Student
+                                </th>
+
+                                <th>
+                                    Academic
+                                </th>
+
+                                <th>
+                                    Priority
+                                </th>
+
+                                <th>
+                                    Status
+                                </th>
+
+                                <th class="text-end px-4">
+                                    Action
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            <% requests.forEach(request => { %>
+
+                                <tr>
+
+                                    <!-- Request -->
+
+                                    <td class="px-4">
+
+                                        <div class="fw-semibold">
+
+                                            <%= request.title %>
+
+                                        </div>
+
+                                        <div class="small text-muted">
+
+                                            <%= request.requestType
+                                                .replace("_", " ")
+                                                .replace(/\b\w/g, c => c.toUpperCase()) %>
+
+                                        </div>
+
+                                        <div
+                                            class="small text-muted mt-1"
+                                            style="max-width:260px;"
+                                        >
+                                            <%= request.description %>
+                                        </div>
+
+                                    </td>
+
+
+                                    <!-- Student -->
+
+                                    <td>
+
+                                        <% if (request.student) { %>
+
+                                            <div class="fw-semibold">
+                                                <%= request.student.name %>
+                                            </div>
+
+                                            <div class="small text-muted">
+                                                <%= request.student.email %>
+                                            </div>
+
+                                        <% } else { %>
+
+                                            <span class="text-muted">
+                                                N/A
+                                            </span>
+
+                                        <% } %>
+
+                                    </td>
+
+
+                                    <!-- Academic -->
+
+                                    <td>
+
+                                        <% if (request.studentProfile) { %>
+
+                                            <div class="fw-semibold">
+                                                <%= request.studentProfile.studentId %>
+                                            </div>
+
+                                            <div class="small text-muted">
+                                                <%= request.studentProfile.program %>
+                                                • Sem <%= request.studentProfile.semester %>
+                                                • Sec <%= request.studentProfile.section || "—" %>
+                                            </div>
+
+                                        <% } else { %>
+
+                                            <span class="text-muted">
+                                                N/A
+                                            </span>
+
+                                        <% } %>
+
+                                    </td>
+
+
+                                    <!-- Priority -->
+
+                                    <td>
+
+                                        <% if (request.priority === "urgent") { %>
+
+                                            <span class="badge bg-danger">
+                                                Urgent
+                                            </span>
+
+                                        <% } else if (request.priority === "high") { %>
+
+                                            <span class="badge bg-warning text-dark">
+                                                High
+                                            </span>
+
+                                        <% } else if (request.priority === "medium") { %>
+
+                                            <span class="badge bg-primary-subtle text-primary">
+                                                Medium
+                                            </span>
+
+                                        <% } else { %>
+
+                                            <span class="badge bg-secondary-subtle text-secondary">
+                                                Low
+                                            </span>
+
+                                        <% } %>
+
+                                    </td>
+
+
+                                    <!-- Status -->
+
+                                    <td>
+
+                                        <% if (request.status === "pending") { %>
+
+                                            <span class="badge bg-warning-subtle text-warning">
+                                                Pending
+                                            </span>
+
+                                        <% } else if (request.status === "in_progress") { %>
+
+                                            <span class="badge bg-primary-subtle text-primary">
+                                                In Progress
+                                            </span>
+
+                                        <% } else if (request.status === "resolved") { %>
+
+                                            <span class="badge bg-success-subtle text-success">
+                                                Resolved
+                                            </span>
+
+                                        <% } else if (request.status === "rejected") { %>
+
+                                            <span class="badge bg-danger-subtle text-danger">
+                                                Rejected
+                                            </span>
+
+                                        <% } else { %>
+
+                                            <span class="badge bg-secondary-subtle text-secondary">
+                                                Cancelled
+                                            </span>
+
+                                        <% } %>
+
+                                    </td>
+
+
+                                    <!-- Action -->
+
+                                    <td class="text-end px-4">
+
+                                        <button
+                                            type="button"
+                                            class="btn btn-sm btn-outline-primary"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#requestModal<%= request._id %>"
+                                        >
+                                            <i class="bi bi-eye me-1"></i>
+                                            Review
+                                        </button>
+
+
+                                        <!-- ==========================================
+                                             REVIEW MODAL
+                                        =========================================== -->
+
+                                        <div
+                                            class="modal fade"
+                                            id="requestModal<%= request._id %>"
+                                            tabindex="-1"
+                                        >
+
+                                            <div class="modal-dialog modal-lg modal-dialog-centered">
+
+                                                <div class="modal-content">
+
+                                                    <div class="modal-header">
+
+                                                        <h5 class="modal-title fw-bold">
+                                                            Review Request
+                                                        </h5>
+
+                                                        <button
+                                                            type="button"
+                                                            class="btn-close"
+                                                            data-bs-dismiss="modal"
+                                                        ></button>
+
+                                                    </div>
+
+
+                                                    <div class="modal-body text-start">
+
+                                                        <div class="mb-3">
+
+                                                            <div class="small text-muted">
+                                                                Title
+                                                            </div>
+
+                                                            <div class="fw-semibold">
+                                                                <%= request.title %>
+                                                            </div>
+
+                                                        </div>
+
+
+                                                        <div class="mb-3">
+
+                                                            <div class="small text-muted">
+                                                                Description
+                                                            </div>
+
+                                                            <div>
+                                                                <%= request.description %>
+                                                            </div>
+
+                                                        </div>
+
+
+                                                        <div class="row g-3 mb-3">
+
+                                                            <div class="col-md-6">
+
+                                                                <div class="small text-muted">
+                                                                    Student
+                                                                </div>
+
+                                                                <div class="fw-semibold">
+                                                                    <%= request.student?.name || "N/A" %>
+                                                                </div>
+
+                                                            </div>
+
+
+                                                            <div class="col-md-6">
+
+                                                                <div class="small text-muted">
+                                                                    Student ID
+                                                                </div>
+
+                                                                <div class="fw-semibold">
+                                                                    <%= request.studentProfile?.studentId || request.studentId || "N/A" %>
+                                                                </div>
+
+                                                            </div>
+
+                                                        </div>
+
+
+                                                        <form
+                                                            action="/faculty/requests/<%= request._id %>/update"
+                                                            method="POST"
+                                                        >
+
+                                                            <div class="mb-3">
+
+                                                                <label class="form-label fw-semibold">
+                                                                    Update Status
+                                                                </label>
+
+                                                                <select
+                                                                    name="status"
+                                                                    class="form-select"
+                                                                    required
+                                                                >
+
+                                                                    <option
+                                                                        value="pending"
+                                                                        <%= request.status === "pending" ? "selected" : "" %>
+                                                                    >
+                                                                        Pending
+                                                                    </option>
+
+                                                                    <option
+                                                                        value="in_progress"
+                                                                        <%= request.status === "in_progress" ? "selected" : "" %>
+                                                                    >
+                                                                        In Progress
+                                                                    </option>
+
+                                                                    <option
+                                                                        value="resolved"
+                                                                        <%= request.status === "resolved" ? "selected" : "" %>
+                                                                    >
+                                                                        Resolved
+                                                                    </option>
+
+                                                                    <option
+                                                                        value="rejected"
+                                                                        <%= request.status === "rejected" ? "selected" : "" %>
+                                                                    >
+                                                                        Rejected
+                                                                    </option>
+
+                                                                </select>
+
+                                                            </div>
+
+
+                                                            <div class="mb-3">
+
+                                                                <label class="form-label fw-semibold">
+                                                                    Faculty Remarks
+                                                                </label>
+
+                                                                <textarea
+                                                                    name="facultyRemarks"
+                                                                    class="form-control"
+                                                                    rows="4"
+                                                                    maxlength="2000"
+                                                                    placeholder="Enter your remarks..."
+                                                                ><%= request.facultyRemarks || "" %></textarea>
+
+                                                            </div>
+
+
+                                                            <div class="text-end">
+
+                                                                <button
+                                                                    type="submit"
+                                                                    class="btn btn-primary"
+                                                                >
+                                                                    <i class="bi bi-check2-circle me-2"></i>
+                                                                    Update Request
+                                                                </button>
+
+                                                            </div>
+
+                                                        </form>
+
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    </td>
+
+                                </tr>
+
+                            <% }) %>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            <% } %>
+
+        </div>
+
+    </div>
+
+</div>

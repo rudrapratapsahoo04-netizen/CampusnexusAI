@@ -1,0 +1,951 @@
+<% layout("layouts/boilerplate") %>
+
+<style>
+    :root {
+        --cn-primary: #4f46e5;
+        --cn-secondary: #7c3aed;
+        --cn-cyan: #06b6d4;
+        --cn-dark: #0f172a;
+        --cn-muted: #64748b;
+        --cn-border: rgba(148, 163, 184, 0.22);
+    }
+
+    .faculty-profile-page {
+        position: relative;
+        min-height: calc(100vh - 80px);
+        overflow: hidden;
+        padding: 32px 0 60px;
+        background:
+            radial-gradient(
+                circle at 10% 10%,
+                rgba(79, 70, 229, 0.13),
+                transparent 30%
+            ),
+            radial-gradient(
+                circle at 90% 20%,
+                rgba(6, 182, 212, 0.12),
+                transparent 28%
+            ),
+            #f8fafc;
+    }
+
+    /* Animated background blobs */
+    .profile-orb {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(2px);
+        opacity: 0.45;
+        pointer-events: none;
+        animation: floatOrb 8s ease-in-out infinite;
+    }
+
+    .orb-one {
+        width: 180px;
+        height: 180px;
+        background: rgba(99, 102, 241, 0.12);
+        top: 80px;
+        left: -70px;
+    }
+
+    .orb-two {
+        width: 220px;
+        height: 220px;
+        background: rgba(6, 182, 212, 0.10);
+        right: -90px;
+        bottom: 80px;
+        animation-delay: 2s;
+    }
+
+    @keyframes floatOrb {
+        0%, 100% {
+            transform: translateY(0) scale(1);
+        }
+
+        50% {
+            transform: translateY(-25px) scale(1.05);
+        }
+    }
+
+    /* Page heading */
+    .profile-heading {
+        animation: fadeDown 0.65s ease both;
+    }
+
+    .profile-heading h1 {
+        font-size: clamp(1.7rem, 3vw, 2.35rem);
+        font-weight: 800;
+        color: var(--cn-dark);
+        letter-spacing: -0.5px;
+    }
+
+    .profile-heading p {
+        color: var(--cn-muted);
+    }
+
+    .heading-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 15px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        background: linear-gradient(
+            135deg,
+            var(--cn-primary),
+            var(--cn-secondary)
+        );
+        box-shadow:
+            0 12px 25px rgba(79, 70, 229, 0.25);
+    }
+
+    /* Main profile card */
+    .profile-hero {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.7);
+        border-radius: 28px;
+        background:
+            linear-gradient(
+                135deg,
+                rgba(255,255,255,0.96),
+                rgba(248,250,252,0.90)
+            );
+        box-shadow:
+            0 25px 70px rgba(15, 23, 42, 0.10);
+        animation: fadeUp 0.75s ease both;
+    }
+
+    .profile-hero::before {
+        content: "";
+        position: absolute;
+        inset: 0 0 auto 0;
+        height: 7px;
+        background: linear-gradient(
+            90deg,
+            #4f46e5,
+            #7c3aed,
+            #06b6d4
+        );
+    }
+
+    .profile-hero-content {
+        position: relative;
+        padding: 42px;
+    }
+
+    /* Avatar */
+    .faculty-avatar-wrapper {
+        position: relative;
+        display: inline-block;
+    }
+
+    .faculty-avatar {
+        width: 132px;
+        height: 132px;
+        border-radius: 38px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 4rem;
+        background:
+            linear-gradient(
+                135deg,
+                #4f46e5,
+                #7c3aed
+            );
+        box-shadow:
+            0 20px 45px rgba(79, 70, 229, 0.30);
+        transition: all 0.35s ease;
+    }
+
+    .faculty-avatar:hover {
+        transform: translateY(-7px) rotate(-2deg);
+        box-shadow:
+            0 28px 55px rgba(79, 70, 229, 0.38);
+    }
+
+    .online-dot {
+        position: absolute;
+        right: -4px;
+        bottom: 8px;
+        width: 25px;
+        height: 25px;
+        border: 4px solid white;
+        border-radius: 50%;
+        background: #22c55e;
+        box-shadow: 0 0 0 5px rgba(34, 197, 94, 0.12);
+        animation: pulseGreen 2s infinite;
+    }
+
+    @keyframes pulseGreen {
+        0%, 100% {
+            box-shadow:
+                0 0 0 5px rgba(34,197,94,.12);
+        }
+
+        50% {
+            box-shadow:
+                0 0 0 10px rgba(34,197,94,.04);
+        }
+    }
+
+    .faculty-name {
+        font-size: clamp(1.7rem, 4vw, 2.4rem);
+        font-weight: 800;
+        color: var(--cn-dark);
+        letter-spacing: -0.7px;
+    }
+
+    .faculty-email {
+        color: var(--cn-muted);
+        word-break: break-word;
+    }
+
+    .role-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 8px 14px;
+        border-radius: 999px;
+        color: #4338ca;
+        background: rgba(99, 102, 241, 0.10);
+        border: 1px solid rgba(99, 102, 241, 0.14);
+        font-size: 0.82rem;
+        font-weight: 700;
+    }
+
+    .active-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 8px 14px;
+        border-radius: 999px;
+        color: #15803d;
+        background: rgba(34, 197, 94, 0.10);
+        border: 1px solid rgba(34, 197, 94, 0.15);
+        font-size: 0.82rem;
+        font-weight: 700;
+    }
+
+    .inactive-badge {
+        color: #b91c1c;
+        background: rgba(239, 68, 68, 0.10);
+        border-color: rgba(239, 68, 68, 0.15);
+    }
+
+    /* Quick info */
+    .quick-info {
+        margin-top: 30px;
+        padding-top: 25px;
+        border-top: 1px solid var(--cn-border);
+    }
+
+    .quick-item {
+        display: flex;
+        align-items: center;
+        gap: 13px;
+    }
+
+    .quick-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 13px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        color: #4f46e5;
+        background: rgba(79, 70, 229, 0.09);
+    }
+
+    .quick-label {
+        color: #94a3b8;
+        font-size: 0.74rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .quick-value {
+        color: #1e293b;
+        font-size: 0.92rem;
+        font-weight: 650;
+        word-break: break-word;
+    }
+
+    /* Information cards */
+    .info-section {
+        margin-top: 26px;
+        animation: fadeUp 0.9s ease both;
+    }
+
+    .section-title {
+        color: var(--cn-dark);
+        font-size: 1.15rem;
+        font-weight: 800;
+    }
+
+    .section-subtitle {
+        color: var(--cn-muted);
+        font-size: 0.88rem;
+    }
+
+    .info-card {
+        height: 100%;
+        padding: 23px;
+        border-radius: 20px;
+        border: 1px solid var(--cn-border);
+        background: rgba(255, 255, 255, 0.85);
+        box-shadow:
+            0 10px 30px rgba(15, 23, 42, 0.055);
+        transition:
+            transform 0.3s ease,
+            box-shadow 0.3s ease,
+            border-color 0.3s ease;
+    }
+
+    .info-card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(99, 102, 241, 0.25);
+        box-shadow:
+            0 18px 40px rgba(15, 23, 42, 0.09);
+    }
+
+    .info-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 13px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 17px;
+        color: #4f46e5;
+        background: linear-gradient(
+            135deg,
+            rgba(79,70,229,.12),
+            rgba(124,58,237,.10)
+        );
+    }
+
+    .info-label {
+        margin-bottom: 5px;
+        color: #94a3b8;
+        font-size: 0.74rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.55px;
+    }
+
+    .info-value {
+        color: #1e293b;
+        font-size: 1rem;
+        font-weight: 700;
+        word-break: break-word;
+    }
+
+    .status-active {
+        color: #16a34a;
+    }
+
+    .status-inactive {
+        color: #dc2626;
+    }
+
+    /* Bottom action */
+    .profile-footer {
+        margin-top: 26px;
+        padding: 20px 24px;
+        border-radius: 20px;
+        border: 1px solid rgba(79,70,229,.10);
+        background: linear-gradient(
+            135deg,
+            rgba(79,70,229,.06),
+            rgba(6,182,212,.05)
+        );
+        animation: fadeUp 1s ease both;
+    }
+
+    .back-dashboard {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 17px;
+        border-radius: 12px;
+        color: #4338ca;
+        background: white;
+        border: 1px solid rgba(79,70,229,.15);
+        text-decoration: none;
+        font-size: 0.88rem;
+        font-weight: 700;
+        transition: all 0.25s ease;
+    }
+
+    .back-dashboard:hover {
+        color: white;
+        background: linear-gradient(
+            135deg,
+            #4f46e5,
+            #7c3aed
+        );
+        transform: translateY(-2px);
+        box-shadow:
+            0 10px 20px rgba(79,70,229,.20);
+    }
+
+    /* Animations */
+    @keyframes fadeUp {
+        from {
+            opacity: 0;
+            transform: translateY(22px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeDown {
+        from {
+            opacity: 0;
+            transform: translateY(-15px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Mobile */
+    @media (max-width: 767.98px) {
+
+        .faculty-profile-page {
+            padding: 22px 0 45px;
+        }
+
+        .profile-hero-content {
+            padding: 28px 22px;
+        }
+
+        .faculty-avatar {
+            width: 105px;
+            height: 105px;
+            border-radius: 30px;
+            font-size: 3.1rem;
+        }
+
+        .faculty-name {
+            margin-top: 20px;
+        }
+
+        .quick-info {
+            gap: 20px;
+        }
+
+        .quick-item {
+            margin-bottom: 18px;
+        }
+
+        .info-card {
+            padding: 20px;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+        }
+    }
+</style>
+
+
+<div class="faculty-profile-page">
+
+    <!-- Decorative Background -->
+    <div class="profile-orb orb-one"></div>
+    <div class="profile-orb orb-two"></div>
+
+
+    <div class="container position-relative">
+
+        <!-- Page Heading -->
+        <div class="profile-heading mb-4">
+
+            <div class="d-flex align-items-center gap-3">
+
+                <div class="heading-icon">
+                    <i class="bi bi-person-badge-fill fs-4"></i>
+                </div>
+
+                <div>
+                    <h1 class="mb-1">
+                        My Faculty Profile
+                    </h1>
+
+                    <p class="mb-0">
+                        View your account and faculty information
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Profile Hero -->
+        <div class="profile-hero">
+
+            <div class="profile-hero-content">
+
+                <div class="row align-items-center">
+
+                    <!-- Avatar -->
+                    <div class="col-lg-2 col-md-3 text-center">
+
+                        <div class="faculty-avatar-wrapper">
+
+                            <div class="faculty-avatar">
+                                <i class="bi bi-person-fill"></i>
+                            </div>
+
+                            <% if (faculty.isActive) { %>
+
+                                <span
+                                    class="online-dot"
+                                    title="Active Account"
+                                ></span>
+
+                            <% } %>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Main Info -->
+                    <div class="col-lg-7 col-md-9 mt-4 mt-md-0">
+
+                        <div class="faculty-name">
+                            <%= faculty.name || "Faculty Member" %>
+                        </div>
+
+                        <div class="faculty-email mt-2">
+                            <i class="bi bi-envelope me-2"></i>
+                            <%= faculty.email || "N/A" %>
+                        </div>
+
+                        <div class="d-flex flex-wrap gap-2 mt-4">
+
+                            <span class="role-badge">
+                                <i class="bi bi-person-workspace"></i>
+                                Faculty
+                            </span>
+
+                            <% if (faculty.isActive) { %>
+
+                                <span class="active-badge">
+                                    <i class="bi bi-check-circle-fill"></i>
+                                    Active Account
+                                </span>
+
+                            <% } else { %>
+
+                                <span class="active-badge inactive-badge">
+                                    <i class="bi bi-x-circle-fill"></i>
+                                    Inactive Account
+                                </span>
+
+                            <% } %>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- CampusNexus Label -->
+                    <div class="col-lg-3 d-none d-lg-block text-end">
+
+                        <div class="text-muted small mb-1">
+                            CAMPUSNEXUS AI
+                        </div>
+
+                        <div class="fw-bold text-dark">
+                            Faculty Portal
+                        </div>
+
+                        <div class="small text-muted mt-1">
+                            Secure Academic Account
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Quick Information -->
+                <div class="quick-info">
+
+                    <div class="row g-4">
+
+                        <div class="col-md-4">
+
+                            <div class="quick-item">
+
+                                <div class="quick-icon">
+                                    <i class="bi bi-shield-check"></i>
+                                </div>
+
+                                <div>
+                                    <div class="quick-label">
+                                        Account Role
+                                    </div>
+
+                                    <div class="quick-value">
+                                        <%= faculty.role || "faculty" %>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-4">
+
+                            <div class="quick-item">
+
+                                <div class="quick-icon">
+                                    <i class="bi bi-clock-history"></i>
+                                </div>
+
+                                <div>
+                                    <div class="quick-label">
+                                        Last Login
+                                    </div>
+
+                                    <div class="quick-value">
+
+                                        <% if (faculty.lastLogin) { %>
+
+                                            <%= new Date(
+                                                faculty.lastLogin
+                                            ).toLocaleString("en-IN", {
+                                                day: "2-digit",
+                                                month: "short",
+                                                year: "numeric",
+                                                hour: "2-digit",
+                                                minute: "2-digit"
+                                            }) %>
+
+                                        <% } else { %>
+
+                                            First login
+
+                                        <% } %>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-4">
+
+                            <div class="quick-item">
+
+                                <div class="quick-icon">
+                                    <i class="bi bi-calendar-check"></i>
+                                </div>
+
+                                <div>
+                                    <div class="quick-label">
+                                        Member Since
+                                    </div>
+
+                                    <div class="quick-value">
+
+                                        <% if (faculty.createdAt) { %>
+
+                                            <%= new Date(
+                                                faculty.createdAt
+                                            ).toLocaleDateString("en-IN", {
+                                                day: "2-digit",
+                                                month: "short",
+                                                year: "numeric"
+                                            }) %>
+
+                                        <% } else { %>
+
+                                            N/A
+
+                                        <% } %>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Account Information -->
+        <div class="info-section">
+
+            <div class="mb-3">
+
+                <div class="section-title">
+                    <i class="bi bi-person-vcard me-2 text-primary"></i>
+                    Account Information
+                </div>
+
+                <div class="section-subtitle mt-1">
+                    Your registered CampusNexus faculty account details.
+                </div>
+
+            </div>
+
+
+            <div class="row g-4">
+
+                <!-- Full Name -->
+                <div class="col-lg-4 col-md-6">
+
+                    <div class="info-card">
+
+                        <div class="info-icon">
+                            <i class="bi bi-person fs-5"></i>
+                        </div>
+
+                        <div class="info-label">
+                            Full Name
+                        </div>
+
+                        <div class="info-value">
+                            <%= faculty.name || "N/A" %>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Email -->
+                <div class="col-lg-4 col-md-6">
+
+                    <div class="info-card">
+
+                        <div class="info-icon">
+                            <i class="bi bi-envelope fs-5"></i>
+                        </div>
+
+                        <div class="info-label">
+                            Email Address
+                        </div>
+
+                        <div class="info-value">
+                            <%= faculty.email || "N/A" %>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Role -->
+                <div class="col-lg-4 col-md-6">
+
+                    <div class="info-card">
+
+                        <div class="info-icon">
+                            <i class="bi bi-person-workspace fs-5"></i>
+                        </div>
+
+                        <div class="info-label">
+                            Account Role
+                        </div>
+
+                        <div class="info-value text-capitalize">
+                            <%= faculty.role || "faculty" %>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Status -->
+                <div class="col-lg-4 col-md-6">
+
+                    <div class="info-card">
+
+                        <div class="info-icon">
+                            <i class="bi bi-activity fs-5"></i>
+                        </div>
+
+                        <div class="info-label">
+                            Account Status
+                        </div>
+
+                        <div class="info-value">
+
+                            <% if (faculty.isActive) { %>
+
+                                <span class="status-active">
+                                    <i class="bi bi-check-circle-fill me-1"></i>
+                                    Active
+                                </span>
+
+                            <% } else { %>
+
+                                <span class="status-inactive">
+                                    <i class="bi bi-x-circle-fill me-1"></i>
+                                    Inactive
+                                </span>
+
+                            <% } %>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Last Login -->
+                <div class="col-lg-4 col-md-6">
+
+                    <div class="info-card">
+
+                        <div class="info-icon">
+                            <i class="bi bi-box-arrow-in-right fs-5"></i>
+                        </div>
+
+                        <div class="info-label">
+                            Last Login
+                        </div>
+
+                        <div class="info-value">
+
+                            <% if (faculty.lastLogin) { %>
+
+                                <%= new Date(
+                                    faculty.lastLogin
+                                ).toLocaleString("en-IN", {
+                                    day: "2-digit",
+                                    month: "short",
+                                    year: "numeric",
+                                    hour: "2-digit",
+                                    minute: "2-digit"
+                                }) %>
+
+                            <% } else { %>
+
+                                <span class="text-muted">
+                                    No login recorded
+                                </span>
+
+                            <% } %>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Account Created -->
+                <div class="col-lg-4 col-md-6">
+
+                    <div class="info-card">
+
+                        <div class="info-icon">
+                            <i class="bi bi-calendar-plus fs-5"></i>
+                        </div>
+
+                        <div class="info-label">
+                            Account Created
+                        </div>
+
+                        <div class="info-value">
+
+                            <% if (faculty.createdAt) { %>
+
+                                <%= new Date(
+                                    faculty.createdAt
+                                ).toLocaleDateString("en-IN", {
+                                    day: "2-digit",
+                                    month: "long",
+                                    year: "numeric"
+                                }) %>
+
+                            <% } else { %>
+
+                                N/A
+
+                            <% } %>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Footer Action -->
+        <div class="profile-footer">
+
+            <div class="d-flex flex-column flex-md-row
+                        justify-content-between
+                        align-items-md-center gap-3">
+
+                <div>
+
+                    <div class="fw-bold text-dark">
+                        <i class="bi bi-shield-lock me-2 text-primary"></i>
+                        Your account is protected
+                    </div>
+
+                    <div class="small text-muted mt-1">
+                        Academic and account information is managed securely.
+                    </div>
+
+                </div>
+
+                <a
+                    href="/faculty/dashboard"
+                    class="back-dashboard"
+                >
+                    <i class="bi bi-arrow-left"></i>
+                    Back to Dashboard
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

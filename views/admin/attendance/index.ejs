@@ -1,0 +1,746 @@
+
+<% layout("layouts/boilerplate") -%>
+<div class="container-fluid py-4">
+
+    <!-- ==========================================
+         HEADER
+    =========================================== -->
+
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+
+        <div>
+
+            <h2 class="fw-bold mb-1">
+                <i class="bi bi-calendar-check text-primary me-2"></i>
+                Attendance Management
+            </h2>
+
+            <p class="text-muted mb-0">
+                Manage monthly student attendance.
+            </p>
+
+        </div>
+
+        <a
+            href="/admin/dashboard"
+            class="btn btn-outline-secondary"
+        >
+            <i class="bi bi-arrow-left me-1"></i>
+            Admin Dashboard
+        </a>
+
+    </div>
+
+
+    <!-- ==========================================
+         FILTER CARD
+    =========================================== -->
+
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-header bg-white py-3">
+
+            <h5 class="fw-bold mb-0">
+                <i class="bi bi-funnel me-2"></i>
+                Select Academic Details
+            </h5>
+
+        </div>
+
+
+        <div class="card-body">
+
+            <form
+                action="/admin/attendance"
+                method="GET"
+                class="row g-3"
+            >
+
+                <!-- Department -->
+
+                <div class="col-12 col-md-6 col-lg-4">
+
+                    <label class="form-label fw-semibold">
+                        Department
+                    </label>
+
+                    <input
+                        type="text"
+                        name="department"
+                        class="form-control"
+                        placeholder="e.g. Computer Science"
+                        value="<%= filters.department %>"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- Program -->
+
+                <div class="col-12 col-md-6 col-lg-4">
+
+                    <label class="form-label fw-semibold">
+                        Program
+                    </label>
+
+                    <input
+                        type="text"
+                        name="program"
+                        class="form-control"
+                        placeholder="e.g. BSc CS"
+                        value="<%= filters.program %>"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- Semester -->
+
+                <div class="col-12 col-md-6 col-lg-2">
+
+                    <label class="form-label fw-semibold">
+                        Semester
+                    </label>
+
+                    <select
+                        name="semester"
+                        class="form-select"
+                        required
+                    >
+
+                        <option value="">
+                            Select
+                        </option>
+
+                        <% for(let i = 1; i <= 8; i++) { %>
+
+                            <option
+                                value="<%= i %>"
+                                <%= Number(filters.semester) === i
+                                    ? "selected"
+                                    : ""
+                                %>
+                            >
+                                Semester <%= i %>
+                            </option>
+
+                        <% } %>
+
+                    </select>
+
+                </div>
+
+
+                <!-- Section -->
+
+                <div class="col-12 col-md-6 col-lg-2">
+
+                    <label class="form-label fw-semibold">
+                        Section
+                    </label>
+
+                    <input
+                        type="text"
+                        name="section"
+                        class="form-control"
+                        placeholder="A"
+                        value="<%= filters.section %>"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- Course Code -->
+
+                <div class="col-12 col-md-6 col-lg-4">
+
+                    <label class="form-label fw-semibold">
+                        Course Code
+                    </label>
+
+                    <input
+                        type="text"
+                        name="courseCode"
+                        class="form-control"
+                        placeholder="e.g. CS301"
+                        value="<%= filters.courseCode %>"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- Course Name -->
+
+                <div class="col-12 col-md-6 col-lg-4">
+
+                    <label class="form-label fw-semibold">
+                        Course Name
+                    </label>
+
+                    <input
+                        type="text"
+                        name="courseName"
+                        class="form-control"
+                        placeholder="e.g. Database Management Systems"
+                        value="<%= filters.courseName %>"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- Month -->
+
+                <div class="col-12 col-md-6 col-lg-2">
+
+                    <label class="form-label fw-semibold">
+                        Month
+                    </label>
+
+                    <select
+                        name="month"
+                        class="form-select"
+                        required
+                    >
+
+                        <% const months = [
+                            "January",
+                            "February",
+                            "March",
+                            "April",
+                            "May",
+                            "June",
+                            "July",
+                            "August",
+                            "September",
+                            "October",
+                            "November",
+                            "December"
+                        ]; %>
+
+
+                        <% months.forEach((monthName, index) => { %>
+
+                            <option
+                                value="<%= index + 1 %>"
+                                <%= Number(filters.month) === index + 1
+                                    ? "selected"
+                                    : ""
+                                %>
+                            >
+                                <%= monthName %>
+                            </option>
+
+                        <% }) %>
+
+                    </select>
+
+                </div>
+
+
+                <!-- Year -->
+
+                <div class="col-12 col-md-6 col-lg-2">
+
+                    <label class="form-label fw-semibold">
+                        Year
+                    </label>
+
+                    <input
+                        type="number"
+                        name="year"
+                        class="form-control"
+                        value="<%= filters.year %>"
+                        min="2000"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- Submit -->
+
+                <div class="col-12">
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                    >
+                        <i class="bi bi-search me-1"></i>
+                        Load Students
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         ATTENDANCE TABLE
+    =========================================== -->
+
+    <% if (students && students.length > 0) { %>
+
+        <form
+            action="/admin/attendance"
+            method="POST"
+        >
+
+            <!-- Hidden academic information -->
+
+            <input
+                type="hidden"
+                name="department"
+                value="<%= filters.department %>"
+            >
+
+            <input
+                type="hidden"
+                name="program"
+                value="<%= filters.program %>"
+            >
+
+            <input
+                type="hidden"
+                name="semester"
+                value="<%= filters.semester %>"
+            >
+
+            <input
+                type="hidden"
+                name="section"
+                value="<%= filters.section %>"
+            >
+
+            <input
+                type="hidden"
+                name="courseCode"
+                value="<%= filters.courseCode %>"
+            >
+
+            <input
+                type="hidden"
+                name="courseName"
+                value="<%= filters.courseName %>"
+            >
+
+            <input
+                type="hidden"
+                name="month"
+                value="<%= filters.month %>"
+            >
+
+            <input
+                type="hidden"
+                name="year"
+                value="<%= filters.year %>"
+            >
+
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-header bg-white py-3">
+
+                    <div class="d-flex flex-column flex-md-row justify-content-between gap-2">
+
+                        <div>
+
+                            <h5 class="fw-bold mb-1">
+                                Student Attendance
+                            </h5>
+
+                            <small class="text-muted">
+
+                                <%= filters.courseCode %>
+                                -
+                                <%= filters.courseName %>
+
+                            </small>
+
+                        </div>
+
+                        <span class="badge bg-primary align-self-start">
+
+                            <%= students.length %>
+                            Students
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="card-body p-0">
+
+                    <div class="table-responsive">
+
+                        <table class="table table-hover align-middle mb-0">
+
+                            <thead class="table-light">
+
+                                <tr>
+
+                                    <th class="px-4">
+                                        #
+                                    </th>
+
+                                    <th>
+                                        Student
+                                    </th>
+
+                                    <th>
+                                        Student ID
+                                    </th>
+
+                                    <th style="min-width: 150px;">
+                                        Total Classes
+                                    </th>
+
+                                    <th style="min-width: 150px;">
+                                        Present
+                                    </th>
+
+                                    <th>
+                                        Absent
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody>
+
+                                <% students.forEach((student, index) => { %>
+
+                                    <%
+                                        const existingAttendance =
+                                            attendanceMap[
+                                                student.user._id.toString()
+                                            ] || {};
+
+                                        const totalClasses =
+                                            existingAttendance.totalClasses || 0;
+
+                                        const presentClasses =
+                                            existingAttendance.presentClasses || 0;
+
+                                        const absentClasses =
+                                            existingAttendance.absentClasses ??
+                                            Math.max(
+                                                0,
+                                                totalClasses - presentClasses
+                                            );
+                                    %>
+
+
+                                    <tr>
+
+                                        <td class="px-4">
+                                            <%= index + 1 %>
+                                        </td>
+
+
+                                        <td>
+
+                                            <div class="fw-semibold">
+                                                <%= student.user.name %>
+                                            </div>
+
+                                            <small class="text-muted">
+                                                <%= student.user.email %>
+                                            </small>
+
+                                        </td>
+
+
+                                        <td>
+
+                                            <span class="badge bg-light text-dark">
+                                                <%= student.studentId %>
+                                            </span>
+
+                                        </td>
+
+
+                                        <!-- Total -->
+
+                                        <td>
+
+                                            <input
+                                                type="number"
+                                                class="form-control"
+                                                name="attendance[<%= student.user._id %>][totalClasses]"
+                                                value="<%= totalClasses %>"
+                                                min="0"
+                                                required
+                                            >
+
+                                        </td>
+
+
+                                        <!-- Present -->
+
+                                        <td>
+
+                                            <input
+                                                type="number"
+                                                class="form-control present-input"
+                                                name="attendance[<%= student.user._id %>][presentClasses]"
+                                                value="<%= presentClasses %>"
+                                                min="0"
+                                                max="<%= totalClasses %>"
+                                                data-total-input="attendance[<%= student.user._id %>][totalClasses]"
+                                                required
+                                            >
+
+                                        </td>
+
+
+                                        <!-- Absent -->
+
+                                        <td>
+
+                                            <span
+                                                class="badge bg-danger-subtle text-danger absent-display"
+                                            >
+                                                <%= absentClasses %>
+                                            </span>
+
+                                        </td>
+
+                                    </tr>
+
+                                <% }) %>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Footer -->
+
+                <div class="card-footer bg-white p-3">
+
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+
+                        <div class="text-muted small">
+
+                            <i class="bi bi-info-circle me-1"></i>
+
+                            Present classes cannot be greater than total classes.
+
+                        </div>
+
+
+                        <button
+                            type="submit"
+                            class="btn btn-success"
+                        >
+                            <i class="bi bi-save me-1"></i>
+                            Save Attendance
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </form>
+
+
+    <% } else if (
+        filters.department &&
+        filters.program &&
+        filters.semester &&
+        filters.section &&
+        filters.courseCode
+    ) { %>
+
+
+        <!-- No Students -->
+
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-body text-center py-5">
+
+                <i class="bi bi-people fs-1 text-muted"></i>
+
+                <h5 class="fw-bold mt-3">
+                    No Students Found
+                </h5>
+
+                <p class="text-muted mb-0">
+                    No students match the selected academic details.
+                </p>
+
+            </div>
+
+        </div>
+
+    <% } else { %>
+
+
+        <!-- Initial State -->
+
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-body text-center py-5">
+
+                <i class="bi bi-funnel fs-1 text-muted"></i>
+
+                <h5 class="fw-bold mt-3">
+                    Select Academic Details
+                </h5>
+
+                <p class="text-muted mb-0">
+                    Select department, program, semester,
+                    section, course and month to load students.
+                </p>
+
+            </div>
+
+        </div>
+
+    <% } %>
+
+</div>
+
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const totalInputs =
+            document.querySelectorAll(
+                'input[name*="[totalClasses]"]'
+            );
+
+        totalInputs.forEach(
+            function (totalInput) {
+
+                totalInput.addEventListener(
+                    "input",
+                    function () {
+
+                        const row =
+                            totalInput.closest("tr");
+
+                        const presentInput =
+                            row.querySelector(
+                                'input[name*="[presentClasses]"]'
+                            );
+
+                        const absentDisplay =
+                            row.querySelector(
+                                ".absent-display"
+                            );
+
+                        const total =
+                            Number(
+                                totalInput.value
+                            ) || 0;
+
+                        const present =
+                            Number(
+                                presentInput.value
+                            ) || 0;
+
+                        presentInput.max =
+                            total;
+
+                        const absent =
+                            Math.max(
+                                0,
+                                total - present
+                            );
+
+                        absentDisplay.textContent =
+                            absent;
+
+                    }
+                );
+
+            }
+        );
+
+
+        const presentInputs =
+            document.querySelectorAll(
+                'input[name*="[presentClasses]"]'
+            );
+
+
+        presentInputs.forEach(
+            function (presentInput) {
+
+                presentInput.addEventListener(
+                    "input",
+                    function () {
+
+                        const row =
+                            presentInput.closest("tr");
+
+                        const totalInput =
+                            row.querySelector(
+                                'input[name*="[totalClasses]"]'
+                            );
+
+                        const absentDisplay =
+                            row.querySelector(
+                                ".absent-display"
+                            );
+
+                        const total =
+                            Number(
+                                totalInput.value
+                            ) || 0;
+
+                        const present =
+                            Number(
+                                presentInput.value
+                            ) || 0;
+
+                        if (present > total) {
+                            presentInput.value =
+                                total;
+                        }
+
+                        const absent =
+                            Math.max(
+                                0,
+                                total -
+                                Number(
+                                    presentInput.value
+                                )
+                            );
+
+                        absentDisplay.textContent =
+                            absent;
+
+                    }
+                );
+
+            }
+        );
+
+    }
+);
+
+</script>

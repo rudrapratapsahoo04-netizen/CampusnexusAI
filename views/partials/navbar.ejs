@@ -1,0 +1,1280 @@
+<nav class="navbar navbar-expand-lg campus-navbar sticky-top">
+
+    <div class="container">
+
+        <!-- ==========================================
+             BRAND
+        =========================================== -->
+        <a
+            class="navbar-brand campus-brand"
+            href="/"
+        >
+            <img
+                src="/images/logo3.png"
+                alt="CampusNexus AI Logo"
+                class="campus-logo"
+            >
+
+            <span class="campus-brand-text">
+                <%= appName %>
+            </span>
+        </a>
+
+
+        <!-- ==========================================
+             MOBILE TOGGLE
+        =========================================== -->
+        <button
+            class="navbar-toggler campus-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#mainNavbar"
+            aria-controls="mainNavbar"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+        >
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+
+        <!-- ==========================================
+             NAVIGATION
+        =========================================== -->
+        <div
+            class="collapse navbar-collapse"
+            id="mainNavbar"
+        >
+
+            <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+
+                <!-- HOME -->
+                <li class="nav-item">
+                    <a
+                        class="nav-link campus-nav-link"
+                        href="/"
+                    >
+                        <i class="bi bi-house-door me-1"></i>
+                        Home
+                    </a>
+                </li>
+
+
+                <!-- FEATURES -->
+                <li class="nav-item">
+                    <a
+                        class="nav-link campus-nav-link"
+                        href="/#features"
+                    >
+                        <i class="bi bi-grid-1x2 me-1"></i>
+                        Features
+                    </a>
+                </li>
+
+
+                <!-- ABOUT -->
+                <li class="nav-item">
+                    <a
+                        class="nav-link campus-nav-link"
+                        href="/#about"
+                    >
+                        <i class="bi bi-info-circle me-1"></i>
+                        About
+                    </a>
+                </li>
+
+            </ul>
+
+
+            <!-- ==========================================
+                 RIGHT SIDE
+            =========================================== -->
+            <div class="d-flex align-items-center gap-2 campus-actions">
+
+                <% if (!currentUser) { %>
+
+                    <!-- LOGIN -->
+                    <a
+                        href="/auth/login"
+                        class="btn campus-login-btn"
+                    >
+                        <i class="bi bi-box-arrow-in-right me-1"></i>
+                        Login
+                    </a>
+
+
+                    <!-- REGISTER -->
+                    <a
+                        href="/auth/register"
+                        class="btn campus-register-btn"
+                    >
+                        <i class="bi bi-person-plus me-1"></i>
+                        Register
+                    </a>
+
+
+                <% } else { %>
+
+                    <!-- USER -->
+                    <span class="campus-user">
+
+                        <span class="campus-user-icon">
+                            <i class="bi bi-person-fill"></i>
+                        </span>
+
+                        <span class="campus-user-name">
+                            <%= currentUser.name %>
+                        </span>
+
+                    </span>
+
+
+                    <!-- STUDENT -->
+                    <% if (currentUser.role === "student") { %>
+
+                        <a
+                            href="/student/dashboard"
+                            class="btn campus-dashboard-btn student-dashboard"
+                        >
+                            <i class="bi bi-speedometer2 me-1"></i>
+                            Dashboard
+                        </a>
+
+                    <% } %>
+
+
+                    <!-- FACULTY -->
+                    <% if (currentUser.role === "faculty") { %>
+
+                        <a
+                            href="/faculty/dashboard"
+                            class="btn campus-dashboard-btn faculty-dashboard"
+                        >
+                            <i class="bi bi-speedometer2 me-1"></i>
+                            Dashboard
+                        </a>
+
+                    <% } %>
+
+
+                    <!-- ADMIN -->
+                    <% if (currentUser.role === "admin") { %>
+
+                        <a
+                            href="/admin/dashboard"
+                            class="btn campus-dashboard-btn admin-dashboard"
+                        >
+                            <i class="bi bi-speedometer2 me-1"></i>
+                            Dashboard
+                        </a>
+
+                    <% } %>
+
+
+                    <!-- LOGOUT -->
+                    <form
+                        action="/auth/logout"
+                        method="POST"
+                        class="d-inline campus-logout-form"
+                    >
+
+                        <button
+                            type="submit"
+                            class="btn campus-logout-btn"
+                        >
+                            <i class="bi bi-box-arrow-right me-1"></i>
+                            Logout
+                        </button>
+
+                    </form>
+
+                <% } %>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</nav>
+
+
+<style>
+
+/* =========================================================
+   CAMPUS NEXUS - DARK PURPLE / MAGENTA NAVBAR
+   ========================================================= */
+
+.campus-navbar {
+
+    /*
+     * Main background inspired by the supplied image:
+     * deep navy + purple + magenta
+     */
+    background:
+        linear-gradient(
+            110deg,
+            #070022 0%,
+            #10002f 35%,
+            #26005f 68%,
+            #7200a8 100%
+        );
+
+    border-bottom:
+        1px solid rgba(255, 255, 255, 0.10);
+
+    box-shadow:
+        0 10px 35px rgba(0, 0, 0, 0.35);
+
+    backdrop-filter:
+        blur(18px);
+
+    -webkit-backdrop-filter:
+        blur(18px);
+
+    min-height: 68px;
+
+    height: auto !important;
+
+    transition:
+        all 0.3s ease;
+
+    z-index: 1030;
+}
+
+
+/* =========================================================
+   SUBTLE GLOW
+   ========================================================= */
+
+.campus-navbar::before {
+
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    pointer-events: none;
+
+    background:
+        radial-gradient(
+            circle at 15% 50%,
+            rgba(173, 0, 255, 0.18),
+            transparent 32%
+        ),
+        radial-gradient(
+            circle at 85% 40%,
+            rgba(255, 0, 200, 0.15),
+            transparent 30%
+        );
+
+    opacity: 0.9;
+}
+
+
+/* =========================================================
+   CONTAINER
+   ========================================================= */
+
+.campus-navbar > .container {
+
+    min-height: 68px;
+
+    height: auto !important;
+
+    display: flex;
+
+    align-items: center;
+
+    position: relative;
+
+    z-index: 2;
+}
+
+
+/* =========================================================
+   BRAND
+   ========================================================= */
+
+.campus-brand {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    color: #ffffff !important;
+
+    font-size: 20px;
+
+    font-weight: 750;
+
+    letter-spacing: -0.4px;
+
+    text-decoration: none;
+
+    height: auto !important;
+
+    line-height: 1;
+
+    flex-shrink: 0;
+
+    transition:
+        transform 0.3s ease;
+}
+
+
+.campus-brand:hover {
+
+    transform:
+        translateY(-1px);
+}
+
+
+/* =========================================================
+   LOGO
+   ========================================================= */
+
+.campus-logo {
+
+    width: 42px;
+
+    height: 42px;
+
+    object-fit: contain;
+
+    border-radius: 11px;
+
+    display: block;
+
+    flex: 0 0 42px;
+
+    background:
+        rgba(255, 255, 255, 0.08);
+
+    border:
+        1px solid rgba(255, 255, 255, 0.18);
+
+    box-shadow:
+        0 5px 20px rgba(168, 0, 255, 0.28);
+
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+
+.campus-brand:hover .campus-logo {
+
+    transform:
+        scale(1.06);
+
+    box-shadow:
+        0 8px 28px rgba(255, 0, 220, 0.45);
+}
+
+
+/* =========================================================
+   BRAND TEXT
+   ========================================================= */
+
+.campus-brand-text {
+
+    color: #ffffff;
+
+    font-size: 20px;
+
+    font-weight: 750;
+
+    line-height: 1;
+
+    letter-spacing: -0.4px;
+
+    white-space: nowrap;
+
+    text-shadow:
+        0 2px 12px rgba(255, 0, 230, 0.25);
+}
+
+
+/* =========================================================
+   NAVBAR COLLAPSE
+   ========================================================= */
+
+.campus-navbar .navbar-collapse {
+
+    height: auto !important;
+
+    min-height: 0 !important;
+
+    max-height: none !important;
+
+    align-items: center;
+}
+
+
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
+
+.campus-navbar .navbar-nav {
+
+    height: auto !important;
+
+    min-height: 0 !important;
+
+    align-items: center;
+}
+
+
+/* =========================================================
+   NAV LINKS
+   ========================================================= */
+
+.campus-nav-link {
+
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding:
+        9px 15px !important;
+
+    margin:
+        0 3px;
+
+    /*
+     * Transparent by default
+     */
+    background:
+        transparent !important;
+
+    border:
+        1px solid transparent;
+
+    color:
+        rgba(255, 255, 255, 0.78) !important;
+
+    font-weight: 600;
+
+    font-size: 14px;
+
+    line-height: 1.4;
+
+    border-radius: 10px;
+
+    height: auto !important;
+
+    min-height: 0 !important;
+
+    transition:
+        color 0.3s ease,
+        background 0.3s ease,
+        border-color 0.3s ease,
+        box-shadow 0.3s ease,
+        transform 0.3s ease;
+}
+
+
+/* =========================================================
+   NAV LINK HOVER
+   ========================================================= */
+
+.campus-nav-link:hover {
+
+    color:
+        #ffffff !important;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(162, 0, 255, 0.32),
+            rgba(255, 0, 204, 0.22)
+        ) !important;
+
+    border-color:
+        rgba(255, 255, 255, 0.13);
+
+    box-shadow:
+        0 6px 20px rgba(166, 0, 255, 0.20);
+
+    transform:
+        translateY(-1px);
+}
+
+
+/* =========================================================
+   ACTIVE / UNDERLINE GLOW
+   ========================================================= */
+
+.campus-nav-link::after {
+
+    content: "";
+
+    position: absolute;
+
+    left: 15px;
+
+    right: 15px;
+
+    bottom: 3px;
+
+    height: 2px;
+
+    border-radius: 20px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #a100ff,
+            #ff00d4
+        );
+
+    box-shadow:
+        0 0 10px rgba(255, 0, 212, 0.65);
+
+    transform:
+        scaleX(0);
+
+    transform-origin:
+        center;
+
+    transition:
+        transform 0.3s ease;
+}
+
+
+.campus-nav-link:hover::after {
+
+    transform:
+        scaleX(1);
+}
+
+
+/* =========================================================
+   RIGHT SIDE
+   ========================================================= */
+
+.campus-actions {
+
+    height: auto !important;
+
+    min-height: 0 !important;
+
+    max-height: none !important;
+
+    align-items: center !important;
+
+    flex-shrink: 0;
+}
+
+
+/* =========================================================
+   USER
+   ========================================================= */
+
+.campus-user {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    color:
+        rgba(255, 255, 255, 0.88);
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    margin-right: 3px;
+
+    max-width: 170px;
+
+    height: auto !important;
+
+    min-height: 0 !important;
+
+    line-height: 1.4;
+}
+
+
+.campus-user-name {
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   USER ICON
+   ========================================================= */
+
+.campus-user-icon {
+
+    width: 32px;
+
+    height: 32px;
+
+    flex: 0 0 32px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 50%;
+
+    color:
+        #ffffff;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(161, 0, 255, 0.65),
+            rgba(255, 0, 212, 0.55)
+        );
+
+    border:
+        1px solid rgba(255, 255, 255, 0.18);
+
+    box-shadow:
+        0 4px 15px rgba(190, 0, 255, 0.25);
+}
+
+
+/* =========================================================
+   ALL BUTTONS - TRANSPARENT DEFAULT
+   ========================================================= */
+
+.campus-login-btn,
+.campus-register-btn,
+.campus-dashboard-btn,
+.campus-logout-btn {
+
+    background:
+        transparent !important;
+
+    box-shadow:
+        none;
+
+    border-radius:
+        9px;
+
+    transition:
+        all 0.3s ease;
+}
+
+
+/* =========================================================
+   LOGIN
+   ========================================================= */
+
+.campus-login-btn {
+
+    color:
+        rgba(255, 255, 255, 0.88) !important;
+
+    border:
+        1px solid rgba(255, 255, 255, 0.20);
+
+    padding:
+        7px 13px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    line-height: 1.4;
+
+    height: auto !important;
+
+    min-height: 0 !important;
+
+    max-height: 42px;
+
+    white-space: nowrap;
+}
+
+
+.campus-login-btn:hover {
+
+    color:
+        #ffffff !important;
+
+    background:
+        linear-gradient(
+            135deg,
+            #7200ff,
+            #d900ff
+        ) !important;
+
+    border-color:
+        transparent;
+
+    box-shadow:
+        0 7px 22px rgba(180, 0, 255, 0.38);
+
+    transform:
+        translateY(-1px);
+}
+
+
+/* =========================================================
+   REGISTER
+   ========================================================= */
+
+.campus-register-btn {
+
+    color:
+        rgba(255, 255, 255, 0.90) !important;
+
+    border:
+        1px solid rgba(255, 255, 255, 0.20);
+
+    padding:
+        7px 14px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    line-height: 1.4;
+
+    height: auto !important;
+
+    min-height: 0 !important;
+
+    max-height: 42px;
+
+    white-space: nowrap;
+}
+
+
+.campus-register-btn:hover {
+
+    color:
+        #ffffff !important;
+
+    background:
+        linear-gradient(
+            135deg,
+            #a000ff,
+            #ff00c8
+        ) !important;
+
+    border-color:
+        transparent;
+
+    box-shadow:
+        0 9px 25px rgba(255, 0, 204, 0.35);
+
+    transform:
+        translateY(-1px);
+}
+
+
+/* =========================================================
+   DASHBOARD BUTTON
+   ========================================================= */
+
+.campus-dashboard-btn {
+
+    display: inline-flex !important;
+
+    align-items: center !important;
+
+    justify-content: center !important;
+
+    width: auto !important;
+
+    height: auto !important;
+
+    min-height: 0 !important;
+
+    max-height: 42px !important;
+
+    padding:
+        7px 13px !important;
+
+    margin: 0 !important;
+
+    border-radius: 9px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    line-height: 1.4;
+
+    white-space: nowrap;
+
+    flex: 0 0 auto;
+
+    align-self: center !important;
+
+    text-decoration: none;
+
+    transition:
+        all 0.3s ease;
+}
+
+
+/* =========================================================
+   STUDENT DASHBOARD
+   ========================================================= */
+
+.student-dashboard {
+
+    color:
+        rgba(255, 255, 255, 0.90) !important;
+
+    background:
+        transparent !important;
+
+    border:
+        1px solid rgba(120, 80, 255, 0.45);
+}
+
+
+.student-dashboard:hover {
+
+    color:
+        #ffffff !important;
+
+    background:
+        linear-gradient(
+            135deg,
+            #5b00ff,
+            #b000ff
+        ) !important;
+
+    border-color:
+        transparent;
+
+    box-shadow:
+        0 8px 24px rgba(105, 0, 255, 0.40);
+
+    transform:
+        translateY(-1px);
+}
+
+
+/* =========================================================
+   FACULTY DASHBOARD
+   ========================================================= */
+
+.faculty-dashboard {
+
+    color:
+        rgba(255, 255, 255, 0.90) !important;
+
+    background:
+        transparent !important;
+
+    border:
+        1px solid rgba(0, 220, 255, 0.30);
+}
+
+
+.faculty-dashboard:hover {
+
+    color:
+        #ffffff !important;
+
+    background:
+        linear-gradient(
+            135deg,
+            #007cff,
+            #00cfff
+        ) !important;
+
+    border-color:
+        transparent;
+
+    box-shadow:
+        0 8px 24px rgba(0, 174, 255, 0.35);
+
+    transform:
+        translateY(-1px);
+}
+
+
+/* =========================================================
+   ADMIN DASHBOARD
+   ========================================================= */
+
+.admin-dashboard {
+
+    color:
+        rgba(255, 255, 255, 0.90) !important;
+
+    background:
+        transparent !important;
+
+    border:
+        1px solid rgba(255, 255, 255, 0.20);
+}
+
+
+.admin-dashboard:hover {
+
+    color:
+        #ffffff !important;
+
+    background:
+        linear-gradient(
+            135deg,
+            #6800ff,
+            #c000ff
+        ) !important;
+
+    border-color:
+        transparent;
+
+    box-shadow:
+        0 8px 24px rgba(160, 0, 255, 0.35);
+
+    transform:
+        translateY(-1px);
+}
+
+
+/* =========================================================
+   LOGOUT
+   ========================================================= */
+
+.campus-logout-form {
+
+    height: auto !important;
+
+    min-height: 0 !important;
+
+    margin: 0 !important;
+
+    padding: 0 !important;
+
+    display: inline-flex;
+
+    align-items: center;
+}
+
+
+.campus-logout-btn {
+
+    display: inline-flex !important;
+
+    align-items: center !important;
+
+    justify-content: center !important;
+
+    width: auto !important;
+
+    height: auto !important;
+
+    min-height: 0 !important;
+
+    max-height: 42px !important;
+
+    color:
+        rgba(255, 255, 255, 0.88) !important;
+
+    background:
+        transparent !important;
+
+    border:
+        1px solid rgba(255, 80, 120, 0.28);
+
+    border-radius: 9px;
+
+    padding:
+        7px 13px;
+
+    margin: 0 !important;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    line-height: 1.4;
+
+    white-space: nowrap;
+
+    transition:
+        all 0.3s ease;
+}
+
+
+.campus-logout-btn:hover {
+
+    color:
+        #ffffff !important;
+
+    background:
+        linear-gradient(
+            135deg,
+            #d0007f,
+            #ff1744
+        ) !important;
+
+    border-color:
+        transparent;
+
+    box-shadow:
+        0 8px 22px rgba(255, 0, 100, 0.30);
+
+    transform:
+        translateY(-1px);
+}
+
+
+/* =========================================================
+   MOBILE TOGGLER
+   ========================================================= */
+
+.campus-toggler {
+
+    border:
+        1px solid rgba(255, 255, 255, 0.18);
+
+    border-radius:
+        9px;
+
+    padding:
+        6px 8px;
+
+    background:
+        rgba(255, 255, 255, 0.06);
+
+    position: relative;
+
+    z-index: 3;
+}
+
+
+.campus-toggler:hover {
+
+    background:
+        rgba(170, 0, 255, 0.22);
+
+    border-color:
+        rgba(255, 255, 255, 0.30);
+}
+
+
+.campus-toggler:focus {
+
+    box-shadow:
+        0 0 0 3px rgba(180, 0, 255, 0.22);
+}
+
+
+/*
+ * Bootstrap normally uses a dark icon.
+ * We make it white for the dark navbar.
+ */
+.campus-toggler .navbar-toggler-icon {
+
+    width: 19px;
+
+    height: 19px;
+
+    filter:
+        brightness(0) invert(1);
+}
+
+
+/* =========================================================
+   TABLET / MOBILE
+   ========================================================= */
+
+@media (max-width: 991px) {
+
+    .campus-navbar {
+
+        padding:
+            7px 0;
+    }
+
+
+    .campus-navbar > .container {
+
+        min-height:
+            54px;
+    }
+
+
+    .campus-navbar .navbar-collapse {
+
+        margin-top:
+            12px;
+
+        padding-top:
+            12px;
+
+        border-top:
+            1px solid rgba(255, 255, 255, 0.10);
+    }
+
+
+    .campus-navbar .navbar-nav {
+
+        align-items:
+            stretch;
+
+        width:
+            100%;
+    }
+
+
+    .campus-nav-link {
+
+        justify-content:
+            flex-start;
+
+        margin:
+            2px 0;
+
+        padding:
+            11px 13px !important;
+    }
+
+
+    .campus-nav-link::after {
+
+        display:
+            none;
+    }
+
+
+    .campus-actions {
+
+        align-items:
+            stretch !important;
+
+        flex-direction:
+            column;
+
+        margin-top:
+            11px;
+
+        padding-top:
+            11px;
+
+        border-top:
+            1px solid rgba(255, 255, 255, 0.10);
+
+        width:
+            100%;
+    }
+
+
+    .campus-user {
+
+        padding:
+            5px 0;
+
+        max-width:
+            none;
+
+        width:
+            100%;
+
+        color:
+            rgba(255, 255, 255, 0.90);
+    }
+
+
+    .campus-actions .btn {
+
+        width:
+            100% !important;
+
+        max-width:
+            none !important;
+
+        justify-content:
+            center;
+    }
+
+
+    .campus-actions form {
+
+        width:
+            100%;
+    }
+
+
+    .campus-actions form button {
+
+        width:
+            100% !important;
+
+        max-width:
+            none !important;
+    }
+
+
+    .campus-dashboard-btn {
+
+        width:
+            100% !important;
+
+        max-height:
+            none !important;
+    }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 575px) {
+
+    .campus-brand-text {
+
+        font-size:
+            18px;
+    }
+
+
+    .campus-logo {
+
+        width:
+            36px;
+
+        height:
+            36px;
+
+        flex-basis:
+            36px;
+    }
+
+
+    .campus-brand {
+
+        gap:
+            7px;
+    }
+
+
+    .campus-navbar {
+
+        padding:
+            6px 0;
+    }
+
+}
+</style>

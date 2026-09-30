@@ -1,0 +1,1066 @@
+<% layout("layouts/boilerplate") -%>
+<div class="container-fluid py-4">
+
+    <!-- ========================================== -->
+    <!-- PAGE HEADER -->
+    <!-- ========================================== -->
+
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+
+        <div>
+            <h2 class="fw-bold mb-1">
+                <i class="bi bi-calendar3 me-2"></i>
+                Timetable Management
+            </h2>
+
+            <p class="text-muted mb-0">
+                Manage university class schedules, faculty, rooms and sections.
+            </p>
+        </div>
+
+        <a
+            href="/admin/timetable/new"
+            class="btn btn-primary"
+        >
+            <i class="bi bi-plus-lg me-1"></i>
+            Add Timetable
+        </a>
+
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- FLASH MESSAGES -->
+    <!-- ========================================== -->
+
+    <% if (typeof messages !== "undefined") { %>
+
+        <% if (messages.success && messages.success.length) { %>
+
+            <% messages.success.forEach(message => { %>
+
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="bi bi-check-circle me-2"></i>
+                    <%= message %>
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert"
+                    ></button>
+                </div>
+
+            <% }) %>
+
+        <% } %>
+
+        <% if (messages.error && messages.error.length) { %>
+
+            <% messages.error.forEach(message => { %>
+
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    <%= message %>
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert"
+                    ></button>
+                </div>
+
+            <% }) %>
+
+        <% } %>
+
+    <% } %>
+
+
+    <!-- ========================================== -->
+    <!-- FILTER CARD -->
+    <!-- ========================================== -->
+
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-header bg-white py-3">
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <h5 class="mb-0 fw-semibold">
+                    <i class="bi bi-funnel me-2"></i>
+                    Filter Timetable
+                </h5>
+
+                <a
+                    href="/admin/timetable"
+                    class="btn btn-sm btn-outline-secondary"
+                >
+                    <i class="bi bi-arrow-counterclockwise me-1"></i>
+                    Reset
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <div class="card-body">
+
+            <form
+                method="GET"
+                action="/admin/timetable"
+                id="timetableFilterForm"
+            >
+
+                <div class="row g-3">
+
+                    <!-- Department -->
+
+                    <div class="col-md-4 col-lg-3">
+
+                        <label class="form-label fw-semibold">
+                            Department
+                        </label>
+
+                        <select
+                            name="department"
+                            id="departmentFilter"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                All Departments
+                            </option>
+
+                            <% (departments || []).forEach(department => { %>
+
+                                <option
+                                    value="<%= department.name %>"
+                                    <%= filters && filters.department &&
+                                        (
+                                            String(filters.department).toLowerCase() ===
+                                            String(department.name).toLowerCase()
+                                            ||
+                                            String(filters.department).toLowerCase() ===
+                                            String(department.code).toLowerCase()
+                                        )
+                                        ? "selected"
+                                        : ""
+                                    %>
+                                >
+                                    <%= department.name %>
+                                    <% if (department.code) { %>
+                                        (<%= department.code %>)
+                                    <% } %>
+                                </option>
+
+                            <% }) %>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Program -->
+
+                    <div class="col-md-4 col-lg-3">
+
+                        <label class="form-label fw-semibold">
+                            Program
+                        </label>
+
+                        <select
+                            name="program"
+                            id="programFilter"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                All Programs
+                            </option>
+
+                            <% (programs || []).forEach(program => { %>
+
+                                <option
+                                    value="<%= program.name %>"
+                                    data-department="<%= program.department %>"
+                                    <%= filters && filters.program &&
+                                        String(filters.program).toLowerCase() ===
+                                        String(program.name).toLowerCase()
+                                        ? "selected"
+                                        : ""
+                                    %>
+                                >
+                                    <%= program.name %>
+                                    <% if (program.code) { %>
+                                        (<%= program.code %>)
+                                    <% } %>
+                                </option>
+
+                            <% }) %>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Semester -->
+
+                    <div class="col-md-4 col-lg-2">
+
+                        <label class="form-label fw-semibold">
+                            Semester
+                        </label>
+
+                        <select
+                            name="semester"
+                            id="semesterFilter"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                All Semesters
+                            </option>
+
+                            <% for (let semester = 1; semester <= 12; semester++) { %>
+
+                                <option
+                                    value="<%= semester %>"
+                                    <%= filters && String(filters.semester) === String(semester)
+                                        ? "selected"
+                                        : ""
+                                    %>
+                                >
+                                    Semester <%= semester %>
+                                </option>
+
+                            <% } %>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Section -->
+
+                    <div class="col-md-4 col-lg-2">
+
+                        <label class="form-label fw-semibold">
+                            Section
+                        </label>
+
+                        <select
+                            name="section"
+                            id="sectionFilter"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                All Sections
+                            </option>
+
+                            <% (sections || []).forEach(section => { %>
+
+                                <% if (section) { %>
+
+                                    <option
+                                        value="<%= section %>"
+                                        <%= filters && filters.section === section
+                                            ? "selected"
+                                            : ""
+                                        %>
+                                    >
+                                        <%= section %>
+                                    </option>
+
+                                <% } %>
+
+                            <% }) %>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Day -->
+
+                    <div class="col-md-4 col-lg-2">
+
+                        <label class="form-label fw-semibold">
+                            Day
+                        </label>
+
+                        <select
+                            name="day"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                All Days
+                            </option>
+
+                            <% const days = [
+                                ["monday", "Monday"],
+                                ["tuesday", "Tuesday"],
+                                ["wednesday", "Wednesday"],
+                                ["thursday", "Thursday"],
+                                ["friday", "Friday"],
+                                ["saturday", "Saturday"]
+                            ]; %>
+
+                            <% days.forEach(item => { %>
+
+                                <option
+                                    value="<%= item[0] %>"
+                                    <%= filters && filters.day === item[0]
+                                        ? "selected"
+                                        : ""
+                                    %>
+                                >
+                                    <%= item[1] %>
+                                </option>
+
+                            <% }) %>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Room -->
+
+                    <div class="col-md-4 col-lg-3">
+
+                        <label class="form-label fw-semibold">
+                            Room
+                        </label>
+
+                        <input
+                            type="text"
+                            name="room"
+                            class="form-control"
+                            placeholder="Search room..."
+                            value="<%= filters && filters.room ? filters.room : '' %>"
+                        >
+
+                    </div>
+
+
+                    <!-- Status -->
+
+                    <div class="col-md-4 col-lg-3">
+
+                        <label class="form-label fw-semibold">
+                            Status
+                        </label>
+
+                        <select
+                            name="status"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                All Status
+                            </option>
+
+                            <option
+                                value="active"
+                                <%= filters && filters.status === "active"
+                                    ? "selected"
+                                    : ""
+                                %>
+                            >
+                                Active
+                            </option>
+
+                            <option
+                                value="inactive"
+                                <%= filters && filters.status === "inactive"
+                                    ? "selected"
+                                    : ""
+                                %>
+                            >
+                                Inactive
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Search -->
+
+                    <div class="col-md-4 col-lg-4">
+
+                        <label class="form-label fw-semibold">
+                            Search
+                        </label>
+
+                        <input
+                            type="text"
+                            id="tableSearch"
+                            class="form-control"
+                            placeholder="Search course, faculty, room..."
+                        >
+
+                    </div>
+
+
+                    <!-- Buttons -->
+
+                    <div class="col-12">
+
+                        <div class="d-flex flex-wrap gap-2">
+
+                            <button
+                                type="submit"
+                                class="btn btn-primary"
+                            >
+                                <i class="bi bi-search me-1"></i>
+                                Apply Filters
+                            </button>
+
+                            <a
+                                href="/admin/timetable"
+                                class="btn btn-outline-secondary"
+                            >
+                                Clear
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- SUMMARY -->
+    <!-- ========================================== -->
+
+    <div class="row g-3 mb-4">
+
+        <div class="col-6 col-md-3">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between">
+
+                        <div>
+                            <div class="text-muted small">
+                                Total Entries
+                            </div>
+
+                            <h3 class="fw-bold mb-0">
+                                <%= (timetable || []).length %>
+                            </h3>
+                        </div>
+
+                        <div class="text-primary fs-3">
+                            <i class="bi bi-calendar-week"></i>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-6 col-md-3">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between">
+
+                        <div>
+                            <div class="text-muted small">
+                                Active
+                            </div>
+
+                            <h3 class="fw-bold mb-0">
+
+                                <%= (timetable || []).filter(
+                                    item => item.isActive
+                                ).length %>
+
+                            </h3>
+                        </div>
+
+                        <div class="text-success fs-3">
+                            <i class="bi bi-check-circle"></i>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-6 col-md-3">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between">
+
+                        <div>
+                            <div class="text-muted small">
+                                Inactive
+                            </div>
+
+                            <h3 class="fw-bold mb-0">
+
+                                <%= (timetable || []).filter(
+                                    item => !item.isActive
+                                ).length %>
+
+                            </h3>
+                        </div>
+
+                        <div class="text-secondary fs-3">
+                            <i class="bi bi-pause-circle"></i>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-6 col-md-3">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between">
+
+                        <div>
+                            <div class="text-muted small">
+                                Faculty Assignments
+                            </div>
+
+                            <h3 class="fw-bold mb-0">
+                                <%= (facultyAssignments || []).length %>
+                            </h3>
+                        </div>
+
+                        <div class="text-info fs-3">
+                            <i class="bi bi-person-badge"></i>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- TIMETABLE TABLE -->
+    <!-- ========================================== -->
+
+    <div class="card border-0 shadow-sm">
+
+        <div class="card-header bg-white py-3">
+
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
+
+                <h5 class="mb-0 fw-semibold">
+                    <i class="bi bi-table me-2"></i>
+                    Timetable Entries
+                </h5>
+
+                <span class="badge text-bg-light border">
+                    <%= (timetable || []).length %> entries
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="card-body p-0">
+
+            <% if (!timetable || timetable.length === 0) { %>
+
+                <div class="text-center py-5 px-3">
+
+                    <div class="display-5 text-muted mb-3">
+                        <i class="bi bi-calendar-x"></i>
+                    </div>
+
+                    <h5 class="fw-semibold">
+                        No timetable entries found
+                    </h5>
+
+                    <p class="text-muted mb-4">
+                        No timetable matches the selected filters.
+                    </p>
+
+                    <a
+                        href="/admin/timetable/new"
+                        class="btn btn-primary"
+                    >
+                        <i class="bi bi-plus-lg me-1"></i>
+                        Create First Timetable
+                    </a>
+
+                </div>
+
+            <% } else { %>
+
+                <div class="table-responsive">
+
+                    <table
+                        class="table table-hover align-middle mb-0"
+                        id="timetableTable"
+                    >
+
+                        <thead class="table-light">
+
+                            <tr>
+
+                                <th class="px-3">
+                                    Day
+                                </th>
+
+                                <th>
+                                    Time
+                                </th>
+
+                                <th>
+                                    Department
+                                </th>
+
+                                <th>
+                                    Program
+                                </th>
+
+                                <th>
+                                    Sem / Sec
+                                </th>
+
+                                <th>
+                                    Course
+                                </th>
+
+                                <th>
+                                    Faculty
+                                </th>
+
+                                <th>
+                                    Room
+                                </th>
+
+                                <th>
+                                    Type
+                                </th>
+
+                                <th>
+                                    Status
+                                </th>
+
+                                <th class="text-end px-3">
+                                    Actions
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            <% timetable.forEach(item => { %>
+
+                                <tr class="<%= item.isActive ? '' : 'table-secondary' %>">
+
+                                    <!-- DAY -->
+
+                                    <td class="px-3">
+
+                                        <span class="fw-semibold text-capitalize">
+                                            <%= item.day %>
+                                        </span>
+
+                                    </td>
+
+
+                                    <!-- TIME -->
+
+                                    <td>
+
+                                        <div class="fw-semibold">
+                                            <%= item.startTime %>
+                                            -
+                                            <%= item.endTime %>
+                                        </div>
+
+                                    </td>
+
+
+                                    <!-- DEPARTMENT -->
+
+                                    <td>
+
+                                        <span class="text-capitalize">
+                                            <%= item.department %>
+                                        </span>
+
+                                    </td>
+
+
+                                    <!-- PROGRAM -->
+
+                                    <td>
+
+                                        <span class="text-capitalize">
+                                            <%= item.program %>
+                                        </span>
+
+                                    </td>
+
+
+                                    <!-- SEMESTER / SECTION -->
+
+                                    <td>
+
+                                        <div class="fw-semibold">
+                                            Sem <%= item.semester %>
+                                        </div>
+
+                                        <div class="text-muted small">
+                                            Section <%= item.section %>
+                                        </div>
+
+                                    </td>
+
+
+                                    <!-- COURSE -->
+
+                                    <td>
+
+                                        <div class="fw-semibold">
+                                            <%= item.courseCode %>
+                                        </div>
+
+                                        <div class="text-muted small">
+                                            <%= item.courseName %>
+                                        </div>
+
+                                    </td>
+
+
+                                    <!-- FACULTY -->
+
+                                    <td>
+
+                                        <div class="fw-semibold">
+                                            <%= item.facultyName || "Not Assigned" %>
+                                        </div>
+
+                                        <% if (item.faculty && item.faculty.email) { %>
+
+                                            <div class="text-muted small">
+                                                <%= item.faculty.email %>
+                                            </div>
+
+                                        <% } %>
+
+                                    </td>
+
+
+                                    <!-- ROOM -->
+
+                                    <td>
+
+                                        <span class="badge text-bg-light border">
+                                            <i class="bi bi-door-open me-1"></i>
+                                            <%= item.room || "TBA" %>
+                                        </span>
+
+                                    </td>
+
+
+                                    <!-- TYPE -->
+
+                                    <td>
+
+                                        <%
+                                            const typeLabels = {
+                                                lecture: "Lecture",
+                                                lab: "Lab",
+                                                tutorial: "Tutorial",
+                                                practical: "Practical",
+                                                seminar: "Seminar"
+                                            };
+
+                                            const typeLabel =
+                                                typeLabels[item.type] ||
+                                                item.type ||
+                                                "Lecture";
+                                        %>
+
+                                        <span class="badge text-bg-primary">
+                                            <%= typeLabel %>
+                                        </span>
+
+                                    </td>
+
+
+                                    <!-- STATUS -->
+
+                                    <td>
+
+                                        <% if (item.isActive) { %>
+
+                                            <span class="badge text-bg-success">
+                                                Active
+                                            </span>
+
+                                        <% } else { %>
+
+                                            <span class="badge text-bg-secondary">
+                                                Inactive
+                                            </span>
+
+                                        <% } %>
+
+                                    </td>
+
+
+                           <!-- ACTIONS -->
+<td class="text-end px-3">
+    <div class="dropdown">
+
+        <button
+            class="btn btn-sm btn-outline-secondary dropdown-toggle"
+            type="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+        >
+            Actions
+        </button>
+
+        <ul class="dropdown-menu dropdown-menu-end">
+
+            <!-- VIEW -->
+            <li>
+                <a
+                    class="dropdown-item"
+                    href="/admin/timetable/<%= item._id %>"
+                >
+                    <i class="bi bi-eye me-2"></i>
+                    View
+                </a>
+            </li>
+
+            <!-- EDIT -->
+            <li>
+                <a
+                    class="dropdown-item"
+                    href="/admin/timetable/<%= item._id %>/edit"
+                >
+                    <i class="bi bi-pencil me-2"></i>
+                    Edit
+                </a>
+            </li>
+
+            <li>
+                <hr class="dropdown-divider">
+            </li>
+
+            <!-- SEND / PUBLISHED STATUS -->
+            <li>
+
+                <% if (item.isPublished === true) { %>
+
+                    <!-- ALREADY PUBLISHED -->
+                    <span
+                        class="dropdown-item-text text-success"
+                    >
+                        <i
+                            class="bi bi-check-circle me-2"
+                        ></i>
+                        Sent to Students
+                    </span>
+
+                <% } else if (item.isActive === true) { %>
+
+                    <!-- NOT PUBLISHED -->
+                    <form
+                        method="POST"
+                        action="/admin/timetable/<%= item._id %>/send-to-students"
+                        onsubmit="return confirm('Send the complete weekly timetable for this department, program, semester and section to students?');"
+                    >
+                        <button
+                            type="submit"
+                            class="dropdown-item text-success"
+                        >
+                            <i
+                                class="bi bi-send me-2"
+                            ></i>
+                            Send to Students
+                        </button>
+                    </form>
+
+                <% } else { %>
+
+                    <!-- INACTIVE -->
+                    <span
+                        class="dropdown-item-text text-muted"
+                    >
+                        <i
+                            class="bi bi-lock me-2"
+                        ></i>
+                        Activate before sending
+                    </span>
+
+                <% } %>
+
+            </li>
+
+            <li>
+                <hr class="dropdown-divider">
+            </li>
+
+            <!-- ACTIVE / INACTIVE -->
+            <li>
+                <form
+                    method="POST"
+                    action="/admin/timetable/<%= item._id %>/toggle-status"
+                    onsubmit="return confirm('Are you sure you want to change the timetable status?');"
+                >
+                    <button
+                        type="submit"
+                        class="dropdown-item"
+                    >
+                        <% if (item.isActive === true) { %>
+
+                            <i
+                                class="bi bi-pause-circle me-2"
+                            ></i>
+                            Deactivate
+
+                        <% } else { %>
+
+                            <i
+                                class="bi bi-play-circle me-2"
+                            ></i>
+                            Activate
+
+                        <% } %>
+                    </button>
+                </form>
+            </li>
+
+        </ul>
+    </div>
+</td>
+                                </tr>
+
+                            <% }) %>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            <% } %>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ========================================== -->
+<!-- CLIENT-SIDE SEARCH -->
+<!-- ========================================== -->
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const searchInput =
+            document.getElementById(
+                "tableSearch"
+            );
+
+        const table =
+            document.getElementById(
+                "timetableTable"
+            );
+
+        if (
+            !searchInput ||
+            !table
+        ) {
+            return;
+        }
+
+        const rows =
+            table.querySelectorAll(
+                "tbody tr"
+            );
+
+        searchInput.addEventListener(
+            "input",
+            function () {
+
+                const search =
+                    this.value
+                        .trim()
+                        .toLowerCase();
+
+                rows.forEach(
+                    function (row) {
+
+                        const text =
+                            row.textContent
+                                .toLowerCase();
+
+                        row.style.display =
+                            text.includes(search)
+                                ? ""
+                                : "none";
+
+                    }
+                );
+
+            }
+        );
+
+    }
+);
+
+</script>

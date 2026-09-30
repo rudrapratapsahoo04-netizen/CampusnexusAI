@@ -1,0 +1,1939 @@
+<% layout("layouts/boilerplate") -%>
+
+<%
+    const selectedAttendance = attendance || null;
+
+    const workingDays =
+        selectedAttendance?.workingDays ?? 0;
+
+    const presentDays =
+        selectedAttendance?.presentDays ?? 0;
+
+    const leaveDays =
+        selectedAttendance?.leaveDays ?? 0;
+
+    const absentDays =
+        selectedAttendance?.absentDays ?? 0;
+
+    const effectiveWorkingDays =
+        Math.max(workingDays - leaveDays, 0);
+
+    const attendancePercentage =
+        effectiveWorkingDays > 0
+            ? (
+                (presentDays /
+                    effectiveWorkingDays) *
+                100
+            ).toFixed(2)
+            : "0.00";
+%>
+
+<div class="faculty-attendance-page">
+
+    <!-- =====================================================
+         PAGE HEADER
+    ====================================================== -->
+
+    <section class="attendance-hero mb-4">
+
+        <div class="hero-content">
+
+            <div class="hero-icon">
+                <i class="bi bi-person-check-fill"></i>
+            </div>
+
+            <div>
+                <span class="hero-eyebrow">
+                    ADMINISTRATION
+                </span>
+
+                <h1>
+                    Faculty Attendance
+                </h1>
+
+                <p>
+                    Manage and update monthly attendance
+                    records for faculty members.
+                </p>
+            </div>
+
+        </div>
+
+        <div class="hero-decoration decoration-one"></div>
+        <div class="hero-decoration decoration-two"></div>
+
+    </section>
+
+
+    <!-- =====================================================
+         FLASH MESSAGES
+    ====================================================== -->
+
+    <% if (typeof messages !== "undefined" && messages.success && messages.success.length) { %>
+
+        <div class="alert alert-success custom-alert">
+            <i class="bi bi-check-circle-fill"></i>
+
+            <div>
+                <strong>Success</strong>
+
+                <div>
+                    <%= messages.success[0] %>
+                </div>
+            </div>
+        </div>
+
+    <% } %>
+
+
+    <% if (typeof messages !== "undefined" && messages.error && messages.error.length) { %>
+
+        <div class="alert alert-danger custom-alert">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+
+            <div>
+                <strong>Something went wrong</strong>
+
+                <div>
+                    <%= messages.error[0] %>
+                </div>
+            </div>
+        </div>
+
+    <% } %>
+
+
+    <!-- =====================================================
+         FILTER / SELECT SECTION
+    ====================================================== -->
+
+    <section class="attendance-panel mb-4">
+
+        <div class="panel-header">
+
+            <div>
+                <span class="section-label">
+                    ATTENDANCE CONTROL
+                </span>
+
+                <h2>
+                    Select Faculty & Period
+                </h2>
+
+                <p>
+                    Choose a faculty member and attendance
+                    period to manage their record.
+                </p>
+            </div>
+
+            <div class="panel-header-icon">
+                <i class="bi bi-sliders2"></i>
+            </div>
+
+        </div>
+
+
+        <form
+            method="GET"
+            action="/admin/faculty-attendance"
+            class="row g-3"
+        >
+
+            <!-- Faculty -->
+
+            <div class="col-12 col-lg-6">
+
+                <label
+                    for="facultyId"
+                    class="form-label"
+                >
+                    Faculty Member
+                </label>
+
+                <div class="input-icon-wrapper">
+
+                    <i class="bi bi-person-badge"></i>
+
+                    <select
+                        id="facultyId"
+                        name="facultyId"
+                        class="form-select input-with-icon"
+                        required
+                    >
+
+                        <option value="">
+                            Select faculty member
+                        </option>
+
+                        <% facultyList.forEach((faculty) => { %>
+
+                            <option
+                                value="<%= faculty._id %>"
+                                <%= filters.facultyId == faculty._id.toString()
+                                    ? "selected"
+                                    : "" %>
+                            >
+                                <%= faculty.name %>
+                                —
+                                <%= faculty.email %>
+                                <% if (!faculty.isActive) { %>
+                                    (Inactive)
+                                <% } %>
+                            </option>
+
+                        <% }) %>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <!-- Month -->
+
+            <div class="col-12 col-md-6 col-lg-3">
+
+                <label
+                    for="month"
+                    class="form-label"
+                >
+                    Month
+                </label>
+
+                <div class="input-icon-wrapper">
+
+                    <i class="bi bi-calendar3"></i>
+
+                    <select
+                        id="month"
+                        name="month"
+                        class="form-select input-with-icon"
+                    >
+
+                        <% const months = [
+                            "January",
+                            "February",
+                            "March",
+                            "April",
+                            "May",
+                            "June",
+                            "July",
+                            "August",
+                            "September",
+                            "October",
+                            "November",
+                            "December"
+                        ]; %>
+
+                        <% months.forEach((monthName, index) => { %>
+
+                            <option
+                                value="<%= index + 1 %>"
+                                <%= Number(filters.month) === index + 1
+                                    ? "selected"
+                                    : "" %>
+                            >
+                                <%= monthName %>
+                            </option>
+
+                        <% }) %>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <!-- Year -->
+
+            <div class="col-12 col-md-6 col-lg-3">
+
+                <label
+                    for="year"
+                    class="form-label"
+                >
+                    Year
+                </label>
+
+                <div class="input-icon-wrapper">
+
+                    <i class="bi bi-calendar-event"></i>
+
+                    <select
+                        id="year"
+                        name="year"
+                        class="form-select input-with-icon"
+                    >
+
+                        <%
+                            const currentYear =
+                                new Date().getFullYear();
+
+                            for (
+                                let y = currentYear - 2;
+                                y <= currentYear + 1;
+                                y++
+                            ) {
+                        %>
+
+                            <option
+                                value="<%= y %>"
+                                <%= Number(filters.year) === y
+                                    ? "selected"
+                                    : "" %>
+                            >
+                                <%= y %>
+                            </option>
+
+                        <% } %>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <!-- Submit -->
+
+            <div class="col-12">
+
+                <button
+                    type="submit"
+                    class="btn btn-primary attendance-load-btn"
+                >
+                    <i class="bi bi-search me-2"></i>
+                    Load Attendance
+                </button>
+
+            </div>
+
+        </form>
+
+    </section>
+
+
+    <% if (selectedFaculty) { %>
+
+        <!-- =================================================
+             FACULTY PROFILE
+        ================================================== -->
+
+        <section class="faculty-profile-card mb-4">
+
+            <div class="profile-main">
+
+                <div class="faculty-avatar">
+
+                    <span>
+                        <%= selectedFaculty.name
+                            .charAt(0)
+                            .toUpperCase() %>
+                    </span>
+
+                </div>
+
+                <div class="faculty-info">
+
+                    <span class="profile-label">
+                        SELECTED FACULTY
+                    </span>
+
+                    <h3>
+                        <%= selectedFaculty.name %>
+                    </h3>
+
+                    <p>
+                        <i class="bi bi-envelope me-1"></i>
+                        <%= selectedFaculty.email %>
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="faculty-status">
+
+                <% if (selectedFaculty.isActive) { %>
+
+                    <span class="status-badge active">
+                        <span></span>
+                        Active
+                    </span>
+
+                <% } else { %>
+
+                    <span class="status-badge inactive">
+                        <span></span>
+                        Inactive
+                    </span>
+
+                <% } %>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             ATTENDANCE SUMMARY
+        ================================================== -->
+
+        <section class="mb-4">
+
+            <div class="summary-grid">
+
+                <!-- Working Days -->
+
+                <div class="summary-card working">
+
+                    <div class="summary-icon">
+                        <i class="bi bi-calendar-week"></i>
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Working Days
+                        </span>
+
+                        <strong id="summaryWorking">
+                            <%= workingDays %>
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Present -->
+
+                <div class="summary-card present">
+
+                    <div class="summary-icon">
+                        <i class="bi bi-check2-circle"></i>
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Present
+                        </span>
+
+                        <strong id="summaryPresent">
+                            <%= presentDays %>
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Leave -->
+
+                <div class="summary-card leave">
+
+                    <div class="summary-icon">
+                        <i class="bi bi-calendar-minus"></i>
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Leave
+                        </span>
+
+                        <strong id="summaryLeave">
+                            <%= leaveDays %>
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Absent -->
+
+                <div class="summary-card absent">
+
+                    <div class="summary-icon">
+                        <i class="bi bi-x-circle"></i>
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Absent
+                        </span>
+
+                        <strong id="summaryAbsent">
+                            <%= absentDays %>
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             ATTENDANCE FORM
+        ================================================== -->
+
+        <section class="attendance-panel mb-4">
+
+            <div class="panel-header">
+
+                <div>
+
+                    <span class="section-label">
+                        MONTHLY RECORD
+                    </span>
+
+                    <h2>
+                        Update Attendance
+                    </h2>
+
+                    <p>
+                        Enter the faculty member's attendance
+                        details for the selected month.
+                    </p>
+
+                </div>
+
+                <div class="panel-header-icon success-icon">
+                    <i class="bi bi-pencil-square"></i>
+                </div>
+
+            </div>
+
+
+            <form
+                method="POST"
+                action="/admin/faculty-attendance"
+                id="attendanceForm"
+            >
+
+                <input
+                    type="hidden"
+                    name="facultyId"
+                    value="<%= filters.facultyId %>"
+                >
+
+                <input
+                    type="hidden"
+                    name="month"
+                    value="<%= filters.month %>"
+                >
+
+                <input
+                    type="hidden"
+                    name="year"
+                    value="<%= filters.year %>"
+                >
+
+
+                <div class="row g-4">
+
+                    <!-- Working Days -->
+
+                    <div class="col-12 col-md-6 col-xl-3">
+
+                        <div class="attendance-input-card">
+
+                            <label
+                                for="workingDays"
+                                class="form-label"
+                            >
+                                Working Days
+                            </label>
+
+                            <div class="number-input-wrapper">
+
+                                <i class="bi bi-calendar-check"></i>
+
+                                <input
+                                    type="number"
+                                    id="workingDays"
+                                    name="workingDays"
+                                    class="form-control attendance-number"
+                                    min="0"
+                                    value="<%= workingDays %>"
+                                    required
+                                >
+
+                            </div>
+
+                            <small>
+                                Total official working days
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Present -->
+
+                    <div class="col-12 col-md-6 col-xl-3">
+
+                        <div class="attendance-input-card present-input">
+
+                            <label
+                                for="presentDays"
+                                class="form-label"
+                            >
+                                Present Days
+                            </label>
+
+                            <div class="number-input-wrapper">
+
+                                <i class="bi bi-check-circle"></i>
+
+                                <input
+                                    type="number"
+                                    id="presentDays"
+                                    name="presentDays"
+                                    class="form-control attendance-number"
+                                    min="0"
+                                    value="<%= presentDays %>"
+                                    required
+                                >
+
+                            </div>
+
+                            <small>
+                                Days faculty was present
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Leave -->
+
+                    <div class="col-12 col-md-6 col-xl-3">
+
+                        <div class="attendance-input-card leave-input">
+
+                            <label
+                                for="leaveDays"
+                                class="form-label"
+                            >
+                                Approved Leave
+                            </label>
+
+                            <div class="number-input-wrapper">
+
+                                <i class="bi bi-calendar-minus"></i>
+
+                                <input
+                                    type="number"
+                                    id="leaveDays"
+                                    name="leaveDays"
+                                    class="form-control attendance-number"
+                                    min="0"
+                                    value="<%= leaveDays %>"
+                                    required
+                                >
+
+                            </div>
+
+                            <small>
+                                Approved leave days
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Absent -->
+
+                    <div class="col-12 col-md-6 col-xl-3">
+
+                        <div class="attendance-input-card absent-input">
+
+                            <label class="form-label">
+                                Absent Days
+                            </label>
+
+                            <div class="number-input-wrapper">
+
+                                <i class="bi bi-x-circle"></i>
+
+                                <input
+                                    type="number"
+                                    id="absentDays"
+                                    class="form-control attendance-number"
+                                    value="<%= absentDays %>"
+                                    readonly
+                                >
+
+                            </div>
+
+                            <small>
+                                Automatically calculated
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Live Percentage -->
+
+                <div class="live-attendance-box mt-4">
+
+                    <div class="percentage-content">
+
+                        <div class="percentage-icon">
+                            <i class="bi bi-graph-up-arrow"></i>
+                        </div>
+
+                        <div>
+
+                            <span>
+                                Attendance Percentage
+                            </span>
+
+                            <strong id="attendancePercentage">
+                                <%= attendancePercentage %>%
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                    <div class="percentage-bar">
+
+                        <div
+                            id="attendanceProgress"
+                            class="percentage-progress"
+                            style="width:<%= Math.min(
+                                Number(attendancePercentage),
+                                100
+                            ) %>%"
+                        ></div>
+
+                    </div>
+
+                    <small>
+                        Approved leave is excluded from
+                        effective attendance calculation.
+                    </small>
+
+                </div>
+
+
+                <!-- Form Actions -->
+
+                <div class="form-actions mt-4">
+
+                    <a
+                        href="/admin/faculty-attendance"
+                        class="btn btn-light action-secondary"
+                    >
+                        <i class="bi bi-arrow-counterclockwise me-2"></i>
+                        Reset
+                    </a>
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary save-attendance-btn"
+                        id="saveAttendanceBtn"
+                    >
+                        <i class="bi bi-cloud-arrow-up me-2"></i>
+                        Save Attendance
+                    </button>
+
+                </div>
+
+            </form>
+
+        </section>
+
+
+    <% } else { %>
+
+        <!-- =================================================
+             EMPTY STATE
+        ================================================== -->
+
+        <section class="empty-attendance-state">
+
+            <div class="empty-icon">
+                <i class="bi bi-person-lines-fill"></i>
+            </div>
+
+            <h3>
+                Select a Faculty Member
+            </h3>
+
+            <p>
+                Choose a faculty member, month and year
+                above to view or update attendance.
+            </p>
+
+        </section>
+
+    <% } %>
+
+
+    <!-- =====================================================
+         INFORMATION CARD
+    ====================================================== -->
+
+    <section class="info-card">
+
+        <div class="info-icon">
+            <i class="bi bi-shield-check"></i>
+        </div>
+
+        <div>
+
+            <h5>
+                Attendance Control
+            </h5>
+
+            <p>
+                Faculty members can only view their own
+                attendance. Attendance records can be
+                created or updated by authorized
+                administrators.
+            </p>
+
+        </div>
+
+    </section>
+
+</div>
+
+
+<style>
+
+/* =========================================================
+   PAGE
+========================================================= */
+
+.faculty-attendance-page {
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 8px 4px 40px;
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.attendance-hero {
+    position: relative;
+    overflow: hidden;
+    border-radius: 24px;
+    padding: 34px;
+    background:
+        linear-gradient(
+            135deg,
+            #172554 0%,
+            #3730a3 52%,
+            #4f46e5 100%
+        );
+    color: #fff;
+    box-shadow:
+        0 18px 50px rgba(37, 38, 120, 0.22);
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.hero-icon {
+    width: 68px;
+    height: 68px;
+    flex-shrink: 0;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 29px;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    backdrop-filter: blur(10px);
+}
+
+.hero-eyebrow {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.7px;
+    opacity: .72;
+}
+
+.attendance-hero h1 {
+    margin: 0;
+    font-size: clamp(26px, 4vw, 38px);
+    font-weight: 800;
+    letter-spacing: -1px;
+}
+
+.attendance-hero p {
+    margin: 8px 0 0;
+    color: rgba(255, 255, 255, .78);
+    font-size: 14px;
+}
+
+.hero-decoration {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.decoration-one {
+    width: 220px;
+    height: 220px;
+    right: -70px;
+    top: -100px;
+    background: rgba(255, 255, 255, .07);
+}
+
+.decoration-two {
+    width: 150px;
+    height: 150px;
+    right: 18%;
+    bottom: -110px;
+    background: rgba(255, 255, 255, .05);
+}
+
+
+/* =========================================================
+   ALERT
+========================================================= */
+
+.custom-alert {
+    border: 0;
+    border-radius: 16px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 17px 20px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, .05);
+}
+
+.custom-alert > i {
+    font-size: 21px;
+}
+
+
+/* =========================================================
+   PANELS
+========================================================= */
+
+.attendance-panel {
+    background: #fff;
+    border: 1px solid #e9edf5;
+    border-radius: 22px;
+    padding: 28px;
+    box-shadow: 0 10px 35px rgba(15, 23, 42, .055);
+}
+
+.panel-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 26px;
+}
+
+.section-label {
+    display: block;
+    margin-bottom: 5px;
+    color: #6366f1;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+}
+
+.panel-header h2 {
+    margin: 0;
+    color: #172033;
+    font-size: 21px;
+    font-weight: 750;
+}
+
+.panel-header p {
+    margin: 6px 0 0;
+    color: #7a8497;
+    font-size: 13px;
+}
+
+.panel-header-icon {
+    width: 46px;
+    height: 46px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+    color: #4f46e5;
+    background: #eef2ff;
+    font-size: 19px;
+}
+
+.success-icon {
+    color: #059669;
+    background: #ecfdf5;
+}
+
+
+/* =========================================================
+   FORM
+========================================================= */
+
+.form-label {
+    color: #273044;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.input-icon-wrapper,
+.number-input-wrapper {
+    position: relative;
+}
+
+.input-icon-wrapper > i,
+.number-input-wrapper > i {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    color: #818ba0;
+    pointer-events: none;
+}
+
+.form-select,
+.form-control {
+    min-height: 48px;
+    border-color: #dfe4ed;
+    border-radius: 12px;
+    font-size: 14px;
+    box-shadow: none !important;
+}
+
+.input-with-icon {
+    padding-left: 42px;
+}
+
+.form-select:focus,
+.form-control:focus {
+    border-color: #818cf8;
+    box-shadow:
+        0 0 0 4px rgba(99, 102, 241, .10) !important;
+}
+
+.attendance-load-btn {
+    min-height: 47px;
+    padding: 0 23px;
+    border: 0;
+    border-radius: 12px;
+    font-weight: 700;
+    background: #4f46e5;
+    transition: .2s ease;
+}
+
+.attendance-load-btn:hover {
+    transform: translateY(-1px);
+    background: #4338ca;
+}
+
+
+/* =========================================================
+   FACULTY PROFILE
+========================================================= */
+
+.faculty-profile-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 24px 27px;
+    border-radius: 20px;
+    background: #fff;
+    border: 1px solid #e9edf5;
+    box-shadow: 0 10px 35px rgba(15, 23, 42, .05);
+}
+
+.profile-main {
+    display: flex;
+    align-items: center;
+    gap: 17px;
+}
+
+.faculty-avatar {
+    width: 62px;
+    height: 62px;
+    flex-shrink: 0;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 23px;
+    font-weight: 800;
+    background:
+        linear-gradient(
+            135deg,
+            #4f46e5,
+            #7c3aed
+        );
+    box-shadow:
+        0 9px 22px rgba(79, 70, 229, .22);
+}
+
+.profile-label {
+    color: #8b94a7;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.4px;
+}
+
+.faculty-info h3 {
+    margin: 2px 0 3px;
+    color: #172033;
+    font-size: 20px;
+    font-weight: 750;
+}
+
+.faculty-info p {
+    margin: 0;
+    color: #7c8699;
+    font-size: 13px;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.status-badge span {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+}
+
+.status-badge.active {
+    color: #047857;
+    background: #ecfdf5;
+}
+
+.status-badge.active span {
+    background: #10b981;
+}
+
+.status-badge.inactive {
+    color: #b45309;
+    background: #fffbeb;
+}
+
+.status-badge.inactive span {
+    background: #f59e0b;
+}
+
+
+/* =========================================================
+   SUMMARY
+========================================================= */
+
+.summary-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.summary-card {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 21px;
+    border-radius: 18px;
+    background: #fff;
+    border: 1px solid #e9edf5;
+    box-shadow: 0 9px 28px rgba(15, 23, 42, .045);
+}
+
+.summary-card::after {
+    content: "";
+    position: absolute;
+    width: 70px;
+    height: 70px;
+    right: -25px;
+    bottom: -30px;
+    border-radius: 50%;
+    opacity: .45;
+}
+
+.summary-icon {
+    width: 47px;
+    height: 47px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+    font-size: 20px;
+}
+
+.summary-card span {
+    display: block;
+    color: #8a93a5;
+    font-size: 11px;
+    font-weight: 700;
+    margin-bottom: 3px;
+}
+
+.summary-card strong {
+    display: block;
+    color: #172033;
+    font-size: 25px;
+    font-weight: 800;
+}
+
+.summary-card.working .summary-icon {
+    color: #4f46e5;
+    background: #eef2ff;
+}
+
+.summary-card.working::after {
+    background: #c7d2fe;
+}
+
+.summary-card.present .summary-icon {
+    color: #059669;
+    background: #ecfdf5;
+}
+
+.summary-card.present::after {
+    background: #a7f3d0;
+}
+
+.summary-card.leave .summary-icon {
+    color: #d97706;
+    background: #fffbeb;
+}
+
+.summary-card.leave::after {
+    background: #fde68a;
+}
+
+.summary-card.absent .summary-icon {
+    color: #dc2626;
+    background: #fef2f2;
+}
+
+.summary-card.absent::after {
+    background: #fecaca;
+}
+
+
+/* =========================================================
+   INPUT CARDS
+========================================================= */
+
+.attendance-input-card {
+    padding: 19px;
+    border: 1px solid #e8ebf2;
+    border-radius: 16px;
+    background: #fafbfc;
+}
+
+.attendance-input-card .form-label {
+    display: block;
+}
+
+.attendance-input-card small {
+    display: block;
+    margin-top: 7px;
+    color: #8b94a7;
+    font-size: 11px;
+}
+
+.number-input-wrapper .form-control {
+    padding-left: 42px;
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.present-input {
+    border-color: #d1fae5;
+    background: #f8fffc;
+}
+
+.leave-input {
+    border-color: #fef3c7;
+    background: #fffdf7;
+}
+
+.absent-input {
+    border-color: #fee2e2;
+    background: #fffafa;
+}
+
+
+/* =========================================================
+   LIVE PERCENTAGE
+========================================================= */
+
+.live-attendance-box {
+    padding: 22px;
+    border-radius: 17px;
+    background: #f8faff;
+    border: 1px solid #e4e8f5;
+}
+
+.percentage-content {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.percentage-icon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+    color: #4f46e5;
+    background: #eef2ff;
+    font-size: 20px;
+}
+
+.percentage-content span {
+    display: block;
+    color: #737e92;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.percentage-content strong {
+    display: block;
+    margin-top: 2px;
+    color: #172033;
+    font-size: 27px;
+    font-weight: 800;
+}
+
+.percentage-bar {
+    height: 9px;
+    margin: 17px 0 8px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: #e8eaf2;
+}
+
+.percentage-progress {
+    height: 100%;
+    border-radius: inherit;
+    background:
+        linear-gradient(
+            90deg,
+            #4f46e5,
+            #7c3aed
+        );
+    transition: width .3s ease;
+}
+
+.live-attendance-box > small {
+    color: #8992a5;
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   ACTIONS
+========================================================= */
+
+.form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.action-secondary,
+.save-attendance-btn {
+    min-height: 46px;
+    padding: 0 20px;
+    border-radius: 11px;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.action-secondary {
+    border: 1px solid #e3e7ef;
+    color: #596378;
+}
+
+.save-attendance-btn {
+    border: 0;
+    background: #4f46e5;
+    box-shadow:
+        0 8px 20px rgba(79, 70, 229, .20);
+    transition: .2s ease;
+}
+
+.save-attendance-btn:hover {
+    transform: translateY(-1px);
+    background: #4338ca;
+}
+
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+.empty-attendance-state {
+    padding: 65px 25px;
+    text-align: center;
+    border: 1px dashed #d8deea;
+    border-radius: 22px;
+    background: #fafbfe;
+}
+
+.empty-icon {
+    width: 70px;
+    height: 70px;
+    margin: 0 auto 17px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+    color: #6366f1;
+    background: #eef2ff;
+    font-size: 28px;
+}
+
+.empty-attendance-state h3 {
+    margin-bottom: 7px;
+    color: #273044;
+    font-size: 19px;
+    font-weight: 750;
+}
+
+.empty-attendance-state p {
+    max-width: 480px;
+    margin: auto;
+    color: #858fa2;
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   INFO
+========================================================= */
+
+.info-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    padding: 20px;
+    border-radius: 17px;
+    background: #f0fdf9;
+    border: 1px solid #ccfbf1;
+}
+
+.info-icon {
+    width: 43px;
+    height: 43px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    color: #0f766e;
+    background: #ccfbf1;
+    font-size: 19px;
+}
+
+.info-card h5 {
+    margin: 1px 0 4px;
+    color: #134e4a;
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.info-card p {
+    margin: 0;
+    color: #4f7773;
+    font-size: 12px;
+    line-height: 1.65;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1100px) {
+
+    .summary-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+}
+
+
+@media (max-width: 767px) {
+
+    .faculty-attendance-page {
+        padding: 0 0 30px;
+    }
+
+    .attendance-hero {
+        padding: 25px 21px;
+        border-radius: 19px;
+    }
+
+    .hero-content {
+        align-items: flex-start;
+    }
+
+    .hero-icon {
+        width: 52px;
+        height: 52px;
+        border-radius: 15px;
+        font-size: 22px;
+    }
+
+    .attendance-hero h1 {
+        font-size: 26px;
+    }
+
+    .attendance-panel {
+        padding: 21px;
+        border-radius: 18px;
+    }
+
+    .panel-header {
+        margin-bottom: 21px;
+    }
+
+    .panel-header h2 {
+        font-size: 18px;
+    }
+
+    .faculty-profile-card {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 20px;
+    }
+
+    .faculty-status {
+        width: 100%;
+    }
+
+    .summary-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .summary-card {
+        padding: 18px;
+    }
+
+    .form-actions {
+        flex-direction: column-reverse;
+    }
+
+    .form-actions .btn {
+        width: 100%;
+    }
+
+}
+
+
+@media (max-width: 480px) {
+
+    .attendance-hero {
+        border-radius: 16px;
+    }
+
+    .hero-content {
+        gap: 13px;
+    }
+
+    .hero-icon {
+        width: 46px;
+        height: 46px;
+        font-size: 19px;
+    }
+
+    .attendance-hero h1 {
+        font-size: 22px;
+        letter-spacing: -.5px;
+    }
+
+    .attendance-hero p {
+        font-size: 12px;
+    }
+
+    .attendance-panel {
+        padding: 17px;
+    }
+
+    .faculty-profile-card {
+        padding: 17px;
+    }
+
+    .faculty-avatar {
+        width: 53px;
+        height: 53px;
+        border-radius: 15px;
+        font-size: 20px;
+    }
+
+    .faculty-info h3 {
+        font-size: 17px;
+    }
+
+    .percentage-content strong {
+        font-size: 24px;
+    }
+
+}
+
+</style>
+
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const workingInput =
+            document.getElementById(
+                "workingDays"
+            );
+
+        const presentInput =
+            document.getElementById(
+                "presentDays"
+            );
+
+        const leaveInput =
+            document.getElementById(
+                "leaveDays"
+            );
+
+        const absentInput =
+            document.getElementById(
+                "absentDays"
+            );
+
+        const percentageText =
+            document.getElementById(
+                "attendancePercentage"
+            );
+
+        const progressBar =
+            document.getElementById(
+                "attendanceProgress"
+            );
+
+        const summaryWorking =
+            document.getElementById(
+                "summaryWorking"
+            );
+
+        const summaryPresent =
+            document.getElementById(
+                "summaryPresent"
+            );
+
+        const summaryLeave =
+            document.getElementById(
+                "summaryLeave"
+            );
+
+        const summaryAbsent =
+            document.getElementById(
+                "summaryAbsent"
+            );
+
+
+        /*
+         * If attendance form is not loaded,
+         * stop here.
+         */
+
+        if (
+            !workingInput ||
+            !presentInput ||
+            !leaveInput
+        ) {
+            return;
+        }
+
+
+        function updateAttendance() {
+
+            const working =
+                Math.max(
+                    Number(
+                        workingInput.value
+                    ) || 0,
+                    0
+                );
+
+            const present =
+                Math.max(
+                    Number(
+                        presentInput.value
+                    ) || 0,
+                    0
+                );
+
+            const leave =
+                Math.max(
+                    Number(
+                        leaveInput.value
+                    ) || 0,
+                    0
+                );
+
+
+            /*
+             * Calculate absent days.
+             */
+
+            const absent =
+                Math.max(
+                    working -
+                    present -
+                    leave,
+                    0
+                );
+
+
+            absentInput.value =
+                absent;
+
+
+            /*
+             * Effective working days
+             */
+
+            const effectiveWorkingDays =
+                Math.max(
+                    working -
+                    leave,
+                    0
+                );
+
+
+            let percentage = 0;
+
+
+            if (
+                effectiveWorkingDays > 0
+            ) {
+
+                percentage =
+                    (
+                        present /
+                        effectiveWorkingDays
+                    ) *
+                    100;
+
+            }
+
+
+            /*
+             * Never allow percentage
+             * above 100.
+             */
+
+            percentage =
+                Math.min(
+                    Math.max(
+                        percentage,
+                        0
+                    ),
+                    100
+                );
+
+
+            /*
+             * Update UI
+             */
+
+            percentageText.textContent =
+                percentage.toFixed(2) + "%";
+
+            progressBar.style.width =
+                percentage.toFixed(2) + "%";
+
+
+            summaryWorking.textContent =
+                working;
+
+            summaryPresent.textContent =
+                present;
+
+            summaryLeave.textContent =
+                leave;
+
+            summaryAbsent.textContent =
+                absent;
+
+
+            /*
+             * Validation hint.
+             */
+
+            if (
+                present + leave >
+                working
+            ) {
+
+                presentInput.classList.add(
+                    "is-invalid"
+                );
+
+                leaveInput.classList.add(
+                    "is-invalid"
+                );
+
+            } else {
+
+                presentInput.classList.remove(
+                    "is-invalid"
+                );
+
+                leaveInput.classList.remove(
+                    "is-invalid"
+                );
+
+            }
+
+        }
+
+
+        workingInput.addEventListener(
+            "input",
+            updateAttendance
+        );
+
+        presentInput.addEventListener(
+            "input",
+            updateAttendance
+        );
+
+        leaveInput.addEventListener(
+            "input",
+            updateAttendance
+        );
+
+
+        /*
+         * Initial calculation.
+         */
+
+        updateAttendance();
+
+
+        /*
+         * Prevent invalid submission.
+         */
+
+        const form =
+            document.getElementById(
+                "attendanceForm"
+            );
+
+        if (form) {
+
+            form.addEventListener(
+                "submit",
+                function (event) {
+
+                    const working =
+                        Number(
+                            workingInput.value
+                        ) || 0;
+
+                    const present =
+                        Number(
+                            presentInput.value
+                        ) || 0;
+
+                    const leave =
+                        Number(
+                            leaveInput.value
+                        ) || 0;
+
+
+                    if (
+                        present + leave >
+                        working
+                    ) {
+
+                        event.preventDefault();
+
+                        alert(
+                            "Present days and approved leave cannot exceed working days."
+                        );
+
+                        return;
+
+                    }
+
+
+                    const saveButton =
+                        document.getElementById(
+                            "saveAttendanceBtn"
+                        );
+
+                    if (saveButton) {
+
+                        saveButton.disabled =
+                            true;
+
+                        saveButton.innerHTML =
+                            '<span class="spinner-border spinner-border-sm me-2"></span>Saving...';
+
+                    }
+
+                }
+            );
+
+        }
+
+    }
+);
+
+</script>

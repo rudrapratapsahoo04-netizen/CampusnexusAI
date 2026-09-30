@@ -1,0 +1,960 @@
+<% layout("layouts/boilerplate") -%>
+
+    <title><%= title || "Worker Registration" %></title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family:
+                Inter,
+                Arial,
+                Helvetica,
+                sans-serif;
+            background:
+                linear-gradient(
+                    135deg,
+                    #eef4ff,
+                    #f8fafc
+                );
+            color: #1e293b;
+        }
+
+        .page {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .register-card {
+            width: 100%;
+            max-width: 1050px;
+            background: #ffffff;
+            border-radius: 22px;
+            box-shadow:
+                0 20px 60px
+                rgba(15, 23, 42, 0.12);
+            overflow: hidden;
+        }
+
+        .header {
+            padding: 32px 40px;
+            background:
+                linear-gradient(
+                    135deg,
+                    #1d4ed8,
+                    #2563eb
+                );
+            color: #ffffff;
+        }
+
+        .header h1 {
+            margin: 0 0 8px;
+            font-size: 30px;
+        }
+
+        .header p {
+            margin: 0;
+            opacity: 0.9;
+            font-size: 15px;
+        }
+
+        form {
+            padding: 36px 40px 42px;
+        }
+
+        .section {
+            margin-bottom: 34px;
+        }
+
+        .section-title {
+            margin-bottom: 18px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .section-title h2 {
+            margin: 0;
+            font-size: 18px;
+            color: #0f172a;
+        }
+
+        .section-title p {
+            margin: 5px 0 0;
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+            gap: 20px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .field.full {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            margin-bottom: 7px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #334155;
+        }
+
+        label span {
+            color: #dc2626;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            padding: 12px 13px;
+            font-size: 14px;
+            font-family: inherit;
+            color: #0f172a;
+            background: #ffffff;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #2563eb;
+            box-shadow:
+                0 0 0 3px
+                rgba(37, 99, 235, 0.12);
+        }
+
+        .hint {
+            margin-top: 5px;
+            color: #64748b;
+            font-size: 12px;
+        }
+
+        .salary-wrapper {
+            position: relative;
+        }
+
+        .salary-wrapper .currency {
+            position: absolute;
+            left: 13px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+            font-size: 14px;
+            pointer-events: none;
+        }
+
+        .salary-wrapper input {
+            padding-left: 28px;
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        .password-wrapper input {
+            padding-right: 75px;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: none;
+            background: transparent;
+            color: #2563eb;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .notice {
+            margin-bottom: 25px;
+            padding: 13px 15px;
+            border-radius: 10px;
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            color: #1e40af;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-top: 10px;
+            padding-top: 25px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .login-link {
+            color: #475569;
+            font-size: 14px;
+        }
+
+        .login-link a {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        .submit-btn {
+            border: none;
+            border-radius: 10px;
+            padding: 13px 28px;
+            background: #2563eb;
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .submit-btn:hover {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+        }
+
+        .required-note {
+            margin-top: 15px;
+            color: #64748b;
+            font-size: 12px;
+        }
+
+        @media (max-width: 750px) {
+
+            .page {
+                padding: 20px 12px;
+            }
+
+            .header {
+                padding: 25px 22px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            form {
+                padding: 28px 22px 32px;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .field.full {
+                grid-column: auto;
+            }
+
+            .actions {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+            }
+
+            .submit-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="page">
+
+    <div class="register-card">
+
+        <div class="header">
+            <h1>Worker Registration</h1>
+
+            <p>
+                Create your university worker account
+                and access the Worker Portal.
+            </p>
+        </div>
+
+
+        <form
+            action="/auth/register/worker"
+            method="POST"
+            autocomplete="off"
+        >
+
+            <div class="notice">
+                Please enter your personal and employment
+                information carefully. Your Worker ID will
+                be generated automatically after registration.
+            </div>
+
+
+            <!-- ================================================= -->
+            <!-- PERSONAL INFORMATION -->
+            <!-- ================================================= -->
+
+            <div class="section">
+
+                <div class="section-title">
+                    <h2>Personal Information</h2>
+
+                    <p>
+                        Basic information about the worker.
+                    </p>
+                </div>
+
+
+                <div class="grid">
+
+                    <div class="field">
+
+                        <label for="name">
+                            Full Name <span>*</span>
+                        </label>
+
+                        <input
+                            type="text"
+                            id="name"
+                            name="name"
+                            placeholder="Enter full name"
+                            minlength="2"
+                            maxlength="100"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label for="email">
+                            Email Address <span>*</span>
+                        </label>
+
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            placeholder="worker@example.com"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label for="mobile">
+                            Mobile Number <span>*</span>
+                        </label>
+
+                        <input
+                            type="tel"
+                            id="mobile"
+                            name="mobile"
+                            placeholder="10-digit mobile number"
+                            pattern="[0-9]{10}"
+                            maxlength="10"
+                            inputmode="numeric"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label for="dob">
+                            Date of Birth <span>*</span>
+                        </label>
+
+                        <input
+                            type="date"
+                            id="dob"
+                            name="dob"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label for="gender">
+                            Gender <span>*</span>
+                        </label>
+
+                        <select
+                            id="gender"
+                            name="gender"
+                            required
+                        >
+
+                            <option value="">
+                                Select Gender
+                            </option>
+
+                            <option value="male">
+                                Male
+                            </option>
+
+                            <option value="female">
+                                Female
+                            </option>
+
+                            <option value="other">
+                                Other
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================================================= -->
+            <!-- EMPLOYMENT INFORMATION -->
+            <!-- ================================================= -->
+
+            <div class="section">
+
+                <div class="section-title">
+                    <h2>Employment Information</h2>
+
+                    <p>
+                        Details about your university employment.
+                    </p>
+                </div>
+
+
+                <div class="grid">
+
+                    <div class="field">
+
+                        <label for="workerType">
+                            Worker Type <span>*</span>
+                        </label>
+
+                        <select
+                            id="workerType"
+                            name="workerType"
+                            required
+                        >
+
+                            <option value="">
+                                Select Worker Type
+                            </option>
+
+                            <option value="plumber">
+                                Plumber
+                            </option>
+
+                            <option value="electrician">
+                                Electrician
+                            </option>
+
+                            <option value="carpenter">
+                                Carpenter
+                            </option>
+
+                            <option value="cleaner">
+                                Cleaner
+                            </option>
+
+                            <option value="gardener">
+                                Gardener
+                            </option>
+
+                            <option value="security">
+                                Security
+                            </option>
+
+                            <option value="technician">
+                                Technician
+                            </option>
+
+                            <option value="other">
+                                Other
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label for="employmentType">
+                            Employment Type <span>*</span>
+                        </label>
+
+                        <select
+                            id="employmentType"
+                            name="employmentType"
+                            required
+                        >
+
+                            <option value="">
+                                Select Employment Type
+                            </option>
+
+                            <option value="full-time">
+                                Full-time
+                            </option>
+
+                            <option value="part-time">
+                                Part-time
+                            </option>
+
+                            <option value="contract">
+                                Contract
+                            </option>
+
+                            <option value="temporary">
+                                Temporary
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label for="joiningDate">
+                            Joining Date <span>*</span>
+                        </label>
+
+                        <input
+                            type="date"
+                            id="joiningDate"
+                            name="joiningDate"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label for="salary">
+                            Monthly Salary <span>*</span>
+                        </label>
+
+                        <div class="salary-wrapper">
+
+                            <span class="currency">
+                                ₹
+                            </span>
+
+                            <input
+                                type="number"
+                                id="salary"
+                                name="salary"
+                                placeholder="Enter salary"
+                                min="0"
+                                step="1"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================================================= -->
+            <!-- ADDRESS INFORMATION -->
+            <!-- ================================================= -->
+
+            <div class="section">
+
+                <div class="section-title">
+                    <h2>Address Information</h2>
+
+                    <p>
+                        Your current residential address.
+                    </p>
+                </div>
+
+
+                <div class="grid">
+
+                    <div class="field full">
+
+                        <label for="address">
+                            Address <span>*</span>
+                        </label>
+
+                        <textarea
+                            id="address"
+                            name="address"
+                            placeholder="Enter complete address"
+                            required
+                        ></textarea>
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label for="city">
+                            City <span>*</span>
+                        </label>
+
+                        <input
+                            type="text"
+                            id="city"
+                            name="city"
+                            placeholder="Enter city"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label for="state">
+                            State <span>*</span>
+                        </label>
+
+                        <input
+                            type="text"
+                            id="state"
+                            name="state"
+                            placeholder="Enter state"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label for="pin">
+                            PIN Code <span>*</span>
+                        </label>
+
+                        <input
+                            type="text"
+                            id="pin"
+                            name="pin"
+                            placeholder="6-digit PIN"
+                            pattern="[0-9]{6}"
+                            maxlength="6"
+                            inputmode="numeric"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================================================= -->
+            <!-- EMERGENCY CONTACT -->
+            <!-- ================================================= -->
+
+            <div class="section">
+
+                <div class="section-title">
+                    <h2>Emergency Contact</h2>
+
+                    <p>
+                        Someone who can be contacted in an emergency.
+                    </p>
+                </div>
+
+
+                <div class="grid">
+
+                    <div class="field">
+
+                        <label for="emergencyContact">
+                            Emergency Contact <span>*</span>
+                        </label>
+
+                        <input
+                            type="tel"
+                            id="emergencyContact"
+                            name="emergencyContact"
+                            placeholder="10-digit mobile number"
+                            pattern="[0-9]{10}"
+                            maxlength="10"
+                            inputmode="numeric"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label for="emergencyRelation">
+                            Relationship <span>*</span>
+                        </label>
+
+                        <input
+                            type="text"
+                            id="emergencyRelation"
+                            name="emergencyRelation"
+                            placeholder="e.g. Father, Mother, Spouse"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================================================= -->
+            <!-- ACCOUNT SECURITY -->
+            <!-- ================================================= -->
+
+            <div class="section">
+
+                <div class="section-title">
+                    <h2>Account Security</h2>
+
+                    <p>
+                        Create your Worker Portal login password.
+                    </p>
+                </div>
+
+
+                <div class="grid">
+
+                    <div class="field">
+
+                        <label for="password">
+                            Password <span>*</span>
+                        </label>
+
+                        <div class="password-wrapper">
+
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                placeholder="Minimum 6 characters"
+                                minlength="6"
+                                required
+                            >
+
+                            <button
+                                type="button"
+                                class="password-toggle"
+                                onclick="togglePassword('password', this)"
+                            >
+                                Show
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label for="confirmPassword">
+                            Confirm Password <span>*</span>
+                        </label>
+
+                        <div class="password-wrapper">
+
+                            <input
+                                type="password"
+                                id="confirmPassword"
+                                name="confirmPassword"
+                                placeholder="Re-enter password"
+                                minlength="6"
+                                required
+                            >
+
+                            <button
+                                type="button"
+                                class="password-toggle"
+                                onclick="togglePassword('confirmPassword', this)"
+                            >
+                                Show
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================================================= -->
+            <!-- ACTIONS -->
+            <!-- ================================================= -->
+
+            <div class="actions">
+
+                <div class="login-link">
+
+                    Already have an account?
+
+                    <a href="/auth/login/worker">
+                        Login here
+                    </a>
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="submit-btn"
+                >
+                    Create Worker Account
+                </button>
+
+            </div>
+
+
+            <div class="required-note">
+                <strong>*</strong>
+                Required fields
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    function togglePassword(
+        inputId,
+        button
+    ) {
+
+        const input =
+            document.getElementById(
+                inputId
+            );
+
+        if (
+            input.type === "password"
+        ) {
+
+            input.type = "text";
+
+            button.textContent =
+                "Hide";
+
+        } else {
+
+            input.type = "password";
+
+            button.textContent =
+                "Show";
+        }
+    }
+
+
+    // Keep mobile fields numeric.
+    document
+        .querySelectorAll(
+            'input[name="mobile"], input[name="emergencyContact"], input[name="pin"]'
+        )
+        .forEach(
+            (input) => {
+
+                input.addEventListener(
+                    "input",
+                    function () {
+
+                        this.value =
+                            this.value.replace(
+                                /\D/g,
+                                ""
+                            );
+
+                    }
+                );
+
+            }
+        );
+
+
+    // Client-side password confirmation.
+    document
+        .querySelector("form")
+        .addEventListener(
+            "submit",
+            function (event) {
+
+                const password =
+                    document.getElementById(
+                        "password"
+                    ).value;
+
+                const confirmPassword =
+                    document.getElementById(
+                        "confirmPassword"
+                    ).value;
+
+                if (
+                    password !==
+                    confirmPassword
+                ) {
+
+                    event.preventDefault();
+
+                    alert(
+                        "Passwords do not match."
+                    );
+                }
+            }
+        );
+
+</script>
+
+</body>

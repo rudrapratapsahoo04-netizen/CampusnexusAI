@@ -1,0 +1,368 @@
+<% layout("layouts/boilerplate") %>
+
+<style>
+
+    .faculty-timetable-page {
+        min-height: 100vh;
+        background:
+            linear-gradient(
+                135deg,
+                #f8fafc 0%,
+                #eef2ff 50%,
+                #f8fafc 100%
+            );
+        padding: 40px 0 60px;
+    }
+
+    .timetable-hero {
+        background:
+            linear-gradient(
+                135deg,
+                #111827,
+                #312e81
+            );
+        color: white;
+        border-radius: 24px;
+        padding: 32px;
+        margin-bottom: 28px;
+        box-shadow:
+            0 20px 45px rgba(15, 23, 42, 0.18);
+    }
+
+    .hero-icon {
+        width: 58px;
+        height: 58px;
+        border-radius: 16px;
+        background: rgba(255,255,255,0.14);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        margin-bottom: 18px;
+    }
+
+    .hero-title {
+        font-weight: 800;
+        margin-bottom: 8px;
+    }
+
+    .hero-subtitle {
+        color: rgba(255,255,255,0.78);
+        margin-bottom: 0;
+    }
+
+    .day-section {
+        margin-bottom: 28px;
+    }
+
+    .day-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 14px;
+    }
+
+    .day-title {
+        font-weight: 800;
+        color: #111827;
+        margin: 0;
+        text-transform: capitalize;
+    }
+
+    .class-count {
+        background: #e0e7ff;
+        color: #3730a3;
+        padding: 6px 12px;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .class-card {
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 18px;
+        padding: 20px;
+        margin-bottom: 14px;
+        transition: all 0.25s ease;
+        box-shadow:
+            0 8px 25px rgba(15,23,42,0.06);
+    }
+
+    .class-card:hover {
+        transform: translateY(-3px);
+        box-shadow:
+            0 15px 35px rgba(15,23,42,0.10);
+        border-color: #c7d2fe;
+    }
+
+    .time-box {
+        background: #eef2ff;
+        color: #3730a3;
+        border-radius: 14px;
+        padding: 12px;
+        text-align: center;
+        font-weight: 800;
+    }
+
+    .course-code {
+        font-size: 13px;
+        font-weight: 800;
+        color: #6366f1;
+        margin-bottom: 4px;
+    }
+
+    .course-name {
+        font-size: 18px;
+        font-weight: 800;
+        color: #111827;
+        margin-bottom: 8px;
+    }
+
+    .class-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .meta-item {
+        background: #f8fafc;
+        border: 1px solid #e5e7eb;
+        padding: 6px 10px;
+        border-radius: 8px;
+        font-size: 13px;
+        color: #475569;
+    }
+
+    .empty-state {
+        background: white;
+        border-radius: 20px;
+        padding: 60px 20px;
+        text-align: center;
+        border: 1px solid #e5e7eb;
+        box-shadow:
+            0 10px 30px rgba(15,23,42,0.05);
+    }
+
+    .empty-icon {
+        width: 72px;
+        height: 72px;
+        margin: 0 auto 18px;
+        border-radius: 20px;
+        background: #eef2ff;
+        color: #4f46e5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+    }
+
+    @media (max-width: 767px) {
+
+        .faculty-timetable-page {
+            padding: 25px 0 40px;
+        }
+
+        .timetable-hero {
+            padding: 24px;
+            border-radius: 18px;
+        }
+
+        .class-card {
+            padding: 15px;
+        }
+
+        .time-box {
+            margin-bottom: 12px;
+        }
+
+    }
+
+</style>
+
+
+<div class="faculty-timetable-page">
+
+    <div class="container">
+
+        <!-- HERO -->
+
+        <div class="timetable-hero">
+
+            <div class="hero-icon">
+                <i class="bi bi-calendar-week"></i>
+            </div>
+
+            <h1 class="hero-title">
+                My Timetable
+            </h1>
+
+            <p class="hero-subtitle">
+                View your assigned classes, courses,
+                sections and classroom schedule.
+            </p>
+
+        </div>
+
+
+        <% if (!timetable || timetable.length === 0) { %>
+
+            <!-- EMPTY STATE -->
+
+            <div class="empty-state">
+
+                <div class="empty-icon">
+                    <i class="bi bi-calendar-x"></i>
+                </div>
+
+                <h4 class="fw-bold">
+                    No Timetable Assigned
+                </h4>
+
+                <p class="text-muted mb-0">
+                    No timetable has been assigned
+                    to your faculty account yet.
+                </p>
+
+            </div>
+
+        <% } else { %>
+
+
+            <%
+                const groupedTimetable = {};
+
+                timetable.forEach(item => {
+
+                    if (!groupedTimetable[item.day]) {
+                        groupedTimetable[item.day] = [];
+                    }
+
+                    groupedTimetable[item.day].push(item);
+
+                });
+            %>
+
+
+            <% Object.keys(groupedTimetable).forEach(day => { %>
+
+                <div class="day-section">
+
+                    <div class="day-header">
+
+                        <h4 class="day-title">
+                            <i class="bi bi-calendar-day me-2"></i>
+                            <%= day %>
+                        </h4>
+
+                        <span class="class-count">
+                            <%= groupedTimetable[day].length %>
+                            Classes
+                        </span>
+
+                    </div>
+
+
+                    <% groupedTimetable[day].forEach(item => { %>
+
+                        <div class="class-card">
+
+                            <div class="row align-items-center g-3">
+
+                                <!-- TIME -->
+
+                                <div class="col-12 col-md-2">
+
+                                    <div class="time-box">
+
+                                        <div>
+                                            <%= item.startTime %>
+                                        </div>
+
+                                        <div class="small text-muted">
+                                            to
+                                        </div>
+
+                                        <div>
+                                            <%= item.endTime %>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                                <!-- COURSE -->
+
+                                <div class="col-12 col-md-7">
+
+                                    <div class="course-code">
+                                        <%= item.courseCode %>
+                                    </div>
+
+                                    <div class="course-name">
+                                        <%= item.courseName %>
+                                    </div>
+
+                                    <div class="class-meta">
+
+                                        <span class="meta-item">
+                                            <i class="bi bi-building me-1"></i>
+                                            <%= item.department %>
+                                        </span>
+
+                                        <span class="meta-item">
+                                            <i class="bi bi-mortarboard me-1"></i>
+                                            <%= item.program %>
+                                        </span>
+
+                                        <span class="meta-item">
+                                            <i class="bi bi-layers me-1"></i>
+                                            Semester <%= item.semester %>
+                                        </span>
+
+                                        <span class="meta-item">
+                                            <i class="bi bi-people me-1"></i>
+                                            Section <%= item.section %>
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+
+                                <!-- ROOM / TYPE -->
+
+                                <div class="col-12 col-md-3">
+
+                                    <div class="class-meta">
+
+                                        <span class="meta-item">
+                                            <i class="bi bi-door-open me-1"></i>
+                                            <%= item.room || "TBA" %>
+                                        </span>
+
+                                        <span class="meta-item">
+                                            <i class="bi bi-easel me-1"></i>
+                                            <%= item.type || "Lecture" %>
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    <% }); %>
+
+                </div>
+
+            <% }); %>
+
+        <% } %>
+
+    </div>
+
+</div>

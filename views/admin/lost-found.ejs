@@ -1,0 +1,503 @@
+<% layout("layouts/boilerplate") %>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f7fb;
+            color: #1f2937;
+        }
+
+        .page {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .page-header {
+            margin-bottom: 25px;
+        }
+
+        .page-header h1 {
+            margin: 0 0 8px;
+            font-size: 28px;
+        }
+
+        .page-header p {
+            margin: 0;
+            color: #6b7280;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 25px;
+        }
+
+        .summary-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .summary-card span {
+            display: block;
+            color: #6b7280;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .summary-card strong {
+            font-size: 28px;
+        }
+
+        .reports {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .report-card {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            padding: 22px;
+        }
+
+        .report-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 18px;
+        }
+
+        .report-top h2 {
+            margin: 0 0 6px;
+            font-size: 21px;
+        }
+
+        .report-id {
+            color: #9ca3af;
+            font-size: 12px;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 6px 11px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-approved {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-rejected {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+
+        .detail {
+            background: #f9fafb;
+            border-radius: 9px;
+            padding: 13px;
+        }
+
+        .detail-label {
+            display: block;
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 5px;
+        }
+
+        .detail-value {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .description {
+            margin: 18px 0;
+            padding: 15px;
+            background: #f9fafb;
+            border-radius: 9px;
+        }
+
+        .description strong {
+            display: block;
+            margin-bottom: 7px;
+        }
+
+        .description p {
+            margin: 0;
+            line-height: 1.6;
+            color: #4b5563;
+            white-space: pre-wrap;
+        }
+
+        .admin-response {
+            margin-top: 18px;
+            padding: 15px;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 9px;
+        }
+
+        .admin-response strong {
+            display: block;
+            margin-bottom: 7px;
+        }
+
+        .admin-response p {
+            margin: 0;
+            color: #166534;
+            white-space: pre-wrap;
+        }
+
+        .review-box {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .review-box h3 {
+            margin: 0 0 12px;
+            font-size: 16px;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 90px;
+            resize: vertical;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            padding: 12px;
+            font: inherit;
+            outline: none;
+        }
+
+        textarea:focus {
+            border-color: #6366f1;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .btn {
+            border: 0;
+            border-radius: 8px;
+            padding: 10px 18px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .btn-approve {
+            background: #16a34a;
+            color: #fff;
+        }
+
+        .btn-reject {
+            background: #dc2626;
+            color: #fff;
+        }
+
+        .empty {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            padding: 50px 20px;
+            text-align: center;
+            color: #6b7280;
+        }
+
+        @media (max-width: 900px) {
+            .summary-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .report-top {
+                flex-direction: column;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="page">
+
+    <div class="page-header">
+        <h1>Lost & Found Management</h1>
+        <p>Review and manage student lost item reports.</p>
+    </div>
+
+
+    <!-- SUMMARY -->
+    <div class="summary-grid">
+
+        <div class="summary-card">
+            <span>Total Reports</span>
+            <strong><%= summary.total %></strong>
+        </div>
+
+        <div class="summary-card">
+            <span>Pending</span>
+            <strong><%= summary.pending %></strong>
+        </div>
+
+        <div class="summary-card">
+            <span>Approved</span>
+            <strong><%= summary.approved %></strong>
+        </div>
+
+        <div class="summary-card">
+            <span>Rejected</span>
+            <strong><%= summary.rejected %></strong>
+        </div>
+
+    </div>
+
+
+    <!-- REPORTS -->
+    <div class="reports">
+
+        <% if (!reports || reports.length === 0) { %>
+
+            <div class="empty">
+                <h3>No Lost & Found Reports</h3>
+                <p>There are currently no student reports to review.</p>
+            </div>
+
+        <% } else { %>
+
+            <% reports.forEach(report => { %>
+
+                <div class="report-card">
+
+                    <div class="report-top">
+
+                        <div>
+                            <h2>
+                                <%= report.itemName %>
+                            </h2>
+
+                            <div class="report-id">
+                                Report ID:
+                                <%= report._id %>
+                            </div>
+                        </div>
+
+
+                        <span
+                            class="status status-<%= report.status %>"
+                        >
+                            <%= report.status %>
+                        </span>
+
+                    </div>
+
+
+                    <!-- REPORT DETAILS -->
+                    <div class="details-grid">
+
+                        <div class="detail">
+                            <span class="detail-label">
+                                Student
+                            </span>
+
+                            <span class="detail-value">
+                                <%= report.student?.name || "Unknown Student" %>
+                            </span>
+                        </div>
+
+
+                        <div class="detail">
+                            <span class="detail-label">
+                                Student Email
+                            </span>
+
+                            <span class="detail-value">
+                                <%= report.student?.email || "Not available" %>
+                            </span>
+                        </div>
+
+
+                        <div class="detail">
+                            <span class="detail-label">
+                                Category
+                            </span>
+
+                            <span class="detail-value">
+                                <%= report.category %>
+                            </span>
+                        </div>
+
+
+                        <div class="detail">
+                            <span class="detail-label">
+                                Lost Location
+                            </span>
+
+                            <span class="detail-value">
+                                <%= report.lostLocation %>
+                            </span>
+                        </div>
+
+
+                        <div class="detail">
+                            <span class="detail-label">
+                                Lost Date
+                            </span>
+
+                            <span class="detail-value">
+                                <%= new Date(report.lostDate).toLocaleDateString() %>
+                            </span>
+                        </div>
+
+
+                        <div class="detail">
+                            <span class="detail-label">
+                                Contact Information
+                            </span>
+
+                            <span class="detail-value">
+                                <%= report.contactInfo || "Not provided" %>
+                            </span>
+                        </div>
+
+                    </div>
+
+
+                    <!-- DESCRIPTION -->
+                    <div class="description">
+
+                        <strong>Description</strong>
+
+                        <p>
+                            <%= report.description %>
+                        </p>
+
+                    </div>
+
+
+                    <!-- EXISTING ADMIN RESPONSE -->
+                    <% if (report.adminResponse) { %>
+
+                        <div class="admin-response">
+
+                            <strong>
+                                Admin Response
+                            </strong>
+
+                            <p>
+                                <%= report.adminResponse %>
+                            </p>
+
+                        </div>
+
+                    <% } %>
+
+
+                    <!-- REVIEW FORM -->
+                    <% if (report.status === "pending") { %>
+
+                        <div class="review-box">
+
+                            <h3>
+                                Review Report
+                            </h3>
+
+                            <form
+                                action="/admin/lost-found/<%= report._id %>/review"
+                                method="POST"
+                            >
+
+                                <textarea
+                                    name="adminResponse"
+                                    placeholder="Write a response for the student..."
+                                    maxlength="1500"
+                                ></textarea>
+
+
+                                <div class="actions">
+
+                                    <button
+                                        type="submit"
+                                        name="status"
+                                        value="approved"
+                                        class="btn btn-approve"
+                                    >
+                                        Approve Report
+                                    </button>
+
+
+                                    <button
+                                        type="submit"
+                                        name="status"
+                                        value="rejected"
+                                        class="btn btn-reject"
+                                    >
+                                        Reject Report
+                                    </button>
+
+                                </div>
+
+                            </form>
+
+                        </div>
+
+                    <% } %>
+
+                </div>
+
+            <% }); %>
+
+        <% } %>
+
+    </div>
+
+</div>
+
+</body>

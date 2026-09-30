@@ -1,0 +1,496 @@
+
+<% layout("layouts/boilerplate") -%>
+<div class="container py-4">
+
+    <!-- HEADER -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h2 class="fw-bold mb-1">
+                <i class="bi bi-qr-code-scan me-2"></i>
+                Apply Gate Pass
+            </h2>
+
+            <p class="text-muted mb-0">
+                Submit an online request for campus exit.
+            </p>
+        </div>
+
+        <a
+            href="/student/gate-passes"
+            class="btn btn-outline-primary"
+        >
+            <i class="bi bi-list-check me-1"></i>
+            My Gate Passes
+        </a>
+
+    </div>
+
+
+    <div class="row g-4">
+
+        <!-- FORM -->
+
+        <div class="col-lg-8">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-body p-4">
+
+                    <h5 class="fw-bold mb-4">
+                        Gate Pass Request
+                    </h5>
+
+                    <form
+                        action="/student/gate-pass/apply"
+                        method="POST"
+                    >
+
+                        <!-- PASS TYPE -->
+
+                        <div class="mb-4">
+
+                            <label
+                                for="passType"
+                                class="form-label fw-semibold"
+                            >
+                                Pass Type
+                                <span class="text-danger">*</span>
+                            </label>
+
+                            <select
+                                id="passType"
+                                name="passType"
+                                class="form-select"
+                                required
+                            >
+
+                                <option value="">
+                                    Select pass type
+                                </option>
+
+                                <option value="outing">
+                                    Outing
+                                </option>
+
+                                <option value="leave">
+                                    Leave
+                                </option>
+
+                                <option value="emergency">
+                                    Emergency
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- DATE -->
+
+                        <div class="mb-4">
+
+                            <label
+                                for="exitDate"
+                                class="form-label fw-semibold"
+                            >
+                                Exit Date
+                                <span class="text-danger">*</span>
+                            </label>
+
+                            <input
+                                type="date"
+                                id="exitDate"
+                                name="exitDate"
+                                class="form-control"
+                                required
+                            >
+
+                        </div>
+
+
+                        <!-- TIME -->
+
+                        <div class="row g-3 mb-4">
+
+                            <div class="col-md-6">
+
+                                <label
+                                    for="expectedExitTime"
+                                    class="form-label fw-semibold"
+                                >
+                                    Expected Exit Time
+                                    <span class="text-danger">*</span>
+                                </label>
+
+                                <input
+                                    type="time"
+                                    id="expectedExitTime"
+                                    name="expectedExitTime"
+                                    class="form-control"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <div class="col-md-6">
+
+                                <label
+                                    for="expectedReturnTime"
+                                    class="form-label fw-semibold"
+                                >
+                                    Expected Return Time
+                                    <span class="text-danger">*</span>
+                                </label>
+
+                                <input
+                                    type="time"
+                                    id="expectedReturnTime"
+                                    name="expectedReturnTime"
+                                    class="form-control"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- DESTINATION -->
+
+                        <div class="mb-4">
+
+                            <label
+                                for="destination"
+                                class="form-label fw-semibold"
+                            >
+                                Destination
+                                <span class="text-danger">*</span>
+                            </label>
+
+                            <input
+                                type="text"
+                                id="destination"
+                                name="destination"
+                                class="form-control"
+                                placeholder="e.g. Bhubaneswar, Home, Hospital"
+                                minlength="2"
+                                maxlength="300"
+                                required
+                            >
+
+                        </div>
+
+
+                        <!-- REASON -->
+
+                        <div class="mb-4">
+
+                            <label
+                                for="reason"
+                                class="form-label fw-semibold"
+                            >
+                                Reason
+                                <span class="text-danger">*</span>
+                            </label>
+
+                            <textarea
+                                id="reason"
+                                name="reason"
+                                class="form-control"
+                                rows="4"
+                                minlength="5"
+                                maxlength="1000"
+                                placeholder="Explain the reason for leaving campus..."
+                                required
+                            ></textarea>
+
+                        </div>
+
+
+                        <!-- EMERGENCY CONTACT -->
+
+                        <div class="mb-4">
+
+                            <label
+                                for="emergencyContact"
+                                class="form-label fw-semibold"
+                            >
+                                Emergency Contact
+                                <span class="text-danger">*</span>
+                            </label>
+
+                            <input
+                                type="tel"
+                                id="emergencyContact"
+                                name="emergencyContact"
+                                class="form-control"
+                                maxlength="10"
+                                pattern="[0-9]{10}"
+                                placeholder="10-digit mobile number"
+                                required
+                            >
+
+                        </div>
+
+
+                        <!-- REMARKS -->
+
+                        <div class="mb-4">
+
+                            <label
+                                for="additionalRemarks"
+                                class="form-label fw-semibold"
+                            >
+                                Additional Remarks
+                            </label>
+
+                            <textarea
+                                id="additionalRemarks"
+                                name="additionalRemarks"
+                                class="form-control"
+                                rows="3"
+                                maxlength="1000"
+                                placeholder="Any additional information..."
+                            ></textarea>
+
+                        </div>
+
+
+                        <!-- INFO -->
+
+                        <div class="alert alert-warning border-0">
+
+                            <div class="d-flex">
+
+                                <i
+                                    class="bi bi-exclamation-triangle-fill
+                                           me-2"
+                                ></i>
+
+                                <div>
+
+                                    <strong>
+                                        Important
+                                    </strong>
+
+                                    <p class="mb-0 mt-1 small">
+                                        Gate pass approval is required
+                                        before leaving the campus.
+                                        After approval, a QR-based gate
+                                        pass will be generated.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- BUTTONS -->
+
+                        <div class="d-flex gap-2">
+
+                            <button
+                                type="submit"
+                                class="btn btn-primary"
+                            >
+                                <i class="bi bi-send me-1"></i>
+                                Submit Gate Pass
+                            </button>
+
+                            <a
+                                href="/student/dashboard"
+                                class="btn btn-outline-secondary"
+                            >
+                                Cancel
+                            </a>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- STUDENT INFORMATION -->
+
+        <div class="col-lg-4">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-body p-4">
+
+                    <h5 class="fw-bold mb-4">
+                        <i class="bi bi-person-vcard me-2"></i>
+                        Student Information
+                    </h5>
+
+
+                    <div class="mb-3">
+
+                        <small class="text-muted">
+                            Student ID
+                        </small>
+
+                        <div class="fw-semibold">
+                            <%= studentProfile.studentId %>
+                        </div>
+
+                    </div>
+
+
+                    <div class="mb-3">
+
+                        <small class="text-muted">
+                            Department
+                        </small>
+
+                        <div class="fw-semibold text-capitalize">
+                            <%= studentProfile.department.replace(
+                                /-/g,
+                                " "
+                            ) %>
+                        </div>
+
+                    </div>
+
+
+                    <div class="mb-3">
+
+                        <small class="text-muted">
+                            Program
+                        </small>
+
+                        <div class="fw-semibold text-uppercase">
+                            <%= studentProfile.program.replace(
+                                /-/g,
+                                " "
+                            ) %>
+                        </div>
+
+                    </div>
+
+
+                    <div class="mb-3">
+
+                        <small class="text-muted">
+                            Semester
+                        </small>
+
+                        <div class="fw-semibold">
+                            Semester <%= studentProfile.semester %>
+                        </div>
+
+                    </div>
+
+
+                    <div>
+
+                        <small class="text-muted">
+                            Section
+                        </small>
+
+                        <div class="fw-semibold">
+                            <%= studentProfile.section || "N/A" %>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- PROCESS -->
+
+            <div class="card border-0 shadow-sm mt-4">
+
+                <div class="card-body p-4">
+
+                    <h6 class="fw-bold mb-3">
+                        Gate Pass Process
+                    </h6>
+
+                    <div class="small">
+
+                        <div class="d-flex mb-3">
+
+                            <span class="badge bg-primary rounded-circle me-2">
+                                1
+                            </span>
+
+                            <span>
+                                Submit gate pass request
+                            </span>
+
+                        </div>
+
+
+                        <div class="d-flex mb-3">
+
+                            <span class="badge bg-primary rounded-circle me-2">
+                                2
+                            </span>
+
+                            <span>
+                                Administration reviews request
+                            </span>
+
+                        </div>
+
+
+                        <div class="d-flex mb-3">
+
+                            <span class="badge bg-primary rounded-circle me-2">
+                                3
+                            </span>
+
+                            <span>
+                                Gate pass gets approved
+                            </span>
+
+                        </div>
+
+
+                        <div class="d-flex">
+
+                            <span class="badge bg-success rounded-circle me-2">
+                                4
+                            </span>
+
+                            <span>
+                                QR pass is generated
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+    const exitDateInput =
+        document.getElementById("exitDate");
+
+    const today =
+        new Date().toISOString().split("T")[0];
+
+    exitDateInput.min = today;
+</script>

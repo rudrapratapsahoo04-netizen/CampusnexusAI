@@ -1,0 +1,867 @@
+<% layout("layouts/boilerplate") -%>
+
+
+<style>
+    .page-header {
+        background: linear-gradient(135deg, #0d6efd, #0b5ed7);
+        color: #fff;
+        border-radius: 18px;
+        padding: 28px;
+        margin-bottom: 24px;
+    }
+
+    .page-header h2 {
+        margin-bottom: 6px;
+        font-weight: 700;
+    }
+
+    .page-header p {
+        margin: 0;
+        opacity: 0.9;
+    }
+
+    .summary-card {
+        border: 0;
+        border-radius: 16px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07);
+        height: 100%;
+    }
+
+    .summary-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 21px;
+        background: #eef4ff;
+        color: #0d6efd;
+    }
+
+    .summary-label {
+        font-size: 13px;
+        color: #6c757d;
+        margin-bottom: 3px;
+    }
+
+    .summary-value {
+        font-size: 25px;
+        font-weight: 700;
+        margin: 0;
+    }
+
+    .filter-card,
+    .table-card {
+        border: 0;
+        border-radius: 16px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07);
+    }
+
+    .filter-card .card-header,
+    .table-card .card-header {
+        background: #fff;
+        border-bottom: 1px solid #eef0f3;
+        padding: 18px 20px;
+        border-radius: 16px 16px 0 0;
+    }
+
+    .filter-title {
+        font-weight: 700;
+        margin: 0;
+    }
+
+    .form-label {
+        font-size: 13px;
+        font-weight: 600;
+        color: #495057;
+    }
+
+    .form-control,
+    .form-select {
+        min-height: 42px;
+        border-radius: 10px;
+    }
+
+    .faculty-table {
+        margin-bottom: 0;
+        vertical-align: middle;
+    }
+
+    .faculty-table th {
+        white-space: nowrap;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+        color: #6c757d;
+        background: #f8f9fa;
+    }
+
+    .faculty-table td {
+        font-size: 14px;
+    }
+
+    .faculty-name {
+        font-weight: 600;
+        color: #212529;
+    }
+
+    .faculty-email {
+        font-size: 12px;
+        color: #6c757d;
+        margin-top: 2px;
+    }
+
+    .employee-id {
+        font-weight: 600;
+        font-size: 13px;
+    }
+
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .status-active {
+        background: #d1e7dd;
+        color: #0f5132;
+    }
+
+    .status-inactive {
+        background: #f8d7da;
+        color: #842029;
+    }
+
+    .profile-badge {
+        background: #e7f1ff;
+        color: #0d6efd;
+        padding: 5px 9px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 600;
+    }
+
+    .designation-badge {
+        background: #f1f3f5;
+        color: #495057;
+        padding: 5px 9px;
+        border-radius: 8px;
+        font-size: 11px;
+        font-weight: 600;
+    }
+
+    .action-btn {
+        border-radius: 8px;
+        font-size: 12px;
+        padding: 6px 10px;
+    }
+
+    .empty-state {
+        padding: 55px 20px;
+        text-align: center;
+        color: #6c757d;
+    }
+
+    .empty-state i {
+        font-size: 42px;
+        margin-bottom: 12px;
+        opacity: 0.5;
+    }
+
+    .table-responsive {
+        border-radius: 0 0 16px 16px;
+    }
+
+    @media (max-width: 768px) {
+        .page-header {
+            padding: 22px;
+        }
+
+        .page-header h2 {
+            font-size: 21px;
+        }
+
+        .summary-value {
+            font-size: 22px;
+        }
+    }
+</style>
+
+<div class="container-fluid py-4">
+
+    <!-- =====================================================
+         PAGE HEADER
+    ====================================================== -->
+
+    <div class="page-header">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+
+            <div>
+                <h2>
+                    <i class="bi bi-person-badge-fill me-2"></i>
+                    Faculty Management
+                </h2>
+
+                <p>
+                    Manage university faculty accounts, profiles and academic information.
+                </p>
+            </div>
+
+            <div>
+                <a href="/admin/dashboard" class="btn btn-light">
+                    <i class="bi bi-arrow-left me-1"></i>
+                    Dashboard
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- =====================================================
+         SUMMARY CARDS
+    ====================================================== -->
+
+    <div class="row g-3 mb-4">
+
+        <div class="col-6 col-xl-3">
+            <div class="card summary-card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center gap-3">
+
+                        <div class="summary-icon">
+                            <i class="bi bi-people-fill"></i>
+                        </div>
+
+                        <div>
+                            <div class="summary-label">
+                                Total Faculty
+                            </div>
+
+                            <p class="summary-value">
+                                <%= summary.total %>
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-6 col-xl-3">
+            <div class="card summary-card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center gap-3">
+
+                        <div class="summary-icon">
+                            <i class="bi bi-person-check-fill"></i>
+                        </div>
+
+                        <div>
+                            <div class="summary-label">
+                                Active
+                            </div>
+
+                            <p class="summary-value text-success">
+                                <%= summary.active %>
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-6 col-xl-3">
+            <div class="card summary-card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center gap-3">
+
+                        <div class="summary-icon">
+                            <i class="bi bi-person-x-fill"></i>
+                        </div>
+
+                        <div>
+                            <div class="summary-label">
+                                Inactive
+                            </div>
+
+                            <p class="summary-value text-danger">
+                                <%= summary.inactive %>
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-6 col-xl-3">
+            <div class="card summary-card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center gap-3">
+
+                        <div class="summary-icon">
+                            <i class="bi bi-file-earmark-person-fill"></i>
+                        </div>
+
+                        <div>
+                            <div class="summary-label">
+                                Profiles
+                            </div>
+
+                            <p class="summary-value">
+                                <%= summary.withProfile %>
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         FILTERS
+    ====================================================== -->
+
+    <div class="card filter-card mb-4">
+
+        <div class="card-header">
+            <h5 class="filter-title">
+                <i class="bi bi-funnel-fill me-2"></i>
+                Search & Filters
+            </h5>
+        </div>
+
+        <div class="card-body">
+
+            <form method="GET" action="/admin/faculty">
+
+                <div class="row g-3">
+
+                    <!-- Search -->
+
+                    <div class="col-12 col-lg-4">
+
+                        <label class="form-label">
+                            Search
+                        </label>
+
+                        <input
+                            type="text"
+                            name="search"
+                            class="form-control"
+                            placeholder="Name, email, employee ID, mobile..."
+                            value="<%= filters.search || '' %>"
+                        >
+
+                    </div>
+
+
+                    <!-- Department -->
+
+                    <div class="col-12 col-md-6 col-lg-2">
+
+                        <label class="form-label">
+                            Department
+                        </label>
+
+                        <select
+                            name="department"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                All Departments
+                            </option>
+
+                            <% filterOptions.departments.forEach(item => { %>
+
+                                <option
+                                    value="<%= item %>"
+                                    <%= filters.department === item ? "selected" : "" %>
+                                >
+                                    <%= item %>
+                                </option>
+
+                            <% }) %>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Program -->
+
+                    <div class="col-12 col-md-6 col-lg-2">
+
+                        <label class="form-label">
+                            Program
+                        </label>
+
+                        <select
+                            name="program"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                All Programs
+                            </option>
+
+                            <% filterOptions.programs.forEach(item => { %>
+
+                                <option
+                                    value="<%= item %>"
+                                    <%= filters.program === item ? "selected" : "" %>
+                                >
+                                    <%= item %>
+                                </option>
+
+                            <% }) %>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Designation -->
+
+                    <div class="col-12 col-md-6 col-lg-2">
+
+                        <label class="form-label">
+                            Designation
+                        </label>
+
+                        <select
+                            name="designation"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                All Designations
+                            </option>
+
+                            <option
+                                value="professor"
+                                <%= filters.designation === "professor" ? "selected" : "" %>
+                            >
+                                Professor
+                            </option>
+
+                            <option
+                                value="associate-professor"
+                                <%= filters.designation === "associate-professor" ? "selected" : "" %>
+                            >
+                                Associate Professor
+                            </option>
+
+                            <option
+                                value="assistant-professor"
+                                <%= filters.designation === "assistant-professor" ? "selected" : "" %>
+                            >
+                                Assistant Professor
+                            </option>
+
+                            <option
+                                value="lecturer"
+                                <%= filters.designation === "lecturer" ? "selected" : "" %>
+                            >
+                                Lecturer
+                            </option>
+
+                            <option
+                                value="visiting-faculty"
+                                <%= filters.designation === "visiting-faculty" ? "selected" : "" %>
+                            >
+                                Visiting Faculty
+                            </option>
+
+                            <option
+                                value="guest-faculty"
+                                <%= filters.designation === "guest-faculty" ? "selected" : "" %>
+                                >
+                                Guest Faculty
+                            </option>
+
+                            <option
+                                value="research-faculty"
+                                <%= filters.designation === "research-faculty" ? "selected" : "" %>
+                            >
+                                Research Faculty
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Status -->
+
+                    <div class="col-12 col-md-6 col-lg-2">
+
+                        <label class="form-label">
+                            Account Status
+                        </label>
+
+                        <select
+                            name="status"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                All Status
+                            </option>
+
+                            <option
+                                value="active"
+                                <%= filters.status === "active" ? "selected" : "" %>
+                            >
+                                Active
+                            </option>
+
+                            <option
+                                value="inactive"
+                                <%= filters.status === "inactive" ? "selected" : "" %>
+                            >
+                                Inactive
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Employment Type -->
+
+                    <div class="col-12 col-md-6 col-lg-2">
+
+                        <label class="form-label">
+                            Employment
+                        </label>
+
+                        <select
+                            name="employmentType"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                All Types
+                            </option>
+
+                            <option
+                                value="full-time"
+                                <%= filters.employmentType === "full-time" ? "selected" : "" %>
+                            >
+                                Full Time
+                            </option>
+
+                            <option
+                                value="part-time"
+                                <%= filters.employmentType === "part-time" ? "selected" : "" %>
+                            >
+                                Part Time
+                            </option>
+
+                            <option
+                                value="contract"
+                                <%= filters.employmentType === "contract" ? "selected" : "" %>
+                            >
+                                Contract
+                            </option>
+
+                            <option
+                                value="visiting"
+                                <%= filters.employmentType === "visiting" ? "selected" : "" %>
+                            >
+                                Visiting
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Buttons -->
+
+                    <div class="col-12">
+
+                        <div class="d-flex flex-wrap gap-2">
+
+                            <button
+                                type="submit"
+                                class="btn btn-primary"
+                            >
+                                <i class="bi bi-search me-1"></i>
+                                Apply Filters
+                            </button>
+
+                            <a
+                                href="/admin/faculty"
+                                class="btn btn-outline-secondary"
+                            >
+                                <i class="bi bi-arrow-counterclockwise me-1"></i>
+                                Reset
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         FACULTY TABLE
+    ====================================================== -->
+
+    <div class="card table-card">
+
+        <div class="card-header">
+
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2">
+
+                <h5 class="filter-title">
+                    <i class="bi bi-person-lines-fill me-2"></i>
+                    Faculty Records
+                </h5>
+
+                <span class="text-muted small">
+                    Showing <strong><%= faculty.length %></strong> record(s)
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="table-responsive">
+
+            <% if (faculty.length > 0) { %>
+
+                <table class="table faculty-table table-hover">
+
+                    <thead>
+
+                        <tr>
+                            <th>Faculty</th>
+                            <th>Employee ID</th>
+                            <th>Department</th>
+                            <th>Program</th>
+                            <th>Designation</th>
+                            <th>Employment</th>
+                            <th>Status</th>
+                            <th class="text-end">Action</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        <% faculty.forEach(item => { %>
+
+                            <tr>
+
+                                <!-- Faculty -->
+
+                                <td>
+
+                                    <div class="faculty-name">
+                                        <%= item.user?.name || "N/A" %>
+                                    </div>
+
+                                    <div class="faculty-email">
+                                        <%= item.user?.email || "No email" %>
+                                    </div>
+
+                                </td>
+
+
+                                <!-- Employee ID -->
+
+                                <td>
+
+                                    <% if (item.employeeId) { %>
+
+                                        <span class="employee-id">
+                                            <%= item.employeeId %>
+                                        </span>
+
+                                    <% } else { %>
+
+                                        <span class="text-muted">
+                                            No Profile
+                                        </span>
+
+                                    <% } %>
+
+                                </td>
+
+
+                                <!-- Department -->
+
+                                <td>
+
+                                    <%= item.department || "—" %>
+
+                                </td>
+
+
+                                <!-- Program -->
+
+                                <td>
+
+                                    <%= item.program || "—" %>
+
+                                </td>
+
+
+                                <!-- Designation -->
+
+                                <td>
+
+                                    <% if (item.designation) { %>
+
+                                        <span class="designation-badge">
+
+                                            <%= item.designation
+                                                .replace(/-/g, " ")
+                                                .replace(/\b\w/g, letter => letter.toUpperCase())
+                                            %>
+
+                                        </span>
+
+                                    <% } else { %>
+
+                                        <span class="text-muted">
+                                            —
+                                        </span>
+
+                                    <% } %>
+
+                                </td>
+
+
+                                <!-- Employment -->
+
+                                <td>
+
+                                    <% if (item.employmentType) { %>
+
+                                        <%= item.employmentType
+                                            .replace(/-/g, " ")
+                                            .replace(/\b\w/g, letter => letter.toUpperCase())
+                                        %>
+
+                                    <% } else { %>
+
+                                        <span class="text-muted">
+                                            —
+                                        </span>
+
+                                    <% } %>
+
+                                </td>
+
+
+                                <!-- Status -->
+
+                                <td>
+
+                                    <% if (item.user?.isActive) { %>
+
+                                        <span class="status-badge status-active">
+                                            <i class="bi bi-check-circle-fill"></i>
+                                            Active
+                                        </span>
+
+                                    <% } else { %>
+
+                                        <span class="status-badge status-inactive">
+                                            <i class="bi bi-x-circle-fill"></i>
+                                            Inactive
+                                        </span>
+
+                                    <% } %>
+
+                                </td>
+
+
+                                <!-- Action -->
+
+                                <td class="text-end">
+
+                                    <% if (item._id) { %>
+
+                                        <a
+                                            href="/admin/faculty/<%= item._id %>"
+                                            class="btn btn-outline-primary action-btn"
+                                        >
+                                            <i class="bi bi-eye-fill me-1"></i>
+                                            View
+                                        </a>
+
+                                    <% } else { %>
+
+                                        <span class="text-muted small">
+                                            No Profile
+                                        </span>
+
+                                    <% } %>
+
+                                </td>
+
+                            </tr>
+
+                        <% }) %>
+
+                    </tbody>
+
+                </table>
+
+            <% } else { %>
+
+                <div class="empty-state">
+
+                    <i class="bi bi-person-x"></i>
+
+                    <h5>
+                        No Faculty Found
+                    </h5>
+
+                    <p class="mb-3">
+                        No faculty records match the selected filters.
+                    </p>
+
+                    <a
+                        href="/admin/faculty"
+                        class="btn btn-outline-primary btn-sm"
+                    >
+                        Clear Filters
+                    </a>
+
+                </div>
+
+            <% } %>
+
+        </div>
+
+    </div>
+
+</div>

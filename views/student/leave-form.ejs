@@ -1,0 +1,383 @@
+<% layout("layouts/boilerplate") -%>
+<div class="container py-4">
+
+    <div class="row justify-content-center">
+
+        <div class="col-xl-9 col-lg-10">
+
+            <!-- Header -->
+            <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+
+                <div>
+                    <h2 class="fw-bold mb-1">
+                        <i class="bi bi-calendar2-x me-2"></i>
+                        Apply for Leave
+                    </h2>
+
+                    <p class="text-muted mb-0">
+                        Submit your leave request for approval.
+                    </p>
+                </div>
+
+                <a
+                    href="/student/leave"
+                    class="btn btn-outline-primary mt-3 mt-md-0"
+                >
+                    <i class="bi bi-clock-history me-1"></i>
+                    My Leave Requests
+                </a>
+
+            </div>
+
+
+            <!-- Academic Information -->
+            <div class="card border-0 shadow-sm mb-4">
+
+                <div class="card-body p-4">
+
+                    <h5 class="fw-bold mb-3">
+                        <i class="bi bi-mortarboard me-2"></i>
+                        Academic Information
+                    </h5>
+
+                    <div class="row g-3">
+
+                        <div class="col-md-6">
+                            <small class="text-muted d-block">
+                                Student ID
+                            </small>
+
+                            <strong>
+                                <%= studentProfile.studentId %>
+                            </strong>
+                        </div>
+
+                        <div class="col-md-6">
+                            <small class="text-muted d-block">
+                                Department
+                            </small>
+
+                            <strong>
+                                <%= studentProfile.department %>
+                            </strong>
+                        </div>
+
+                        <div class="col-md-4">
+                            <small class="text-muted d-block">
+                                Program
+                            </small>
+
+                            <strong>
+                                <%= studentProfile.program %>
+                            </strong>
+                        </div>
+
+                        <div class="col-md-4">
+                            <small class="text-muted d-block">
+                                Semester
+                            </small>
+
+                            <strong>
+                                Semester <%= studentProfile.semester %>
+                            </strong>
+                        </div>
+
+                        <div class="col-md-4">
+                            <small class="text-muted d-block">
+                                Section
+                            </small>
+
+                            <strong>
+                                <%= studentProfile.section || "N/A" %>
+                            </strong>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Leave Form -->
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-body p-4 p-md-5">
+
+                    <form
+                        action="/student/leave/apply"
+                        method="POST"
+                        id="leaveForm"
+                    >
+
+                        <!-- Leave Type -->
+                        <div class="mb-4">
+
+                            <label
+                                for="leaveType"
+                                class="form-label fw-semibold"
+                            >
+                                Leave Type
+                                <span class="text-danger">*</span>
+                            </label>
+
+                            <select
+                                class="form-select"
+                                id="leaveType"
+                                name="leaveType"
+                                required
+                            >
+
+                                <option value="">
+                                    Select leave type
+                                </option>
+
+                                <option value="casual">
+                                    Casual Leave
+                                </option>
+
+                                <option value="medical">
+                                    Medical Leave
+                                </option>
+
+                                <option value="emergency">
+                                    Emergency Leave
+                                </option>
+
+                                <option value="other">
+                                    Other
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- Dates -->
+                        <div class="row g-3 mb-4">
+
+                            <div class="col-md-6">
+
+                                <label
+                                    for="fromDate"
+                                    class="form-label fw-semibold"
+                                >
+                                    From Date
+                                    <span class="text-danger">*</span>
+                                </label>
+
+                                <input
+                                    type="date"
+                                    class="form-control"
+                                    id="fromDate"
+                                    name="fromDate"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <div class="col-md-6">
+
+                                <label
+                                    for="toDate"
+                                    class="form-label fw-semibold"
+                                >
+                                    To Date
+                                    <span class="text-danger">*</span>
+                                </label>
+
+                                <input
+                                    type="date"
+                                    class="form-control"
+                                    id="toDate"
+                                    name="toDate"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Total Days -->
+                        <div class="mb-4">
+
+                            <label
+                                for="totalDays"
+                                class="form-label fw-semibold"
+                            >
+                                Total Leave Days
+                            </label>
+
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="totalDays"
+                                value="0 days"
+                                readonly
+                            >
+
+                            <div class="form-text">
+                                Number of days will be calculated automatically.
+                            </div>
+
+                        </div>
+
+
+                        <!-- Reason -->
+                        <div class="mb-4">
+
+                            <label
+                                for="reason"
+                                class="form-label fw-semibold"
+                            >
+                                Reason for Leave
+                                <span class="text-danger">*</span>
+                            </label>
+
+                            <textarea
+                                class="form-control"
+                                id="reason"
+                                name="reason"
+                                rows="5"
+                                minlength="5"
+                                maxlength="1000"
+                                placeholder="Explain the reason for your leave..."
+                                required
+                            ></textarea>
+
+                            <div class="form-text">
+                                Maximum 1000 characters.
+                            </div>
+
+                        </div>
+
+
+                        <!-- Information -->
+                        <div class="alert alert-info border-0">
+
+                            <div class="d-flex">
+
+                                <i class="bi bi-info-circle-fill fs-5 me-2"></i>
+
+                                <div>
+                                    <strong>
+                                        Approval Process
+                                    </strong>
+
+                                    <p class="mb-0 mt-1">
+                                        Your request will first be reviewed
+                                        by the administration and then
+                                        forwarded to your HOD for final approval.
+                                    </p>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Buttons -->
+                        <div class="d-flex flex-column flex-sm-row gap-2 mt-4">
+
+                            <button
+                                type="submit"
+                                class="btn btn-primary px-4"
+                            >
+                                <i class="bi bi-send me-1"></i>
+                                Submit Leave Request
+                            </button>
+
+                            <a
+                                href="/student/dashboard"
+                                class="btn btn-outline-secondary px-4"
+                            >
+                                Cancel
+                            </a>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+    const fromDate =
+        document.getElementById("fromDate");
+
+    const toDate =
+        document.getElementById("toDate");
+
+    const totalDays =
+        document.getElementById("totalDays");
+
+
+    function calculateDays() {
+
+        if (
+            !fromDate.value ||
+            !toDate.value
+        ) {
+            totalDays.value = "0 days";
+            return;
+        }
+
+        const start =
+            new Date(fromDate.value);
+
+        const end =
+            new Date(toDate.value);
+
+        if (end < start) {
+
+            totalDays.value =
+                "Invalid date range";
+
+            return;
+        }
+
+        const difference =
+            end.getTime() -
+            start.getTime();
+
+        const days =
+            Math.floor(
+                difference /
+                (1000 * 60 * 60 * 24)
+            ) + 1;
+
+        totalDays.value =
+            `${days} day${days > 1 ? "s" : ""}`;
+    }
+
+
+    fromDate.addEventListener(
+        "change",
+        calculateDays
+    );
+
+    toDate.addEventListener(
+        "change",
+        calculateDays
+    );
+
+
+    // Prevent selecting an end date
+    // earlier than start date.
+    fromDate.addEventListener(
+        "change",
+        () => {
+            toDate.min = fromDate.value;
+        }
+    );
+</script>

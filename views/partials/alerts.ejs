@@ -1,0 +1,40 @@
+<% if (typeof success !== "undefined" && success) { %>
+
+    <div class="container mt-3">
+        <div
+            class="alert alert-success alert-dismissible fade show"
+            role="alert"
+        >
+            <i class="bi bi-check-circle me-2"></i>
+            <%= success %>
+
+            <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"
+            ></button>
+        </div>
+    </div>
+
+<% } %>
+
+
+<% if (typeof error !== "undefined" && error && typeof error === "string") { %>
+
+    <div class="container mt-3">
+        <div
+            class="alert alert-danger alert-dismissible fade show"
+            role="alert"
+        >
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            <%= error %>
+
+            <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"
+            ></button>
+        </div>
+    </div>
+
+<% } %>

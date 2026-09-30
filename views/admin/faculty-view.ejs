@@ -1,0 +1,619 @@
+<% layout("layouts/boilerplate") -%>
+
+<style>
+    .faculty-page {
+        padding: 28px 0 50px;
+    }
+
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+
+    .page-title {
+        margin: 0;
+        font-weight: 700;
+        color: #1f2937;
+    }
+
+    .page-subtitle {
+        margin: 5px 0 0;
+        color: #6b7280;
+        font-size: 14px;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .profile-card {
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 16px;
+        padding: 25px;
+        margin-bottom: 22px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+    }
+
+    .profile-header {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .profile-avatar {
+        width: 82px;
+        height: 82px;
+        border-radius: 50%;
+        background: #eef2ff;
+        color: #4f46e5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+        font-weight: 700;
+        flex-shrink: 0;
+    }
+
+    .profile-name {
+        margin: 0;
+        font-size: 25px;
+        font-weight: 700;
+        color: #111827;
+    }
+
+    .employee-id {
+        margin-top: 5px;
+        color: #6b7280;
+        font-size: 14px;
+    }
+
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 11px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        margin-top: 10px;
+    }
+
+    .status-active {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .status-inactive {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .section-card {
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 16px;
+        padding: 24px;
+        margin-bottom: 22px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+    }
+
+    .section-title {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        margin: 0 0 20px;
+        font-size: 18px;
+        font-weight: 700;
+        color: #1f2937;
+        padding-bottom: 13px;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .section-title i {
+        color: #4f46e5;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px 25px;
+    }
+
+    .info-item {
+        min-width: 0;
+    }
+
+    .info-label {
+        display: block;
+        font-size: 12px;
+        color: #6b7280;
+        font-weight: 600;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+    }
+
+    .info-value {
+        color: #111827;
+        font-size: 15px;
+        font-weight: 500;
+        word-break: break-word;
+    }
+
+    .info-value.muted {
+        color: #9ca3af;
+    }
+
+    .badge-soft {
+        display: inline-block;
+        padding: 5px 10px;
+        border-radius: 7px;
+        font-size: 12px;
+        font-weight: 600;
+        background: #eef2ff;
+        color: #4338ca;
+    }
+
+    .back-btn {
+        border-radius: 9px;
+    }
+
+    @media (max-width: 768px) {
+        .page-header {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .profile-header {
+            align-items: flex-start;
+        }
+
+        .info-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .profile-card,
+        .section-card {
+            padding: 18px;
+        }
+
+        .profile-name {
+            font-size: 21px;
+        }
+    }
+</style>
+
+<div class="container-fluid faculty-page">
+
+    <div class="page-header">
+
+        <div>
+            <h1 class="page-title">
+                Faculty Profile
+            </h1>
+
+            <p class="page-subtitle">
+                Complete faculty information and account details
+            </p>
+        </div>
+
+        <div class="action-buttons">
+
+            <a
+                href="/admin/faculty"
+                class="btn btn-outline-secondary back-btn"
+            >
+                <i class="bi bi-arrow-left"></i>
+                Back to Faculty
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- PROFILE HEADER -->
+
+    <div class="profile-card">
+
+        <div class="profile-header">
+
+            <div class="profile-avatar">
+                <%= faculty.user.name
+                    ? faculty.user.name.charAt(0).toUpperCase()
+                    : "F"
+                %>
+            </div>
+
+            <div>
+
+                <h2 class="profile-name">
+                    <%= faculty.user.name %>
+                </h2>
+
+                <div class="employee-id">
+                    Employee ID:
+                    <strong>
+                        <%= faculty.employeeId || "Not Available" %>
+                    </strong>
+                </div>
+
+                <% if (faculty.user.isActive) { %>
+
+                    <span class="status-badge status-active">
+                        <i class="bi bi-check-circle-fill"></i>
+                        Active Account
+                    </span>
+
+                <% } else { %>
+
+                    <span class="status-badge status-inactive">
+                        <i class="bi bi-x-circle-fill"></i>
+                        Inactive Account
+                    </span>
+
+                <% } %>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- PERSONAL INFORMATION -->
+
+    <div class="section-card">
+
+        <h3 class="section-title">
+            <i class="bi bi-person-vcard-fill"></i>
+            Personal Information
+        </h3>
+
+        <div class="info-grid">
+
+            <div class="info-item">
+                <span class="info-label">Full Name</span>
+                <div class="info-value">
+                    <%= faculty.user.name %>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <span class="info-label">Employee ID</span>
+                <div class="info-value">
+                    <%= faculty.employeeId %>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <span class="info-label">Date of Birth</span>
+                <div class="info-value">
+                    <%= faculty.dob
+                        ? new Date(faculty.dob).toLocaleDateString("en-IN")
+                        : "Not Available"
+                    %>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <span class="info-label">Gender</span>
+                <div class="info-value">
+                    <%= faculty.gender
+                        ? faculty.gender.charAt(0).toUpperCase() + faculty.gender.slice(1)
+                        : "Not Available"
+                    %>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <span class="info-label">Mobile</span>
+                <div class="info-value">
+                    <%= faculty.mobile %>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <span class="info-label">Email</span>
+                <div class="info-value">
+                    <%= faculty.user.email %>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- PROFESSIONAL INFORMATION -->
+
+    <div class="section-card">
+
+        <h3 class="section-title">
+            <i class="bi bi-briefcase-fill"></i>
+            Professional Information
+        </h3>
+
+        <div class="info-grid">
+
+            <div class="info-item">
+                <span class="info-label">Designation</span>
+                <div class="info-value">
+                    <span class="badge-soft">
+                        <%= faculty.designation %>
+                    </span>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <span class="info-label">Employment Type</span>
+                <div class="info-value">
+                    <%= faculty.employmentType %>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <span class="info-label">Joining Date</span>
+                <div class="info-value">
+                    <%= faculty.joiningDate
+                        ? new Date(faculty.joiningDate).toLocaleDateString("en-IN")
+                        : "Not Available"
+                    %>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <span class="info-label">Experience</span>
+                <div class="info-value">
+                    <%= faculty.experience %> years
+                </div>
+            </div>
+
+            <div class="info-item">
+                <span class="info-label">Department</span>
+                <div class="info-value">
+                    <%= faculty.department %>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <span class="info-label">Program</span>
+                <div class="info-value">
+                    <%= faculty.program %>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <span class="info-label">Specialization</span>
+                <div class="info-value">
+                    <%= faculty.specialization %>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <span class="info-label">Courses</span>
+                <div class="info-value">
+                    <%= faculty.courses || "Not Assigned" %>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- QUALIFICATION -->
+
+    <div class="section-card">
+
+        <h3 class="section-title">
+            <i class="bi bi-mortarboard-fill"></i>
+            Academic Qualification
+        </h3>
+
+        <div class="info-grid">
+
+            <div class="info-item">
+                <span class="info-label">Highest Qualification</span>
+                <div class="info-value">
+                    <span class="badge-soft">
+                        <%= faculty.highestQualification %>
+                    </span>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <span class="info-label">Qualification Field</span>
+                <div class="info-value">
+                    <%= faculty.qualificationField %>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <span class="info-label">University / Institution</span>
+                <div class="info-value">
+                    <%= faculty.qualificationUniversity %>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <span class="info-label">Experience</span>
+                <div class="info-value">
+                    <%= faculty.experience %> years
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ADDRESS -->
+
+    <div class="section-card">
+
+        <h3 class="section-title">
+            <i class="bi bi-geo-alt-fill"></i>
+            Address Information
+        </h3>
+
+        <div class="info-grid">
+
+            <div class="info-item" style="grid-column: 1 / -1;">
+                <span class="info-label">Address</span>
+                <div class="info-value">
+                    <%= faculty.address %>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <span class="info-label">City</span>
+                <div class="info-value">
+                    <%= faculty.city %>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <span class="info-label">State</span>
+                <div class="info-value">
+                    <%= faculty.state %>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <span class="info-label">PIN Code</span>
+                <div class="info-value">
+                    <%= faculty.pin %>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- EMERGENCY CONTACT -->
+
+    <div class="section-card">
+
+        <h3 class="section-title">
+            <i class="bi bi-telephone-fill"></i>
+            Emergency Contact
+        </h3>
+
+        <div class="info-grid">
+
+            <div class="info-item">
+                <span class="info-label">Emergency Contact</span>
+                <div class="info-value">
+                    <%= faculty.emergencyContact %>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <span class="info-label">Relation</span>
+                <div class="info-value">
+                    <%= faculty.emergencyRelation %>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ACCOUNT INFORMATION -->
+
+    <div class="section-card">
+
+        <h3 class="section-title">
+            <i class="bi bi-shield-lock-fill"></i>
+            Account Information
+        </h3>
+
+        <div class="info-grid">
+
+            <div class="info-item">
+                <span class="info-label">Account Email</span>
+                <div class="info-value">
+                    <%= faculty.user.email %>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <span class="info-label">Role</span>
+                <div class="info-value">
+                    <span class="badge-soft">
+                        <%= faculty.user.role %>
+                    </span>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <span class="info-label">Account Status</span>
+                <div class="info-value">
+
+                    <% if (faculty.user.isActive) { %>
+
+                        <span class="badge-soft">
+                            Active
+                        </span>
+
+                    <% } else { %>
+
+                        <span class="badge bg-danger">
+                            Inactive
+                        </span>
+
+                    <% } %>
+
+                </div>
+            </div>
+
+            <div class="info-item">
+                <span class="info-label">Last Login</span>
+                <div class="info-value">
+
+                    <%= faculty.user.lastLogin
+                        ? new Date(faculty.user.lastLogin).toLocaleString("en-IN")
+                        : "Never"
+                    %>
+
+                </div>
+            </div>
+
+            <div class="info-item">
+                <span class="info-label">Account Created</span>
+                <div class="info-value">
+
+                    <%= faculty.user.createdAt
+                        ? new Date(faculty.user.createdAt).toLocaleString("en-IN")
+                        : "Not Available"
+                    %>
+
+                </div>
+            </div>
+
+            <div class="info-item">
+                <span class="info-label">Profile Updated</span>
+                <div class="info-value">
+
+                    <%= faculty.updatedAt
+                        ? new Date(faculty.updatedAt).toLocaleString("en-IN")
+                        : "Not Available"
+                    %>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

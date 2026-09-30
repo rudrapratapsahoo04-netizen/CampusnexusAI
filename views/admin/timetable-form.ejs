@@ -1,0 +1,978 @@
+<% layout("layouts/boilerplate") -%>
+
+<div class="container-fluid py-4">
+
+    <!-- ========================================== -->
+    <!-- PAGE HEADER -->
+    <!-- ========================================== -->
+
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+
+        <div>
+            <h2 class="fw-bold mb-1">
+                <i class="bi bi-calendar-week me-2"></i>
+                Create Weekly Timetable
+            </h2>
+
+            <p class="text-muted mb-0">
+                Create the complete weekly timetable for a department, program, semester and section.
+            </p>
+        </div>
+
+        <a
+            href="/admin/timetable"
+            class="btn btn-outline-secondary"
+        >
+            <i class="bi bi-arrow-left me-1"></i>
+            Back to Timetable
+        </a>
+
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- FLASH MESSAGES -->
+    <!-- ========================================== -->
+
+    <% if (typeof messages !== "undefined" && messages.error && messages.error.length) { %>
+
+        <% messages.error.forEach(message => { %>
+
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+
+                <i class="bi bi-exclamation-triangle me-2"></i>
+
+                <%= message %>
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
+                ></button>
+
+            </div>
+
+        <% }) %>
+
+    <% } %>
+
+
+    <% if (typeof messages !== "undefined" && messages.success && messages.success.length) { %>
+
+        <% messages.success.forEach(message => { %>
+
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+
+                <i class="bi bi-check-circle me-2"></i>
+
+                <%= message %>
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
+                ></button>
+
+            </div>
+
+        <% }) %>
+
+    <% } %>
+
+
+    <!-- ========================================== -->
+    <!-- MAIN FORM -->
+    <!-- ========================================== -->
+
+    <form
+        method="POST"
+        action="/admin/timetable"
+        id="weeklyTimetableForm"
+        novalidate
+    >
+
+
+        <!-- ========================================== -->
+        <!-- ACADEMIC INFORMATION -->
+        <!-- ========================================== -->
+
+        <div class="card border-0 shadow-sm mb-4">
+
+            <div class="card-header bg-white py-3">
+
+                <h5 class="fw-semibold mb-0">
+                    <i class="bi bi-mortarboard me-2"></i>
+                    Academic Information
+                </h5>
+
+            </div>
+
+
+            <div class="card-body">
+
+                <div class="row g-3">
+
+                    <!-- DEPARTMENT -->
+
+                    <div class="col-md-3">
+
+                        <label
+                            for="department"
+                            class="form-label fw-semibold"
+                        >
+                            Department
+                            <span class="text-danger">*</span>
+                        </label>
+
+                        <select
+                            name="department"
+                            id="department"
+                            class="form-select"
+                            required
+                        >
+
+                            <option value="">
+                                Select Department
+                            </option>
+
+                            <% (departments || []).forEach(department => { %>
+
+                                <option
+                                    value="<%= department._id %>"
+                                >
+                                    <%= department.name %>
+
+                                    <% if (department.code) { %>
+                                        (<%= department.code %>)
+                                    <% } %>
+
+                                </option>
+
+                            <% }) %>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- PROGRAM -->
+
+                    <div class="col-md-3">
+
+                        <label
+                            for="program"
+                            class="form-label fw-semibold"
+                        >
+                            Program / Branch
+                            <span class="text-danger">*</span>
+                        </label>
+
+                        <select
+                            name="program"
+                            id="program"
+                            class="form-select"
+                            required
+                        >
+
+                            <option value="">
+                                Select Program
+                            </option>
+
+                            <% (programs || []).forEach(program => { %>
+
+                                <option
+                                    value="<%= program._id %>"
+                                    data-department="<%= program.department %>"
+                                    data-semesters="<%= program.totalSemesters || 8 %>"
+                                >
+                                    <%= program.name %>
+
+                                    <% if (program.code) { %>
+                                        (<%= program.code %>)
+                                    <% } %>
+
+                                </option>
+
+                            <% }) %>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- SEMESTER -->
+
+                    <div class="col-md-3">
+
+                        <label
+                            for="semester"
+                            class="form-label fw-semibold"
+                        >
+                            Semester
+                            <span class="text-danger">*</span>
+                        </label>
+
+                        <select
+                            name="semester"
+                            id="semester"
+                            class="form-select"
+                            required
+                        >
+
+                            <option value="">
+                                Select Semester
+                            </option>
+
+                            <% for (let i = 1; i <= 12; i++) { %>
+
+                                <option value="<%= i %>">
+                                    Semester <%= i %>
+                                </option>
+
+                            <% } %>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- SECTION -->
+
+                    <div class="col-md-3">
+
+                        <label
+                            for="section"
+                            class="form-label fw-semibold"
+                        >
+                            Section
+                            <span class="text-danger">*</span>
+                        </label>
+
+                        <select
+                            name="section"
+                            id="section"
+                            class="form-select"
+                            required
+                        >
+
+                            <option value="">
+                                Select Section
+                            </option>
+
+                            <option value="A">
+                                Section A
+                            </option>
+
+                            <option value="B">
+                                Section B
+                            </option>
+
+                            <option value="C">
+                                Section C
+                            </option>
+
+                            <option value="D">
+                                Section D
+                            </option>
+
+                            <option value="E">
+                                Section E
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ========================================== -->
+        <!-- WEEKLY TIMETABLE -->
+        <!-- ========================================== -->
+
+        <div class="card border-0 shadow-sm mb-4">
+
+            <div class="card-header bg-white py-3">
+
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
+
+                    <div>
+
+                        <h5 class="fw-semibold mb-1">
+                            <i class="bi bi-calendar3 me-2"></i>
+                            Weekly Timetable
+                        </h5>
+
+                        <small class="text-muted">
+                            7 periods per day · Monday to Saturday
+                        </small>
+
+                    </div>
+
+                    <span class="badge bg-primary">
+                        42 Available Slots
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="card-body p-0">
+
+                <div class="table-responsive">
+
+                    <table class="table table-bordered timetable-table mb-0">
+
+                        <thead>
+
+                            <tr>
+
+                                <th class="time-column">
+                                    Time
+                                </th>
+
+                                <th>
+                                    Monday
+                                </th>
+
+                                <th>
+                                    Tuesday
+                                </th>
+
+                                <th>
+                                    Wednesday
+                                </th>
+
+                                <th>
+                                    Thursday
+                                </th>
+
+                                <th>
+                                    Friday
+                                </th>
+
+                                <th>
+                                    Saturday
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            <%
+                                const periods = [
+                                    ["09:00", "10:00"],
+                                    ["10:00", "11:00"],
+                                    ["11:00", "12:00"],
+                                    ["12:00", "13:00"],
+                                    ["13:00", "14:00"],
+                                    ["14:00", "15:00"],
+                                    ["15:00", "16:00"]
+                                ];
+
+                                const days = [
+                                    "monday",
+                                    "tuesday",
+                                    "wednesday",
+                                    "thursday",
+                                    "friday",
+                                    "saturday"
+                                ];
+                            %>
+
+
+                            <% periods.forEach((period, periodIndex) => { %>
+
+                                <tr>
+
+                                    <!-- TIME -->
+
+                                    <td class="time-cell">
+
+                                        <div class="fw-bold">
+                                            <%= period[0] %>
+                                            -
+                                            <%= period[1] %>
+                                        </div>
+
+                                    </td>
+
+
+                                    <!-- DAYS -->
+
+                                    <% days.forEach((day, dayIndex) => { %>
+
+                                        <%
+                                            const entryIndex =
+                                                periodIndex * days.length + dayIndex;
+                                        %>
+
+
+                                        <td class="timetable-cell">
+
+                                            <!-- DAY -->
+
+                                            <input
+                                                type="hidden"
+                                                name="entries[<%= entryIndex %>][day]"
+                                                value="<%= day %>"
+                                            >
+
+
+                                            <!-- START TIME -->
+
+                                            <input
+                                                type="hidden"
+                                                name="entries[<%= entryIndex %>][startTime]"
+                                                value="<%= period[0] %>"
+                                            >
+
+
+                                            <!-- END TIME -->
+
+                                            <input
+                                                type="hidden"
+                                                name="entries[<%= entryIndex %>][endTime]"
+                                                value="<%= period[1] %>"
+                                            >
+
+
+                                            <!-- SUBJECT -->
+
+                                            <div class="mb-2">
+
+                                                <label class="form-label small fw-semibold mb-1">
+                                                    Subject
+                                                </label>
+
+                                                <input
+                                                    type="text"
+                                                    name="entries[<%= entryIndex %>][courseName]"
+                                                    class="form-control form-control-sm subject-input"
+                                                    placeholder="Subject name"
+                                                    maxlength="150"
+                                                >
+
+                                            </div>
+
+
+                                            <!-- TEACHER -->
+
+                                            <div class="mb-2">
+
+                                                <label class="form-label small fw-semibold mb-1">
+                                                    Teacher
+                                                </label>
+
+                                                <input
+                                                    type="text"
+                                                    name="entries[<%= entryIndex %>][facultyName]"
+                                                    class="form-control form-control-sm teacher-input"
+                                                    placeholder="Teacher name"
+                                                    maxlength="100"
+                                                >
+
+                                            </div>
+
+
+                                            <!-- ROOM -->
+
+                                            <div class="mb-2">
+
+                                                <label class="form-label small fw-semibold mb-1">
+                                                    Room
+                                                </label>
+
+                                                <input
+                                                    type="text"
+                                                    name="entries[<%= entryIndex %>][room]"
+                                                    class="form-control form-control-sm room-input"
+                                                    placeholder="Room / Lab"
+                                                    maxlength="100"
+                                                >
+
+                                            </div>
+
+
+                                            <!-- TYPE -->
+
+                                            <div>
+
+                                                <label class="form-label small fw-semibold mb-1">
+                                                    Type
+                                                </label>
+
+                                                <select
+                                                    name="entries[<%= entryIndex %>][type]"
+                                                    class="form-select form-select-sm type-select"
+                                                >
+
+                                                    <option value="">
+                                                          None
+                                                    </option>
+
+                                                    <option value="lecture">
+                                                        Lecture
+                                                    </option>
+
+                                                    <option value="lab">
+                                                        Lab
+                                                    </option>
+
+                                                    <option value="tutorial">
+                                                        Tutorial
+                                                    </option>
+
+                                                    <option value="practical">
+                                                        Practical
+                                                    </option>
+
+                                                    <option value="seminar">
+                                                        Seminar
+                                                    </option>
+
+                                                </select>
+
+                                            </div>
+
+                                        </td>
+
+                                    <% }) %>
+
+                                </tr>
+
+                            <% }) %>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ========================================== -->
+        <!-- INFORMATION -->
+        <!-- ========================================== -->
+
+        <div class="alert alert-info border-0 shadow-sm">
+
+            <div class="d-flex gap-2">
+
+                <i class="bi bi-info-circle fs-5"></i>
+
+                <div>
+
+                    <strong>Timetable Information</strong>
+
+                    <ul class="mb-0 mt-1">
+
+                        <li>
+                            Subject and teacher names are entered manually.
+                        </li>
+
+                        <li>
+                            Empty slots will not be saved.
+                        </li>
+
+                        <li>
+                            Room can be a classroom, lab or other campus location.
+                        </li>
+
+                        <li>
+                            The system will validate timetable conflicts before saving.
+                        </li>
+
+                    </ul>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ========================================== -->
+        <!-- ACTIONS -->
+        <!-- ========================================== -->
+
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-body">
+
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+
+                    <div>
+
+                        <div class="fw-semibold">
+                            Save Weekly Timetable
+                        </div>
+
+                        <small class="text-muted">
+                            Review all subjects and teachers before saving.
+                        </small>
+
+                    </div>
+
+
+                    <div class="d-flex gap-2">
+
+                        <a
+                            href="/admin/timetable"
+                            class="btn btn-outline-secondary"
+                        >
+                            Cancel
+                        </a>
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary px-4"
+                            id="saveTimetableBtn"
+                        >
+
+                            <i class="bi bi-save me-1"></i>
+
+                            Save Weekly Timetable
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+<!-- ========================================== -->
+<!-- STYLES -->
+<!-- ========================================== -->
+
+<style>
+
+    .timetable-table {
+        min-width: 1600px;
+    }
+
+    .timetable-table thead th {
+        background: #f8f9fa;
+        text-align: center;
+        vertical-align: middle;
+        font-weight: 600;
+        white-space: nowrap;
+        padding: 14px 10px;
+    }
+
+    .time-column {
+        width: 110px;
+        min-width: 110px;
+    }
+
+    .time-cell {
+        width: 110px;
+        min-width: 110px;
+        background: #f8f9fa;
+        text-align: center;
+        vertical-align: middle;
+        white-space: nowrap;
+    }
+
+    .timetable-cell {
+        width: 250px;
+        min-width: 250px;
+        padding: 12px !important;
+        vertical-align: top;
+        background: #ffffff;
+    }
+
+    .timetable-cell:hover {
+        background: #f8fbff;
+    }
+
+    .timetable-cell .form-label {
+        color: #495057;
+    }
+
+    .timetable-cell .form-control,
+    .timetable-cell .form-select {
+        font-size: 12px;
+    }
+
+    .subject-input,
+    .teacher-input {
+        min-height: 34px;
+    }
+
+    .room-input {
+        min-height: 34px;
+    }
+
+    .type-select {
+        min-height: 34px;
+    }
+
+</style>
+
+
+<!-- ========================================== -->
+<!-- JAVASCRIPT -->
+<!-- ========================================== -->
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const form =
+            document.getElementById(
+                "weeklyTimetableForm"
+            );
+
+        const department =
+            document.getElementById(
+                "department"
+            );
+
+        const program =
+            document.getElementById(
+                "program"
+            );
+
+        const semester =
+            document.getElementById(
+                "semester"
+            );
+
+        const section =
+            document.getElementById(
+                "section"
+            );
+
+        const saveButton =
+            document.getElementById(
+                "saveTimetableBtn"
+            );
+
+
+        /*
+         * Department → Program filtering.
+         */
+        function filterPrograms() {
+
+            const selectedDepartment =
+                String(
+                    department.value || ""
+                );
+
+
+            Array.from(
+                program.options
+            ).forEach(
+                function (option, index) {
+
+                    if (index === 0) {
+                        return;
+                    }
+
+
+                    const optionDepartment =
+                        String(
+                            option.dataset.department || ""
+                        );
+
+
+                    option.hidden =
+                        Boolean(
+                            selectedDepartment &&
+                            optionDepartment !==
+                            selectedDepartment
+                        );
+
+                }
+            );
+
+
+            const selectedOption =
+                program.selectedOptions[0];
+
+
+            if (
+                selectedOption &&
+                selectedOption.hidden
+            ) {
+
+                program.value = "";
+
+            }
+
+        }
+
+
+        department.addEventListener(
+            "change",
+            filterPrograms
+        );
+
+
+        /*
+         * Initial filtering.
+         */
+        filterPrograms();
+
+
+        /*
+         * Basic validation before submit.
+         */
+        form.addEventListener(
+            "submit",
+            function (event) {
+
+                if (
+                    !department.value ||
+                    !program.value ||
+                    !semester.value ||
+                    !section.value
+                ) {
+
+                    event.preventDefault();
+
+                    alert(
+                        "Please select Department, Program, Semester and Section."
+                    );
+
+                    return;
+
+                }
+
+
+                /*
+                 * Count filled timetable slots.
+                 */
+                const subjectInputs =
+                    document.querySelectorAll(
+                        ".subject-input"
+                    );
+
+                let filledSlots = 0;
+
+
+                subjectInputs.forEach(
+                    function (input) {
+
+                        if (
+                            input.value.trim()
+                        ) {
+
+                            filledSlots++;
+
+                        }
+
+                    }
+                );
+
+
+                if (filledSlots === 0) {
+
+                    event.preventDefault();
+
+                    alert(
+                        "Please enter at least one subject in the timetable."
+                    );
+
+                    return;
+
+                }
+
+
+                /*
+                 * If subject is entered,
+                 * teacher is required.
+                 */
+                const cells =
+                    document.querySelectorAll(
+                        ".timetable-cell"
+                    );
+
+
+                let invalidCell = false;
+
+
+                cells.forEach(
+                    function (cell) {
+
+                        const subject =
+                            cell.querySelector(
+                                ".subject-input"
+                            );
+
+                        const teacher =
+                            cell.querySelector(
+                                ".teacher-input"
+                            );
+
+
+                        if (
+                            subject &&
+                            teacher &&
+                            subject.value.trim() &&
+                            !teacher.value.trim()
+                        ) {
+
+                            invalidCell = true;
+
+                        }
+
+                    }
+                );
+
+
+                if (invalidCell) {
+
+                    event.preventDefault();
+
+                    alert(
+                        "Please enter the teacher name for every subject."
+                    );
+
+                    return;
+
+                }
+
+
+                /*
+                 * Prevent double submission.
+                 */
+                saveButton.disabled = true;
+
+                saveButton.innerHTML = `
+                    <span
+                        class="spinner-border spinner-border-sm me-1"
+                    ></span>
+                    Saving...
+                `;
+
+            }
+        );
+
+    }
+
+);
+
+</script>

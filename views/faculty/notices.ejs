@@ -1,0 +1,4636 @@
+<%= layout("layouts/boilerplate") -%>
+<%
+const safeAssignments = Array.isArray(assignments)
+    ? assignments
+    : [];
+
+const safeLeaves = Array.isArray(approvedLeaves)
+    ? approvedLeaves
+    : [];
+
+const safeNotices = Array.isArray(notices)
+    ? notices
+    : [];
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function formatDate(date) {
+
+    if (!date) {
+        return "-";
+    }
+
+    return new Date(date).toLocaleDateString("en-IN", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric"
+    });
+}
+
+
+function calculateLeaveDays(startDate, endDate) {
+
+    if (!startDate || !endDate) {
+        return 0;
+    }
+
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+
+    start.setHours(0, 0, 0, 0);
+    end.setHours(0, 0, 0, 0);
+
+    const difference =
+        end.getTime() - start.getTime();
+
+    return (
+        Math.floor(
+            difference / (1000 * 60 * 60 * 24)
+        ) + 1
+    );
+}
+
+
+function formatNoticeType(type) {
+
+    if (!type) {
+        return "Notice";
+    }
+
+    return type
+        .replaceAll("_", " ")
+        .replace(/\b\w/g, function (c) {
+            return c.toUpperCase();
+        });
+}
+
+%>
+
+
+<div class="container-fluid py-4 faculty-notice-page">
+
+
+    <!-- =========================================================
+         HERO
+    ========================================================== -->
+
+    <div class="notice-hero mb-4">
+
+        <div class="hero-decoration hero-decoration-one"></div>
+        <div class="hero-decoration hero-decoration-two"></div>
+
+        <div class="hero-content">
+
+            <div class="hero-icon">
+                <i class="bi bi-megaphone-fill"></i>
+            </div>
+
+            <div>
+
+                <div class="hero-eyebrow">
+                    FACULTY COMMUNICATION
+                </div>
+
+                <h1 class="fw-bold mb-2">
+                    Faculty Notices
+                </h1>
+
+                <p class="mb-0 hero-description">
+                    Share important academic updates, leave information,
+                    class changes and announcements with your assigned students.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="hero-bottom">
+
+            <div class="assignment-badge">
+
+                <i class="bi bi-shield-check"></i>
+
+                <span>
+                    Only your assigned academic areas
+                </span>
+
+            </div>
+
+
+            <div class="hero-stat">
+
+                <strong>
+                    <%= safeAssignments.length %>
+                </strong>
+
+                <span>
+                    Active Assignment<%= safeAssignments.length === 1 ? "" : "s" %>
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =========================================================
+         ALERTS
+    ========================================================== -->
+
+    <% if (typeof success !== "undefined" && success) { %>
+
+        <div class="alert alert-success modern-alert shadow-sm">
+
+            <i class="bi bi-check-circle-fill"></i>
+
+            <span>
+                <%= success %>
+            </span>
+
+            <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="alert">
+            </button>
+
+        </div>
+
+    <% } %>
+
+
+    <% if (typeof error !== "undefined" && error) { %>
+
+        <div class="alert alert-danger modern-alert shadow-sm">
+
+            <i class="bi bi-exclamation-triangle-fill"></i>
+
+            <span>
+                <%= error %>
+            </span>
+
+            <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="alert">
+            </button>
+
+        </div>
+
+    <% } %>
+
+
+
+    <!-- =========================================================
+         NO ASSIGNMENTS
+    ========================================================== -->
+
+    <% if (safeAssignments.length === 0) { %>
+
+        <div class="empty-assignment-card">
+
+            <div class="empty-icon">
+
+                <i class="bi bi-journal-x"></i>
+
+            </div>
+
+            <div class="empty-badge">
+                ASSIGNMENT REQUIRED
+            </div>
+
+            <h3>
+                No Active Faculty Assignments
+            </h3>
+
+            <p>
+                You currently do not have any active course,
+                semester or section assignments.
+            </p>
+
+            <div class="assignment-help">
+
+                <i class="bi bi-info-circle-fill"></i>
+
+                <span>
+                    Please contact the administrator and ask them to
+                    assign your department, program, semester, section
+                    and course.
+                </span>
+
+            </div>
+
+        </div>
+
+    <% } else { %>
+
+
+
+    <!-- =========================================================
+         MAIN GRID
+    ========================================================== -->
+
+    <div class="row g-4">
+
+
+        <!-- =====================================================
+             LEFT — CREATE NOTICE
+        ====================================================== -->
+
+        <div class="col-xl-5">
+
+            <div class="glass-card publish-card">
+
+                <div class="card-header-modern">
+
+                    <div>
+
+                        <span class="section-label">
+                            CREATE
+                        </span>
+
+                        <h3 class="mb-1">
+                            Publish New Notice
+                        </h3>
+
+                        <p class="header-description mb-0">
+                            Send an update to your assigned students.
+                        </p>
+
+                    </div>
+
+                    <div class="header-icon">
+                        <i class="bi bi-pencil-square"></i>
+                    </div>
+
+                </div>
+
+
+
+                <form
+                    method="POST"
+                    action="/faculty/notices/publish"
+                    id="noticeForm"
+                    novalidate>
+
+
+                    <!-- =================================================
+                         NOTICE TYPE
+                    ================================================== -->
+
+                    <div class="form-group-modern">
+
+                        <label>
+                            Notice Type
+                            <span>*</span>
+                        </label>
+
+                        <select
+                            class="form-select modern-input"
+                            name="noticeType"
+                            id="noticeType"
+                            required>
+
+                            <option value="">
+                                Select notice type
+                            </option>
+
+                            <option value="faculty_leave">
+                                Faculty Leave
+                            </option>
+
+                            <option value="class_cancelled">
+                                Class Cancelled
+                            </option>
+
+                            <option value="class_rescheduled">
+                                Class Rescheduled
+                            </option>
+
+                            <option value="academic">
+                                Academic Notice
+                            </option>
+
+                            <option value="assignment">
+                                Assignment
+                            </option>
+
+                            <option value="other">
+                                Other
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+
+                    <!-- =================================================
+                         TITLE
+                    ================================================== -->
+
+                    <div class="form-group-modern">
+
+                        <label>
+                            Notice Title
+                            <span>*</span>
+                        </label>
+
+                        <input
+                            type="text"
+                            name="title"
+                            id="noticeTitle"
+                            class="form-control modern-input"
+                            placeholder="e.g. Faculty Leave — Classes Suspended"
+                            maxlength="200"
+                            required>
+
+                    </div>
+
+
+
+                    <!-- =================================================
+                         NOTICE DATE
+                    ================================================== -->
+
+                    <div class="form-group-modern">
+
+                        <label>
+                            Notice Date
+                        </label>
+
+                        <input
+                            type="date"
+                            name="noticeDate"
+                            id="noticeDate"
+                            class="form-control modern-input">
+
+                    </div>
+
+
+
+                    <!-- =================================================
+                         DESCRIPTION
+                    ================================================== -->
+
+                    <div class="form-group-modern">
+
+                        <label>
+                            Message for Students
+                            <span>*</span>
+                        </label>
+
+                        <textarea
+                            name="description"
+                            id="noticeDescription"
+                            class="form-control modern-input"
+                            rows="5"
+                            maxlength="5000"
+                            placeholder="Write the complete message students should know..."
+                            required></textarea>
+
+                        <div class="character-counter">
+                            <span id="descriptionCount">
+                                0
+                            </span>
+                            / 5000
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- =================================================
+                         TARGET CLASS
+                    ================================================== -->
+
+                    <div class="target-box">
+
+                        <div class="target-header">
+
+                            <div>
+
+                                <span class="section-label">
+                                    TARGET STUDENTS
+                                </span>
+
+                                <h5 class="mb-1">
+                                    Select Academic Area
+                                </h5>
+
+                                <small>
+                                    Students will receive the notice
+                                    according to this exact class.
+                                </small>
+
+                            </div>
+
+                            <i class="bi bi-diagram-3-fill"></i>
+
+                        </div>
+
+
+
+                        <!-- DEPARTMENT -->
+
+                        <div class="form-group-modern">
+
+                            <label>
+                                Department
+                                <span>*</span>
+                            </label>
+
+                            <select
+                                name="department"
+                                id="department"
+                                class="form-select modern-input"
+                                required>
+
+                                <option value="">
+                                    Select Department
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+
+                        <!-- PROGRAM -->
+
+                        <div class="form-group-modern">
+
+                            <label>
+                                Program
+                                <span>*</span>
+                            </label>
+
+                            <select
+                                name="program"
+                                id="program"
+                                class="form-select modern-input"
+                                disabled
+                                required>
+
+                                <option value="">
+                                    Select Program
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+
+                        <!-- SEMESTER -->
+
+                        <div class="form-group-modern">
+
+                            <label>
+                                Semester
+                                <span>*</span>
+                            </label>
+
+                            <select
+                                name="semester"
+                                id="semester"
+                                class="form-select modern-input"
+                                disabled
+                                required>
+
+                                <option value="">
+                                    Select Semester
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+
+                        <!-- SECTION -->
+
+                        <div class="form-group-modern">
+
+                            <label>
+                                Section
+                                <span>*</span>
+                            </label>
+
+                            <select
+                                name="section"
+                                id="section"
+                                class="form-select modern-input"
+                                disabled
+                                required>
+
+                                <option value="">
+                                    Select Section
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+
+                        <!-- COURSE -->
+
+                        <div class="form-group-modern">
+
+                            <label>
+                                Course
+                                <span>*</span>
+                            </label>
+
+                            <select
+                                name="courseCode"
+                                id="courseCode"
+                                class="form-select modern-input"
+                                disabled
+                                required>
+
+                                <option value="">
+                                    Select Course
+                                </option>
+
+                            </select>
+
+                            <input
+                                type="hidden"
+                                name="courseName"
+                                id="courseName">
+
+                        </div>
+
+
+
+                        <!-- TARGET SUMMARY -->
+
+                        <div
+                            id="selectionSummary"
+                            class="selection-summary d-none">
+
+                            <div class="summary-icon">
+
+                                <i class="bi bi-check-circle-fill"></i>
+
+                            </div>
+
+                            <div>
+
+                                <small>
+                                    NOTICE WILL BE SENT TO
+                                </small>
+
+                                <strong id="selectionText">
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- =================================================
+                         FACULTY LEAVE
+                    ================================================== -->
+
+                    <div
+                        id="facultyLeaveBox"
+                        class="conditional-box leave-box d-none">
+
+
+                        <div class="conditional-title">
+
+                            <div class="conditional-icon">
+                                <i class="bi bi-calendar-heart"></i>
+                            </div>
+
+                            <div>
+
+                                <strong>
+                                    Faculty Leave Details
+                                </strong>
+
+                                <small>
+                                    Students will see this information
+                                    in a clear leave notice.
+                                </small>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <label class="form-label-custom">
+                            Select Approved Leave
+                        </label>
+
+                        <select
+                            name="facultyLeave"
+                            id="facultyLeave"
+                            class="form-select modern-input">
+
+                            <option value="">
+                                Select approved leave
+                            </option>
+
+                            <% safeLeaves.forEach(leave => { %>
+
+                                <option
+                                    value="<%= leave._id %>"
+                                    data-start="<%= leave.startDate %>"
+                                    data-end="<%= leave.endDate %>"
+                                    data-type="<%= leave.leaveType || '' %>">
+
+                                    <%= leave.leaveType
+                                        ? leave.leaveType
+                                        : "Leave"
+                                    %>
+
+                                    —
+                                    <%= formatDate(leave.startDate) %>
+                                    to
+                                    <%= formatDate(leave.endDate) %>
+
+                                </option>
+
+                            <% }) %>
+
+                        </select>
+
+
+
+                        <!-- LEAVE PREVIEW -->
+
+                        <div
+                            id="leavePreview"
+                            class="leave-preview d-none">
+
+                            <div class="leave-preview-header">
+
+                                <div class="leave-preview-icon">
+                                    <i class="bi bi-calendar2-week"></i>
+                                </div>
+
+                                <div>
+
+                                    <small>
+                                        LEAVE SUMMARY
+                                    </small>
+
+                                    <strong id="leavePreviewType">
+                                        -
+                                    </strong>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="leave-info-grid">
+
+                                <div class="leave-info-item">
+
+                                    <span>
+                                        <i class="bi bi-calendar-event"></i>
+                                        From
+                                    </span>
+
+                                    <strong id="leavePreviewStart">
+                                        -
+                                    </strong>
+
+                                </div>
+
+
+                                <div class="leave-info-item">
+
+                                    <span>
+                                        <i class="bi bi-calendar-check"></i>
+                                        To
+                                    </span>
+
+                                    <strong id="leavePreviewEnd">
+                                        -
+                                    </strong>
+
+                                </div>
+
+
+                                <div class="leave-info-item leave-days-item">
+
+                                    <span>
+                                        <i class="bi bi-hourglass-split"></i>
+                                        Duration
+                                    </span>
+
+                                    <strong>
+                                        <span id="leavePreviewDays">
+                                            0
+                                        </span>
+                                        day(s)
+                                    </strong>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="leave-student-message">
+
+                                <i class="bi bi-info-circle-fill"></i>
+
+                                <span id="leaveStudentMessage">
+                                    Students will be informed about
+                                    your leave period.
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- =================================================
+                         RESCHEDULE
+                    ================================================== -->
+
+                    <div
+                        id="rescheduleBox"
+                        class="conditional-box d-none">
+
+                        <div class="conditional-title">
+
+                            <div class="conditional-icon">
+                                <i class="bi bi-calendar-event"></i>
+                            </div>
+
+                            <div>
+
+                                <strong>
+                                    New Class Schedule
+                                </strong>
+
+                                <small>
+                                    Tell students when the class
+                                    will be conducted.
+                                </small>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="row g-3">
+
+                            <div class="col-12">
+
+                                <label class="form-label-custom">
+                                    New Date
+                                </label>
+
+                                <input
+                                    type="date"
+                                    name="rescheduledDate"
+                                    class="form-control modern-input">
+
+                            </div>
+
+
+                            <div class="col-md-6">
+
+                                <label class="form-label-custom">
+                                    Start Time
+                                </label>
+
+                                <input
+                                    type="time"
+                                    name="rescheduledStartTime"
+                                    class="form-control modern-input">
+
+                            </div>
+
+
+                            <div class="col-md-6">
+
+                                <label class="form-label-custom">
+                                    End Time
+                                </label>
+
+                                <input
+                                    type="time"
+                                    name="rescheduledEndTime"
+                                    class="form-control modern-input">
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- =================================================
+                         STUDENT PREVIEW
+                    ================================================== -->
+
+                    <div
+                        id="studentNoticePreview"
+                        class="student-preview d-none">
+
+                        <div class="preview-header">
+
+                            <span>
+                                <i class="bi bi-eye"></i>
+                                STUDENT PREVIEW
+                            </span>
+
+                            <small>
+                                Approximate view
+                            </small>
+
+                        </div>
+
+
+                        <div class="preview-card">
+
+                            <div class="preview-badge">
+                                NOTICE
+                            </div>
+
+                            <h5 id="previewTitle">
+                                Your notice title
+                            </h5>
+
+                            <p id="previewDescription">
+                                Your notice message will appear here.
+                            </p>
+
+                            <div
+                                id="previewLeave"
+                                class="preview-leave d-none">
+
+                            </div>
+
+                            <div
+                                id="previewTarget"
+                                class="preview-target">
+
+                                Select target class above.
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- =================================================
+                         SUBMIT
+                    ================================================== -->
+
+                    <button
+                        type="submit"
+                        class="btn publish-btn w-100"
+                        id="publishBtn">
+
+                        <i class="bi bi-send-fill me-2"></i>
+
+                        Publish Notice
+
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =====================================================
+             RIGHT — NOTICE HISTORY
+        ====================================================== -->
+
+        <div class="col-xl-7">
+
+            <div class="glass-card history-card">
+
+                <div class="card-header-modern">
+
+                    <div>
+
+                        <span class="section-label">
+                            HISTORY
+                        </span>
+
+                        <h3 class="mb-1">
+                            Published Notices
+                        </h3>
+
+                        <p class="header-description mb-0">
+                            Track the notices you have shared.
+                        </p>
+
+                    </div>
+
+
+                    <div class="notice-count">
+
+                        <strong>
+                            <%= safeNotices.length %>
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <% if (safeNotices.length === 0) { %>
+
+                    <div class="empty-notices">
+
+                        <div class="empty-icon small">
+
+                            <i class="bi bi-megaphone"></i>
+
+                        </div>
+
+                        <h5>
+                            No Notices Published
+                        </h5>
+
+                        <p>
+                            Your published notices will appear here.
+                        </p>
+
+                    </div>
+
+                <% } else { %>
+
+
+                    <div class="notice-list">
+
+                        <% safeNotices.forEach(notice => { %>
+
+                            <div class="notice-item">
+
+
+                                <!-- NOTICE HEADER -->
+
+                                <div class="notice-item-top">
+
+                                    <div>
+
+                                        <span class="notice-type-badge">
+
+                                            <%= formatNoticeType(
+                                                notice.noticeType
+                                            ) %>
+
+                                        </span>
+
+                                        <h5 class="mt-2 mb-1">
+                                            <%= notice.title %>
+                                        </h5>
+
+                                    </div>
+
+
+                                    <span
+                                        class="<%= notice.isActive
+                                            ? 'status-active'
+                                            : 'status-inactive'
+                                        %>">
+
+                                        <i class="bi
+                                            <%= notice.isActive
+                                                ? 'bi-check-circle-fill'
+                                                : 'bi-x-circle-fill'
+                                            %>">
+                                        </i>
+
+                                        <%= notice.isActive
+                                            ? "Active"
+                                            : "Removed"
+                                        %>
+
+                                    </span>
+
+                                </div>
+
+
+
+                                <!-- DESCRIPTION -->
+
+                                <p class="notice-description">
+                                    <%= notice.description %>
+                                </p>
+
+
+
+                                <!-- =================================================
+                                     LEAVE INFORMATION
+                                ================================================== -->
+
+                                <% if (
+                                    notice.noticeType === "faculty_leave" &&
+                                    notice.facultyLeave
+                                ) { %>
+
+                                    <%
+                                    const leaveData =
+                                        notice.facultyLeave;
+
+                                    const leaveStart =
+                                        leaveData.startDate;
+
+                                    const leaveEnd =
+                                        leaveData.endDate;
+
+                                    const leaveDays =
+                                        calculateLeaveDays(
+                                            leaveStart,
+                                            leaveEnd
+                                        );
+                                    %>
+
+
+                                    <div class="published-leave-card">
+
+                                        <div class="published-leave-icon">
+
+                                            <i class="bi bi-calendar2-heart"></i>
+
+                                        </div>
+
+
+                                        <div class="published-leave-content">
+
+                                            <span class="published-label">
+                                                FACULTY LEAVE
+                                            </span>
+
+                                            <strong>
+                                                <%= leaveData.leaveType || "Leave" %>
+                                            </strong>
+
+
+                                            <div class="published-leave-dates">
+
+                                                <span>
+                                                    <i class="bi bi-calendar-event"></i>
+                                                    <%= formatDate(leaveStart) %>
+                                                </span>
+
+                                                <i class="bi bi-arrow-right"></i>
+
+                                                <span>
+                                                    <i class="bi bi-calendar-check"></i>
+                                                    <%= formatDate(leaveEnd) %>
+                                                </span>
+
+                                                <span class="duration-pill">
+
+                                                    <i class="bi bi-hourglass-split"></i>
+
+                                                    <%= leaveDays %>
+                                                    day<%= leaveDays === 1 ? "" : "s" %>
+
+                                                </span>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                <% } %>
+
+
+
+                                <!-- =================================================
+                                     TARGET
+                                ================================================== -->
+
+                                <div class="notice-meta-grid">
+
+                                    <div>
+
+                                        <i class="bi bi-building"></i>
+
+                                        <span>
+                                            <%= notice.department || "-" %>
+                                        </span>
+
+                                    </div>
+
+
+                                    <div>
+
+                                        <i class="bi bi-mortarboard"></i>
+
+                                        <span>
+                                            <%= notice.program || "-" %>
+                                        </span>
+
+                                    </div>
+
+
+                                    <div>
+
+                                        <i class="bi bi-layers"></i>
+
+                                        <span>
+                                            Semester
+                                            <%= notice.semester || "-" %>
+                                        </span>
+
+                                    </div>
+
+
+                                    <div>
+
+                                        <i class="bi bi-people"></i>
+
+                                        <span>
+                                            Section
+                                            <%= notice.section || "-" %>
+                                        </span>
+
+                                    </div>
+
+
+                                    <div>
+
+                                        <i class="bi bi-book"></i>
+
+                                        <span>
+                                            <%= notice.courseCode || "-" %>
+                                        </span>
+
+                                    </div>
+
+
+                                    <div>
+
+                                        <i class="bi bi-clock"></i>
+
+                                        <span>
+                                            <%= notice.publishedAt
+                                                ? new Date(
+                                                    notice.publishedAt
+                                                ).toLocaleString(
+                                                    "en-IN"
+                                                )
+                                                : "-"
+                                            %>
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+
+
+                                <!-- =================================================
+                                     RESCHEDULE INFORMATION
+                                ================================================== -->
+
+                                <% if (
+                                    notice.noticeType ===
+                                    "class_rescheduled"
+                                ) { %>
+
+                                    <div class="extra-notice-info">
+
+                                        <strong>
+                                            <i class="bi bi-calendar-event me-1"></i>
+                                            Rescheduled Class
+                                        </strong>
+
+                                        <div class="reschedule-display">
+
+                                            <span>
+                                                <%= notice.rescheduledDate
+                                                    ? formatDate(
+                                                        notice.rescheduledDate
+                                                    )
+                                                    : "-"
+                                                %>
+                                            </span>
+
+                                            <span>
+                                                <%= notice.rescheduledStartTime || "-" %>
+                                                -
+                                                <%= notice.rescheduledEndTime || "-" %>
+                                            </span>
+
+                                        </div>
+
+                                    </div>
+
+                                <% } %>
+
+
+
+                                <!-- =================================================
+                                     REMOVE
+                                ================================================== -->
+
+                                <% if (notice.isActive) { %>
+
+                                    <form
+                                        method="POST"
+                                        action="/faculty/notices/<%= notice._id %>/deactivate"
+                                        class="mt-3">
+
+                                        <button
+                                            type="submit"
+                                            class="btn btn-outline-danger btn-sm remove-btn"
+                                            onclick="return confirm('Remove this notice? Students will no longer see it as an active notice.')">
+
+                                            <i class="bi bi-trash3 me-1"></i>
+
+                                            Remove Notice
+
+                                        </button>
+
+                                    </form>
+
+                                <% } %>
+
+
+                            </div>
+
+                        <% }) %>
+
+                    </div>
+
+                <% } %>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <% } %>
+
+</div>
+
+
+
+<!-- =============================================================
+     STYLES
+============================================================= -->
+
+<style>
+
+:root {
+
+    --notice-primary: #4f46e5;
+    --notice-primary-dark: #3730a3;
+    --notice-secondary: #7c3aed;
+
+    --notice-success: #059669;
+    --notice-danger: #dc2626;
+
+    --notice-text: #111827;
+    --notice-muted: #6b7280;
+
+    --notice-border: #e5e7eb;
+    --notice-bg: #f8fafc;
+
+}
+
+
+.faculty-notice-page {
+    max-width: 1700px;
+    margin: auto;
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.notice-hero {
+
+    position: relative;
+
+    overflow: hidden;
+
+    border-radius: 26px;
+
+    padding: 34px;
+
+    color: white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #312e81 0%,
+            #4f46e5 48%,
+            #7c3aed 100%
+        );
+
+    box-shadow:
+        0 22px 55px
+        rgba(79,70,229,.20);
+
+}
+
+
+.hero-decoration {
+
+    position: absolute;
+
+    border-radius: 50%;
+
+    background:
+        rgba(255,255,255,.08);
+
+    pointer-events: none;
+
+}
+
+
+.hero-decoration-one {
+
+    width: 280px;
+    height: 280px;
+
+    right: -80px;
+    top: -130px;
+
+}
+
+
+.hero-decoration-two {
+
+    width: 170px;
+    height: 170px;
+
+    right: 220px;
+    bottom: -120px;
+
+}
+
+
+.hero-content {
+
+    position: relative;
+
+    z-index: 2;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 18px;
+
+}
+
+
+.hero-icon {
+
+    width: 68px;
+    height: 68px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 20px;
+
+    background:
+        rgba(255,255,255,.15);
+
+    border:
+        1px solid
+        rgba(255,255,255,.18);
+
+    font-size: 29px;
+
+    flex-shrink: 0;
+
+}
+
+
+.hero-eyebrow {
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+    letter-spacing: 1.8px;
+
+    opacity: .75;
+
+    margin-bottom: 4px;
+
+}
+
+
+.hero-description {
+
+    max-width: 720px;
+
+    opacity: .88;
+
+}
+
+
+.hero-bottom {
+
+    position: relative;
+
+    z-index: 2;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin-top: 25px;
+
+}
+
+
+.assignment-badge {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    padding: 9px 14px;
+
+    border-radius: 999px;
+
+    background:
+        rgba(255,255,255,.12);
+
+    border:
+        1px solid
+        rgba(255,255,255,.12);
+
+    font-size: 13px;
+
+}
+
+
+.hero-stat {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    font-size: 13px;
+
+    opacity: .9;
+
+}
+
+
+.hero-stat strong {
+
+    font-size: 20px;
+
+}
+
+
+
+/* =========================================================
+   ALERT
+========================================================= */
+
+.modern-alert {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    border: none;
+
+    border-radius: 14px;
+
+    padding: 14px 17px;
+
+}
+
+
+
+/* =========================================================
+   GLASS CARD
+========================================================= */
+
+.glass-card {
+
+    background:
+        rgba(255,255,255,.97);
+
+    border:
+        1px solid
+        var(--notice-border);
+
+    border-radius: 22px;
+
+    box-shadow:
+        0 12px 40px
+        rgba(15,23,42,.06);
+
+    overflow: hidden;
+
+}
+
+
+.publish-card {
+
+    position: sticky;
+
+    top: 20px;
+
+}
+
+
+.card-header-modern {
+
+    padding: 24px;
+
+    border-bottom:
+        1px solid
+        var(--notice-border);
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 15px;
+
+}
+
+
+.section-label {
+
+    display: block;
+
+    color:
+        var(--notice-primary);
+
+    font-size: 10px;
+
+    font-weight: 900;
+
+    letter-spacing: 1.5px;
+
+    margin-bottom: 5px;
+
+}
+
+
+.header-description {
+
+    color:
+        var(--notice-muted);
+
+    font-size: 13px;
+
+}
+
+
+.header-icon {
+
+    width: 46px;
+    height: 46px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 14px;
+
+    background:
+        #eef2ff;
+
+    color:
+        var(--notice-primary);
+
+    font-size: 20px;
+
+    flex-shrink: 0;
+
+}
+
+
+.notice-count {
+
+    width: 48px;
+    height: 48px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 15px;
+
+    background:
+        #eef2ff;
+
+    color:
+        var(--notice-primary);
+
+    font-size: 18px;
+
+    flex-shrink: 0;
+
+}
+
+
+
+/* =========================================================
+   FORM
+========================================================= */
+
+#noticeForm {
+
+    padding: 24px;
+
+}
+
+
+.form-group-modern {
+
+    margin-bottom: 18px;
+
+}
+
+
+.form-group-modern label,
+.form-label-custom {
+
+    display: block;
+
+    margin-bottom: 7px;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    color:
+        var(--notice-text);
+
+}
+
+
+.form-group-modern label span {
+
+    color:
+        var(--notice-danger);
+
+}
+
+
+.modern-input {
+
+    border-radius: 12px;
+
+    border:
+        1px solid #dbe1ea;
+
+    padding:
+        11px 13px;
+
+    transition:
+        border-color .2s ease,
+        box-shadow .2s ease;
+
+}
+
+
+.modern-input:focus {
+
+    border-color:
+        var(--notice-primary);
+
+    box-shadow:
+        0 0 0 4px
+        rgba(79,70,229,.10);
+
+}
+
+
+.modern-input:disabled {
+
+    background:
+        #f3f4f6;
+
+    cursor:
+        not-allowed;
+
+}
+
+
+.character-counter {
+
+    text-align: right;
+
+    color:
+        var(--notice-muted);
+
+    font-size: 11px;
+
+    margin-top: 5px;
+
+}
+
+
+
+/* =========================================================
+   TARGET
+========================================================= */
+
+.target-box {
+
+    margin:
+        24px 0;
+
+    padding:
+        20px;
+
+    border-radius:
+        18px;
+
+    background:
+        #f8fafc;
+
+    border:
+        1px solid #e2e8f0;
+
+}
+
+
+.target-header {
+
+    display: flex;
+
+    align-items:
+        flex-start;
+
+    justify-content:
+        space-between;
+
+    margin-bottom:
+        20px;
+
+    gap:
+        15px;
+
+}
+
+
+.target-header > i {
+
+    color:
+        var(--notice-primary);
+
+    font-size:
+        22px;
+
+}
+
+
+.target-header small {
+
+    color:
+        var(--notice-muted);
+
+    font-size:
+        12px;
+
+}
+
+
+
+/* =========================================================
+   SELECTION SUMMARY
+========================================================= */
+
+.selection-summary {
+
+    display: flex;
+
+    gap: 12px;
+
+    align-items: flex-start;
+
+    padding: 13px;
+
+    border-radius: 13px;
+
+    background:
+        #ecfdf5;
+
+    border:
+        1px solid #a7f3d0;
+
+    color:
+        #065f46;
+
+}
+
+
+.summary-icon {
+
+    font-size: 19px;
+
+}
+
+
+.selection-summary small {
+
+    display: block;
+
+    font-size: 9px;
+
+    font-weight: 800;
+
+    letter-spacing: 1px;
+
+    opacity: .75;
+
+}
+
+
+.selection-summary strong {
+
+    display: block;
+
+    margin-top: 3px;
+
+    line-height: 1.5;
+
+    font-size: 12px;
+
+}
+
+
+
+/* =========================================================
+   CONDITIONAL BOX
+========================================================= */
+
+.conditional-box {
+
+    padding: 18px;
+
+    margin-bottom: 20px;
+
+    border-radius: 17px;
+
+    background:
+        #f8fafc;
+
+    border:
+        1px dashed #cbd5e1;
+
+}
+
+
+.conditional-title {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 11px;
+
+    margin-bottom: 15px;
+
+}
+
+
+.conditional-title strong {
+
+    display: block;
+
+    font-size: 14px;
+
+}
+
+
+.conditional-title small {
+
+    display: block;
+
+    color:
+        var(--notice-muted);
+
+    font-size: 11px;
+
+    margin-top: 2px;
+
+}
+
+
+.conditional-icon {
+
+    width: 40px;
+    height: 40px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background:
+        #eef2ff;
+
+    color:
+        var(--notice-primary);
+
+}
+
+
+
+/* =========================================================
+   LEAVE PREVIEW
+========================================================= */
+
+.leave-preview {
+
+    margin-top: 15px;
+
+    border-radius: 15px;
+
+    overflow: hidden;
+
+    background:
+        white;
+
+    border:
+        1px solid #e5e7eb;
+
+}
+
+
+.leave-preview-header {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 11px;
+
+    padding: 14px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #eef2ff,
+            #f5f3ff
+        );
+
+}
+
+
+.leave-preview-icon {
+
+    width: 39px;
+    height: 39px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 11px;
+
+    background:
+        white;
+
+    color:
+        var(--notice-primary);
+
+}
+
+
+.leave-preview-header small {
+
+    display: block;
+
+    font-size: 9px;
+
+    font-weight: 800;
+
+    letter-spacing: 1px;
+
+    color:
+        var(--notice-muted);
+
+}
+
+
+.leave-preview-header strong {
+
+    display: block;
+
+    margin-top: 2px;
+
+    font-size: 14px;
+
+}
+
+
+.leave-info-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    border-top:
+        1px solid #edf0f4;
+
+}
+
+
+.leave-info-item {
+
+    padding: 13px;
+
+    border-right:
+        1px solid #edf0f4;
+
+}
+
+
+.leave-info-item:last-child {
+
+    border-right:
+        none;
+
+}
+
+
+.leave-info-item span {
+
+    display: block;
+
+    color:
+        var(--notice-muted);
+
+    font-size: 10px;
+
+    margin-bottom: 5px;
+
+}
+
+
+.leave-info-item strong {
+
+    font-size: 12px;
+
+}
+
+
+.leave-days-item strong {
+
+    color:
+        var(--notice-primary);
+
+}
+
+
+.leave-student-message {
+
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 8px;
+
+    padding: 12px 13px;
+
+    border-top:
+        1px solid #edf0f4;
+
+    color:
+        #475569;
+
+    font-size: 11px;
+
+    line-height: 1.5;
+
+}
+
+
+.leave-student-message i {
+
+    color:
+        var(--notice-primary);
+
+}
+
+
+
+/* =========================================================
+   STUDENT PREVIEW
+========================================================= */
+
+.student-preview {
+
+    margin-bottom:
+        20px;
+
+}
+
+
+.preview-header {
+
+    display: flex;
+
+    justify-content:
+        space-between;
+
+    align-items:
+        center;
+
+    margin-bottom:
+        8px;
+
+}
+
+
+.preview-header span {
+
+    font-size:
+        10px;
+
+    font-weight:
+        900;
+
+    letter-spacing:
+        1.2px;
+
+    color:
+        var(--notice-primary);
+
+}
+
+
+.preview-header small {
+
+    color:
+        var(--notice-muted);
+
+    font-size:
+        10px;
+
+}
+
+
+.preview-card {
+
+    padding:
+        16px;
+
+    border:
+        1px solid #e5e7eb;
+
+    border-radius:
+        15px;
+
+    background:
+        white;
+
+}
+
+
+.preview-badge {
+
+    display:
+        inline-block;
+
+    padding:
+        4px 8px;
+
+    border-radius:
+        999px;
+
+    background:
+        #eef2ff;
+
+    color:
+        #4338ca;
+
+    font-size:
+        9px;
+
+    font-weight:
+        800;
+
+}
+
+
+.preview-card h5 {
+
+    margin:
+        9px 0 5px;
+
+    font-size:
+        15px;
+
+}
+
+
+.preview-card p {
+
+    color:
+        #64748b;
+
+    font-size:
+        12px;
+
+    line-height:
+        1.6;
+
+    margin-bottom:
+        10px;
+
+}
+
+
+.preview-target {
+
+    padding:
+        9px;
+
+    border-radius:
+        9px;
+
+    background:
+        #f8fafc;
+
+    color:
+        #64748b;
+
+    font-size:
+        10px;
+
+}
+
+
+.preview-leave {
+
+    margin:
+        10px 0;
+
+    padding:
+        10px;
+
+    border-radius:
+        10px;
+
+    background:
+        #eef2ff;
+
+    color:
+        #3730a3;
+
+    font-size:
+        11px;
+
+}
+
+
+
+/* =========================================================
+   PUBLISH BUTTON
+========================================================= */
+
+.publish-btn {
+
+    padding:
+        13px 18px;
+
+    border:
+        none;
+
+    border-radius:
+        13px;
+
+    color:
+        white;
+
+    font-weight:
+        700;
+
+    background:
+        linear-gradient(
+            135deg,
+            #4f46e5,
+            #7c3aed
+        );
+
+    box-shadow:
+        0 10px 24px
+        rgba(79,70,229,.22);
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease;
+
+}
+
+
+.publish-btn:hover {
+
+    color:
+        white;
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 15px 30px
+        rgba(79,70,229,.28);
+
+}
+
+
+
+/* =========================================================
+   NOTICE LIST
+========================================================= */
+
+.notice-list {
+
+    padding:
+        24px;
+
+}
+
+
+.notice-item {
+
+    padding:
+        20px;
+
+    border:
+        1px solid var(--notice-border);
+
+    border-radius:
+        17px;
+
+    margin-bottom:
+        16px;
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease;
+
+}
+
+
+.notice-item:last-child {
+
+    margin-bottom:
+        0;
+
+}
+
+
+.notice-item:hover {
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 12px 30px
+        rgba(15,23,42,.06);
+
+}
+
+
+.notice-item-top {
+
+    display:
+        flex;
+
+    align-items:
+        flex-start;
+
+    justify-content:
+        space-between;
+
+    gap:
+        12px;
+
+}
+
+
+.notice-type-badge {
+
+    display:
+        inline-block;
+
+    padding:
+        5px 9px;
+
+    border-radius:
+        999px;
+
+    background:
+        #eef2ff;
+
+    color:
+        #4338ca;
+
+    font-size:
+        10px;
+
+    font-weight:
+        800;
+
+}
+
+
+.status-active,
+.status-inactive {
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    gap:
+        5px;
+
+    padding:
+        5px 9px;
+
+    border-radius:
+        999px;
+
+    font-size:
+        10px;
+
+    font-weight:
+        800;
+
+}
+
+
+.status-active {
+
+    color:
+        #047857;
+
+    background:
+        #ecfdf5;
+
+}
+
+
+.status-inactive {
+
+    color:
+        #b91c1c;
+
+    background:
+        #fef2f2;
+
+}
+
+
+.notice-description {
+
+    margin-top:
+        12px;
+
+    color:
+        #4b5563;
+
+    line-height:
+        1.7;
+
+    white-space:
+        pre-line;
+
+}
+
+
+
+/* =========================================================
+   PUBLISHED LEAVE
+========================================================= */
+
+.published-leave-card {
+
+    display:
+        flex;
+
+    align-items:
+        flex-start;
+
+    gap:
+        13px;
+
+    padding:
+        14px;
+
+    margin-top:
+        15px;
+
+    border:
+        1px solid #c7d2fe;
+
+    border-radius:
+        14px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #eef2ff,
+            #f5f3ff
+        );
+
+}
+
+
+.published-leave-icon {
+
+    width:
+        42px;
+
+    height:
+        42px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    border-radius:
+        12px;
+
+    background:
+        white;
+
+    color:
+        var(--notice-primary);
+
+    font-size:
+        19px;
+
+    flex-shrink:
+        0;
+
+}
+
+
+.published-leave-content {
+
+    min-width:
+        0;
+
+}
+
+
+.published-label {
+
+    display:
+        block;
+
+    font-size:
+        9px;
+
+    font-weight:
+        900;
+
+    letter-spacing:
+        1.1px;
+
+    color:
+        #6366f1;
+
+}
+
+
+.published-leave-content > strong {
+
+    display:
+        block;
+
+    margin:
+        2px 0 7px;
+
+    font-size:
+        14px;
+
+}
+
+
+.published-leave-dates {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    flex-wrap:
+        wrap;
+
+    gap:
+        8px;
+
+    font-size:
+        11px;
+
+    color:
+        #475569;
+
+}
+
+
+.duration-pill {
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    gap:
+        4px;
+
+    padding:
+        4px 8px;
+
+    border-radius:
+        999px;
+
+    background:
+        #4f46e5;
+
+    color:
+        white;
+
+    font-weight:
+        700;
+
+}
+
+
+
+/* =========================================================
+   META
+========================================================= */
+
+.notice-meta-grid {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0,1fr));
+
+    gap:
+        9px;
+
+    margin-top:
+        16px;
+
+}
+
+
+.notice-meta-grid > div {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        8px;
+
+    padding:
+        9px;
+
+    border-radius:
+        10px;
+
+    background:
+        #f8fafc;
+
+    color:
+        #4b5563;
+
+    font-size:
+        11px;
+
+    min-width:
+        0;
+
+}
+
+
+.notice-meta-grid span {
+
+    overflow:
+        hidden;
+
+    text-overflow:
+        ellipsis;
+
+    white-space:
+        nowrap;
+
+}
+
+
+.notice-meta-grid i {
+
+    color:
+        var(--notice-primary);
+
+    flex-shrink:
+        0;
+
+}
+
+
+
+/* =========================================================
+   EXTRA
+========================================================= */
+
+.extra-notice-info {
+
+    margin-top:
+        14px;
+
+    padding:
+        11px;
+
+    border-radius:
+        10px;
+
+    background:
+        #fffbeb;
+
+    color:
+        #92400e;
+
+    font-size:
+        12px;
+
+}
+
+
+.reschedule-display {
+
+    display:
+        flex;
+
+    gap:
+        15px;
+
+    margin-top:
+        6px;
+
+}
+
+
+
+/* =========================================================
+   EMPTY
+========================================================= */
+
+.empty-assignment-card,
+.empty-notices {
+
+    text-align:
+        center;
+
+    padding:
+        65px 25px;
+
+}
+
+
+.empty-assignment-card {
+
+    background:
+        white;
+
+    border:
+        1px solid
+        var(--notice-border);
+
+    border-radius:
+        22px;
+
+}
+
+
+.empty-icon {
+
+    width:
+        72px;
+
+    height:
+        72px;
+
+    margin:
+        0 auto 18px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    border-radius:
+        20px;
+
+    background:
+        #eef2ff;
+
+    color:
+        var(--notice-primary);
+
+    font-size:
+        30px;
+
+}
+
+
+.empty-icon.small {
+
+    width:
+        58px;
+
+    height:
+        58px;
+
+    font-size:
+        22px;
+
+}
+
+
+.empty-badge {
+
+    display:
+        inline-block;
+
+    padding:
+        5px 9px;
+
+    margin-bottom:
+        8px;
+
+    border-radius:
+        999px;
+
+    background:
+        #fef3c7;
+
+    color:
+        #92400e;
+
+    font-size:
+        9px;
+
+    font-weight:
+        900;
+
+    letter-spacing:
+        1px;
+
+}
+
+
+.empty-assignment-card h3 {
+
+    font-weight:
+        800;
+
+}
+
+
+.empty-assignment-card p,
+.empty-notices p {
+
+    color:
+        var(--notice-muted);
+
+}
+
+
+.assignment-help {
+
+    max-width:
+        620px;
+
+    margin:
+        20px auto 0;
+
+    padding:
+        13px;
+
+    display:
+        flex;
+
+    align-items:
+        flex-start;
+
+    gap:
+        9px;
+
+    text-align:
+        left;
+
+    border-radius:
+        12px;
+
+    background:
+        #f8fafc;
+
+    color:
+        #64748b;
+
+    font-size:
+        12px;
+
+    line-height:
+        1.5;
+
+}
+
+
+.assignment-help i {
+
+    color:
+        var(--notice-primary);
+
+}
+
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1199px) {
+
+    .publish-card {
+
+        position:
+            static;
+
+    }
+
+}
+
+
+@media (max-width: 767px) {
+
+    .notice-hero {
+
+        padding:
+            24px;
+
+        border-radius:
+            20px;
+
+    }
+
+
+    .hero-content {
+
+        align-items:
+            flex-start;
+
+    }
+
+
+    .hero-icon {
+
+        width:
+            52px;
+
+        height:
+            52px;
+
+        font-size:
+            22px;
+
+    }
+
+
+    .notice-hero h1 {
+
+        font-size:
+            24px;
+
+    }
+
+
+    .hero-description {
+
+        font-size:
+            13px;
+
+    }
+
+
+    .hero-bottom {
+
+        align-items:
+            flex-start;
+
+        flex-direction:
+            column;
+
+    }
+
+
+    .card-header-modern {
+
+        padding:
+            19px;
+
+    }
+
+
+    #noticeForm {
+
+        padding:
+            19px;
+
+    }
+
+
+    .notice-list {
+
+        padding:
+            19px;
+
+    }
+
+
+    .target-box {
+
+        padding:
+            16px;
+
+    }
+
+
+    .notice-meta-grid {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+
+    .notice-item-top {
+
+        flex-direction:
+            column;
+
+    }
+
+
+    .leave-info-grid {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+
+    .leave-info-item {
+
+        border-right:
+            none;
+
+        border-bottom:
+            1px solid #edf0f4;
+
+    }
+
+
+    .leave-info-item:last-child {
+
+        border-bottom:
+            none;
+
+    }
+
+
+    .published-leave-card {
+
+        flex-direction:
+            column;
+
+    }
+
+
+    .published-leave-dates {
+
+        align-items:
+            flex-start;
+
+        flex-direction:
+            column;
+
+    }
+
+
+    .reschedule-display {
+
+        flex-direction:
+            column;
+
+        gap:
+            4px;
+
+    }
+
+}
+
+</style>
+
+
+
+<!-- =============================================================
+     JAVASCRIPT
+============================================================= -->
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+
+        /* =========================================================
+           RAW ASSIGNMENTS
+        ========================================================== */
+
+        const rawAssignments =
+            <%- JSON.stringify(
+                safeAssignments
+            ) %>;
+
+
+        const assignments =
+            rawAssignments
+                .map(function (assignment) {
+
+                    return {
+
+                        department:
+                            String(
+                                assignment.department || ""
+                            )
+                            .trim()
+                            .toLowerCase(),
+
+                        program:
+                            String(
+                                assignment.program || ""
+                            )
+                            .trim()
+                            .toLowerCase(),
+
+                        semester:
+                            Number(
+                                assignment.semester
+                            ),
+
+                        section:
+                            String(
+                                assignment.section || ""
+                            )
+                            .trim()
+                            .toUpperCase(),
+
+                        courseCode:
+                            String(
+                                assignment.courseCode || ""
+                            )
+                            .trim()
+                            .toUpperCase(),
+
+                        courseName:
+                            String(
+                                assignment.courseName || ""
+                            )
+                            .trim()
+
+                    };
+
+                })
+                .filter(function (assignment) {
+
+                    return (
+                        assignment.department &&
+                        assignment.program &&
+                        Number.isInteger(
+                            assignment.semester
+                        ) &&
+                        assignment.section &&
+                        assignment.courseCode
+                    );
+
+                });
+
+
+
+        /* =========================================================
+           ELEMENTS
+        ========================================================== */
+
+        const department =
+            document.getElementById(
+                "department"
+            );
+
+        const program =
+            document.getElementById(
+                "program"
+            );
+
+        const semester =
+            document.getElementById(
+                "semester"
+            );
+
+        const section =
+            document.getElementById(
+                "section"
+            );
+
+        const courseCode =
+            document.getElementById(
+                "courseCode"
+            );
+
+        const courseName =
+            document.getElementById(
+                "courseName"
+            );
+
+        const selectionSummary =
+            document.getElementById(
+                "selectionSummary"
+            );
+
+        const selectionText =
+            document.getElementById(
+                "selectionText"
+            );
+
+        const noticeType =
+            document.getElementById(
+                "noticeType"
+            );
+
+        const facultyLeaveBox =
+            document.getElementById(
+                "facultyLeaveBox"
+            );
+
+        const facultyLeave =
+            document.getElementById(
+                "facultyLeave"
+            );
+
+        const leavePreview =
+            document.getElementById(
+                "leavePreview"
+            );
+
+        const rescheduleBox =
+            document.getElementById(
+                "rescheduleBox"
+            );
+
+        const noticeForm =
+            document.getElementById(
+                "noticeForm"
+            );
+
+        const noticeTitle =
+            document.getElementById(
+                "noticeTitle"
+            );
+
+        const noticeDescription =
+            document.getElementById(
+                "noticeDescription"
+            );
+
+        const descriptionCount =
+            document.getElementById(
+                "descriptionCount"
+            );
+
+        const studentNoticePreview =
+            document.getElementById(
+                "studentNoticePreview"
+            );
+
+        const previewTitle =
+            document.getElementById(
+                "previewTitle"
+            );
+
+        const previewDescription =
+            document.getElementById(
+                "previewDescription"
+            );
+
+        const previewTarget =
+            document.getElementById(
+                "previewTarget"
+            );
+
+        const previewLeave =
+            document.getElementById(
+                "previewLeave"
+            );
+
+
+
+        /* =========================================================
+           HELPERS
+        ========================================================== */
+
+        function resetSelect(
+            select,
+            placeholder
+        ) {
+
+            select.innerHTML = "";
+
+            const option =
+                document.createElement(
+                    "option"
+                );
+
+            option.value = "";
+
+            option.textContent =
+                placeholder;
+
+            select.appendChild(
+                option
+            );
+
+            select.disabled = true;
+
+        }
+
+
+        function uniqueValues(
+            array
+        ) {
+
+            return [
+                ...new Set(array)
+            ];
+
+        }
+
+
+        function addOption(
+            select,
+            value,
+            label
+        ) {
+
+            const option =
+                document.createElement(
+                    "option"
+                );
+
+            option.value =
+                value;
+
+            option.textContent =
+                label;
+
+            select.appendChild(
+                option
+            );
+
+        }
+
+
+        function formatDate(
+            value
+        ) {
+
+            if (!value) {
+                return "-";
+            }
+
+            return new Date(value)
+                .toLocaleDateString(
+                    "en-IN",
+                    {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric"
+                    }
+                );
+
+        }
+
+
+        function calculateDays(
+            start,
+            end
+        ) {
+
+            if (!start || !end) {
+                return 0;
+            }
+
+            const startDate =
+                new Date(start);
+
+            const endDate =
+                new Date(end);
+
+            startDate.setHours(
+                0, 0, 0, 0
+            );
+
+            endDate.setHours(
+                0, 0, 0, 0
+            );
+
+            return (
+                Math.floor(
+                    (
+                        endDate.getTime() -
+                        startDate.getTime()
+                    ) /
+                    (
+                        1000 *
+                        60 *
+                        60 *
+                        24
+                    )
+                ) + 1
+            );
+
+        }
+
+
+
+        /* =========================================================
+           LOAD DEPARTMENTS
+        ========================================================== */
+
+        function loadDepartments() {
+
+            resetSelect(
+                department,
+                "Select Department"
+            );
+
+            resetSelect(
+                program,
+                "Select Program"
+            );
+
+            resetSelect(
+                semester,
+                "Select Semester"
+            );
+
+            resetSelect(
+                section,
+                "Select Section"
+            );
+
+            resetSelect(
+                courseCode,
+                "Select Course"
+            );
+
+
+            const departments =
+                uniqueValues(
+                    assignments.map(
+                        function (item) {
+                            return item.department;
+                        }
+                    )
+                )
+                .sort();
+
+
+            departments.forEach(
+                function (item) {
+
+                    addOption(
+                        department,
+                        item,
+                        item.toUpperCase()
+                    );
+
+                }
+            );
+
+
+            if (
+                departments.length
+            ) {
+
+                department.disabled =
+                    false;
+
+            }
+
+        }
+
+
+
+        /* =========================================================
+           DEPARTMENT
+        ========================================================== */
+
+        department.addEventListener(
+            "change",
+            function () {
+
+                const selectedDepartment =
+                    this.value
+                        .trim()
+                        .toLowerCase();
+
+
+                resetSelect(
+                    program,
+                    "Select Program"
+                );
+
+                resetSelect(
+                    semester,
+                    "Select Semester"
+                );
+
+                resetSelect(
+                    section,
+                    "Select Section"
+                );
+
+                resetSelect(
+                    courseCode,
+                    "Select Course"
+                );
+
+
+                hideSelectionSummary();
+
+
+                if (
+                    !selectedDepartment
+                ) {
+                    return;
+                }
+
+
+                const programs =
+                    uniqueValues(
+                        assignments
+                            .filter(
+                                function (item) {
+
+                                    return (
+                                        item.department ===
+                                        selectedDepartment
+                                    );
+
+                                }
+                            )
+                            .map(
+                                function (item) {
+
+                                    return item.program;
+
+                                }
+                            )
+                    )
+                    .sort();
+
+
+                programs.forEach(
+                    function (item) {
+
+                        addOption(
+                            program,
+                            item,
+                            item.toUpperCase()
+                        );
+
+                    }
+                );
+
+
+                if (
+                    programs.length
+                ) {
+
+                    program.disabled =
+                        false;
+
+                }
+
+                updatePreviewTarget();
+
+            }
+        );
+
+
+
+        /* =========================================================
+           PROGRAM
+        ========================================================== */
+
+        program.addEventListener(
+            "change",
+            function () {
+
+                const selectedDepartment =
+                    department.value
+                        .trim()
+                        .toLowerCase();
+
+                const selectedProgram =
+                    this.value
+                        .trim()
+                        .toLowerCase();
+
+
+                resetSelect(
+                    semester,
+                    "Select Semester"
+                );
+
+                resetSelect(
+                    section,
+                    "Select Section"
+                );
+
+                resetSelect(
+                    courseCode,
+                    "Select Course"
+                );
+
+
+                hideSelectionSummary();
+
+
+                if (
+                    !selectedDepartment ||
+                    !selectedProgram
+                ) {
+
+                    return;
+
+                }
+
+
+                const semesters =
+                    uniqueValues(
+                        assignments
+                            .filter(
+                                function (item) {
+
+                                    return (
+                                        item.department ===
+                                            selectedDepartment &&
+                                        item.program ===
+                                            selectedProgram
+                                    );
+
+                                }
+                            )
+                            .map(
+                                function (item) {
+
+                                    return item.semester;
+
+                                }
+                            )
+                    )
+                    .sort(
+                        function (a, b) {
+                            return a - b;
+                        }
+                    );
+
+
+                semesters.forEach(
+                    function (item) {
+
+                        addOption(
+                            semester,
+                            item,
+                            "Semester " + item
+                        );
+
+                    }
+                );
+
+
+                if (
+                    semesters.length
+                ) {
+
+                    semester.disabled =
+                        false;
+
+                }
+
+                updatePreviewTarget();
+
+            }
+        );
+
+
+
+        /* =========================================================
+           SEMESTER
+        ========================================================== */
+
+        semester.addEventListener(
+            "change",
+            function () {
+
+                const selectedDepartment =
+                    department.value
+                        .trim()
+                        .toLowerCase();
+
+                const selectedProgram =
+                    program.value
+                        .trim()
+                        .toLowerCase();
+
+                const selectedSemester =
+                    Number(this.value);
+
+
+                resetSelect(
+                    section,
+                    "Select Section"
+                );
+
+                resetSelect(
+                    courseCode,
+                    "Select Course"
+                );
+
+
+                hideSelectionSummary();
+
+
+                if (
+                    !selectedDepartment ||
+                    !selectedProgram ||
+                    !selectedSemester
+                ) {
+
+                    return;
+
+                }
+
+
+                const sections =
+                    uniqueValues(
+                        assignments
+                            .filter(
+                                function (item) {
+
+                                    return (
+                                        item.department ===
+                                            selectedDepartment &&
+                                        item.program ===
+                                            selectedProgram &&
+                                        item.semester ===
+                                            selectedSemester
+                                    );
+
+                                }
+                            )
+                            .map(
+                                function (item) {
+
+                                    return item.section;
+
+                                }
+                            )
+                    )
+                    .sort();
+
+
+                sections.forEach(
+                    function (item) {
+
+                        addOption(
+                            section,
+                            item,
+                            "Section " + item
+                        );
+
+                    }
+                );
+
+
+                if (
+                    sections.length
+                ) {
+
+                    section.disabled =
+                        false;
+
+                }
+
+                updatePreviewTarget();
+
+            }
+        );
+
+
+
+        /* =========================================================
+           SECTION
+        ========================================================== */
+
+        section.addEventListener(
+            "change",
+            function () {
+
+                const selectedDepartment =
+                    department.value
+                        .trim()
+                        .toLowerCase();
+
+                const selectedProgram =
+                    program.value
+                        .trim()
+                        .toLowerCase();
+
+                const selectedSemester =
+                    Number(
+                        semester.value
+                    );
+
+                const selectedSection =
+                    this.value
+                        .trim()
+                        .toUpperCase();
+
+
+                resetSelect(
+                    courseCode,
+                    "Select Course"
+                );
+
+
+                hideSelectionSummary();
+
+
+                if (
+                    !selectedDepartment ||
+                    !selectedProgram ||
+                    !selectedSemester ||
+                    !selectedSection
+                ) {
+
+                    return;
+
+                }
+
+
+                const courses =
+                    assignments.filter(
+                        function (item) {
+
+                            return (
+                                item.department ===
+                                    selectedDepartment &&
+
+                                item.program ===
+                                    selectedProgram &&
+
+                                item.semester ===
+                                    selectedSemester &&
+
+                                item.section ===
+                                    selectedSection
+                            );
+
+                        }
+                    );
+
+
+                const uniqueCourses = [];
+
+
+                courses.forEach(
+                    function (item) {
+
+                        const exists =
+                            uniqueCourses.some(
+                                function (course) {
+
+                                    return (
+                                        course.courseCode ===
+                                        item.courseCode
+                                    );
+
+                                }
+                            );
+
+
+                        if (!exists) {
+
+                            uniqueCourses.push(
+                                item
+                            );
+
+                        }
+
+                    }
+                );
+
+
+                uniqueCourses.sort(
+                    function (a, b) {
+
+                        return a.courseCode
+                            .localeCompare(
+                                b.courseCode
+                            );
+
+                    }
+                );
+
+
+                uniqueCourses.forEach(
+                    function (item) {
+
+                        addOption(
+                            courseCode,
+                            item.courseCode,
+                            item.courseCode +
+                            " - " +
+                            item.courseName
+                        );
+
+                    }
+                );
+
+
+                if (
+                    uniqueCourses.length
+                ) {
+
+                    courseCode.disabled =
+                        false;
+
+                }
+
+                updatePreviewTarget();
+
+            }
+        );
+
+
+
+        /* =========================================================
+           COURSE
+        ========================================================== */
+
+        courseCode.addEventListener(
+            "change",
+            function () {
+
+                const selectedCode =
+                    this.value
+                        .trim()
+                        .toUpperCase();
+
+
+                const selectedCourse =
+                    assignments.find(
+                        function (item) {
+
+                            return (
+
+                                item.department ===
+                                    department.value
+                                        .trim()
+                                        .toLowerCase() &&
+
+                                item.program ===
+                                    program.value
+                                        .trim()
+                                        .toLowerCase() &&
+
+                                item.semester ===
+                                    Number(
+                                        semester.value
+                                    ) &&
+
+                                item.section ===
+                                    section.value
+                                        .trim()
+                                        .toUpperCase() &&
+
+                                item.courseCode ===
+                                    selectedCode
+
+                            );
+
+                        }
+                    );
+
+
+                if (
+                    selectedCourse
+                ) {
+
+                    courseName.value =
+                        selectedCourse.courseName;
+
+
+                    showSelectionSummary(
+                        selectedCourse
+                    );
+
+                } else {
+
+                    courseName.value =
+                        "";
+
+                    hideSelectionSummary();
+
+                }
+
+
+                updatePreviewTarget();
+
+            }
+        );
+
+
+
+        /* =========================================================
+           SELECTION SUMMARY
+        ========================================================== */
+
+        function showSelectionSummary(
+            course
+        ) {
+
+            selectionSummary.classList.remove(
+                "d-none"
+            );
+
+
+            selectionText.textContent =
+
+                department.value.toUpperCase() +
+                " → " +
+
+                program.value.toUpperCase() +
+                " → Semester " +
+
+                semester.value +
+                " → Section " +
+
+                section.value.toUpperCase() +
+                " → " +
+
+                course.courseCode +
+                " - " +
+
+                course.courseName;
+
+        }
+
+
+        function hideSelectionSummary() {
+
+            selectionSummary.classList.add(
+                "d-none"
+            );
+
+            selectionText.textContent =
+                "";
+
+            courseName.value =
+                "";
+
+        }
+
+
+
+        /* =========================================================
+           LEAVE CHANGE
+        ========================================================== */
+
+        facultyLeave.addEventListener(
+            "change",
+            function () {
+
+                const selectedOption =
+                    this.options[
+                        this.selectedIndex
+                    ];
+
+
+                if (
+                    !this.value ||
+                    !selectedOption
+                ) {
+
+                    leavePreview.classList.add(
+                        "d-none"
+                    );
+
+                    previewLeave.classList.add(
+                        "d-none"
+                    );
+
+                    return;
+
+                }
+
+
+                const start =
+                    selectedOption.dataset.start;
+
+                const end =
+                    selectedOption.dataset.end;
+
+                const type =
+                    selectedOption.dataset.type ||
+                    "Faculty Leave";
+
+
+                const days =
+                    calculateDays(
+                        start,
+                        end
+                    );
+
+
+                document.getElementById(
+                    "leavePreviewType"
+                ).textContent =
+                    type;
+
+
+                document.getElementById(
+                    "leavePreviewStart"
+                ).textContent =
+                    formatDate(start);
+
+
+                document.getElementById(
+                    "leavePreviewEnd"
+                ).textContent =
+                    formatDate(end);
+
+
+                document.getElementById(
+                    "leavePreviewDays"
+                ).textContent =
+                    days;
+
+
+                document.getElementById(
+                    "leaveStudentMessage"
+                ).textContent =
+
+                    "Students will be informed that the faculty member " +
+                    "will be on " +
+                    type +
+                    " from " +
+                    formatDate(start) +
+                    " to " +
+                    formatDate(end) +
+                    " (" +
+                    days +
+                    " day" +
+                    (days === 1 ? "" : "s") +
+                    ").";
+
+
+                leavePreview.classList.remove(
+                    "d-none"
+                );
+
+
+                previewLeave.innerHTML =
+
+                    "<strong>" +
+                    type +
+                    "</strong>" +
+
+                    " · " +
+                    formatDate(start) +
+
+                    " → " +
+                    formatDate(end) +
+
+                    " · " +
+                    days +
+
+                    " day" +
+                    (days === 1 ? "" : "s");
+
+
+                previewLeave.classList.remove(
+                    "d-none"
+                );
+
+            }
+        );
+
+
+
+        /* =========================================================
+           NOTICE TYPE
+        ========================================================== */
+
+        noticeType.addEventListener(
+            "change",
+            function () {
+
+                facultyLeaveBox.classList.add(
+                    "d-none"
+                );
+
+                rescheduleBox.classList.add(
+                    "d-none"
+                );
+
+
+                if (
+                    this.value ===
+                    "faculty_leave"
+                ) {
+
+                    facultyLeaveBox.classList.remove(
+                        "d-none"
+                    );
+
+                }
+
+
+                if (
+                    this.value ===
+                    "class_rescheduled"
+                ) {
+
+                    rescheduleBox.classList.remove(
+                        "d-none"
+                    );
+
+                }
+
+
+                updatePreview();
+
+            }
+        );
+
+
+
+        /* =========================================================
+           LIVE DESCRIPTION COUNTER
+        ========================================================== */
+
+        noticeDescription.addEventListener(
+            "input",
+            function () {
+
+                descriptionCount.textContent =
+                    this.value.length;
+
+                updatePreview();
+
+            }
+        );
+
+
+
+        noticeTitle.addEventListener(
+            "input",
+            updatePreview
+        );
+
+
+
+        /* =========================================================
+           PREVIEW TARGET
+        ========================================================== */
+
+        function updatePreviewTarget() {
+
+            const dept =
+                department.value;
+
+            const prog =
+                program.value;
+
+            const sem =
+                semester.value;
+
+            const sec =
+                section.value;
+
+            const course =
+                courseCode.value;
+
+
+            if (
+                dept &&
+                prog &&
+                sem &&
+                sec &&
+                course
+            ) {
+
+                previewTarget.textContent =
+
+                    dept.toUpperCase() +
+                    " → " +
+                    prog.toUpperCase() +
+                    " → Semester " +
+                    sem +
+                    " → Section " +
+                    sec.toUpperCase() +
+                    " → " +
+                    course;
+
+            } else {
+
+                previewTarget.textContent =
+                    "Select target class above.";
+
+            }
+
+        }
+
+
+
+        /* =========================================================
+           STUDENT PREVIEW
+        ========================================================== */
+
+        function updatePreview() {
+
+            if (
+                noticeType.value ||
+                noticeTitle.value ||
+                noticeDescription.value
+            ) {
+
+                studentNoticePreview.classList.remove(
+                    "d-none"
+                );
+
+            } else {
+
+                studentNoticePreview.classList.add(
+                    "d-none"
+                );
+
+            }
+
+
+            previewTitle.textContent =
+                noticeTitle.value ||
+                "Your notice title";
+
+
+            previewDescription.textContent =
+                noticeDescription.value ||
+                "Your notice message will appear here.";
+
+
+            updatePreviewTarget();
+
+        }
+
+
+
+        /* =========================================================
+           FORM VALIDATION
+        ========================================================== */
+
+        noticeForm.addEventListener(
+            "submit",
+            function (event) {
+
+                if (
+                    !department.value ||
+                    !program.value ||
+                    !semester.value ||
+                    !section.value ||
+                    !courseCode.value
+                ) {
+
+                    event.preventDefault();
+
+                    alert(
+                        "Please select Department, Program, Semester, Section and Course."
+                    );
+
+                    return;
+
+                }
+
+
+                if (
+                    !noticeType.value
+                ) {
+
+                    event.preventDefault();
+
+                    alert(
+                        "Please select notice type."
+                    );
+
+                    return;
+
+                }
+
+
+                if (
+                    noticeType.value ===
+                    "faculty_leave"
+                ) {
+
+                    if (
+                        !facultyLeave.value
+                    ) {
+
+                        event.preventDefault();
+
+                        alert(
+                            "Please select an approved faculty leave."
+                        );
+
+                        return;
+
+                    }
+
+                }
+
+
+                if (
+                    noticeType.value ===
+                    "class_rescheduled"
+                ) {
+
+                    const date =
+                        document.querySelector(
+                            "[name='rescheduledDate']"
+                        );
+
+                    const start =
+                        document.querySelector(
+                            "[name='rescheduledStartTime']"
+                        );
+
+                    const end =
+                        document.querySelector(
+                            "[name='rescheduledEndTime']"
+                        );
+
+
+                    if (
+                        !date.value ||
+                        !start.value ||
+                        !end.value
+                    ) {
+
+                        event.preventDefault();
+
+                        alert(
+                            "Please provide rescheduled date and time."
+                        );
+
+                        return;
+
+                    }
+
+
+                    if (
+                        start.value >=
+                        end.value
+                    ) {
+
+                        event.preventDefault();
+
+                        alert(
+                            "End time must be after start time."
+                        );
+
+                        return;
+
+                    }
+
+                }
+
+
+                const publishBtn =
+                    document.getElementById(
+                        "publishBtn"
+                    );
+
+
+                publishBtn.disabled =
+                    true;
+
+
+                publishBtn.innerHTML =
+
+                    '<span class="spinner-border spinner-border-sm me-2"></span>' +
+                    'Publishing...';
+
+            }
+        );
+
+
+
+        /* =========================================================
+           INITIAL
+        ========================================================== */
+
+        loadDepartments();
+
+        updatePreviewTarget();
+
+    }
+);
+
+</script>
