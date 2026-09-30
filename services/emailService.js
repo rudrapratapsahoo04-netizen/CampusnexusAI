@@ -24,15 +24,22 @@ const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST || "smtp.gmail.com",
     port: Number(process.env.SMTP_PORT || 465),
     secure: true,
+
+    family: 4,
+
     auth: {
         user: smtpUser,
         pass: smtpPass
     },
+
     tls: {
         minVersion: "TLSv1.2"
-    }
-});
+    },
 
+    connectionTimeout: 30000,
+    greetingTimeout: 30000,
+    socketTimeout: 60000
+});
 // =====================================================
 // VERIFY SMTP CONNECTION
 // =====================================================
