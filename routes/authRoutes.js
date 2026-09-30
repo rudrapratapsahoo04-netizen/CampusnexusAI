@@ -13,20 +13,13 @@ const {
     showRoleLogin,
     login,
 
-    showLoginOTP,
-    verifyLoginOTP,
-    resendLoginOTP,
-
     logout,
 
     showForgotPassword,
-    forgotPassword,
+   
 
-    showVerifyOTP,
-    verifyOTP,
 
-    showResetPassword,
-    resetPassword
+    
 } = require("../controllers/authController");
 
 const {
@@ -187,74 +180,25 @@ router.post(
 //        ↓
 // Dashboard
 
-router.get(
-    "/verify-login-otp",
-    requireGuest,
-    showLoginOTP
-);
-
-router.post(
-    "/verify-login-otp",
-    requireGuest,
-    verifyLoginOTP
-);
-
-router.post(
-    "/resend-login-otp",
-    requireGuest,
-    resendLoginOTP
-);
 
 
 // =====================================================
 // FORGOT PASSWORD
 // =====================================================
 
-router.get(
-    "/forgot-password",
-    requireGuest,
-    showForgotPassword
-);
-
-router.post(
-    "/forgot-password",
-    requireGuest,
-    forgotPassword
-);
 
 
 // =====================================================
 // PASSWORD RESET OTP
 // =====================================================
 
-router.get(
-    "/verify-otp",
-    requireGuest,
-    showVerifyOTP
-);
-
-router.post(
-    "/verify-otp",
-    requireGuest,
-    verifyOTP
-);
 
 
 // =====================================================
 // RESET PASSWORD
 // =====================================================
 
-router.get(
-    "/reset-password",
-    requireGuest,
-    showResetPassword
-);
 
-router.post(
-    "/reset-password",
-    requireGuest,
-    resetPassword
-);
 
 
 // =====================================================
