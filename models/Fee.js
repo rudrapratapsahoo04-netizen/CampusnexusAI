@@ -195,11 +195,6 @@ const feeSchema = new mongoose.Schema(
 // INDEXES
 // ==========================================
 
-feeSchema.index({
-    student: 1,
-    academicSession: 1,
-    semester: 1
-});
 
 
 feeSchema.index({
