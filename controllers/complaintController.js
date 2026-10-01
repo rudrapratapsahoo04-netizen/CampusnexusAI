@@ -104,8 +104,13 @@ const submitComplaint = async (
         // --------------------------------
         const complaint =
             await Complaint.create({
-                student: userId,
 
+                // Required by Complaint schema
+                applicant: studentProfile._id,
+                applicantType: "student",
+
+                // Student information
+                student: userId,
                 studentProfile:
                     studentProfile._id,
 
@@ -124,6 +129,7 @@ const submitComplaint = async (
                 section:
                     studentProfile.section,
 
+                // Complaint information
                 category:
                     category.trim(),
 
@@ -153,6 +159,7 @@ const submitComplaint = async (
         return res.redirect(
             "/student/complaints"
         );
+
     } catch (error) {
         console.error(
             "Submit complaint error:",
